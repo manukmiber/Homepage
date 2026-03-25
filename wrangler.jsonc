@@ -1,0 +1,8 @@
+{
+  "name": "nama-worker-kamu",
+  "main": "src/workers.js",
+  "compatibility_date": "2026-03-25",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
+}
