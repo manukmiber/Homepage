@@ -1,17 +1,9 @@
 {
-  "name": "manukmiberaibeta",
-  "version": "1.0.0",
-  "description": "Cloudflare Worker dengan gpt-tokenizer",
-  "main": "workers.js",
-  "type": "module",
-  "scripts": {
-    "deploy": "wrangler deploy",
-    "dev": "wrangler dev"
-  },
+  "name": "worker-chat",
+  "version": "2.9.0",
+  "private": true,
+  "main": "worker.js",
   "dependencies": {
-    "gpt-tokenizer": "^2.1.2"
-  },
-  "devDependencies": {
-    "wrangler": "^3.0.0"
+    "gpt-tokenizer": "^2.8.1"
   }
 }
