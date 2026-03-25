@@ -1,3 +1,8 @@
-name = "worker"
-main = "worker.js"
-compatibility_date = "2025-01-01"
+{
+  "name": "nama-worker-kamu",
+  "main": "workers.js",
+  "compatibility_date": "2026-03-25",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
+}
