@@ -1,5 +1,9 @@
-// worker-chat.js
-import { encode } from 'gpt-tokenizer';
+// worker-chat.js  v2.9.0
+// Session 26: real BPE tokenizer (gpt-tokenizer/cl100k_base); THINKING_MODELS removed — read from auth.reasoning
+// Session 25: x-whitelabel: true on upstream requests; total_cost passed to record-tokens
+// Session 24: pass billable + paygoDiscount to recordTokens for PAYGO billing
+
+import { encode } from 'gpt-tokenizer';   // cl100k_base — no WASM, edge-safe
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -15,13 +19,6 @@ const PROVIDERS = {
   nano1: 'NANO1_KEY',
   nano2: 'NANO2_KEY',
 };
-
-const THINKING_MODELS = new Set([
-  'o1', 'o1-preview', 'o1-mini', 'o3', 'o3-mini', 'o4-mini',
-  'deepseek-r1', 'deepseek-reasoner',
-  'qwq-32b', 'qwq-32b-preview',
-  'gemini-2.5-pro', 'gemini-2.5-flash',
-]);
 
 // ─── Logging ──────────────────────────────────────────────────────────────────
 
@@ -116,49 +113,33 @@ async function withTimeout(promise, ms, fallback = null) {
 
 // ─── Cost Calculation ─────────────────────────────────────────────────────────
 
-// v2.8: prices are USD per 1 000 000 tokens (standard AI API convention).
-// auth response is expected to include inputPrice and outputPrice (both floats).
-// Falls back to 0 if not provided — totalCost will be 0 but never NaN/undefined.
 function calcTotalCost(inputTokens, outputTokens, reasoningTokens, inputPrice, outputPrice) {
   const inp = Number(inputPrice)  || 0;
   const out = Number(outputPrice) || 0;
-  // reasoning tokens billed at output rate (common convention; adjust if Nano differs)
   const cost = ((inputTokens * inp) + ((outputTokens + reasoningTokens) * out)) / 1_000_000;
-  return Math.round(cost * 1_000_000) / 1_000_000; // round to 6 decimal places (micro-USD)
+  return Math.round(cost * 1_000_000) / 1_000_000;
 }
 
-// ─── Real Token Counting (gpt-tokenizer / cl100k_base) ───────────────────────
-//
-// encode(text) returns a Uint32Array of BPE token IDs — .length = exact token count.
-// This is the same algorithm OpenAI's tiktoken uses for GPT-3.5 / GPT-4 / GPT-4o.
-//
-// Per-message overhead follows OpenAI's chat format specification:
-//   +3 tokens  — priming tokens for every conversation  (reply starts with <|im_start|>assistant)
-//   +4 tokens  — per message  (<|im_start|> role \n content <|im_end|>)
-//
-// Reference: https://platform.openai.com/docs/advanced-usage/managing-tokens
+// ─── Real Tokenizer (cl100k_base via gpt-tokenizer) ──────────────────────────
+// NanoGPT with x-whitelabel:true strips the usage field from responses.
+// We must count tokens locally. gpt-tokenizer gives real BPE counts (not estimates).
 
-function encodeLen(text) {
+function safeEncode(text) {
   if (!text || typeof text !== 'string') return 0;
-  try {
-    return encode(text).length;
-  } catch {
-    // encode() should never throw, but guard against edge cases
-    return Math.ceil(text.length / 4);
-  }
+  try { return encode(text).length; } catch { return 0; }
 }
 
 function countInputTokens(messages) {
   if (!Array.isArray(messages)) return 0;
-  let total = 3; // conversation-level priming
+  let total = 3; // base overhead per OpenAI spec
   for (const msg of messages) {
-    total += 4; // per-message overhead
+    total += 4;  // per-message overhead
     const content = msg.content;
     if (typeof content === 'string') {
-      total += encodeLen(content);
+      total += safeEncode(content);
     } else if (Array.isArray(content)) {
       for (const part of content) {
-        if (part?.type === 'text') total += encodeLen(part.text ?? '');
+        if (part?.type === 'text') total += safeEncode(part.text ?? '');
       }
     }
   }
@@ -225,8 +206,6 @@ async function callNextCompletionId(env) {
   }
 }
 
-// v2.8: totalCost now included in record-tokens payload
-// v2.7: billable + paygoDiscount for PAYGO billing
 function fireRecordTokens(ctx, env, apiKey, modelName, effort, ip, tokenPromise, billable, paygoDiscount) {
   ctx.waitUntil(
     tokenPromise
@@ -238,7 +217,7 @@ function fireRecordTokens(ctx, env, apiKey, modelName, effort, ip, tokenPromise,
             apiKey, modelName, effort, ip,
             inputTokens, outputTokens, reasoningTokens,
             billable, paygoDiscount,
-            totalCost,   // v2.8 — USD, rounded to 6 decimal places
+            totalCost,
           }),
         })
       )
@@ -280,8 +259,8 @@ const COMMAND_ARG_MODE = Object.fromEntries(
 const _ALL_NAMES = COMMAND_REGISTRY
   .flatMap(({ canonical, aliases }) => [canonical, ...aliases])
   .sort((a, b) => b.length - a.length).join('|');
-const SLASH_RE  = new RegExp(`^\\/(${_ALL_NAMES})(?:[ \\t]+([^\\n]*))?$`, 'm');
-const _EXAMPLE  = {
+const SLASH_RE = new RegExp(`^\\/(${_ALL_NAMES})(?:[ \\t]+([^\\n]*))?$`, 'm');
+const _EXAMPLE = {
   weather: 'Tokyo', crypto: 'btc', rate: 'usd idr',
   jobs: 'python developer', wiki: 'black hole', news: 'tech', time: 'london',
 };
@@ -381,8 +360,8 @@ function stripChunk(parsed) {
     }
     if (choice.delta && typeof choice.delta === 'object') {
       delete choice.delta.role;
-      if (choice.delta.content === '')          delete choice.delta.content;
-      if (choice.delta.reasoning === '')        delete choice.delta.reasoning;
+      if (choice.delta.content === '')           delete choice.delta.content;
+      if (choice.delta.reasoning === '')         delete choice.delta.reasoning;
       if (choice.delta.reasoning_content === '') delete choice.delta.reasoning_content;
     }
     const deltaKeys       = Object.keys(choice.delta ?? {}).length;
@@ -396,20 +375,9 @@ function stripChunk(parsed) {
   return parsed;
 }
 
-// ─── SSE Sanitizer + Real Tokenizer ──────────────────────────────────────────
-//
-// Token count priority (most → least accurate):
-//   1. Upstream usage chunk  — Nano sends a final SSE chunk with usage field.
-//                              Captured here BEFORE stripChunk removes it.
-//                              Fields checked: prompt_tokens, completion_tokens,
-//                              reasoning_tokens | thinking_tokens | reasoning_completion_tokens
-//   2. gpt-tokenizer fallback — encode() on the accumulated output/reasoning text.
-//                               Used when upstream didn't send a usage chunk.
-//   3. Pre-call inputTokens  — countInputTokens() via gpt-tokenizer on the messages
-//                               array. Used for inputTokens when upstream usage
-//                               doesn't include prompt_tokens.
-//
-// v2.9: estimateTokens() removed. All token counts are now exact BPE counts.
+// ─── SSE Sanitizer ────────────────────────────────────────────────────────────
+// NanoGPT with x-whitelabel:true does NOT send usage chunks.
+// Token counts come entirely from our local real tokenizer (gpt-tokenizer/cl100k_base).
 
 function sanitizeUpstreamStream(rawStream, completionId, onUsage, inputTokens, inputPrice, outputPrice) {
   const decoder    = new TextDecoder();
@@ -419,26 +387,16 @@ function sanitizeUpstreamStream(rawStream, completionId, onUsage, inputTokens, i
   let   errCount   = 0;
   const idOverride = completionId != null ? String(completionId) : null;
 
-  // Accumulated streaming text — used as fallback if upstream skips the usage chunk
   let outputText    = '';
   let reasoningText = '';
-
-  // Upstream usage chunk — populated if Nano sends it (highest accuracy)
-  let upstreamInput     = null; // prompt_tokens from upstream
-  let upstreamOutput    = null; // completion_tokens from upstream
-  let upstreamReasoning = null; // reasoning_tokens from upstream
 
   function fireUsage() {
     if (usageFired) return;
     usageFired = true;
-
-    // Prefer upstream counts; fall back to gpt-tokenizer on accumulated text
-    const finalInput     = upstreamInput     ?? inputTokens;
-    const finalOutput    = upstreamOutput    ?? encodeLen(outputText);
-    const finalReasoning = upstreamReasoning ?? encodeLen(reasoningText);
-
-    const totalCost = calcTotalCost(finalInput, finalOutput, finalReasoning, inputPrice, outputPrice);
-    try { onUsage({ inputTokens: finalInput, outputTokens: finalOutput, reasoningTokens: finalReasoning, totalCost }); } catch { /* no-op */ }
+    const outputTokens    = safeEncode(outputText);
+    const reasoningTokens = safeEncode(reasoningText);
+    const totalCost = calcTotalCost(inputTokens, outputTokens, reasoningTokens, inputPrice, outputPrice);
+    try { onUsage({ inputTokens, outputTokens, reasoningTokens, totalCost }); } catch { /* no-op */ }
   }
 
   function processChunk(raw, ctrl) {
@@ -455,25 +413,6 @@ function sanitizeUpstreamStream(rawStream, completionId, onUsage, inputTokens, i
       return;
     }
 
-    // ── Capture upstream usage BEFORE stripChunk removes it ──────────────────
-    // Nano sends a final usage chunk: { usage: { prompt_tokens, completion_tokens, ... } }
-    // Some models also include reasoning_tokens / thinking_tokens.
-    if (parsed.usage && typeof parsed.usage === 'object') {
-      const u = parsed.usage;
-      const pt = Number(u.prompt_tokens);
-      const ct = Number(u.completion_tokens);
-      const rt = Number(
-        u.reasoning_tokens             ??
-        u.thinking_tokens              ??
-        u.reasoning_completion_tokens  ??
-        NaN
-      );
-      if (Number.isFinite(pt) && pt >= 0) upstreamInput     = pt;
-      if (Number.isFinite(ct) && ct >= 0) upstreamOutput    = ct;
-      if (Number.isFinite(rt) && rt >= 0) upstreamReasoning = rt;
-    }
-
-    // ── Accumulate delta text for gpt-tokenizer fallback ─────────────────────
     if (Array.isArray(parsed.choices)) {
       for (const choice of parsed.choices) {
         const d = choice.delta;
@@ -517,9 +456,7 @@ function sanitizeUpstreamStream(rawStream, completionId, onUsage, inputTokens, i
         if (dataLine) processChunk(dataLine.slice(6).trim(), ctrl);
       }
       fireUsage();
-      if (errCount > 0) {
-        logWarn('sanitize', 'Stream completed with dropped chunks', { errCount });
-      }
+      if (errCount > 0) logWarn('sanitize', 'Stream completed with dropped chunks', { errCount });
     },
   }));
 }
@@ -697,14 +634,13 @@ async function handleProxy(req, env, ctx) {
   }
 
   const cfMeta = extractCfMeta(req);
+  const auth   = await callAuthorize(env, apiKey, modelName, effort, ip, cfMeta, ua);
 
-  const auth = await callAuthorize(env, apiKey, modelName, effort, ip, cfMeta, ua);
   if (!auth?.ok) {
     logWarn(lctx, 'auth_failed', { err: auth?.error });
     const errStr = String(auth?.error || '');
     const isRate = errStr.toLowerCase().includes('rate');
 
-    // Session 24: handle insufficient_balance
     if (auth?.code === 'no_balance' || errStr === 'insufficient_balance') {
       return jsonErr(auth?.message || 'Insufficient PAYGO balance. Please top up.', 402);
     }
@@ -730,14 +666,10 @@ async function handleProxy(req, env, ctx) {
     return jsonErr(authMsg, 403, authCode ? { code: authCode } : {});
   }
 
-  // v2.7: capture billable flags from auth
   const billable      = !!auth.billable;
   const paygoDiscount = Number(auth.paygoDiscount) || 0;
-
-  // v2.8: capture per-token prices from auth (USD per 1M tokens)
-  // worker-account authorize must return these from the models table
-  const inputPrice  = Number(auth.inputPrice)  || 0;
-  const outputPrice = Number(auth.outputPrice) || 0;
+  const inputPrice    = Number(auth.inputPrice)    || 0;
+  const outputPrice   = Number(auth.outputPrice)   || 0;
 
   const provider    = auth.provider || 'nano1';
   const keyBinding  = PROVIDERS[provider];
@@ -747,7 +679,8 @@ async function handleProxy(req, env, ctx) {
     return jsonErr('Provider configuration error. Please contact support.', 503);
   }
 
-  const isThinkingModel = THINKING_MODELS.has(modelName) || effort === 'high';
+  // auth.reasoning comes from models.reasoning column in D1 — no hardcoded list needed
+  const isThinkingModel = !!auth.reasoning || effort === 'high';
   if (!isThinkingModel) {
     await new Promise(r => setTimeout(r, GRACE_MS));
   }
@@ -760,7 +693,6 @@ async function handleProxy(req, env, ctx) {
     stream: true,
   });
 
-  // v2.9: countInputTokens now uses gpt-tokenizer (real BPE counts)
   const inputTokens = countInputTokens(bodyObj.messages);
 
   const [upstream, completionId] = await Promise.all([
@@ -771,7 +703,7 @@ async function handleProxy(req, env, ctx) {
         headers: {
           'Content-Type':  'application/json',
           'Authorization': `Bearer ${providerKey}`,
-          'x-whitelabel':  'true',   // v2.8 — white-label: hide our identity from Nano
+          'x-whitelabel':  'true',
         },
         body: upstreamBody,
       }
@@ -789,40 +721,24 @@ async function handleProxy(req, env, ctx) {
   if (!upstream.ok) {
     const { msg, raw } = await extractUpstreamError(upstream);
     logError(lctx, 'upstream_bad_status', { status: upstream.status, raw: raw.slice(0, 200) });
-    if (upstream.status >= 400 && upstream.status < 500) {
-      return jsonErr(msg, upstream.status);
-    }
+    if (upstream.status >= 400 && upstream.status < 500) return jsonErr(msg, upstream.status);
     return jsonErr(msg, 502);
   }
 
   let resolveTokens;
   const tokenPromise = new Promise(resolve => { resolveTokens = resolve; });
 
-  // v2.7+v2.8: billable + paygoDiscount + totalCost forwarded to record-tokens
   fireRecordTokens(ctx, env, apiKey, modelName, effort, ip, tokenPromise, billable, paygoDiscount);
 
   logInfo(lctx, 'proxied', {
-    model:        modelName,
-    effort:       effort || '(none)',
-    provider,
-    hasTool:      !!slash,
-    inputTokens,
-    completionId: completionId ?? '(upstream-id)',
-    billable,
-    inputPrice,
-    outputPrice,
+    model: modelName, effort: effort || '(none)', provider,
+    hasTool: !!slash, inputTokens, completionId: completionId ?? '(upstream-id)',
+    billable, isThinkingModel, inputPrice, outputPrice,
   });
 
-  // v2.8: pass pricing into sanitizer so totalCost is computed when stream ends
-  // v2.9: sanitizer now captures upstream usage chunk + falls back to gpt-tokenizer
   const cleanStream  = sanitizeUpstreamStream(upstream.body, completionId, resolveTokens, inputTokens, inputPrice, outputPrice);
-  const mergedStream = toolDisplayStream
-    ? concatStreams(toolDisplayStream, cleanStream)
-    : cleanStream;
-
-  const finalStream = wrapWithKeepalive(mergedStream);
-
-  return sseResponse(finalStream);
+  const mergedStream = toolDisplayStream ? concatStreams(toolDisplayStream, cleanStream) : cleanStream;
+  return sseResponse(wrapWithKeepalive(mergedStream));
 }
 
 // ─── Entry Point ──────────────────────────────────────────────────────────────
