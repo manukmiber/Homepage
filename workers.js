@@ -1,16 +1,4 @@
-// worker-chat.js  v2.9.0
-// Session 26: real tokenizer via gpt-tokenizer (cl100k_base, same as tiktoken).
-//             Upstream usage chunk now captured before strip → used first.
-//             gpt-tokenizer used as fallback when upstream doesn't send usage.
-//             estimateTokens() removed entirely.
-// Session 25: x-whitelabel: true on upstream requests; total_cost passed to record-tokens
-// Session 24: pass billable + paygoDiscount to recordTokens for PAYGO billing
-
-// ─── Real Tokenizer ───────────────────────────────────────────────────────────
-// gpt-tokenizer: pure-JS cl100k_base (same encoding as OpenAI tiktoken).
-// Zero WASM, zero native bindings — runs natively in Cloudflare Workers.
-// Dashboard setup: Workers editor → "+" (npm packages) → add "gpt-tokenizer"
-// Docs: https://github.com/nicktindall/gpt-tokenizer
+// worker-chat.js
 import { encode } from 'gpt-tokenizer';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
