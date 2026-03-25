@@ -2,7 +2,7 @@
   "name": "manukmiberaibeta",
   "version": "1.0.0",
   "description": "Cloudflare Worker dengan gpt-tokenizer",
-  "main": "src/workers.js",
+  "main": "workers.js",
   "type": "module",
   "scripts": {
     "deploy": "wrangler deploy",
