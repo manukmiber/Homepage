@@ -7,7 +7,7 @@
 <meta name="description" content="Three roleplay models behind an OpenAI-compatible endpoint. Exact token counting, pricing that follows thinking effort, usage billed as USDT invoices.">
 <meta name="color-scheme" content="light dark">
 <meta property="og:title" content="ZeikoAI — OpenAI-compatible roleplay API">
-<meta property="og:description" content="Change the base URL and the models run. SSE streaming, 128K context, three pricing bands.">
+<meta property="og:description" content="Change the base URL and the models run. SSE streaming, 256K context, three pricing bands.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><path d='M21 9H11l6 6-6 8h10' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>">
 <link rel="stylesheet" href="css/style.css">
@@ -73,7 +73,7 @@
           <span class="term-title">example request</span>
           <button class="copy" type="button" data-copy="#heroCode">Copy</button>
         </figcaption>
-        <pre class="term-body"><code id="heroCode">curl https://ai.zeiko.biz.id.com/v1/chat/completions \
+        <pre class="term-body"><code id="heroCode">curl https://ai.zeiko.biz.id/v1/chat/completions \
   -H "Authorization: Bearer sk-zeiko-..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -89,45 +89,10 @@
     <div class="wrap">
       <dl class="stats">
         <div><dt>Models</dt><dd>3</dd></div>
-        <div><dt>Context</dt><dd>128K</dd></div>
+        <div><dt>Context</dt><dd>256K</dd></div>
         <div><dt>Max output</dt><dd>8K</dd></div>
         <div><dt>Pricing bands</dt><dd>3</dd></div>
       </dl>
-    </div>
-  </section>
-
-  <!-- ======================================================== features -->
-  <section class="section" id="features">
-    <div class="wrap">
-      <h2 class="sec-title">What you get</h2>
-      <p class="sec-lede">An API you already know how to call, with the accounting done for you.</p>
-
-      <div class="grid cards">
-        <article class="card">
-          <h3>Drop-in OpenAI</h3>
-          <p><code>/v1/chat/completions</code>, <code>/v1/completions</code>, <code>/v1/models</code> and <code>/v1/embeddings</code> — also without the <code>/v1</code> prefix, since some clients add it themselves.</p>
-        </article>
-        <article class="card">
-          <h3>Tokens counted, not guessed</h3>
-          <p>Each model's own tokenizer does the counting, so the number you are billed for is the number the model actually read — including non-Latin text, where estimates drift.</p>
-        </article>
-        <article class="card">
-          <h3>Three pricing bands</h3>
-          <p>One standard rate, a higher one when you ask for maximum thinking, a cheaper one when thinking is off. The band is picked from the <code>reasoning_effort</code> on your request.</p>
-        </article>
-        <article class="card">
-          <h3>Clean streaming</h3>
-          <p>Server-sent events with a consistent envelope — <code>id</code>, <code>model</code> and <code>created</code> stay stable from the first delta to <code>[DONE]</code>.</p>
-        </article>
-        <article class="card">
-          <h3>Usage in the open</h3>
-          <p>Requests, tokens and cost, per key and split per model. The price recorded is the price at the moment the request ran, so changing rates never rewrites yesterday's bill.</p>
-        </article>
-        <article class="card">
-          <h3>Two kinds of key</h3>
-          <p><strong>Company</strong> keys sit in front of many end users and carry each user's own id; <strong>private</strong> keys are a single holder — and they are never rate-paced.</p>
-        </article>
-      </div>
     </div>
   </section>
 
