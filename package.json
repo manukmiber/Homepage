@@ -1,9 +1,13 @@
 {
-  "name": "worker-chat",
-  "version": "2.9.0",
+  "name": "proxychat",
+  "version": "0.1.0",
   "private": true,
-  "main": "worker.js",
-  "dependencies": {
-    "gpt-tokenizer": "^2.8.1"
+  "description": "Landing page ZeikoAI — static, dilayani Cloudflare Workers static assets.",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
   }
 }
