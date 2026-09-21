@@ -1,30 +1,30 @@
-# proxychat — landing page ZeikoAI
+# proxychat — ZeikoAI landing page
 
-Halaman statis untuk relay [chtting-relay](https://github.com/manukmiber/Chtting-relay-worker):
-API roleplay OpenAI-compatible dengan tiga model, harga tiga pita, dan tagihan USDT.
+A static one-page site for the ZeikoAI API: three roleplay models behind an
+OpenAI-compatible endpoint, three pricing bands, USDT invoicing.
 
-Isi repo ini **hanya halaman**, tidak ada kode relay. Worker lama (`workers.js`)
-sudah dikosongkan dari branch `main`; riwayatnya masih tersimpan di git kalau
-suatu saat perlu dilihat lagi (`git log --all`, commit `c2df3f7` ke belakang).
+This repository holds the page only. The old Cloudflare worker that used to live
+here was removed from `main`; it is still in git history if it is ever needed
+(`git log --all`, commit `c2df3f7` and earlier).
 
-## Isi
+## Layout
 
 ```
 public/
-  index.html     satu halaman: hero, fitur, model, harga, contoh kode, FAQ, kontak
-  css/style.css  token warna sama dengan dashboard relay, terang + gelap
-  js/main.js     tema, menu mobile, tab contoh kode, tombol salin
-wrangler.jsonc   dilayani sebagai Cloudflare Workers static assets
+  index.html     one page: hero, features, models, pricing, code samples, FAQ, contact
+  css/style.css  colour tokens for light and dark
+  js/main.js     theme toggle, mobile menu, code tabs, copy button
+wrangler.jsonc   served as Cloudflare Workers static assets
 ```
 
-Tidak ada build step, tidak ada CDN, tidak ada framework. Buka
-`public/index.html` langsung di browser dan halamannya sudah utuh.
+No build step, no CDN, no framework. Open `public/index.html` straight from disk
+and the page is already complete.
 
-## Jalankan lokal
+## Run locally
 
 ```bash
 npx wrangler dev          # http://localhost:8787
-# atau tanpa wrangler:
+# or without wrangler:
 python3 -m http.server -d public 8080
 ```
 
@@ -34,14 +34,13 @@ python3 -m http.server -d public 8080
 npx wrangler deploy
 ```
 
-Ganti `name` di `wrangler.jsonc` kalau nama worker-nya beda, lalu pasang custom
-domain lewat dashboard Cloudflare.
+Change `name` in `wrangler.jsonc` if the worker is called something else, then
+attach a custom domain from the Cloudflare dashboard.
 
-## Yang masih harus diisi
+## Still to fill in
 
-- **Kontak** di bagian "Minta API key" masih `halo@example.com` — ganti di
-  `public/index.html` sebelum halaman dibagikan.
-- **Base URL** di contoh kode masih `https://api.contoh-kamu.com` — ganti dengan
-  hostname tunnel/domain yang benar-benar dipakai.
-- Harga di halaman mengikuti `config/config.example.json` di repo relay. Kalau
-  tarifnya berubah, tabel di `#harga` dan kartu model ikut diperbarui.
+- **Contact** in the "Request a key" section is still `hello@example.com` —
+  replace it in `public/index.html` before the page is shared.
+- **Base URL** in the code samples is still `https://api.your-domain.com` —
+  replace it with the hostname actually handed to callers.
+- If rates change, update both the `#pricing` table and the model cards.

@@ -2,7 +2,7 @@
   "name": "proxychat",
   "version": "0.1.0",
   "private": true,
-  "description": "Landing page ZeikoAI — static, dilayani Cloudflare Workers static assets.",
+  "description": "ZeikoAI landing page — static, served as Cloudflare Workers static assets.",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy"

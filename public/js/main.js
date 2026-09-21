@@ -1,20 +1,20 @@
-/* ZeikoAI landing — JS seperlunya saja: tema, menu, tab kode, tombol salin.
- * Halaman ini tetap terbaca utuh kalau file ini gagal dimuat. */
+/* ZeikoAI landing — only what the page needs: theme, menu, code tabs, copy.
+ * The page still reads fine if this file never loads. */
 
 (function () {
   'use strict';
 
   var root = document.documentElement;
 
-  /* ---------------------------------------------------------- tema */
-  /* localStorage bisa melempar (private window, site data diblokir), jadi
-     setiap aksesnya dibungkus — halaman tetap jalan dengan tema sistem. */
+  /* --------------------------------------------------------- theme */
+  /* localStorage can throw (private window, blocked site data), so every
+     access is wrapped — the page falls back to the system theme. */
 
   function readTheme() {
     try { return localStorage.getItem('zeiko-theme'); } catch (e) { return null; }
   }
   function writeTheme(v) {
-    try { localStorage.setItem('zeiko-theme', v); } catch (e) { /* abaikan */ }
+    try { localStorage.setItem('zeiko-theme', v); } catch (e) { /* ignore */ }
   }
 
   var saved = readTheme();
@@ -32,7 +32,7 @@
     });
   }
 
-  /* ----------------------------------------------------- menu mobile */
+  /* ----------------------------------------------------- mobile menu */
 
   var nav = document.getElementById('nav');
   var navToggle = document.getElementById('navToggle');
@@ -49,7 +49,7 @@
     });
   }
 
-  /* -------------------------------------------------------- tab kode */
+  /* --------------------------------------------------------- code tabs */
 
   var TITLES = {
     'tab-curl': 'chat completion, streaming',
@@ -73,7 +73,7 @@
     });
   });
 
-  /* ------------------------------------------------------ tombol salin */
+  /* -------------------------------------------------------- copy button */
 
   document.querySelectorAll('.copy').forEach(function (btn) {
     btn.addEventListener('click', function () {
@@ -82,7 +82,7 @@
       var text = target.textContent;
       var done = function () {
         var before = btn.textContent;
-        btn.textContent = 'Tersalin';
+        btn.textContent = 'Copied';
         setTimeout(function () { btn.textContent = before; }, 1600);
       };
 
@@ -102,11 +102,11 @@
     ta.style.opacity = '0';
     document.body.appendChild(ta);
     ta.select();
-    try { document.execCommand('copy'); done(); } catch (e) { /* abaikan */ }
+    try { document.execCommand('copy'); done(); } catch (e) { /* ignore */ }
     document.body.removeChild(ta);
   }
 
-  /* -------------------------------------------------------- tahun footer */
+  /* -------------------------------------------------------- footer year */
 
   var year = document.getElementById('year');
   if (year) year.textContent = String(new Date().getFullYear());

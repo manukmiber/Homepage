@@ -1,20 +1,20 @@
 <!doctype html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ZeikoAI — API roleplay OpenAI-compatible</title>
-<meta name="description" content="Tiga model roleplay lewat endpoint yang sama persis dengan OpenAI. Token dihitung tokenizer asli, harga mengikuti thinking effort, tagihan keluar sebagai invoice USDT.">
+<title>ZeikoAI — OpenAI-compatible roleplay API</title>
+<meta name="description" content="Three roleplay models behind an OpenAI-compatible endpoint. Exact token counting, pricing that follows thinking effort, usage billed as USDT invoices.">
 <meta name="color-scheme" content="light dark">
-<meta property="og:title" content="ZeikoAI — API roleplay OpenAI-compatible">
-<meta property="og:description" content="Ganti base URL, model jalan. Streaming SSE, konteks 128K, harga tiga pita.">
+<meta property="og:title" content="ZeikoAI — OpenAI-compatible roleplay API">
+<meta property="og:description" content="Change the base URL and the models run. SSE streaming, 128K context, three pricing bands.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><path d='M21 9H11l6 6-6 8h10' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<a class="skip" href="#main">Lompat ke konten</a>
+<a class="skip" href="#main">Skip to content</a>
 
 <header class="topbar">
   <div class="wrap topbar-in">
@@ -23,19 +23,19 @@
       <span class="brand-name">ZeikoAI</span>
     </a>
 
-    <nav class="nav" id="nav" aria-label="Navigasi utama">
-      <a href="#model">Model</a>
-      <a href="#harga">Harga</a>
-      <a href="#mulai">Mulai pakai</a>
-      <a href="#tanya">Tanya jawab</a>
-      <a class="btn btn-sm btn-primary" href="#kontak">Minta API key</a>
+    <nav class="nav" id="nav" aria-label="Main navigation">
+      <a href="#models">Models</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#start">Get started</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn btn-sm btn-primary" href="#contact">Request a key</a>
     </nav>
 
     <div class="topbar-tools">
-      <button class="icon-btn" id="theme" type="button" aria-label="Ganti tema terang/gelap">
+      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
         <span aria-hidden="true">◐</span>
       </button>
-      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="nav">
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
         <span aria-hidden="true">☰</span>
       </button>
     </div>
@@ -48,38 +48,38 @@
   <section class="hero" id="top">
     <div class="wrap hero-in">
       <div class="hero-copy">
-        <p class="eyebrow">OpenAI-compatible · Streaming SSE · Konteks 128K</p>
-        <h1>API roleplay yang tinggal ganti <em>base URL</em>.</h1>
+        <p class="eyebrow">OpenAI-compatible · SSE streaming · 128K context</p>
+        <h1>Roleplay models, one <em>base URL</em> away.</h1>
         <p class="lede">
-          Tiga model roleplay di balik endpoint yang bentuknya sama persis dengan
-          OpenAI. Token dihitung pakai tokenizer asli tiap model — bukan tebakan
-          karakter dibagi empat — dan tarifnya mengikuti seberapa keras model
-          diminta berpikir.
+          Three roleplay models behind an endpoint shaped exactly like OpenAI's.
+          Tokens are counted with each model's real tokenizer — not characters
+          divided by four — and the rate follows how hard you ask the model to
+          think.
         </p>
         <div class="cta">
-          <a class="btn btn-primary" href="#kontak">Minta API key</a>
-          <a class="btn btn-ghost" href="#harga">Lihat harga</a>
+          <a class="btn btn-primary" href="#contact">Request a key</a>
+          <a class="btn btn-ghost" href="#pricing">See pricing</a>
         </div>
         <ul class="ticks">
-          <li>SDK OpenAI resmi jalan tanpa ubah kode</li>
-          <li>Rincian pemakaian per key dan per model</li>
-          <li>Invoice USDT, bukan langganan bulanan buta</li>
+          <li>Official OpenAI SDKs work unchanged</li>
+          <li>Usage broken down per key and per model</li>
+          <li>USDT invoices, not a blind monthly subscription</li>
         </ul>
       </div>
 
-      <figure class="term" aria-label="Contoh panggilan API">
+      <figure class="term" aria-label="Example API call">
         <figcaption class="term-bar">
           <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
-          <span class="term-title">contoh panggilan</span>
-          <button class="copy" type="button" data-copy="#heroCode">Salin</button>
+          <span class="term-title">example request</span>
+          <button class="copy" type="button" data-copy="#heroCode">Copy</button>
         </figcaption>
-        <pre class="term-body"><code id="heroCode">curl https://api.contoh-kamu.com/v1/chat/completions \
-  -H "Authorization: Bearer sk-relay-..." \
+        <pre class="term-body"><code id="heroCode">curl https://api.your-domain.com/v1/chat/completions \
+  -H "Authorization: Bearer sk-zeiko-..." \
   -H "Content-Type: application/json" \
   -d '{
     "model": "Jagad-512B-V1",
     "messages": [
-      {"role": "user", "content": "Halo, kenalan dong."}
+      {"role": "user", "content": "Hi, tell me who you are."}
     ],
     "stream": true
   }'</code></pre>
@@ -88,86 +88,86 @@
 
     <div class="wrap">
       <dl class="stats">
-        <div><dt>Model siap pakai</dt><dd>3</dd></div>
-        <div><dt>Konteks</dt><dd>128K</dd></div>
-        <div><dt>Output maksimum</dt><dd>8K</dd></div>
-        <div><dt>Pita harga</dt><dd>3</dd></div>
+        <div><dt>Models</dt><dd>3</dd></div>
+        <div><dt>Context</dt><dd>128K</dd></div>
+        <div><dt>Max output</dt><dd>8K</dd></div>
+        <div><dt>Pricing bands</dt><dd>3</dd></div>
       </dl>
     </div>
   </section>
 
-  <!-- ======================================================== fitur -->
-  <section class="section" id="fitur">
+  <!-- ======================================================== features -->
+  <section class="section" id="features">
     <div class="wrap">
-      <h2 class="sec-title">Yang kamu dapat</h2>
-      <p class="sec-lede">Relay-nya yang mengurus bagian membosankan: terjemahan nama model, hitung token, bentuk respons, dan pembukuan.</p>
+      <h2 class="sec-title">What you get</h2>
+      <p class="sec-lede">An API you already know how to call, with the accounting done for you.</p>
 
       <div class="grid cards">
         <article class="card">
           <h3>Drop-in OpenAI</h3>
-          <p><code>/v1/chat/completions</code>, <code>/v1/completions</code>, <code>/v1/models</code> dan <code>/v1/embeddings</code> — juga tanpa awalan <code>/v1</code>, karena sebagian klien menambahkannya sendiri.</p>
+          <p><code>/v1/chat/completions</code>, <code>/v1/completions</code>, <code>/v1/models</code> and <code>/v1/embeddings</code> — also without the <code>/v1</code> prefix, since some clients add it themselves.</p>
         </article>
         <article class="card">
-          <h3>Token dihitung, bukan ditaksir</h3>
-          <p>Tokenizer asli tiap model, jadi angka yang kamu bayar sama dengan angka yang dihitung backend — bukan estimasi yang meleset di teks non-Latin.</p>
+          <h3>Tokens counted, not guessed</h3>
+          <p>Each model's own tokenizer does the counting, so the number you are billed for is the number the model actually read — including non-Latin text, where estimates drift.</p>
         </article>
         <article class="card">
-          <h3>Harga tiga pita</h3>
-          <p>Satu tarif baku, satu lebih mahal saat kamu minta thinking maksimum, satu lebih murah saat thinking dimatikan. Pita dipilih dari <code>reasoning_effort</code> permintaanmu.</p>
+          <h3>Three pricing bands</h3>
+          <p>One standard rate, a higher one when you ask for maximum thinking, a cheaper one when thinking is off. The band is picked from the <code>reasoning_effort</code> on your request.</p>
         </article>
         <article class="card">
-          <h3>Streaming yang rapi</h3>
-          <p>SSE dengan amplop respons kami sendiri — <code>id</code>, <code>model</code>, dan <code>created</code> konsisten, tanpa sisa jejak backend di tengah stream.</p>
+          <h3>Clean streaming</h3>
+          <p>Server-sent events with a consistent envelope — <code>id</code>, <code>model</code> and <code>created</code> stay stable from the first delta to <code>[DONE]</code>.</p>
         </article>
         <article class="card">
-          <h3>Pemakaian terbuka</h3>
-          <p>Berapa request, berapa token, dan berapa biayanya — per key dan dipecah per model. Harga yang tercatat adalah harga saat request itu jalan.</p>
+          <h3>Usage in the open</h3>
+          <p>Requests, tokens and cost, per key and split per model. The price recorded is the price at the moment the request ran, so changing rates never rewrites yesterday's bill.</p>
         </article>
         <article class="card">
-          <h3>Dua jenis key</h3>
-          <p><strong>Company</strong> untuk reseller yang membawa pengguna akhirnya sendiri; <strong>private</strong> untuk satu pemegang — dan yang private tidak pernah direm.</p>
+          <h3>Two kinds of key</h3>
+          <p><strong>Company</strong> keys sit in front of many end users and carry each user's own id; <strong>private</strong> keys are a single holder — and they are never rate-paced.</p>
         </article>
       </div>
     </div>
   </section>
 
-  <!-- ======================================================== model -->
-  <section class="section section-tint" id="model">
+  <!-- ========================================================= models -->
+  <section class="section section-tint" id="models">
     <div class="wrap">
-      <h2 class="sec-title">Tiga model</h2>
-      <p class="sec-lede">Nama yang kamu panggil adalah nama yang kamu lihat di respons. Semuanya konteks 128K, output sampai 8.192 token, streaming.</p>
+      <h2 class="sec-title">The models</h2>
+      <p class="sec-lede">The name you call is the name you see in the response. All three: 128K context, up to 8,192 output tokens, streaming.</p>
 
       <div class="grid models">
         <article class="card model">
           <span class="badge badge-ok">SFW</span>
           <h3>Jagad 512B V1</h3>
           <p class="model-id"><code>Jagad-512B-V1</code></p>
-          <p>Roleplay aman untuk umum. Pilihan bawaan kalau kamu ragu harus mulai dari mana.</p>
-          <p class="price"><span>$0,35</span> in · <span>$1,50</span> out <small>/ 1 jt token</small></p>
+          <p>Safe-for-work roleplay. The default pick when you are not sure where to start.</p>
+          <p class="price"><span>$0.35</span> in · <span>$1.50</span> out <small>/ 1M tokens</small></p>
         </article>
         <article class="card model">
-          <span class="badge badge-warn">Dewasa</span>
+          <span class="badge badge-warn">Adult</span>
           <h3>Asmarandana 512B V1</h3>
           <p class="model-id"><code>Asmarandana-512B-V1</code></p>
-          <p>Roleplay dewasa. Untuk pemanggil yang memang menyaring penggunanya sendiri.</p>
-          <p class="price"><span>$0,50</span> in · <span>$2,00</span> out <small>/ 1 jt token</small></p>
+          <p>Adult roleplay, for callers who gate their own users.</p>
+          <p class="price"><span>$0.50</span> in · <span>$2.00</span> out <small>/ 1M tokens</small></p>
         </article>
         <article class="card model">
-          <span class="badge badge-err">Tanpa batas</span>
+          <span class="badge badge-err">Unrestricted</span>
           <h3>Wissangeni 512B V1</h3>
           <p class="model-id"><code>Wissangeni-512B-V1</code></p>
-          <p>Roleplay tanpa pembatasan gaya. Tarifnya paling tinggi karena memang paling jarang menolak.</p>
-          <p class="price"><span>$0,80</span> in · <span>$4,00</span> out <small>/ 1 jt token</small></p>
+          <p>Unrestricted roleplay. The highest rate of the three, because it is the one that rarely says no.</p>
+          <p class="price"><span>$0.80</span> in · <span>$4.00</span> out <small>/ 1M tokens</small></p>
         </article>
       </div>
     </div>
   </section>
 
-  <!-- ======================================================== harga -->
-  <section class="section" id="harga">
+  <!-- ======================================================== pricing -->
+  <section class="section" id="pricing">
     <div class="wrap">
-      <h2 class="sec-title">Harga</h2>
-      <p class="sec-lede">USD per satu juta token. Tiga kolom terakhir adalah ketiga pitanya — yang dipakai ditentukan oleh thinking effort di request kamu.</p>
+      <h2 class="sec-title">Pricing</h2>
+      <p class="sec-lede">USD per million tokens. The last three columns are the three bands — which one applies is decided by the thinking effort on your request.</p>
 
       <div class="table-scroll">
         <table class="table">
@@ -178,21 +178,21 @@
               <th scope="col">Cache read</th>
               <th scope="col">Output</th>
               <th scope="col">Max thinking</th>
-              <th scope="col">Tanpa thinking</th>
+              <th scope="col">No thinking</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <th scope="row">Jagad-512B-V1</th>
-              <td>$0,35</td><td>$0,10</td><td>$1,50</td><td>$2,00</td><td>$1,20</td>
+              <td>$0.35</td><td>$0.10</td><td>$1.50</td><td>$2.00</td><td>$1.20</td>
             </tr>
             <tr>
               <th scope="row">Asmarandana-512B-V1</th>
-              <td>$0,50</td><td>$0,10</td><td>$2,00</td><td>$2,65</td><td>$1,60</td>
+              <td>$0.50</td><td>$0.10</td><td>$2.00</td><td>$2.65</td><td>$1.60</td>
             </tr>
             <tr>
               <th scope="row">Wissangeni-512B-V1</th>
-              <td>$0,80</td><td>$0,20</td><td>$4,00</td><td>$6,00</td><td>$3,50</td>
+              <td>$0.80</td><td>$0.20</td><td>$4.00</td><td>$6.00</td><td>$3.50</td>
             </tr>
           </tbody>
         </table>
@@ -200,28 +200,28 @@
 
       <div class="grid notes">
         <div class="note">
-          <h3>Pita mana yang kena?</h3>
-          <p><code>none</code> dan <code>minimal</code> masuk pita tanpa thinking; <code>low</code>, <code>medium</code>, <code>high</code> masuk pita baku; <code>max</code> masuk pita max thinking. Token reasoning dihitung sebagai token output di pita yang sedang berlaku.</p>
+          <h3>Which band applies?</h3>
+          <p><code>none</code> and <code>minimal</code> land in the no-thinking band; <code>low</code>, <code>medium</code> and <code>high</code> in the standard band; <code>max</code> in the max-thinking band. Reasoning tokens count as output tokens at the band's output rate.</p>
         </div>
         <div class="note">
-          <h3>Jawaban yang menolak</h3>
-          <p>Model yang menolak tetap membaca prompt-nya dulu, jadi tidak gratis — tapi juga tidak ditagih seharga jawaban penuh: <strong>$0,05 flat per request</strong>, menggantikan hitungan tokennya.</p>
+          <h3>Refusals</h3>
+          <p>A model that refuses still had to read the prompt first, so it is not free — but it is not billed as a full answer either: <strong>$0.05 flat per request</strong>, replacing the token count.</p>
         </div>
         <div class="note">
-          <h3>Tagihan</h3>
-          <p>Pemakaian dirangkum jadi invoice per periode: rincian per model, subtotal, pajak, total. Dibayar dalam <strong>USDT (TRC20)</strong>, dengan kurs IDR yang ikut tercetak di invoice.</p>
+          <h3>Billing</h3>
+          <p>Usage is summarised into an invoice per period: per-model breakdown, subtotal, tax, total. Paid in <strong>USDT (TRC20)</strong>, with the IDR rate printed on the invoice.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ======================================================== mulai -->
-  <section class="section section-tint" id="mulai">
+  <!-- ========================================================== start -->
+  <section class="section section-tint" id="start">
     <div class="wrap">
-      <h2 class="sec-title">Mulai pakai</h2>
-      <p class="sec-lede">Base URL dan API key dikirim bersama saat key dibuat. Sisanya sama seperti memanggil OpenAI.</p>
+      <h2 class="sec-title">Get started</h2>
+      <p class="sec-lede">Your base URL and API key arrive together when the key is issued. Everything after that is an ordinary OpenAI call.</p>
 
-      <div class="tabs" role="tablist" aria-label="Contoh kode">
+      <div class="tabs" role="tablist" aria-label="Code examples">
         <button class="tab is-on" role="tab" id="tab-curl"   aria-selected="true"  aria-controls="pane-curl">cURL</button>
         <button class="tab"       role="tab" id="tab-python" aria-selected="false" aria-controls="pane-python">Python</button>
         <button class="tab"       role="tab" id="tab-node"   aria-selected="false" aria-controls="pane-node">Node.js</button>
@@ -230,18 +230,18 @@
       <div class="term term-flat">
         <div class="term-bar">
           <span class="term-title" id="paneTitle">chat completion, streaming</span>
-          <button class="copy" type="button" data-copy=".pane:not([hidden]) code">Salin</button>
+          <button class="copy" type="button" data-copy=".pane:not([hidden]) code">Copy</button>
         </div>
 
         <div class="pane" role="tabpanel" id="pane-curl" aria-labelledby="tab-curl">
-<pre class="term-body"><code>curl https://api.contoh-kamu.com/v1/chat/completions \
+<pre class="term-body"><code>curl https://api.your-domain.com/v1/chat/completions \
   -H "Authorization: Bearer $ZEIKO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "Asmarandana-512B-V1",
     "messages": [
-      {"role": "system", "content": "Kamu pendengar yang sabar."},
-      {"role": "user",   "content": "Ceritakan ulang hariku, tapi versi heroik."}
+      {"role": "system", "content": "You are a patient listener."},
+      {"role": "user",   "content": "Retell my day, but make it heroic."}
     ],
     "reasoning_effort": "none",
     "stream": true
@@ -252,13 +252,13 @@
 <pre class="term-body"><code>from openai import OpenAI
 
 client = OpenAI(
-    base_url="https://api.contoh-kamu.com/v1",
-    api_key="sk-relay-...",
+    base_url="https://api.your-domain.com/v1",
+    api_key="sk-zeiko-...",
 )
 
 stream = client.chat.completions.create(
     model="Jagad-512B-V1",
-    messages=[{"role": "user", "content": "Halo, kenalan dong."}],
+    messages=[{"role": "user", "content": "Hi, tell me who you are."}],
     stream=True,
 )
 
@@ -270,13 +270,13 @@ for chunk in stream:
 <pre class="term-body"><code>import OpenAI from "openai";
 
 const client = new OpenAI({
-  baseURL: "https://api.contoh-kamu.com/v1",
+  baseURL: "https://api.your-domain.com/v1",
   apiKey: process.env.ZEIKO_API_KEY,
 });
 
 const stream = await client.chat.completions.create({
   model: "Wissangeni-512B-V1",
-  messages: [{ role: "user", content: "Halo, kenalan dong." }],
+  messages: [{ role: "user", content: "Hi, tell me who you are." }],
   stream: true,
 });
 
@@ -287,56 +287,56 @@ for await (const part of stream) {
       </div>
 
       <p class="fineprint">
-        <code>GET /v1/models</code> menjawab daftar model beserta harga ketiga pitanya,
-        jadi klien yang mau tahu tarif tidak perlu bertanya ke siapa pun.
+        <code>GET /v1/models</code> returns every model together with all three of its
+        pricing bands, so a client that wants to know the rate never has to ask anyone.
       </p>
     </div>
   </section>
 
-  <!-- ======================================================== tanya -->
-  <section class="section" id="tanya">
+  <!-- ============================================================ faq -->
+  <section class="section" id="faq">
     <div class="wrap narrow">
-      <h2 class="sec-title">Tanya jawab</h2>
+      <h2 class="sec-title">FAQ</h2>
 
       <details class="faq" open>
-        <summary>Perlu ganti kode klien saya?</summary>
-        <p>Tidak. Endpoint, bentuk request dan bentuk respons mengikuti OpenAI, jadi SDK resmi dan hampir semua klien pihak ketiga cukup diberi <code>base_url</code> dan API key baru.</p>
+        <summary>Do I have to change my client code?</summary>
+        <p>No. The endpoints, the request shape and the response shape follow OpenAI, so the official SDKs and most third-party clients only need a new <code>base_url</code> and API key.</p>
       </details>
 
       <details class="faq">
-        <summary>Bagaimana cara menghitung biayanya?</summary>
-        <p>Per token, per juta token, mengikuti tabel harga di atas — dengan pita yang dipilih dari <code>reasoning_effort</code> request kamu. Token input, cache read, output dan reasoning dicatat terpisah di setiap baris pemakaian.</p>
+        <summary>How is the cost worked out?</summary>
+        <p>Per token, per million tokens, following the table above — with the band chosen by the <code>reasoning_effort</code> on your request. Input, cache-read, output and reasoning tokens are recorded separately on every usage line.</p>
       </details>
 
       <details class="faq">
-        <summary>Apa bedanya key <em>company</em> dan <em>private</em>?</summary>
-        <p>Key <strong>company</strong> berdiri di depan banyak pengguna akhir: setiap panggilan membawa id penggunanya sendiri, dan id itu yang jadi rincian di invoice. Key <strong>private</strong> adalah satu pemegang — field <code>user</code> diabaikan, dan balasannya tidak direm.</p>
+        <summary>What is the difference between a <em>company</em> and a <em>private</em> key?</summary>
+        <p>A <strong>company</strong> key stands in front of many end users: every call carries its own user id, and that id is what appears on the invoice breakdown. A <strong>private</strong> key is a single holder — the <code>user</code> field is ignored, and responses are never paced.</p>
       </details>
 
       <details class="faq">
-        <summary>Kalau model menolak menjawab, tetap ditagih?</summary>
-        <p>Ya, tapi flat $0,05 per request, bukan seharga jawaban penuh. Penolakan dikenali dari kalimat penolakan di jawaban yang diucapkan — blok penalaran tidak ikut dihitung.</p>
+        <summary>If a model refuses, am I still billed?</summary>
+        <p>Yes, but at $0.05 flat for that request rather than the price of a full answer. A refusal is recognised from the spoken answer itself; reasoning blocks are not counted.</p>
       </details>
 
       <details class="faq">
-        <summary>Datanya disimpan di mana?</summary>
-        <p>Relay-nya berjalan di perangkat operator, bukan layanan pihak ketiga. Yang dicatat adalah metrik pemakaian dan potongan pratinjau untuk keperluan tagihan dan diagnosa.</p>
+        <summary>What gets stored?</summary>
+        <p>Usage metrics needed for billing and diagnostics — counts, timings, status — plus a short preview of the prompt and answer. Nothing is sold or shared.</p>
       </details>
     </div>
   </section>
 
-  <!-- ======================================================== kontak -->
-  <section class="section section-tint" id="kontak">
+  <!-- ======================================================== contact -->
+  <section class="section section-tint" id="contact">
     <div class="wrap narrow center">
-      <h2 class="sec-title">Minta API key</h2>
-      <p class="sec-lede">Sebutkan model yang mau dipakai dan perkiraan volumenya. Key dikirim sekali bersama base URL-nya.</p>
+      <h2 class="sec-title">Request a key</h2>
+      <p class="sec-lede">Tell us which models you want and roughly what volume you expect. The key is sent once, together with your base URL.</p>
 
-      <!-- TODO: ganti dengan kontak asli (email / Telegram / WhatsApp). -->
+      <!-- TODO: replace with the real contact (email / Telegram / WhatsApp). -->
       <div class="contact">
-        <a class="btn btn-primary" href="mailto:halo@example.com?subject=Minta%20API%20key%20ZeikoAI">halo@example.com</a>
-        <a class="btn btn-ghost" href="https://github.com/manukmiber/Chtting-relay-worker" rel="noopener">Lihat relay di GitHub</a>
+        <a class="btn btn-primary" href="mailto:hello@example.com?subject=ZeikoAI%20API%20key%20request">hello@example.com</a>
+        <a class="btn btn-ghost" href="#pricing">Review pricing first</a>
       </div>
-      <p class="fineprint">Kontak di atas masih contoh — ganti di <code>public/index.html</code> sebelum dibagikan.</p>
+      <p class="fineprint">The address above is still a placeholder — replace it in <code>public/index.html</code> before sharing the page.</p>
     </div>
   </section>
 
@@ -345,11 +345,11 @@ for await (const part of stream) {
 <footer class="footer">
   <div class="wrap footer-in">
     <p>© <span id="year">2026</span> ZeikoAI</p>
-    <nav aria-label="Tautan kaki">
-      <a href="#model">Model</a>
-      <a href="#harga">Harga</a>
-      <a href="#mulai">Mulai pakai</a>
-      <a href="https://github.com/manukmiber/Chtting-relay-worker" rel="noopener">GitHub</a>
+    <nav aria-label="Footer links">
+      <a href="#models">Models</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#start">Get started</a>
+      <a href="#contact">Contact</a>
     </nav>
   </div>
 </footer>

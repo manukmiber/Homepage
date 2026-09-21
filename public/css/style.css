@@ -1,9 +1,9 @@
-/* ZeikoAI landing — satu stylesheet, tanpa build step, tanpa CDN.
+/* ZeikoAI landing — one stylesheet, no build step, no CDN.
  *
- * Palet-nya sengaja sama dengan dashboard relay (public/css/app.css di repo
- * Chtting-relay-worker): setiap warna adalah token yang didefinisikan di
- * `:root` polos dulu, dan blok gelap hanya *mendefinisikan ulang*. Warna yang
- * hanya hidup di dalam media query akan hilang begitu tema dikunci terang.
+ * Every colour is a token defined on bare `:root` first, so the dark blocks
+ * below only ever *redefine*. A colour whose only definition lives inside a
+ * media query is a colour that disappears the moment somebody pins the theme
+ * the other way.
  */
 
 /* ================================================================ tokens */
