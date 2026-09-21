@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ZeikoAI — OpenAI-compatible roleplay API</title>
+<title>ZeikoAI OpenAI-compatible roleplay API</title>
 <meta name="description" content="Three roleplay models behind an OpenAI-compatible endpoint. Exact token counting, pricing that follows thinking effort, usage billed as USDT invoices.">
 <meta name="color-scheme" content="light dark">
 <meta property="og:title" content="ZeikoAI — OpenAI-compatible roleplay API">
@@ -48,7 +48,7 @@
   <section class="hero" id="top">
     <div class="wrap hero-in">
       <div class="hero-copy">
-        <p class="eyebrow">OpenAI-compatible · SSE streaming · 128K context</p>
+        <p class="eyebrow">OpenAI-compatible · SSE streaming · 256K context</p>
         <h1>Roleplay models, one <em>base URL</em> away.</h1>
         <p class="lede">
           Three roleplay models behind an endpoint shaped exactly like OpenAI's.
@@ -73,7 +73,7 @@
           <span class="term-title">example request</span>
           <button class="copy" type="button" data-copy="#heroCode">Copy</button>
         </figcaption>
-        <pre class="term-body"><code id="heroCode">curl https://api.your-domain.com/v1/chat/completions \
+        <pre class="term-body"><code id="heroCode">curl https://ai.zeiko.biz.id.com/v1/chat/completions \
   -H "Authorization: Bearer sk-zeiko-..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -234,7 +234,7 @@
         </div>
 
         <div class="pane" role="tabpanel" id="pane-curl" aria-labelledby="tab-curl">
-<pre class="term-body"><code>curl https://api.your-domain.com/v1/chat/completions \
+<pre class="term-body"><code>curl https://ai.zeiko.biz.id/v1/chat/completions \
   -H "Authorization: Bearer $ZEIKO_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -252,7 +252,7 @@
 <pre class="term-body"><code>from openai import OpenAI
 
 client = OpenAI(
-    base_url="https://api.your-domain.com/v1",
+    base_url="https://ai.zeiko.biz.id/v1/chat/completions",
     api_key="sk-zeiko-...",
 )
 
@@ -270,7 +270,7 @@ for chunk in stream:
 <pre class="term-body"><code>import OpenAI from "openai";
 
 const client = new OpenAI({
-  baseURL: "https://api.your-domain.com/v1",
+  baseURL: "https://ai.zeiko.biz.id/v1/chat/completions",
   apiKey: process.env.ZEIKO_API_KEY,
 });
 
@@ -333,11 +333,8 @@ for await (const part of stream) {
 
       <!-- TODO: replace with the real contact (email / Telegram / WhatsApp). -->
       <div class="contact">
-        <a class="btn btn-primary" href="mailto:hello@example.com?subject=ZeikoAI%20API%20key%20request">hello@example.com</a>
+        <a class="btn btn-primary" href="mailto:manukmiberxzeikoai.com?subject=ZeikoAI%20API%20key%20request">manukmiberxzeikoai.com</a>
         <a class="btn btn-ghost" href="#pricing">Review pricing first</a>
-      </div>
-      <p class="fineprint">The address above is still a placeholder — replace it in <code>public/index.html</code> before sharing the page.</p>
-    </div>
   </section>
 
 </main>
