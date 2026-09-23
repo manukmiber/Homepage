@@ -340,6 +340,9 @@ h1 em { font-style: normal; color: var(--brand-ink); }
 }
 .model .price span { color: var(--text); font-weight: 700; }
 .model .price small { color: var(--muted); }
+.model h3 a { color: inherit; }
+.model-more { display: inline-block; margin-top: 12px; font-size: .9rem; font-weight: 600; }
+.models-cta { margin: 22px 0 0; }
 
 .badge {
   display: inline-block;

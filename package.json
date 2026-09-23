@@ -2,10 +2,11 @@
   "name": "proxychat",
   "version": "0.1.0",
   "private": true,
-  "description": "ZeikoAI landing page — static, served as Cloudflare Workers static assets.",
+  "description": "ZeikoAI site \u2014 a static landing page and /models, served as Cloudflare Workers static assets with one small worker for the R2 model snapshot.",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "seed:local": "wrangler r2 object put zeiko-models/models.json --file dev/models.sample.json --local --content-type application/json"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"
