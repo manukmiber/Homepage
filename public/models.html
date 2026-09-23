@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Models — ZeikoAI</title>
+<meta name="description" content="Every ZeikoAI model at a glance: what it is for, context window, output limit, pricing bands, thinking controls, and live speed and latency measured on real traffic every hour.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="ZeikoAI models">
+<meta property="og:description" content="Specs, pricing and live performance for every ZeikoAI roleplay model, refreshed hourly.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><path d='M21 9H11l6 6-6 8h10' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+<!-- Absolute paths: this same file answers /models and /models/<id>. -->
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/models.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/">
+      <span class="brand-mark" aria-hidden="true">Z</span>
+      <span class="brand-name">ZeikoAI</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Main navigation">
+      <a href="/models" aria-current="page">Models</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/#start">Get started</a>
+      <a href="/#faq">FAQ</a>
+      <a class="btn btn-sm btn-primary" href="/#contact">Request a key</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
+        <span aria-hidden="true">◐</span>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <span aria-hidden="true">☰</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- Filled in by js/models.js from /data/models.json. What is here is what a
+       reader sees if that never loads. -->
+  <div id="app" class="wrap mp" aria-live="polite">
+    <section class="mp-loading">
+      <p class="eyebrow">Models</p>
+      <h1>Loading the latest figures…</h1>
+      <p class="lede">Specs, pricing and live performance for every model.</p>
+    </section>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> ZeikoAI</p>
+    <nav aria-label="Footer links">
+      <a href="/models">Models</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/#start">Get started</a>
+      <a href="/#contact">Contact</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script src="/js/models.js"></script>
+</body>
+</html>
