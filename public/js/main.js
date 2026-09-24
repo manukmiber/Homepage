@@ -1,4 +1,5 @@
-/* ZeikoAI site — only what the pages need: theme, menu, copy, cost estimator.
+/* ZeikoAI site — only what the pages need: theme, menu, copy, cost estimator,
+ * chart hover.
  * Every page still reads fine if this file never loads. */
 
 (function () {
@@ -166,6 +167,90 @@
     calc.hidden = false;
     update();
   }
+
+  /* ------------------------------------------------------ chart hover */
+  /* The charts on /models arrive as finished SVG. This adds the crosshair
+     and the readout: pointer or arrow keys pick a period. Every value is
+     also in the table under each set of charts. */
+
+  document.querySelectorAll('.chart-plot svg[data-x]').forEach(function (svg) {
+    var plot = svg.parentNode;
+    var labels = svg.getAttribute('data-x').split('|');
+    var names = (svg.getAttribute('data-names') || '').split('|');
+    var series = ['data-v1', 'data-v2']
+      .map(function (a) { return svg.getAttribute(a); })
+      .filter(Boolean)
+      .map(function (v) { return v.split('|'); });
+    var g = svg.getAttribute('data-geom').split(' ').map(Number); // left, plot width, width, top, plot height
+    var n = labels.length;
+    var at = -1;
+
+    var cross = document.createElement('div');
+    cross.className = 'chart-cross';
+    cross.hidden = true;
+    var tip = document.createElement('div');
+    tip.className = 'chart-tip';
+    tip.hidden = true;
+    plot.appendChild(cross);
+    plot.appendChild(tip);
+
+    function show(i) {
+      at = Math.max(0, Math.min(n - 1, i));
+      var scale = svg.getBoundingClientRect().width / g[2];
+      var x = (g[0] + (at + 0.5) * (g[1] / n)) * scale;
+      cross.style.left = x + 'px';
+      cross.style.top = g[3] * scale + 'px';
+      cross.style.height = g[4] * scale + 'px';
+      cross.hidden = false;
+
+      tip.textContent = '';
+      var title = document.createElement('div');
+      title.className = 'chart-tip-title';
+      title.textContent = labels[at];
+      tip.appendChild(title);
+      series.forEach(function (vals, j) {
+        var row = document.createElement('div');
+        row.className = 'chart-tip-row';
+        var key = document.createElement('i');
+        key.className = 's' + (j + 1);
+        var value = document.createElement('strong');
+        value.textContent = vals[at];
+        var name = document.createElement('span');
+        name.textContent = names[j] || '';
+        row.appendChild(key);
+        row.appendChild(value);
+        row.appendChild(name);
+        tip.appendChild(row);
+      });
+      tip.hidden = false;
+      var w = tip.offsetWidth;
+      var left = x + 12;
+      if (left + w > plot.clientWidth) left = Math.max(0, x - w - 12);
+      tip.style.left = left + 'px';
+    }
+
+    function hide() {
+      cross.hidden = true;
+      tip.hidden = true;
+    }
+
+    svg.addEventListener('pointermove', function (e) {
+      var rect = svg.getBoundingClientRect();
+      var px = (e.clientX - rect.left) / (rect.width / g[2]);
+      show(Math.floor((px - g[0]) / (g[1] / n)));
+    });
+    svg.addEventListener('pointerleave', hide);
+    svg.addEventListener('focus', function () { show(at < 0 ? n - 1 : at); });
+    svg.addEventListener('blur', hide);
+    svg.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        e.preventDefault();
+        show((at < 0 ? n - 1 : at) + (e.key === 'ArrowLeft' ? -1 : 1));
+      } else if (e.key === 'Escape') {
+        hide();
+      }
+    });
+  });
 
   /* -------------------------------------------------------- footer year */
 

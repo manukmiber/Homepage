@@ -1,9 +1,10 @@
 # CLAUDE.md
 
-This repository is the public ZeikoAI website. It does two things:
-**it shows the models, and it shows their prices.** Nothing else.
+This repository is the public ZeikoAI website. It shows **the models, their
+prices, and how each model is performing.** Nothing else.
 
-`/models` stays: it is where visitors look the models up.
+`/models` stays: it is where visitors look the models up, with each model's
+live performance figures.
 
 ## The rule: never leak anything about how the API works
 
@@ -52,6 +53,11 @@ site* is built and deployed is fine.
 - Every rate: input, cache read, the output rate in each of the three bands,
   and the flat fee for a refused request; which effort lands in which band;
   that reasoning tokens count as output.
+- Each model's performance on `/models`, over the last 24 hours, 7 days and
+  30 days, each beside the window before it: time to first token, output
+  speed, latency, availability, requests, input and output tokens, cache
+  rate, and their charts. Say where they come from as "updated every hour"
+  and stop there.
 - How to request a key (the contact section).
 
 ## Layout
@@ -63,21 +69,39 @@ public/
   404.html
   _redirects      old /models/<id> links → /models#<id>
   css/style.css   the only stylesheet; colour tokens for light and dark
-  js/main.js      theme, mobile menu, copy buttons, hero bars, estimator
+  js/main.js      theme, mobile menu, copy buttons, hero bars, estimator, chart hover
+src/
+  worker.js       runs for /models only: fills its placeholders from the snapshot
+  render.js       snapshot → HTML for those placeholders; numbers only
+dev/
+  sample-stats.mjs  made-up figures for local development and the check
 scripts/
-  check-site.mjs  leak scan + price consistency (npm run check)
-wrangler.jsonc    serves public/ as static assets and nothing else
+  check-site.mjs  leak scan + price consistency + rendered /models (npm run check)
+wrangler.jsonc    static assets, plus the worker for /models and its R2 binding
 ```
 
-It is a static site, and it stays one:
+Everything is a static file except `/models`, and the browser never asks for
+anything but this site's own files:
 
-- **No server code.** No worker script, no bindings, no `run_worker_first`.
+- **One piece of server code.** `src/worker.js` runs for `/models` only
+  (`run_worker_first`). It reads the hourly snapshot from the `MODELS` R2
+  binding and fills the page's placeholders (`data-perf-bar`, `data-perf`,
+  `data-stat`) before the page leaves. Every other path never reaches it.
+- **`src/render.js` is the only door from the snapshot to the page.** It
+  reads numbers and nothing else; every string on the page is a fixed label
+  written there or a number formatted there. The snapshot carries other
+  fields; never copy one of them, or any text at all, onto the page. The
+  check renders a sample laced with junk text and fails if any gets through.
+- **Never serve the snapshot to the browser**, whole or in part: no data
+  file, no JSON endpoint, no inline JSON. Only finished HTML goes out.
 - **No runtime requests.** No `fetch`, XHR, WebSocket, analytics, web fonts or
-  CDN scripts. Every number is written into the HTML, so the page is complete
-  as shipped and the network tab shows only this site's own files.
+  CDN scripts. The network tab shows only this site's own files.
 - **No build step**, no framework, no dependencies besides wrangler.
-- Every page must read fine with JavaScript off. The estimator is the only
-  part that needs it, and it stays hidden without it.
+- Every page must read fine with JavaScript off. The figures and charts are
+  rendered on the server; JavaScript only adds chart hover and the estimator
+  (which stays hidden without it).
+- If the snapshot is missing or unreadable, `/models` goes out as the static
+  file, with "not available right now" where the figures would be.
 
 ## Prices: one key, many places
 
@@ -103,6 +127,9 @@ Any new `$` amount on a page must carry a `data-price` key too.
 - `models.html`: a jump chip, an at-a-glance row, and a full
   `<article id="<model-id>">` sheet (copy one of the existing ones).
 - The FAQ entry "Which model should I pick?".
+- `models.html`: the model's `data-perf` section and its three `data-stat`
+  cells in the at-a-glance table. Its figures appear once the snapshot
+  carries that model id.
 
 ## Before every commit
 
@@ -112,8 +139,11 @@ npm run check
 
 It fails on banned words, external URLs, network calls, a price that reads
 differently in two places, a `$` amount without `data-price`, or a link to a
-model that `models.html` does not have. Reword the page until it passes.
-Never shorten the banned list to make it pass.
+model that `models.html` does not have. It also renders the made-up sample
+through `src/render.js` and holds that output to the same rules, fails if any
+text from the snapshot reaches it, and fails if a placeholder on `/models`
+would stay empty. Reword the page until it passes. Never shorten the banned
+list to make it pass.
 
 The check only catches words. It will not catch a sentence that gives the
 game away in plain language ("the name you call is the name you see in the
@@ -126,4 +156,8 @@ response"). Read your own copy with the rule above in mind.
   `prefers-color-scheme` block and `[data-theme="dark"]`. Add a new colour
   to all three.
 - Layouts must work at 375px wide with no horizontal scroll.
-- Preview locally with `npx wrangler dev` (http://localhost:8787).
+- Preview locally with `npm run seed:local` once (made-up figures into the
+  local bucket), then `npx wrangler dev` (http://localhost:8787).
+- Charts: thin marks, hairline grid, one colour per series from the
+  `--series-*` tokens (validated for colour-blind separation in both themes),
+  a legend only when a chart has two series, and a table view under them.

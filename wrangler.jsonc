@@ -1,11 +1,17 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "proxychat",
+  "main": "src/worker.js",
   "compatibility_date": "2026-03-25",
-  // Static files only: every path is a file under ./public. No script,
-  // no bindings. See CLAUDE.md before adding either.
   "assets": {
     "directory": "./public",
-    "not_found_handling": "404-page"
-  }
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    // Only /models reaches src/worker.js; every other path is a plain file.
+    "run_worker_first": ["/models"]
+  },
+  // Read-only: the hourly model snapshot, rendered into /models.
+  "r2_buckets": [
+    { "binding": "MODELS", "bucket_name": "zeiko-models" }
+  ]
 }

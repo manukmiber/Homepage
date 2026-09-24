@@ -7,6 +7,9 @@
 //   3. Every price carries a data-price key, and a key reads the same
 //      everywhere it appears.
 //   4. Every /models#<id> link lands on a model that exists.
+//   5. What src/render.js puts into /models on the server passes the same
+//      rules, carries no text out of the snapshot, and fills every
+//      placeholder models.html has.
 //
 // Exits 1 with one line per problem. Reword the page; never trim the lists
 // below to make a check pass.
@@ -14,6 +17,8 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join, relative, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { render, sanitize } from '../src/render.js';
+import { sampleSnapshot } from '../dev/sample-stats.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const PUBLIC = join(ROOT, 'public');
@@ -65,13 +70,11 @@ const BANNED = [
   ['decision logic', /\b(detect(s|ed|ion)?|classif(y|ier|ies|ied)|recogni[sz](e|es|ed))\b/i],
   ['decision logic', /\b(alias|aliases|aliased|mapped|masked|renamed)\b/i],
   ['data handling', /\b(stored|storage|retention|retain(s|ed)?)\b/i],
-  // what gets measured
-  ['telemetry', /\b(logs|logging|logged|request log)\b/i],
-  ['telemetry', /\b(telemetry|analytics|tracking)\b/i],
-  ['telemetry', /\b(latency|ttft|throughput|uptime)\b/i],
-  ['telemetry', /\btime to first token\b/i],
-  ['telemetry', /\btokens? per second\b|\btok\/s\b/i],
-  ['telemetry', /\b(cache|hit) rate\b/i],
+  // where the performance figures come from
+  ['infrastructure', /\b(logs|logging|logged|request log)\b/i],
+  ['infrastructure', /\bsnapshots?\b/i],
+  // third parties watching visitors
+  ['network', /\b(analytics|tracking)\b/i],
   // who else's models these might be
   ['model origin', /\b(openrouter|anthropic|claude|chatgpt|gemini|google|deepseek|qwen|llama|mistral|mixtral|grok|xai|kimi|moonshot|glm|zhipu|cohere|perplexity|nvidia|groq|fireworks|together\.ai|hugging ?face)\b/i],
   ['model origin', /\bgpt-?\d/i],
@@ -109,7 +112,8 @@ const TEXT_EXT = new Set(['.html', '.css', '.js', '.mjs', '.json', '.txt', '.svg
 const problems = [];
 const report = (file, index, src, msg) => {
   const line = src.slice(0, index).split('\n').length;
-  problems.push(`${relative(ROOT, file)}:${line}  ${msg}`);
+  const name = file.startsWith(ROOT) ? relative(ROOT, file) : file;
+  problems.push(`${name}:${line}  ${msg}`);
 };
 
 function walk(dir) {
@@ -123,9 +127,7 @@ const files = walk(PUBLIC).filter((f) => TEXT_EXT.has(extname(f)));
 const html = [];
 const prices = new Map(); // key -> [{ value, file, index, src }]
 
-for (const file of files) {
-  const src = readFileSync(file, 'utf8');
-
+function scan(file, src) {
   for (const [what, re] of BANNED) {
     const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
     for (const m of src.matchAll(g)) report(file, m.index, src, `${what}: "${m[0]}"`);
@@ -139,7 +141,11 @@ for (const file of files) {
   for (const m of src.matchAll(URL_RE)) {
     if (!URL_OK.some((ok) => ok.test(m[0]))) report(file, m.index, src, `external URL: "${m[0]}"`);
   }
+}
 
+for (const file of files) {
+  const src = readFileSync(file, 'utf8');
+  scan(file, src);
   if (extname(file) === '.html') html.push({ file, src });
 }
 
@@ -185,6 +191,36 @@ if (!models) {
   }
 }
 
+// ------------------------------------------------------ rendered /models
+
+// Render the made-up sample through the same code the server runs, with
+// junk a real snapshot might carry mixed in. None of the junk may come out.
+const RENDERED = 'rendered /models (dev sample)';
+const snap = sampleSnapshot(Date.UTC(2026, 8, 24, 12));
+snap.format = 'CANARY format';
+snap.models[0].page = { notes: ['CANARY note'] };
+snap.models[0].endpoints = ['CANARY endpoint'];
+snap.models[1].stats['7d'].current.requests = 'CANARY count';
+snap.models.push({ id: '<b>CANARY</b>', stats: {} });
+const view = render(sanitize(snap));
+
+if (!view) {
+  problems.push(`${RENDERED}: src/render.js rendered nothing`);
+} else {
+  const out = [view.bar, ...Object.values(view.models), ...Object.values(view.glance).flatMap(Object.values)].join('\n');
+  scan(RENDERED, out);
+  for (const m of out.matchAll(/CANARY/g)) report(RENDERED, m.index, out, 'text from the snapshot reached the page; only numbers may');
+  for (const m of out.matchAll(/\$\s?\d/g)) report(RENDERED, m.index, out, 'a price in the performance figures; prices live in the static HTML');
+  if (models) {
+    for (const m of models.src.matchAll(/data-perf="([^"]+)"/g)) {
+      if (!view.models[m[1]]) report(models.file, m.index, models.src, `data-perf="${m[1]}" has no model in the sample`);
+    }
+    for (const m of models.src.matchAll(/data-stat="([^":]+):([^"]+)"/g)) {
+      if (!(view.glance[m[1]] && view.glance[m[1]][m[2]])) report(models.file, m.index, models.src, `data-stat="${m[1]}:${m[2]}" is never filled`);
+    }
+  }
+}
+
 // ----------------------------------------------------------------- result
 
 if (problems.length) {
@@ -194,4 +230,4 @@ if (problems.length) {
   process.exit(1);
 }
 
-console.log(`check-site: ${files.length} files clean, ${prices.size} price keys consistent.`);
+console.log(`check-site: ${files.length} files and the rendered /models clean, ${prices.size} price keys consistent.`);

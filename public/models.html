@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Models — ZeikoAI</title>
-<meta name="description" content="Every ZeikoAI model with its specs and full rate card: input, cache read and output at each thinking effort, in USD per million tokens.">
+<meta name="description" content="Every ZeikoAI model with its specs, full rate card and live performance: time to first token, output speed, latency and availability, updated every hour.">
 <meta name="color-scheme" content="light dark">
 <meta property="og:title" content="ZeikoAI models">
-<meta property="og:description" content="Specs and full rate card for every ZeikoAI roleplay model.">
+<meta property="og:description" content="Specs, full rate card and live performance for every ZeikoAI roleplay model.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><path d='M21 9H11l6 6-6 8h10' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>">
 <link rel="stylesheet" href="css/style.css">
@@ -48,12 +48,13 @@
     <div class="wrap">
       <p class="crumbs"><a href="/">Home</a> <span aria-hidden="true">/</span> Models</p>
       <h1>Models</h1>
-      <p class="lede">Three roleplay models, each with its full rate card. Every price is USD per million tokens.</p>
+      <p class="lede">Three roleplay models, each with its full rate card and live performance. Every price is USD per million tokens.</p>
       <nav class="chips" aria-label="Jump to a model">
         <a class="chip" href="#Jagad-512B-V1"><i class="dot-ok" aria-hidden="true"></i>Jagad-512B-V1</a>
         <a class="chip" href="#Asmarandana-512B-V1"><i class="dot-warn" aria-hidden="true"></i>Asmarandana-512B-V1</a>
         <a class="chip" href="#Wissangeni-512B-V1"><i class="dot-err" aria-hidden="true"></i>Wissangeni-512B-V1</a>
       </nav>
+      <div class="perf-bar" data-perf-bar hidden></div>
     </div>
   </section>
 
@@ -61,10 +62,10 @@
   <section class="section section-tint section-tight" aria-labelledby="glanceTitle">
     <div class="wrap">
       <h2 class="sec-title" id="glanceTitle">At a glance</h2>
-      <p class="sec-lede">Output here is the standard band (<code>low</code>, <code>medium</code>, <code>high</code>). Each model's card below lists all three.</p>
+      <p class="sec-lede">Output here is the standard band (<code>low</code>, <code>medium</code>, <code>high</code>); each model's card below lists all three. First token, speed and availability follow the window picked above.</p>
 
       <div class="table-scroll">
-        <table class="table">
+        <table class="table table-compact">
           <thead>
             <tr>
               <th scope="col">Model</th>
@@ -74,6 +75,9 @@
               <th scope="col">Input</th>
               <th scope="col">Cache read</th>
               <th scope="col">Output</th>
+              <th scope="col">First token</th>
+              <th scope="col">Speed</th>
+              <th scope="col">Availability</th>
             </tr>
           </thead>
           <tbody>
@@ -84,6 +88,9 @@
               <td data-price="Jagad-512B-V1:input">$0.35</td>
               <td data-price="Jagad-512B-V1:cache">$0.10</td>
               <td data-price="Jagad-512B-V1:out">$1.50</td>
+              <td data-stat="Jagad-512B-V1:ttft">—</td>
+              <td data-stat="Jagad-512B-V1:tps">—</td>
+              <td data-stat="Jagad-512B-V1:avail">—</td>
             </tr>
             <tr>
               <th scope="row"><a href="#Asmarandana-512B-V1">Asmarandana-512B-V1</a></th>
@@ -92,6 +99,9 @@
               <td data-price="Asmarandana-512B-V1:input">$0.50</td>
               <td data-price="Asmarandana-512B-V1:cache">$0.10</td>
               <td data-price="Asmarandana-512B-V1:out">$2.00</td>
+              <td data-stat="Asmarandana-512B-V1:ttft">—</td>
+              <td data-stat="Asmarandana-512B-V1:tps">—</td>
+              <td data-stat="Asmarandana-512B-V1:avail">—</td>
             </tr>
             <tr>
               <th scope="row"><a href="#Wissangeni-512B-V1">Wissangeni-512B-V1</a></th>
@@ -100,6 +110,9 @@
               <td data-price="Wissangeni-512B-V1:input">$0.80</td>
               <td data-price="Wissangeni-512B-V1:cache">$0.20</td>
               <td data-price="Wissangeni-512B-V1:out">$4.00</td>
+              <td data-stat="Wissangeni-512B-V1:ttft">—</td>
+              <td data-stat="Wissangeni-512B-V1:tps">—</td>
+              <td data-stat="Wissangeni-512B-V1:avail">—</td>
             </tr>
           </tbody>
         </table>
@@ -142,6 +155,9 @@
             </tbody>
           </table>
         </div>
+        <section class="perf" data-perf="Jagad-512B-V1" aria-label="Jagad 512B V1 performance">
+          <p class="perf-empty">Live performance figures are not available right now.</p>
+        </section>
       </article>
 
       <article class="card sheet" id="Asmarandana-512B-V1">
@@ -175,6 +191,9 @@
             </tbody>
           </table>
         </div>
+        <section class="perf" data-perf="Asmarandana-512B-V1" aria-label="Asmarandana 512B V1 performance">
+          <p class="perf-empty">Live performance figures are not available right now.</p>
+        </section>
       </article>
 
       <article class="card sheet" id="Wissangeni-512B-V1">
@@ -208,8 +227,26 @@
             </tbody>
           </table>
         </div>
+        <section class="perf" data-perf="Wissangeni-512B-V1" aria-label="Wissangeni 512B V1 performance">
+          <p class="perf-empty">Live performance figures are not available right now.</p>
+        </section>
       </article>
 
+    </div>
+  </section>
+
+  <!-- ===================================================== definitions -->
+  <section class="section section-tight" aria-labelledby="defsTitle">
+    <div class="wrap narrow">
+      <h2 class="sec-title" id="defsTitle">What the figures mean</h2>
+      <dl class="defs">
+        <div><dt>Time to first token</dt><dd>How long until the first token of the answer arrives.</dd></div>
+        <div><dt>Latency</dt><dd>How long until the whole answer has arrived.</dd></div>
+        <div><dt>Output speed</dt><dd>Output tokens per second while the answer is being written.</dd></div>
+        <div><dt>Availability</dt><dd>The share of requests answered without a server error.</dd></div>
+        <div><dt>Cache rate</dt><dd>The share of input tokens read from cache, at the cache-read rate.</dd></div>
+      </dl>
+      <p class="fineprint">Medians over the window you pick, beside the same window just before it. Times are in UTC.</p>
     </div>
   </section>
 
