@@ -27,8 +27,6 @@ or anywhere else:
 - **Infrastructure**: where or how the API is hosted, Workers, R2, KV, D1,
   databases, buckets, logs, dashboards, admin panels, internal repositories,
   environment variables, secrets.
-- **Telemetry**: request counts, token volumes, latency, time to first token,
-  throughput, uptime, cache hit rates, or anything else read from request logs.
 - **Decision logic**: how refusals are detected, how caching works, how model
   names are mapped, what is stored and for how long.
 - **Connection details**: the API base URL or hostname, endpoint paths, the
