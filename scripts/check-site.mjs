@@ -40,9 +40,14 @@ const BANNED = [
   ['architecture', /\bbase model/i],
   ['architecture', /\bfine-?tun/i],
   ['architecture', /\binference\b/i],
-  // tokens are billed, never explained
-  ['tokenizer', /\btokeni[sz](er|ers|ation|ing)\b/i],
+  // tokens are priced, never explained
+  ['tokenizer', /\btokeni[sz](e|es|ed|er|ers|ation|ing)\b/i],
   ['tokenizer', /\bcharacters divided\b/i],
+  ['tokenizer', /\b(counted|counting) (with|by)\b/i],
+  // the site shows prices, never billing
+  ['billing', /\b(bill|bills|billed|billing|invoice|invoices|invoiced|invoicing)\b/i],
+  ['billing', /\b(usdt|trc-?20|idr|rupiah|crypto|wallet)\b/i],
+  ['billing', /\b(tax|taxes|vat|subscription|subscriptions|payment|payments|pay|pays|paid|charged|top-?up)\b/i],
   // where it runs
   ['infrastructure', /\bworkers?\b/i],
   ['infrastructure', /\bcloudflare/i],

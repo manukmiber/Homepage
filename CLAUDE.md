@@ -19,8 +19,11 @@ or anywhere else:
 - **What runs the models**: base model, model family, the lab or vendor
   behind it, fine-tuning, hardware, GPUs, regions, or any parameter count
   beyond the product name.
-- **Tokenizer**: which tokenizer is used or how tokens are counted. Say "billed
-  per token" and stop there.
+- **Tokenizer**: which tokenizer is used or how tokens are counted. Say
+  "priced per million tokens" and stop there.
+- **Billing**: invoices, billing periods, payment methods or currencies
+  (USDT, TRC20, IDR), tax, subscriptions, how or when a customer is charged.
+  The site shows prices, never billing.
 - **Infrastructure**: where or how the API is hosted, Workers, R2, KV, D1,
   databases, buckets, logs, dashboards, admin panels, internal repositories,
   environment variables, secrets.
@@ -50,16 +53,14 @@ site* is built and deployed is fine.
   OpenAI SDKs".
 - Every rate: input, cache read, the output rate in each of the three bands,
   and the flat fee for a refused request; which effort lands in which band;
-  that reasoning tokens bill as output.
-- Billing: one invoice per period, per-model breakdown, USDT (TRC20), IDR
-  rate printed on the invoice, no subscription.
+  that reasoning tokens count as output.
 - How to request a key (the contact section).
 
 ## Layout
 
 ```
 public/
-  index.html      landing: hero, models, pricing + bill estimator, FAQ, contact
+  index.html      landing: hero, models, pricing + cost estimator, FAQ, contact
   models.html     /models: at-a-glance table, then each model's specs and rate card
   404.html
   _redirects      old /models/<id> links → /models#<id>

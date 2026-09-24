@@ -1,4 +1,4 @@
-/* ZeikoAI site — only what the pages need: theme, menu, copy, bill estimator.
+/* ZeikoAI site — only what the pages need: theme, menu, copy, cost estimator.
  * Every page still reads fine if this file never loads. */
 
 (function () {
@@ -114,7 +114,7 @@
     });
   });
 
-  /* ------------------------------------------------------ bill estimator */
+  /* ------------------------------------------------------ cost estimator */
   /* Reads its rates from the pricing table, so the table stays the only
      place the landing page states them. */
 
