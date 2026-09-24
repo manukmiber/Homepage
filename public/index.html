@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ZeikoAI — roleplay models and pricing</title>
-<meta name="description" content="Three roleplay models, from safe-for-work to unrestricted. 256K context, priced per million tokens, billed as USDT invoices.">
+<meta name="description" content="Three roleplay models, from safe-for-work to unrestricted. 256K context, priced per million tokens.">
 <meta name="color-scheme" content="light dark">
 <meta property="og:title" content="ZeikoAI — roleplay models and pricing">
-<meta property="og:description" content="Three roleplay models, 256K context, three pricing bands. Pay per token in USDT.">
+<meta property="og:description" content="Three roleplay models, 256K context, three pricing bands.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><path d='M21 9H11l6 6-6 8h10' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>">
 <link rel="stylesheet" href="css/style.css">
@@ -47,12 +47,11 @@
   <section class="hero" id="top">
     <div class="wrap hero-in">
       <div class="hero-copy">
-        <p class="eyebrow">3 roleplay models · 256K context · USDT billing</p>
+        <p class="eyebrow">3 roleplay models · 256K context · 3 pricing bands</p>
         <h1>Roleplay models, <em>priced by the token</em>.</h1>
         <p class="lede">
-          From safe-for-work to unrestricted. You pay per million tokens, the
-          output rate follows how hard you ask the model to think, and every
-          period closes with a single USDT invoice.
+          From safe-for-work to unrestricted, priced per million tokens.
+          The output rate depends on the thinking effort you pick.
         </p>
         <div class="cta">
           <a class="btn btn-primary" href="#pricing">See pricing</a>
@@ -60,8 +59,8 @@
         </div>
         <ul class="ticks">
           <li>Works with the official OpenAI SDKs</li>
-          <li>Per-model breakdown on every invoice</li>
-          <li>No subscription — pay for what you use</li>
+          <li>256K context, up to 8,192 output tokens</li>
+          <li>Safe-for-work, adult and unrestricted</li>
         </ul>
       </div>
 
@@ -195,18 +194,14 @@
         </div>
         <div class="note">
           <h3>Refusals</h3>
-          <p>A refused request is not billed as a full answer: it costs <strong><span data-price="refusal">$0.05</span> flat</strong>, in place of its token count.</p>
-        </div>
-        <div class="note">
-          <h3>Billing</h3>
-          <p>Usage is summed into one invoice per period: per-model breakdown, subtotal, tax, total. Paid in <strong>USDT (TRC20)</strong>, with the IDR rate printed on the invoice.</p>
+          <p>A refused request costs <strong><span data-price="refusal">$0.05</span> flat</strong>, in place of its token price.</p>
         </div>
       </div>
 
       <!-- Needs JavaScript to add up; without it, the table above says everything. -->
       <form class="card calc" id="calc" hidden aria-labelledby="calcTitle">
         <div class="calc-head">
-          <h3 id="calcTitle">Estimate a bill</h3>
+          <h3 id="calcTitle">Estimate the cost</h3>
           <p>Rates come straight from the table above.</p>
         </div>
         <div class="calc-grid">
@@ -240,7 +235,7 @@
           <span><small>Per request</small><strong data-out="one">–</strong></span>
           <span><small>Total</small><strong data-out="all">–</strong></span>
         </output>
-        <p class="calc-note">An estimate at list rates, before tax. Output includes reasoning tokens.</p>
+        <p class="calc-note">An estimate at list rates. Output includes reasoning tokens.</p>
       </form>
     </div>
   </section>
@@ -261,18 +256,13 @@
       </details>
 
       <details class="faq">
-        <summary>Are reasoning tokens billed?</summary>
+        <summary>Do reasoning tokens count?</summary>
         <p>Yes, as output tokens, at the output rate of the band the request landed in. Asking for less thinking lowers both the rate and the token count.</p>
       </details>
 
       <details class="faq">
-        <summary>If a model refuses, am I still billed?</summary>
-        <p>Yes, but <span data-price="refusal">$0.05</span> flat for that request, not the price of a full answer.</p>
-      </details>
-
-      <details class="faq">
-        <summary>How do I pay?</summary>
-        <p>Usage is invoiced per period with a per-model breakdown. You pay in USDT on TRC20; the IDR rate is printed on the invoice. There is no subscription.</p>
+        <summary>What does a refused request cost?</summary>
+        <p><span data-price="refusal">$0.05</span> flat for that request, not the price of a full answer.</p>
       </details>
     </div>
   </section>

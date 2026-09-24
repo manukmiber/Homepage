@@ -2,7 +2,7 @@
 
 The public ZeikoAI website: the models and their prices, as static files.
 
-- `/` is the landing page: the models, the pricing table, a bill estimator,
+- `/` is the landing page: the models, the pricing table, a cost estimator,
   a pricing FAQ, and how to request a key.
 - `/models` lists every model with its specs and full rate card. The old
   `/models/<id>` links redirect to `/models#<id>`.
