@@ -4,15 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Models — ZeikoAI</title>
-<meta name="description" content="Every ZeikoAI model at a glance: what it is for, context window, output limit, pricing bands, thinking controls, and live speed and latency measured on real traffic every hour.">
+<meta name="description" content="Every ZeikoAI model with its specs and full rate card: input, cache read and output at each thinking effort, in USD per million tokens.">
 <meta name="color-scheme" content="light dark">
 <meta property="og:title" content="ZeikoAI models">
-<meta property="og:description" content="Specs, pricing and live performance for every ZeikoAI roleplay model, refreshed hourly.">
+<meta property="og:description" content="Specs and full rate card for every ZeikoAI roleplay model.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><path d='M21 9H11l6 6-6 8h10' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>">
-<!-- Absolute paths: this same file answers /models and /models/<id>. -->
-<link rel="stylesheet" href="/css/style.css">
-<link rel="stylesheet" href="/css/models.css">
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
@@ -28,7 +26,6 @@
     <nav class="nav" id="nav" aria-label="Main navigation">
       <a href="/models" aria-current="page">Models</a>
       <a href="/#pricing">Pricing</a>
-      <a href="/#start">Get started</a>
       <a href="/#faq">FAQ</a>
       <a class="btn btn-sm btn-primary" href="/#contact">Request a key</a>
     </nav>
@@ -45,30 +42,205 @@
 </header>
 
 <main id="main">
-  <!-- Filled in by js/models.js from /data/models.json. What is here is what a
-       reader sees if that never loads. -->
-  <div id="app" class="wrap mp" aria-live="polite">
-    <section class="mp-loading">
-      <p class="eyebrow">Models</p>
-      <h1>Loading the latest figures…</h1>
-      <p class="lede">Specs, pricing and live performance for every model.</p>
-    </section>
-  </div>
+
+  <!-- ======================================================= heading -->
+  <section class="page-head">
+    <div class="wrap">
+      <p class="crumbs"><a href="/">Home</a> <span aria-hidden="true">/</span> Models</p>
+      <h1>Models</h1>
+      <p class="lede">Three roleplay models, each with its full rate card. Every price is USD per million tokens.</p>
+      <nav class="chips" aria-label="Jump to a model">
+        <a class="chip" href="#Jagad-512B-V1"><i class="dot-ok" aria-hidden="true"></i>Jagad-512B-V1</a>
+        <a class="chip" href="#Asmarandana-512B-V1"><i class="dot-warn" aria-hidden="true"></i>Asmarandana-512B-V1</a>
+        <a class="chip" href="#Wissangeni-512B-V1"><i class="dot-err" aria-hidden="true"></i>Wissangeni-512B-V1</a>
+      </nav>
+    </div>
+  </section>
+
+  <!-- ==================================================== at a glance -->
+  <section class="section section-tint section-tight" aria-labelledby="glanceTitle">
+    <div class="wrap">
+      <h2 class="sec-title" id="glanceTitle">At a glance</h2>
+      <p class="sec-lede">Output here is the standard band (<code>low</code>, <code>medium</code>, <code>high</code>). Each model's card below lists all three.</p>
+
+      <div class="table-scroll">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Model</th>
+              <th scope="col">Content</th>
+              <th scope="col">Context</th>
+              <th scope="col">Max output</th>
+              <th scope="col">Input</th>
+              <th scope="col">Cache read</th>
+              <th scope="col">Output</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"><a href="#Jagad-512B-V1">Jagad-512B-V1</a></th>
+              <td><span class="badge badge-ok">SFW</span></td>
+              <td>256K</td><td>8,192</td>
+              <td data-price="Jagad-512B-V1:input">$0.35</td>
+              <td data-price="Jagad-512B-V1:cache">$0.10</td>
+              <td data-price="Jagad-512B-V1:out">$1.50</td>
+            </tr>
+            <tr>
+              <th scope="row"><a href="#Asmarandana-512B-V1">Asmarandana-512B-V1</a></th>
+              <td><span class="badge badge-warn">Adult</span></td>
+              <td>256K</td><td>8,192</td>
+              <td data-price="Asmarandana-512B-V1:input">$0.50</td>
+              <td data-price="Asmarandana-512B-V1:cache">$0.10</td>
+              <td data-price="Asmarandana-512B-V1:out">$2.00</td>
+            </tr>
+            <tr>
+              <th scope="row"><a href="#Wissangeni-512B-V1">Wissangeni-512B-V1</a></th>
+              <td><span class="badge badge-err">Unrestricted</span></td>
+              <td>256K</td><td>8,192</td>
+              <td data-price="Wissangeni-512B-V1:input">$0.80</td>
+              <td data-price="Wissangeni-512B-V1:cache">$0.20</td>
+              <td data-price="Wissangeni-512B-V1:out">$4.00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== each model -->
+  <section class="section" aria-label="Model details">
+    <div class="wrap sheets">
+
+      <article class="card sheet" id="Jagad-512B-V1">
+        <header class="sheet-head">
+          <span class="badge badge-ok">SFW</span>
+          <h2>Jagad 512B V1</h2>
+          <p class="sheet-id">
+            <code id="id-jagad">Jagad-512B-V1</code>
+            <button class="copy" type="button" data-copy="#id-jagad">Copy ID</button>
+          </p>
+          <p class="sheet-lede">Safe-for-work roleplay. The default pick when you are not sure where to start.</p>
+        </header>
+        <div class="sheet-body">
+          <dl class="specs">
+            <div><dt>Content</dt><dd>Safe for work</dd></div>
+            <div><dt>Context window</dt><dd>256K tokens</dd></div>
+            <div><dt>Max output</dt><dd>8,192 tokens</dd></div>
+            <div><dt>Streaming</dt><dd>Yes</dd></div>
+            <div><dt>Thinking effort</dt><dd><code>none</code> to <code>max</code></dd></div>
+            <div><dt>Client</dt><dd>OpenAI SDKs</dd></div>
+          </dl>
+          <table class="rates">
+            <caption>Rates · USD per 1M tokens</caption>
+            <tbody>
+              <tr><th scope="row">Input</th><td data-price="Jagad-512B-V1:input">$0.35</td></tr>
+              <tr><th scope="row">Cache read</th><td data-price="Jagad-512B-V1:cache">$0.10</td></tr>
+              <tr><th scope="row">Output · no thinking <small>none, minimal</small></th><td data-price="Jagad-512B-V1:out-none">$1.20</td></tr>
+              <tr><th scope="row">Output · standard <small>low, medium, high</small></th><td data-price="Jagad-512B-V1:out">$1.50</td></tr>
+              <tr><th scope="row">Output · max thinking <small>max</small></th><td data-price="Jagad-512B-V1:out-max">$2.00</td></tr>
+              <tr class="rates-flat"><th scope="row">Refused request</th><td><span data-price="refusal">$0.05</span> flat</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="card sheet" id="Asmarandana-512B-V1">
+        <header class="sheet-head">
+          <span class="badge badge-warn">Adult</span>
+          <h2>Asmarandana 512B V1</h2>
+          <p class="sheet-id">
+            <code id="id-asmarandana">Asmarandana-512B-V1</code>
+            <button class="copy" type="button" data-copy="#id-asmarandana">Copy ID</button>
+          </p>
+          <p class="sheet-lede">Adult roleplay, for callers who gate their own users.</p>
+        </header>
+        <div class="sheet-body">
+          <dl class="specs">
+            <div><dt>Content</dt><dd>Adult</dd></div>
+            <div><dt>Context window</dt><dd>256K tokens</dd></div>
+            <div><dt>Max output</dt><dd>8,192 tokens</dd></div>
+            <div><dt>Streaming</dt><dd>Yes</dd></div>
+            <div><dt>Thinking effort</dt><dd><code>none</code> to <code>max</code></dd></div>
+            <div><dt>Client</dt><dd>OpenAI SDKs</dd></div>
+          </dl>
+          <table class="rates">
+            <caption>Rates · USD per 1M tokens</caption>
+            <tbody>
+              <tr><th scope="row">Input</th><td data-price="Asmarandana-512B-V1:input">$0.50</td></tr>
+              <tr><th scope="row">Cache read</th><td data-price="Asmarandana-512B-V1:cache">$0.10</td></tr>
+              <tr><th scope="row">Output · no thinking <small>none, minimal</small></th><td data-price="Asmarandana-512B-V1:out-none">$1.60</td></tr>
+              <tr><th scope="row">Output · standard <small>low, medium, high</small></th><td data-price="Asmarandana-512B-V1:out">$2.00</td></tr>
+              <tr><th scope="row">Output · max thinking <small>max</small></th><td data-price="Asmarandana-512B-V1:out-max">$2.65</td></tr>
+              <tr class="rates-flat"><th scope="row">Refused request</th><td><span data-price="refusal">$0.05</span> flat</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="card sheet" id="Wissangeni-512B-V1">
+        <header class="sheet-head">
+          <span class="badge badge-err">Unrestricted</span>
+          <h2>Wissangeni 512B V1</h2>
+          <p class="sheet-id">
+            <code id="id-wissangeni">Wissangeni-512B-V1</code>
+            <button class="copy" type="button" data-copy="#id-wissangeni">Copy ID</button>
+          </p>
+          <p class="sheet-lede">Unrestricted roleplay. The highest rate of the three, because it is the one that rarely says no.</p>
+        </header>
+        <div class="sheet-body">
+          <dl class="specs">
+            <div><dt>Content</dt><dd>Unrestricted</dd></div>
+            <div><dt>Context window</dt><dd>256K tokens</dd></div>
+            <div><dt>Max output</dt><dd>8,192 tokens</dd></div>
+            <div><dt>Streaming</dt><dd>Yes</dd></div>
+            <div><dt>Thinking effort</dt><dd><code>none</code> to <code>max</code></dd></div>
+            <div><dt>Client</dt><dd>OpenAI SDKs</dd></div>
+          </dl>
+          <table class="rates">
+            <caption>Rates · USD per 1M tokens</caption>
+            <tbody>
+              <tr><th scope="row">Input</th><td data-price="Wissangeni-512B-V1:input">$0.80</td></tr>
+              <tr><th scope="row">Cache read</th><td data-price="Wissangeni-512B-V1:cache">$0.20</td></tr>
+              <tr><th scope="row">Output · no thinking <small>none, minimal</small></th><td data-price="Wissangeni-512B-V1:out-none">$3.50</td></tr>
+              <tr><th scope="row">Output · standard <small>low, medium, high</small></th><td data-price="Wissangeni-512B-V1:out">$4.00</td></tr>
+              <tr><th scope="row">Output · max thinking <small>max</small></th><td data-price="Wissangeni-512B-V1:out-max">$6.00</td></tr>
+              <tr class="rates-flat"><th scope="row">Refused request</th><td><span data-price="refusal">$0.05</span> flat</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============================================================= cta -->
+  <section class="section section-tint section-tight">
+    <div class="wrap cta-band">
+      <div>
+        <h2>Found the one?</h2>
+        <p>Work out a monthly bill with the estimator, or ask for a key straight away.</p>
+      </div>
+      <div class="cta">
+        <a class="btn btn-ghost" href="/#calc">Estimate a bill</a>
+        <a class="btn btn-primary" href="/#contact">Request a key</a>
+      </div>
+    </div>
+  </section>
+
 </main>
 
 <footer class="footer">
   <div class="wrap footer-in">
     <p>© <span id="year">2026</span> ZeikoAI</p>
     <nav aria-label="Footer links">
-      <a href="/models">Models</a>
+      <a href="/">Home</a>
       <a href="/#pricing">Pricing</a>
-      <a href="/#start">Get started</a>
+      <a href="/#faq">FAQ</a>
       <a href="/#contact">Contact</a>
     </nav>
   </div>
 </footer>
 
-<script src="/js/main.js"></script>
-<script src="/js/models.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

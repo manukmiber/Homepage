@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>ZeikoAI OpenAI-compatible roleplay API</title>
-<meta name="description" content="Three roleplay models behind an OpenAI-compatible endpoint. Exact token counting, pricing that follows thinking effort, usage billed as USDT invoices.">
+<title>ZeikoAI — roleplay models and pricing</title>
+<meta name="description" content="Three roleplay models, from safe-for-work to unrestricted. 256K context, priced per million tokens, billed as USDT invoices.">
 <meta name="color-scheme" content="light dark">
-<meta property="og:title" content="ZeikoAI — OpenAI-compatible roleplay API">
-<meta property="og:description" content="Change the base URL and the models run. SSE streaming, 256K context, three pricing bands.">
+<meta property="og:title" content="ZeikoAI — roleplay models and pricing">
+<meta property="og:description" content="Three roleplay models, 256K context, three pricing bands. Pay per token in USDT.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><path d='M21 9H11l6 6-6 8h10' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>">
 <link rel="stylesheet" href="css/style.css">
@@ -18,7 +18,7 @@
 
 <header class="topbar">
   <div class="wrap topbar-in">
-    <a class="brand" href="#top">
+    <a class="brand" href="/">
       <span class="brand-mark" aria-hidden="true">Z</span>
       <span class="brand-name">ZeikoAI</span>
     </a>
@@ -26,7 +26,6 @@
     <nav class="nav" id="nav" aria-label="Main navigation">
       <a href="/models">Models</a>
       <a href="#pricing">Pricing</a>
-      <a href="#start">Get started</a>
       <a href="#faq">FAQ</a>
       <a class="btn btn-sm btn-primary" href="#contact">Request a key</a>
     </nav>
@@ -48,41 +47,50 @@
   <section class="hero" id="top">
     <div class="wrap hero-in">
       <div class="hero-copy">
-        <p class="eyebrow">OpenAI-compatible · SSE streaming · 256K context</p>
-        <h1>Roleplay models, one <em>base URL</em> away.</h1>
+        <p class="eyebrow">3 roleplay models · 256K context · USDT billing</p>
+        <h1>Roleplay models, <em>priced by the token</em>.</h1>
         <p class="lede">
-          Three roleplay models behind an endpoint shaped exactly like OpenAI's.
-          Tokens are counted with each model's real tokenizer — not characters
-          divided by four — and the rate follows how hard you ask the model to
-          think.
+          From safe-for-work to unrestricted. You pay per million tokens, the
+          output rate follows how hard you ask the model to think, and every
+          period closes with a single USDT invoice.
         </p>
         <div class="cta">
-          <a class="btn btn-primary" href="#contact">Request a key</a>
-          <a class="btn btn-ghost" href="#pricing">See pricing</a>
+          <a class="btn btn-primary" href="#pricing">See pricing</a>
+          <a class="btn btn-ghost" href="/models">Browse the models</a>
         </div>
         <ul class="ticks">
-          <li>Official OpenAI SDKs work unchanged</li>
-          <li>Usage broken down per key and per model</li>
-          <li>USDT invoices, not a blind monthly subscription</li>
+          <li>Works with the official OpenAI SDKs</li>
+          <li>Per-model breakdown on every invoice</li>
+          <li>No subscription — pay for what you use</li>
         </ul>
       </div>
 
-      <figure class="term" aria-label="Example API call">
-        <figcaption class="term-bar">
-          <span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span>
-          <span class="term-title">example request</span>
-          <button class="copy" type="button" data-copy="#heroCode">Copy</button>
+      <figure class="card rate-card" aria-labelledby="rateCap">
+        <figcaption id="rateCap">
+          <span class="rate-kicker">Output rate follows thinking effort</span>
+          <span class="rate-sub"><code>Jagad-512B-V1</code> · USD per 1M tokens</span>
         </figcaption>
-        <pre class="term-body"><code id="heroCode">curl https://ai.zeiko.biz.id/v1/chat/completions \
-  -H "Authorization: Bearer sk-zeiko-..." \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "Jagad-512B-V1",
-    "messages": [
-      {"role": "user", "content": "Hi, tell me who you are."}
-    ],
-    "stream": true
-  }'</code></pre>
+        <ul class="bars">
+          <li>
+            <span class="bar-label"><code>none</code> · <code>minimal</code></span>
+            <span class="bar"><span style="width:60%"></span></span>
+            <strong data-price="Jagad-512B-V1:out-none">$1.20</strong>
+          </li>
+          <li>
+            <span class="bar-label"><code>low</code> · <code>medium</code> · <code>high</code></span>
+            <span class="bar"><span style="width:75%"></span></span>
+            <strong data-price="Jagad-512B-V1:out">$1.50</strong>
+          </li>
+          <li>
+            <span class="bar-label"><code>max</code></span>
+            <span class="bar"><span style="width:100%"></span></span>
+            <strong data-price="Jagad-512B-V1:out-max">$2.00</strong>
+          </li>
+        </ul>
+        <p class="rate-foot">
+          Input <strong data-price="Jagad-512B-V1:input">$0.35</strong> and cache read
+          <strong data-price="Jagad-512B-V1:cache">$0.10</strong> stay the same at every effort.
+        </p>
       </figure>
     </div>
 
@@ -100,36 +108,36 @@
   <section class="section section-tint" id="models">
     <div class="wrap">
       <h2 class="sec-title">The models</h2>
-      <p class="sec-lede">The name you call is the name you see in the response. All three: 256K context, up to 8,192 output tokens, streaming.</p>
+      <p class="sec-lede">All three: 256K context, up to 8,192 output tokens, streaming. Pick by how much the model is allowed to say.</p>
 
       <div class="grid models">
         <article class="card model">
           <span class="badge badge-ok">SFW</span>
-          <h3><a href="/models/Jagad-512B-V1">Jagad 512B V1</a></h3>
+          <h3><a href="/models#Jagad-512B-V1">Jagad 512B V1</a></h3>
           <p class="model-id"><code>Jagad-512B-V1</code></p>
           <p>Safe-for-work roleplay. The default pick when you are not sure where to start.</p>
-          <p class="price"><span>$0.35</span> in · <span>$1.50</span> out <small>/ 1M tokens</small></p>
-          <a class="model-more" href="/models/Jagad-512B-V1">Specs &amp; live performance →</a>
+          <p class="price"><span data-price="Jagad-512B-V1:input">$0.35</span> in · <span data-price="Jagad-512B-V1:out">$1.50</span> out <small>/ 1M tokens</small></p>
+          <a class="model-more" href="/models#Jagad-512B-V1">Specs &amp; full rates →</a>
         </article>
         <article class="card model">
           <span class="badge badge-warn">Adult</span>
-          <h3><a href="/models/Asmarandana-512B-V1">Asmarandana 512B V1</a></h3>
+          <h3><a href="/models#Asmarandana-512B-V1">Asmarandana 512B V1</a></h3>
           <p class="model-id"><code>Asmarandana-512B-V1</code></p>
           <p>Adult roleplay, for callers who gate their own users.</p>
-          <p class="price"><span>$0.50</span> in · <span>$2.00</span> out <small>/ 1M tokens</small></p>
-          <a class="model-more" href="/models/Asmarandana-512B-V1">Specs &amp; live performance →</a>
+          <p class="price"><span data-price="Asmarandana-512B-V1:input">$0.50</span> in · <span data-price="Asmarandana-512B-V1:out">$2.00</span> out <small>/ 1M tokens</small></p>
+          <a class="model-more" href="/models#Asmarandana-512B-V1">Specs &amp; full rates →</a>
         </article>
         <article class="card model">
           <span class="badge badge-err">Unrestricted</span>
-          <h3><a href="/models/Wissangeni-512B-V1">Wissangeni 512B V1</a></h3>
+          <h3><a href="/models#Wissangeni-512B-V1">Wissangeni 512B V1</a></h3>
           <p class="model-id"><code>Wissangeni-512B-V1</code></p>
           <p>Unrestricted roleplay. The highest rate of the three, because it is the one that rarely says no.</p>
-          <p class="price"><span>$0.80</span> in · <span>$4.00</span> out <small>/ 1M tokens</small></p>
-          <a class="model-more" href="/models/Wissangeni-512B-V1">Specs &amp; live performance →</a>
+          <p class="price"><span data-price="Wissangeni-512B-V1:input">$0.80</span> in · <span data-price="Wissangeni-512B-V1:out">$4.00</span> out <small>/ 1M tokens</small></p>
+          <a class="model-more" href="/models#Wissangeni-512B-V1">Specs &amp; full rates →</a>
         </article>
       </div>
 
-      <p class="models-cta"><a class="btn btn-ghost" href="/models">Compare the models, with live speed and latency →</a></p>
+      <p class="models-cta"><a class="btn btn-ghost" href="/models">Compare every model side by side →</a></p>
     </div>
   </section>
 
@@ -137,10 +145,10 @@
   <section class="section" id="pricing">
     <div class="wrap">
       <h2 class="sec-title">Pricing</h2>
-      <p class="sec-lede">USD per million tokens. The last three columns are the three bands — which one applies is decided by the thinking effort on your request.</p>
+      <p class="sec-lede">USD per million tokens. The last three columns are the output bands — which one applies is decided by the thinking effort on your request.</p>
 
       <div class="table-scroll">
-        <table class="table">
+        <table class="table" id="rateTable">
           <thead>
             <tr>
               <th scope="col">Model</th>
@@ -152,17 +160,29 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
+            <tr data-model="Jagad-512B-V1">
               <th scope="row">Jagad-512B-V1</th>
-              <td>$0.35</td><td>$0.10</td><td>$1.50</td><td>$2.00</td><td>$1.20</td>
+              <td data-price="Jagad-512B-V1:input">$0.35</td>
+              <td data-price="Jagad-512B-V1:cache">$0.10</td>
+              <td data-price="Jagad-512B-V1:out">$1.50</td>
+              <td data-price="Jagad-512B-V1:out-max">$2.00</td>
+              <td data-price="Jagad-512B-V1:out-none">$1.20</td>
             </tr>
-            <tr>
+            <tr data-model="Asmarandana-512B-V1">
               <th scope="row">Asmarandana-512B-V1</th>
-              <td>$0.50</td><td>$0.10</td><td>$2.00</td><td>$2.65</td><td>$1.60</td>
+              <td data-price="Asmarandana-512B-V1:input">$0.50</td>
+              <td data-price="Asmarandana-512B-V1:cache">$0.10</td>
+              <td data-price="Asmarandana-512B-V1:out">$2.00</td>
+              <td data-price="Asmarandana-512B-V1:out-max">$2.65</td>
+              <td data-price="Asmarandana-512B-V1:out-none">$1.60</td>
             </tr>
-            <tr>
+            <tr data-model="Wissangeni-512B-V1">
               <th scope="row">Wissangeni-512B-V1</th>
-              <td>$0.80</td><td>$0.20</td><td>$4.00</td><td>$6.00</td><td>$3.50</td>
+              <td data-price="Wissangeni-512B-V1:input">$0.80</td>
+              <td data-price="Wissangeni-512B-V1:cache">$0.20</td>
+              <td data-price="Wissangeni-512B-V1:out">$4.00</td>
+              <td data-price="Wissangeni-512B-V1:out-max">$6.00</td>
+              <td data-price="Wissangeni-512B-V1:out-none">$3.50</td>
             </tr>
           </tbody>
         </table>
@@ -175,136 +195,99 @@
         </div>
         <div class="note">
           <h3>Refusals</h3>
-          <p>A model that refuses still had to read the prompt first, so it is not free — but it is not billed as a full answer either: <strong>$0.05 flat per request</strong>, replacing the token count.</p>
+          <p>A refused request is not billed as a full answer: it costs <strong><span data-price="refusal">$0.05</span> flat</strong>, in place of its token count.</p>
         </div>
         <div class="note">
           <h3>Billing</h3>
-          <p>Usage is summarised into an invoice per period: per-model breakdown, subtotal, tax, total. Paid in <strong>USDT (TRC20)</strong>, with the IDR rate printed on the invoice.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========================================================== start -->
-  <section class="section section-tint" id="start">
-    <div class="wrap">
-      <h2 class="sec-title">Get started</h2>
-      <p class="sec-lede">Your base URL and API key arrive together when the key is issued. Everything after that is an ordinary OpenAI call.</p>
-
-      <div class="tabs" role="tablist" aria-label="Code examples">
-        <button class="tab is-on" role="tab" id="tab-curl"   aria-selected="true"  aria-controls="pane-curl">cURL</button>
-        <button class="tab"       role="tab" id="tab-python" aria-selected="false" aria-controls="pane-python">Python</button>
-        <button class="tab"       role="tab" id="tab-node"   aria-selected="false" aria-controls="pane-node">Node.js</button>
-      </div>
-
-      <div class="term term-flat">
-        <div class="term-bar">
-          <span class="term-title" id="paneTitle">chat completion, streaming</span>
-          <button class="copy" type="button" data-copy=".pane:not([hidden]) code">Copy</button>
-        </div>
-
-        <div class="pane" role="tabpanel" id="pane-curl" aria-labelledby="tab-curl">
-<pre class="term-body"><code>curl https://ai.zeiko.biz.id/v1/chat/completions \
-  -H "Authorization: Bearer $ZEIKO_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "model": "Asmarandana-512B-V1",
-    "messages": [
-      {"role": "system", "content": "You are a patient listener."},
-      {"role": "user",   "content": "Retell my day, but make it heroic."}
-    ],
-    "reasoning_effort": "none",
-    "stream": true
-  }'</code></pre>
-        </div>
-
-        <div class="pane" role="tabpanel" id="pane-python" aria-labelledby="tab-python" hidden>
-<pre class="term-body"><code>from openai import OpenAI
-
-client = OpenAI(
-    base_url="https://ai.zeiko.biz.id/v1/chat/completions",
-    api_key="sk-zeiko-...",
-)
-
-stream = client.chat.completions.create(
-    model="Jagad-512B-V1",
-    messages=[{"role": "user", "content": "Hi, tell me who you are."}],
-    stream=True,
-)
-
-for chunk in stream:
-    print(chunk.choices[0].delta.content or "", end="")</code></pre>
-        </div>
-
-        <div class="pane" role="tabpanel" id="pane-node" aria-labelledby="tab-node" hidden>
-<pre class="term-body"><code>import OpenAI from "openai";
-
-const client = new OpenAI({
-  baseURL: "https://ai.zeiko.biz.id/v1/chat/completions",
-  apiKey: process.env.ZEIKO_API_KEY,
-});
-
-const stream = await client.chat.completions.create({
-  model: "Wissangeni-512B-V1",
-  messages: [{ role: "user", content: "Hi, tell me who you are." }],
-  stream: true,
-});
-
-for await (const part of stream) {
-  process.stdout.write(part.choices[0]?.delta?.content ?? "");
-}</code></pre>
+          <p>Usage is summed into one invoice per period: per-model breakdown, subtotal, tax, total. Paid in <strong>USDT (TRC20)</strong>, with the IDR rate printed on the invoice.</p>
         </div>
       </div>
 
-      <p class="fineprint">
-        <code>GET /v1/models</code> returns every model together with all three of its
-        pricing bands, so a client that wants to know the rate never has to ask anyone.
-      </p>
+      <!-- Needs JavaScript to add up; without it, the table above says everything. -->
+      <form class="card calc" id="calc" hidden aria-labelledby="calcTitle">
+        <div class="calc-head">
+          <h3 id="calcTitle">Estimate a bill</h3>
+          <p>Rates come straight from the table above.</p>
+        </div>
+        <div class="calc-grid">
+          <label>Model
+            <select name="model"></select>
+          </label>
+          <label>Thinking effort
+            <select name="effort">
+              <option value="out-none">none</option>
+              <option value="out-none">minimal</option>
+              <option value="out">low</option>
+              <option value="out" selected>medium</option>
+              <option value="out">high</option>
+              <option value="out-max">max</option>
+            </select>
+          </label>
+          <label>Input tokens per request
+            <input type="number" name="input" min="0" step="1" value="3000" inputmode="numeric">
+          </label>
+          <label>…of which cache reads
+            <input type="number" name="cached" min="0" step="1" value="0" inputmode="numeric">
+          </label>
+          <label>Output tokens per request
+            <input type="number" name="output" min="0" step="1" value="400" inputmode="numeric">
+          </label>
+          <label>Requests
+            <input type="number" name="requests" min="0" step="1" value="10000" inputmode="numeric">
+          </label>
+        </div>
+        <output class="calc-out" name="result" aria-live="polite">
+          <span><small>Per request</small><strong data-out="one">–</strong></span>
+          <span><small>Total</small><strong data-out="all">–</strong></span>
+        </output>
+        <p class="calc-note">An estimate at list rates, before tax. Output includes reasoning tokens.</p>
+      </form>
     </div>
   </section>
 
   <!-- ============================================================ faq -->
-  <section class="section" id="faq">
+  <section class="section section-tint" id="faq">
     <div class="wrap narrow">
       <h2 class="sec-title">FAQ</h2>
 
       <details class="faq" open>
-        <summary>Do I have to change my client code?</summary>
-        <p>No. The endpoints, the request shape and the response shape follow OpenAI, so the official SDKs and most third-party clients only need a new <code>base_url</code> and API key.</p>
+        <summary>Which model should I pick?</summary>
+        <p><strong>Jagad</strong> for safe-for-work roleplay, and when you are not sure. <strong>Asmarandana</strong> for adult roleplay, if you gate your own users. <strong>Wissangeni</strong> when you need a model that rarely says no — it carries the highest rate. <a href="/models">Compare them on one page.</a></p>
       </details>
 
       <details class="faq">
         <summary>How is the cost worked out?</summary>
-        <p>Per token, per million tokens, following the table above — with the band chosen by the <code>reasoning_effort</code> on your request. Input, cache-read, output and reasoning tokens are recorded separately on every usage line.</p>
+        <p>Per token, at the rates in the table above. Input, cache-read and output tokens are priced separately, and the output rate comes from the band your <code>reasoning_effort</code> lands in. Add them up and divide by a million.</p>
       </details>
 
       <details class="faq">
-        <summary>What is the difference between a <em>company</em> and a <em>private</em> key?</summary>
-        <p>A <strong>company</strong> key stands in front of many end users: every call carries its own user id, and that id is what appears on the invoice breakdown. A <strong>private</strong> key is a single holder — the <code>user</code> field is ignored, and responses are never paced.</p>
+        <summary>Are reasoning tokens billed?</summary>
+        <p>Yes, as output tokens, at the output rate of the band the request landed in. Asking for less thinking lowers both the rate and the token count.</p>
       </details>
 
       <details class="faq">
         <summary>If a model refuses, am I still billed?</summary>
-        <p>Yes, but at $0.05 flat for that request rather than the price of a full answer. A refusal is recognised from the spoken answer itself; reasoning blocks are not counted.</p>
+        <p>Yes, but <span data-price="refusal">$0.05</span> flat for that request, not the price of a full answer.</p>
       </details>
 
       <details class="faq">
-        <summary>What gets stored?</summary>
-        <p>Usage metrics needed for billing and diagnostics — counts, timings, status — plus a short preview of the prompt and answer. Nothing is sold or shared.</p>
+        <summary>How do I pay?</summary>
+        <p>Usage is invoiced per period with a per-model breakdown. You pay in USDT on TRC20; the IDR rate is printed on the invoice. There is no subscription.</p>
       </details>
     </div>
   </section>
 
   <!-- ======================================================== contact -->
-  <section class="section section-tint" id="contact">
+  <section class="section" id="contact">
     <div class="wrap narrow center">
       <h2 class="sec-title">Request a key</h2>
-      <p class="sec-lede">Tell us which models you want and roughly what volume you expect. The key is sent once, together with your base URL.</p>
+      <p class="sec-lede">Tell us which models you want and roughly what volume you expect. Your key arrives with everything you need to connect.</p>
 
-      <!-- TODO: replace with the real contact (email / Telegram / WhatsApp). -->
       <div class="contact">
         <a class="btn btn-primary" href="mailto:manukmiberxzeikoai.com?subject=ZeikoAI%20API%20key%20request">manukmiberxzeikoai.com</a>
-        <a class="btn btn-ghost" href="#pricing">Review pricing first</a>
+        <a class="btn btn-ghost" href="/models">Review the models first</a>
+      </div>
+    </div>
   </section>
 
 </main>
@@ -315,7 +298,7 @@ for await (const part of stream) {
     <nav aria-label="Footer links">
       <a href="/models">Models</a>
       <a href="#pricing">Pricing</a>
-      <a href="#start">Get started</a>
+      <a href="#faq">FAQ</a>
       <a href="#contact">Contact</a>
     </nav>
   </div>
