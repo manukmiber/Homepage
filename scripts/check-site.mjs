@@ -10,6 +10,10 @@
 //   5. What src/render.js puts into /models on the server passes the same
 //      rules, carries no text out of the snapshot, and fills every
 //      placeholder models.html has.
+//   6. The account pages (src/account/views.js), rendered from a made-up
+//      account, pass the same rules except billing words and the details a
+//      customer gets with their key — the account area is where both
+//      belong — and escape everything the account holds.
 //
 // Exits 1 with one line per problem. Reword the page; never trim the lists
 // below to make a check pass.
@@ -19,6 +23,7 @@ import { join, relative, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { render, sanitize } from '../src/render.js';
 import { sampleSnapshot } from '../dev/sample-stats.mjs';
+import * as accountViews from '../src/account/views.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const PUBLIC = join(ROOT, 'public');
@@ -221,6 +226,57 @@ if (!view) {
   }
 }
 
+// ------------------------------------------------------- account pages
+
+// The account area may talk about money (it is the customer's own) and may
+// show the key and the address it goes with; everything else stays banned.
+const ACCOUNT_OK = new Set(['billing', 'connection detail']);
+const ACCOUNT_BANNED = BANNED.filter(([what]) => !ACCOUNT_OK.has(what));
+const ACCOUNT = 'rendered /account (made-up account)';
+{
+  const evil = '<script>CANARY</script>';
+  const o = {
+    account: { id: 'a1', username: 'acme', name: evil, email: 'ops@acme.test', emailVerified: false, hasPassword: false, google: true, github: false, createdAt: Date.UTC(2026, 8, 1) },
+    mail: true,
+    plan: { id: 'expand', name: 'Expand', paygo: false, requests: 100000, days: 30, expiresAt: Date.UTC(2026, 10, 1) },
+    chat: { planName: 'Free', expiresAt: null, url: 'https://chat.example' },
+    usage: { used: 81234, amount: 100000, periodStart: Date.UTC(2026, 9, 1), resetsAt: Date.UTC(2026, 10, 1) },
+    balance: { micro: 4_200_000, text: '$4.20', shared: true },
+    prepaid: true,
+    plans: [{ id: 'welcome', name: evil, priceUsd: 1, days: 30, requests: 10000, subscription: true }],
+    topUps: [2, 5], minTopUpUsd: 2, maxTopUpUsd: 1000,
+    paymentsActive: true, subscriptionsActive: true,
+    key: { id: 'k1', masked: 'abcd…wxyz', enabled: true },
+    models: [{ id: 'pranata-v1', unit: 'mtok', usd: 0.003, window: 2000 }],
+    payments: [{ id: 'p1', kind: 'credit', what: evil, amountText: '$5.00', status: 'waiting', paid: false, invoiceUrl: 'https://pay.example/i', createdAt: Date.now() }],
+    subscriptions: [],
+    daily: [{ day: Date.now() - (Date.now() % 86_400_000), calls: 12, units: 14, inputTokens: 9000 }],
+  };
+  const opts = { google: true, github: true };
+  const pages = [
+    accountViews.page({ title: 'Account', body: accountViews.overview(o, ''), signedIn: true }),
+    accountViews.plans(o, { csrf: 'x', flash: '', pick: 'welcome' }),
+    accountViews.key(o, { csrf: 'x', flash: '', secret: 'k-123', apiBase: 'https://example.test' }),
+    accountViews.settings(o, { csrf: 'x', flash: '', opts }),
+    accountViews.signIn({ csrf: 'x', error: evil, notice: '', email: evil, next: '/account', opts }),
+    accountViews.signUp({ csrf: 'x', error: '', email: '', username: evil, next: '', opts }),
+    accountViews.forgot({ csrf: 'x', error: '', sent: false }),
+  ].join('\n');
+  for (const [what, re] of ACCOUNT_BANNED) {
+    const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
+    for (const m of pages.matchAll(g)) {
+      // "Continue with Google" is a sign-in button, not a model's origin.
+      if (what === 'model origin' && /^google$/i.test(m[0])) continue;
+      report(ACCOUNT, m.index, pages, `${what}: "${m[0]}"`);
+    }
+  }
+  for (const m of pages.matchAll(/<script>CANARY/g)) report(ACCOUNT, m.index, pages, 'an account value reached the page unescaped');
+  for (const re of NETWORK) {
+    const g = new RegExp(re.source, re.flags + 'g');
+    for (const m of pages.matchAll(g)) report(ACCOUNT, m.index, pages, `network call: "${m[0]}"`);
+  }
+}
+
 // ----------------------------------------------------------------- result
 
 if (problems.length) {
@@ -230,4 +286,4 @@ if (problems.length) {
   process.exit(1);
 }
 
-console.log(`check-site: ${files.length} files and the rendered /models clean, ${prices.size} price keys consistent.`);
+console.log(`check-site: ${files.length} files, the rendered /models and the account pages clean, ${prices.size} price keys consistent.`);

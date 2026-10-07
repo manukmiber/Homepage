@@ -28,15 +28,17 @@
       <a href="#pricing">Pricing</a>
       <a href="#decision">Decision</a>
       <a href="#faq">FAQ</a>
+      <a class="nav-account" href="/account">Sign in</a>
       <a class="btn btn-sm btn-primary" href="#contact">Request a key</a>
     </nav>
 
     <div class="topbar-tools">
       <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
-        <span aria-hidden="true">◐</span>
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
       </button>
       <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
-        <span aria-hidden="true">☰</span>
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       </button>
     </div>
   </div>
@@ -246,46 +248,71 @@
        its own plans, and not in the table or the estimator above. -->
   <section class="section section-tint" id="decision">
     <div class="wrap">
-      <h2 class="sec-title">Pranata V1</h2>
-      <p class="sec-lede">A decision model built fully in-house. Pranata delivers fast, consistent decisions — yes or no, pick one, score it, with a probability for every option — at a price that barely registers: <span data-price="pranata-v1:input">$0.003</span> per million tokens. It has a price and plans of its own, apart from the roleplay models.</p>
-      <dl class="stats stats-inline">
-        <div><dt>Active users</dt><dd>About 890</dd></div>
-      </dl>
+      <div class="dec-head">
+        <div>
+          <p class="eyebrow">Decision model · built in-house</p>
+          <h2 class="sec-title">Pranata V1</h2>
+          <p class="sec-lede">Fast, consistent decisions — yes or no, pick one, score it — with a probability for every option, at <span data-price="pranata-v1:input">$0.003</span> per million input tokens. Answers cost nothing extra. Buy a plan or add a balance yourself; no key request needed.</p>
+        </div>
+        <a class="btn btn-ghost" href="/models#pranata-v1">Specs &amp; performance →</a>
+      </div>
 
       <div class="notice" role="note">
         <p><strong>Very high demand right now.</strong> We're sorry for the higher latency, and for results that may be less steady than usual, while so many calls come in. We're working on a much larger expansion.</p>
       </div>
 
-      <div class="grid notes">
-        <article class="card model">
-          <h3><a href="/models#pranata-v1">Per token</a></h3>
-          <p class="model-id"><code>pranata-v1</code></p>
-          <p>No plan and no allowance: each call is priced on its input tokens. Answers cost nothing extra.</p>
-          <p class="price"><span data-price="pranata-v1:input">$0.003</span> in <small>/ 1M tokens</small></p>
+      <dl class="facts">
+        <div>
+          <dt>Per token</dt>
+          <dd><span data-price="pranata-v1:input">$0.003</span> <small>/ 1M input tokens</small></dd>
+          <p>From your account balance. No plan needed.</p>
+        </div>
+        <div>
+          <dt>Longest call</dt>
+          <dd>2,000 <small>tokens</small></dd>
+          <p>State and questions together.</p>
+        </div>
+        <div>
+          <dt>One plan request</dt>
+          <dd>1,000 <small>tokens</small></dd>
+          <p>A call of 1,001 to 2,000 tokens counts as two.</p>
+        </div>
+      </dl>
+
+      <h3 class="sub-title">Plans <small>for 30 days · Pranata V1 only</small></h3>
+      <div class="plans">
+        <article class="plan" id="plan-welcome">
+          <h4>Welcome</h4>
+          <p class="plan-price" data-price="decision:welcome">$1</p>
+          <p class="plan-reqs"><strong>10,000</strong> requests</p>
+          <a class="btn btn-ghost btn-sm" href="/account/plans?plan=welcome">Buy</a>
         </article>
-        <div class="note">
-          <h3>How big can a call be?</h3>
-          <p>Up to 2,000 tokens. On a plan, a call of up to 1,000 tokens counts as one request, and a call of 1,001 to 2,000 tokens counts as two.</p>
-        </div>
-        <div class="note">
-          <h3>Plans are for Decision only</h3>
-          <p>A plan covers Pranata V1 and nothing else. The roleplay models above are priced per token.</p>
-        </div>
+        <article class="plan" id="plan-expand">
+          <h4>Expand</h4>
+          <p class="plan-price" data-price="decision:expand">$5</p>
+          <p class="plan-reqs"><strong>100,000</strong> requests</p>
+          <a class="btn btn-ghost btn-sm" href="/account/plans?plan=expand">Buy</a>
+        </article>
+        <article class="plan" id="plan-huh">
+          <h4>Huh?</h4>
+          <p class="plan-price" data-price="decision:huh">$10</p>
+          <p class="plan-reqs"><strong>250,000</strong> requests</p>
+          <a class="btn btn-ghost btn-sm" href="/account/plans?plan=huh">Buy</a>
+        </article>
+        <article class="plan" id="plan-question">
+          <h4>Question about decision?</h4>
+          <p class="plan-price" data-price="decision:question">$25</p>
+          <p class="plan-reqs"><strong>750,000</strong> requests</p>
+          <a class="btn btn-ghost btn-sm" href="/account/plans?plan=question">Buy</a>
+        </article>
+        <article class="plan" id="plan-enough">
+          <h4>Is this even enough for you?</h4>
+          <p class="plan-price" data-price="decision:enough">$50</p>
+          <p class="plan-reqs"><strong>2,000,000</strong> requests</p>
+          <a class="btn btn-ghost btn-sm" href="/account/plans?plan=enough">Buy</a>
+        </article>
       </div>
-
-      <h3 class="sub-title">Plans</h3>
-      <div class="grid plans">
-        <article class="card plan"><h3>Welcome</h3><p class="plan-price" data-price="decision:welcome">$1</p><p class="plan-reqs">10,000 requests</p><p class="plan-term">for 30 days</p></article>
-        <article class="card plan"><h3>Expand</h3><p class="plan-price" data-price="decision:expand">$5</p><p class="plan-reqs">100,000 requests</p><p class="plan-term">for 30 days</p></article>
-        <article class="card plan"><h3>Huh?</h3><p class="plan-price" data-price="decision:huh">$10</p><p class="plan-reqs">250,000 requests</p><p class="plan-term">for 30 days</p></article>
-        <article class="card plan"><h3>Question about decision?</h3><p class="plan-price" data-price="decision:question">$25</p><p class="plan-reqs">750,000 requests</p><p class="plan-term">for 30 days</p></article>
-        <article class="card plan"><h3>Is this even enough for you?</h3><p class="plan-price" data-price="decision:enough">$50</p><p class="plan-reqs">2,000,000 requests</p><p class="plan-term">for 30 days</p></article>
-      </div>
-
-      <div class="cta models-cta">
-        <a class="btn btn-ghost" href="/models#pranata-v1">Live figures for Pranata V1 →</a>
-        <a class="btn btn-primary" href="#contact">Ask for a plan</a>
-      </div>
+      <p class="fineprint plans-foot">A plan's requests are used first; after that, calls come out of your balance. Plans cover Pranata V1 only — the roleplay models are priced per token.</p>
     </div>
   </section>
 
@@ -320,6 +347,11 @@
       </details>
 
       <details class="faq">
+        <summary>How do I get Pranata V1?</summary>
+        <p><a href="/account/signup">Create an account</a> with your email or a one-click sign-in, then buy a plan or add a balance. Your key is waiting on your account page.</p>
+      </details>
+
+      <details class="faq">
         <summary>Does a Decision plan cover the roleplay models?</summary>
         <p>No. Plans are for <a href="#decision">Pranata V1</a> only; Jagad, Asmarandana and Wissangeni are priced per token.</p>
       </details>
@@ -330,10 +362,10 @@
   <section class="section section-tint" id="contact">
     <div class="wrap narrow center">
       <h2 class="sec-title">Request a key</h2>
-      <p class="sec-lede">Tell us which models you want, or which Decision plan, and roughly what volume you expect. Your key arrives with everything you need to connect.</p>
+      <p class="sec-lede">For the roleplay models, tell us which ones you want and roughly what volume you expect. Your key arrives with everything you need to connect. Pranata V1 needs no request: <a href="/account/signup">create an account</a>.</p>
 
       <div class="contact">
-        <a class="btn btn-primary" href="mailto:manukmiberxzeikoai.com?subject=ZeikoAI%20API%20key%20request">manukmiberxzeikoai.com</a>
+        <a class="btn btn-primary" href="mailto:manukmiber@zeikoai.com?subject=ZeikoAI%20API%20key%20request">manukmiber@zeikoai.com</a>
         <a class="btn btn-ghost" href="/models">Review the models first</a>
       </div>
     </div>
@@ -350,6 +382,7 @@
       <a href="#decision">Decision</a>
       <a href="#faq">FAQ</a>
       <a href="#contact">Contact</a>
+      <a href="/account">Account</a>
     </nav>
   </div>
 </footer>

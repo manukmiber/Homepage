@@ -1,7 +1,9 @@
 # CLAUDE.md
 
 This repository is the public ZeikoAI website. It shows **the models, their
-prices, and how each model is performing.** Nothing else.
+prices, and how each model is performing** — and, behind sign-in, **the
+customer's own Zeiko Account** (`/account`): where Pranata V1 plans and the
+balance are bought and the key is handed over.
 
 `/models` stays: it is where visitors look the models up, with each model's
 live performance figures.
@@ -38,6 +40,14 @@ or anywhere else:
 When in doubt, leave it out. If a request would put any of the above on the
 site, say so and ask before doing it, even if the request is explicit.
 
+**The one exception is the account area (`/account`, below)**, on the
+operator's explicit request: there, the customer's own money (plan, balance,
+payments, renewals, the payment page) and the details they get with their
+key (the key itself, the address it goes with) may be shown. Everything
+else above stays banned there too — architecture, what runs the models,
+infrastructure, decision logic — and the public pages keep the rule whole:
+a plan card says "Buy", never how payment works.
+
 The same rule covers everything else in this repository: README, code
 comments, commit messages, PR titles and PR descriptions. Never name or
 describe the API's backend or the relay. Writing about how *this static
@@ -58,7 +68,9 @@ site* is built and deployed is fine.
   speed, latency, availability, requests, input and output tokens, cache
   rate, and their charts. Say where they come from as "updated every hour"
   and stop there.
-- How to request a key (the contact section).
+- How to request a key (the contact section) for the roleplay models, and
+  "Buy" / "Create an account" for Pranata V1.
+- A "Sign in" link to `/account`.
 
 ## Layout
 
@@ -73,18 +85,20 @@ public/
 src/
   worker.js       runs for /models only: fills its placeholders from the snapshot
   render.js       snapshot → HTML for those placeholders; numbers only
+  account/        Zeiko Accounts (/account): index.js routes, views.js pages,
+                  crypto.js signed cookies, service.js the accounts service
 dev/
   sample-stats.mjs  made-up figures for local development and the check
 scripts/
-  check-site.mjs  leak scan + price consistency + rendered /models (npm run check)
-wrangler.jsonc    static assets, plus the worker for /models and its R2 binding
+  check-site.mjs  leak scan + price consistency + rendered /models and /account (npm run check)
+wrangler.jsonc    static assets, plus the worker for /models and /account and its R2 binding
 ```
 
-Everything is a static file except `/models`, and the browser never asks for
-anything but this site's own files:
+Everything is a static file except `/models` and `/account`, and the browser
+never asks for anything but this site's own files:
 
-- **One piece of server code.** `src/worker.js` runs for `/models` only
-  (`run_worker_first`). It reads the hourly snapshot from the `MODELS` R2
+- **One piece of server code.** `src/worker.js` runs for `/models` and
+  `/account` only (`run_worker_first`). It reads the hourly snapshot from the `MODELS` R2
   binding and fills the page's placeholders (`data-perf-bar`, `data-perf`,
   `data-stat`) before the page leaves. Every other path never reaches it.
 - **`src/render.js` is the only door from the snapshot to the page.** It
@@ -102,6 +116,40 @@ anything but this site's own files:
   (which stays hidden without it).
 - If the snapshot is missing or unreadable, `/models` goes out as the static
   file, with "not available right now" where the figures would be.
+
+## Zeiko Accounts (`src/account/`)
+
+One account for ZeikoAI and Zeiko Chat: the same login (email and password,
+Google, GitHub) and **one balance** for both. `/account` is rendered by the
+Worker from the accounts service (`service.js`, server to server with
+`ACCOUNTS_URL` + `ACCOUNTS_TOKEN`); the browser never sees that address.
+
+- **Nothing is stored here.** The session is an HMAC-signed cookie
+  (`zk_s`, `crypto.js`, `SESSION_SECRET`), the Google/GitHub state another
+  (`zk_o`, ten minutes). Every page asks the service again.
+- **Every page works with JavaScript off**: every action is a `<form>` POST
+  with a CSRF value that must equal its `zk_c` cookie, and a foreign
+  `Origin` is refused. No `fetch` in `public/` still holds.
+- **Only fixed sentences come from the address bar** (`?m=` → `FLASH`). A
+  query string is the visitor's text; printing it would let anyone make the
+  site say anything. Everything from the service goes through `esc`.
+- **4xx messages from the service are shown as written** (they are written
+  for customers); a 5xx or an unreachable service is "not available right
+  now". `next=` only ever points at `/account…` (`safeNext`).
+- Sign-up asks for a username: the account is also a Zeiko Chat account.
+  Confirmation and password-reset emails are Zeiko Chat's own (its links,
+  its reset page); this site sends no mail.
+- Pages answer with `no-store`, `X-Frame-Options: DENY` and a CSP of
+  `'self'` only (no inline styles: progress bars are SVG attributes).
+- Settings are Worker secrets, never in `wrangler.jsonc`: `ACCOUNTS_URL`,
+  `ACCOUNTS_TOKEN`, `SESSION_SECRET` (32+), optional `GOOGLE_CLIENT_ID`/
+  `GOOGLE_CLIENT_SECRET`, `GITHUB_CLIENT_ID`/`GITHUB_CLIENT_SECRET`,
+  `API_BASE_URL`. Locally: `.dev.vars` (gitignored).
+- `npm run check` renders every account page from a made-up account laced
+  with `<script>` and holds it to the banned list minus billing and
+  connection details. Keep new pages in that list.
+- UI words: "Account", never "dashboard" (banned); CSS class names ship in
+  `public/` and are scanned too (`.funds`, not `.topup`).
 
 ## Prices: one key, many places
 
@@ -136,9 +184,11 @@ and plans cover it only. Its figures on `/models` come from the snapshot's
 `decisions` block and `per_second` (calls, not streamed replies:
 `render.js::decisionSection`) — measured counts only. Never put a made-up,
 animated or "live-looking" number in the figures; they are hourly and say so.
-"Active users: about 890" is the operator's own figure, written as static copy
-beside the specs, never in the measured panel; change it when they do. The
-high-demand notice is the operator's wording; take it down when they say so.
+The operator removed the "Active users" figure; do not bring back a typed-in
+user count. The high-demand notice is the operator's wording; take it down
+when they say so. Plan cards link to `/account/plans?plan=<id>` ("Buy"); the
+plan ids there must stay the accounts service's (`welcome`, `expand`, `huh`,
+`question`, `enough`).
 The model's id is `pranata-v1` (display name Pranata V1).
 
 ## Adding, renaming or removing a model

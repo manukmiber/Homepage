@@ -1,7 +1,8 @@
 // The only code that runs on the server side of the site.
 //
-// `run_worker_first` in wrangler.jsonc sends /models here; every other path
-// is a plain file and never reaches this code. For /models, the static page
+// `run_worker_first` in wrangler.jsonc sends /models and /account here;
+// every other path is a plain file and never reaches this code. /account is
+// Zeiko Accounts (src/account/). For /models, the static page
 // is fetched as usual and the latest hourly snapshot in R2 is rendered into
 // its placeholders (see src/render.js). The visitor's browser only ever
 // receives finished HTML: no data file, no script fetching one.
@@ -10,12 +11,16 @@
 // with its "not available right now" notes.
 
 import { render, sanitize } from './render.js';
+import { handleAccount } from './account/index.js';
 
 const OBJECT = 'models.json';
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
+    if (url.pathname === '/account' || url.pathname.startsWith('/account/')) {
+      return handleAccount(request, env, ctx);
+    }
     if (url.pathname !== '/models') return env.ASSETS.fetch(request);
 
     // The page is rewritten every hour, so the static file's validators no

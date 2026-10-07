@@ -9,6 +9,10 @@ performing.
   performance: time to first token, output speed, latency, availability,
   requests, tokens and cache rate over 24 hours, 7 days and 30 days, with
   charts. The old `/models/<id>` links redirect to `/models#<id>`.
+- `/account` is Zeiko Accounts: one account for ZeikoAI and Zeiko Chat
+  (email and password, Google or GitHub), and the customer's own area —
+  plan and requests left, the one balance, buying plans and balance, payments,
+  the key, settings. Light and dark, and every page works with JavaScript off.
 
 **Read [CLAUDE.md](CLAUDE.md) before changing anything.** It lists what the
 site must never show, and every place a price has to be updated.
@@ -24,8 +28,9 @@ public/
   css/style.css   one stylesheet, light and dark
   js/main.js      theme, menu, copy buttons, estimator, chart hover
 src/
-  worker.js       runs for /models only
+  worker.js       runs for /models and /account only
   render.js       the hourly snapshot → the figures and charts on /models
+  account/        Zeiko Accounts: sessions, sign-in with Google/GitHub, pages
 dev/
   sample-stats.mjs  made-up figures for local development
 scripts/
@@ -46,6 +51,15 @@ npm run seed:local        # made-up figures into the local bucket
 npx wrangler dev          # http://localhost:8787
 ```
 
+`/account` needs its settings in `.dev.vars` (never committed):
+`ACCOUNTS_URL`, `ACCOUNTS_TOKEN`, `SESSION_SECRET` (32+ characters), and
+optionally `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`,
+`GITHUB_CLIENT_ID`/`GITHUB_CLIENT_SECRET` and `API_BASE_URL`. Without the
+first three it says accounts open soon. In production set each with
+`npx wrangler secret put <NAME>`. The Google and GitHub apps' redirect
+URIs are `https://<site>/account/oauth/google/callback` and
+`https://<site>/account/oauth/github/callback`.
+
 ## Check
 
 ```bash
@@ -56,7 +70,8 @@ This checks the site for words it must never contain and for requests to
 anywhere else, and confirms that each price reads the same everywhere it
 appears. It also renders the made-up figures through `src/render.js`, holds
 the result to the same rules, and fails if any text from the snapshot would
-reach the page. Run it before every commit. `npm run deploy` runs it first
+reach the page, and renders the account pages from a made-up account to the
+same rules (money words allowed there). Run it before every commit. `npm run deploy` runs it first
 and stops if it fails.
 
 ## Deploy
