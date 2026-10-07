@@ -82,9 +82,3 @@ npm run deploy
 
 The `zeiko-models` R2 bucket must exist before a deploy, because the worker
 binds to it.
-
-## Still to fill in
-
-- **Contact**: the "Request a key" button points at `manukmiberxzeikoai.com`,
-  which is not a valid email address (there is no `@`). Replace it in
-  `public/index.html` with the real address.
