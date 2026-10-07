@@ -13,6 +13,8 @@ const PROFILES = [
   { id: 'Jagad-512B-V1', rph: 9, ttft: 720, tps: 48, reply: 350, prompt: 4500, cache: 0.33, err: 0.004, seed: 11 },
   { id: 'Asmarandana-512B-V1', rph: 6, ttft: 910, tps: 42, reply: 420, prompt: 5200, cache: 0.28, err: 0.006, seed: 23 },
   { id: 'Wissangeni-512B-V1', rph: 4, ttft: 1310, tps: 36, reply: 500, prompt: 6100, cache: 0.22, err: 0.009, seed: 37 },
+  // The decision model: many short calls, answered in one step.
+  { id: 'pranata-v1', decision: true, rph: 900, ttft: 0, tps: 0, reply: 0, latency: 180, prompt: 600, cache: 0, err: 0.002, seed: 53 },
 ];
 
 function rng(seed) {
@@ -38,6 +40,10 @@ function bucket(p, r, t, hours) {
   }
   const errors = r() < p.err * requests ? 1 + Math.floor(r() * 2) : 0;
   const input = Math.round(requests * p.prompt * (0.85 + 0.3 * r()));
+  if (p.decision) {
+    const latency = p.latency * (0.8 + 0.4 * r());
+    return { requests, errors, input, output: 0, cached: 0, ttft: null, latency: round(latency), tps: null };
+  }
   const output = Math.round(requests * p.reply * (0.85 + 0.3 * r()));
   const cached = Math.round(input * p.cache * (0.8 + 0.4 * r()));
   const ttft = p.ttft * (0.85 + 0.3 * r());
@@ -62,7 +68,7 @@ function series(list, start, step) {
   };
 }
 
-function figures(list) {
+function figures(list, hours) {
   const sum = (k) => list.reduce((a, b) => a + b[k], 0);
   const requests = sum('requests');
   const errors = sum('errors');
@@ -89,6 +95,7 @@ function figures(list) {
     ttft_ms: spread('ttft'),
     latency_ms: spread('latency'),
     tps: spread('tps'),
+    per_second: round((requests - errors) / (hours * 3600), 2),
   };
 }
 
@@ -100,16 +107,26 @@ export function sampleSnapshot(asOf = Math.floor(Date.now() / HOUR) * HOUR) {
     // 60 days of days: the last 30 are charted, the 30 before are "previous".
     const dayStart = Math.floor(asOf / DAY) * DAY;
     const days = Array.from({ length: 60 }, (_, i) => bucket(p, r, dayStart - (60 - i) * DAY, 24));
-    return {
+    const model = {
       id: p.id,
       stats: {
-        '24h': { current: figures(hours.slice(-24)), previous: figures(hours.slice(-48, -24)) },
-        '7d': { current: figures(hours.slice(-168)), previous: figures(hours.slice(-336, -168)) },
-        '30d': { current: figures(days.slice(-30)), previous: figures(days.slice(-60, -30)) },
+        '24h': { current: figures(hours.slice(-24), 24), previous: figures(hours.slice(-48, -24), 24) },
+        '7d': { current: figures(hours.slice(-168), 168), previous: figures(hours.slice(-336, -168), 168) },
+        '30d': { current: figures(days.slice(-30), 720), previous: figures(days.slice(-60, -30), 720) },
       },
       hourly: series(hours.slice(-168), asOf - 168 * HOUR, HOUR),
       daily: series(days.slice(-30), dayStart - 30 * DAY, DAY),
     };
+    if (p.decision) {
+      const answered = days.reduce((a, b) => a + b.requests - b.errors, 0);
+      const last = hours[hours.length - 1];
+      model.decisions = {
+        answered_to_date: answered,
+        per_second_last_hour: round((last.requests - last.errors) / 3600, 2),
+        per_second_busiest_minute_24h: round(Math.max(...hours.slice(-24).map((h) => h.requests)) / 3600 * 1.6, 2),
+      };
+    }
+    return model;
   });
   return { as_of: new Date(asOf).toISOString(), models };
 }

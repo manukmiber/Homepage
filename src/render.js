@@ -16,9 +16,9 @@ export const WINDOWS = [
 ];
 export const DEFAULT_WINDOW = '7d';
 
-const ID = /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/;
+const ID = /^[A-Za-z0-9][A-Za-z0-9._/-]{0,63}$/;
 const FIGURES = ['requests', 'served', 'errors', 'availability', 'input_tokens', 'output_tokens',
-  'cached_tokens', 'cache_rate', 'avg_input_tokens', 'avg_output_tokens'];
+  'cached_tokens', 'cache_rate', 'avg_input_tokens', 'avg_output_tokens', 'per_second'];
 const SPREADS = ['ttft_ms', 'latency_ms', 'tps'];
 const SERIES = ['requests', 'errors', 'input_tokens', 'output_tokens', 'cached_tokens', 'ttft_ms', 'latency_ms', 'tps'];
 
@@ -64,7 +64,18 @@ export function sanitize(doc) {
       const s = m.stats && m.stats[w.id];
       stats[w.id] = { cur: figures(s && s.current), prev: figures(s && s.previous) };
     }
-    models[m.id] = { stats, hourly: series(m.hourly, 168), daily: series(m.daily, 30) };
+    // The decision model carries its own counters; a boolean and numbers are
+    // all that is taken from them.
+    const d = m.decisions && typeof m.decisions === 'object' ? m.decisions : null;
+    models[m.id] = {
+      stats,
+      hourly: series(m.hourly, 168),
+      daily: series(m.daily, 30),
+      decision: d !== null,
+      totals: d
+        ? { lastHour: num(d.per_second_last_hour), busiest: num(d.per_second_busiest_minute_24h) }
+        : null,
+    };
   }
   return { asOf: Number.isFinite(asOf) ? asOf : null, models };
 }
@@ -100,6 +111,7 @@ const fmt = {
     return trim(v / 1000, v < 10000 ? 2 : 1) + ' s';
   },
   tps: (v) => (v == null ? '—' : trim(v, 1) + ' tok/s'),
+  rate: (v) => (v == null ? '—' : (v >= 100 ? grouped(v) : trim(v, v < 10 ? 2 : 1)) + '/s'),
   pct: (v, d = 1) => (v == null ? '—' : trim(v * 100, d) + '%'),
 };
 
@@ -309,6 +321,14 @@ const CHARTS = [
 ];
 const WIN = Object.fromEntries(WINDOWS.map((w) => [w.id, w]));
 
+// The decision model answers in one step: no first token, no output speed,
+// no output tokens.
+const DECISION_CHARTS = [
+  { title: 'Calls', kind: 'columns', keys: ['requests'], names: ['Calls'], fmt: 'count', sub: (w) => WIN[w].unit },
+  { title: 'Latency', kind: 'line', keys: ['latency'], names: ['Latency'], fmt: 'ms', sub: (w) => `${WIN[w].avg}, full answer` },
+  { title: 'Input tokens', kind: 'columns', keys: ['input'], names: ['Input tokens'], fmt: 'count', sub: (w) => WIN[w].unit },
+];
+
 // ----------------------------------------------------------------- tiles
 
 function delta(cur, prev, upIsGood, label) {
@@ -341,6 +361,56 @@ function tiles(s, w) {
     tile('Output tokens', fmt.compact(c.output_tokens), c.avg_output_tokens != null ? `${fmt.count(c.avg_output_tokens)} per request` : '', delta(c.output_tokens, p.output_tokens, null, pr)),
     tile('Cache rate', fmt.pct(c.cache_rate), c.cached_tokens != null ? `${fmt.compact(c.cached_tokens)} tokens from cache` : '', delta(c.cache_rate, p.cache_rate, true, pr)),
   ].join('') + '</div>';
+}
+
+function decisionTiles(s, w) {
+  const c = s.cur;
+  const p = s.prev || figures({});
+  const pr = w.prev;
+  return '<div class="tiles">' + [
+    tile('Calls per second', fmt.rate(c.per_second), `answered, ${w.short} average`, delta(c.per_second, p.per_second, null, pr)),
+    tile('Latency', fmt.ms(c.latency_ms && c.latency_ms.p50), `median full answer · p95 ${fmt.ms(c.latency_ms && c.latency_ms.p95)}`, delta(c.latency_ms && c.latency_ms.p50, p.latency_ms && p.latency_ms.p50, false, pr)),
+    tile('Availability', fmt.pct(c.availability, 2), `${fmt.count(c.errors ?? 0)} server errors`, delta(c.availability, p.availability, true, pr)),
+    tile('Calls', fmt.compact(c.requests),
+      c.served != null ? `${fmt.count(c.served)} answered` + (c.avg_input_tokens != null ? ` · ${fmt.count(c.avg_input_tokens)} tokens each` : '') : '',
+      delta(c.requests, p.requests, null, pr)),
+  ].join('') + '</div>';
+}
+
+function decisionTable(pts, win) {
+  const head = ['Period', 'Calls', 'Errors', 'Latency', 'Input'];
+  const body = pts.map((p) => '<tr>' + [
+    `<th scope="row">${esc(bucketLabel(p, win))}</th>`,
+    fmt.count(p.requests), fmt.count(p.errors), fmt.ms(p.latency), fmt.count(p.input),
+  ].map((c, i) => (i ? `<td>${esc(c)}</td>` : c)).join('') + '</tr>').join('');
+  return `<details class="perf-table"><summary>Show these figures as a table</summary>` +
+    `<div class="table-scroll"><table class="table"><thead><tr>${head.map((h) => `<th scope="col">${h}</th>`).join('')}</tr></thead>` +
+    `<tbody>${body}</tbody></table></div></details>`;
+}
+
+/** The decision model: how fast calls arrive now, then each window. */
+function decisionSection(m) {
+  const t = m.totals || {};
+  let html = '<h3 class="perf-title">Traffic</h3><div class="tiles tiles-2">' + [
+    tile('Calls per second', fmt.rate(t.lastHour), 'last full hour, average', ''),
+    tile('Busiest minute', fmt.rate(t.busiest), 'last 24 hours, per second', ''),
+  ].join('') + '</div>';
+  html += '<h3 class="perf-title perf-title-gap">Performance ' +
+    WINDOWS.map((w) => `<span data-w="${w.id}">· ${esc(w.short)}</span>`).join('') + '</h3>';
+  for (const w of WINDOWS) {
+    const s = m.stats[w.id];
+    const pts = points(m, w.id);
+    html += `<div data-w="${w.id}">`;
+    html += s.cur && s.cur.requests != null
+      ? decisionTiles(s, w)
+      : '<p class="perf-empty">No traffic in this window yet.</p>';
+    if (pts.length) {
+      html += '<div class="charts">' + DECISION_CHARTS.map((c) => chart(c, pts, w.id)).join('') + '</div>';
+      html += decisionTable(pts, w.id);
+    }
+    html += '</div>';
+  }
+  return html;
 }
 
 function table(pts, win) {
@@ -408,6 +478,10 @@ export function render(view) {
   const models = {};
   const cells = {};
   for (const [id, m] of Object.entries(view.models)) {
+    if (m.decision) {
+      models[id] = decisionSection(m);
+      continue;
+    }
     models[id] = modelSection(m);
     cells[id] = glance(m);
   }

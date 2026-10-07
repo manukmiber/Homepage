@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ZeikoAI — roleplay models and pricing</title>
-<meta name="description" content="Three roleplay models, from safe-for-work to unrestricted. 256K context, priced per million tokens.">
+<meta name="description" content="Three roleplay models, from safe-for-work to unrestricted, priced per million tokens — and Pranata V1, with plans of its own.">
 <meta name="color-scheme" content="light dark">
 <meta property="og:title" content="ZeikoAI — roleplay models and pricing">
-<meta property="og:description" content="Three roleplay models, 256K context, three pricing bands.">
+<meta property="og:description" content="Three roleplay models, 256K context, three pricing bands. Plus Pranata V1.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><path d='M21 9H11l6 6-6 8h10' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>">
 <link rel="stylesheet" href="css/style.css">
@@ -26,6 +26,7 @@
     <nav class="nav" id="nav" aria-label="Main navigation">
       <a href="/models">Models</a>
       <a href="#pricing">Pricing</a>
+      <a href="#decision">Decision</a>
       <a href="#faq">FAQ</a>
       <a class="btn btn-sm btn-primary" href="#contact">Request a key</a>
     </nav>
@@ -240,8 +241,56 @@
     </div>
   </section>
 
+  <!-- ======================================================= decision -->
+  <!-- Pranata V1 stands apart from the roleplay models: its own price,
+       its own plans, and not in the table or the estimator above. -->
+  <section class="section section-tint" id="decision">
+    <div class="wrap">
+      <h2 class="sec-title">Pranata V1</h2>
+      <p class="sec-lede">A decision model built fully in-house. Pranata delivers fast, consistent decisions — yes or no, pick one, score it, with a probability for every option — at a price that barely registers: <span data-price="pranata-v1:input">$0.003</span> per million tokens. It has a price and plans of its own, apart from the roleplay models.</p>
+      <dl class="stats stats-inline">
+        <div><dt>Active users</dt><dd>About 890</dd></div>
+      </dl>
+
+      <div class="notice" role="note">
+        <p><strong>Very high demand right now.</strong> We're sorry for the higher latency, and for results that may be less steady than usual, while so many calls come in. We're working on a much larger expansion.</p>
+      </div>
+
+      <div class="grid notes">
+        <article class="card model">
+          <h3><a href="/models#pranata-v1">Per token</a></h3>
+          <p class="model-id"><code>pranata-v1</code></p>
+          <p>No plan and no allowance: each call is priced on its input tokens. Answers cost nothing extra.</p>
+          <p class="price"><span data-price="pranata-v1:input">$0.003</span> in <small>/ 1M tokens</small></p>
+        </article>
+        <div class="note">
+          <h3>How big can a call be?</h3>
+          <p>Up to 2,000 tokens. On a plan, a call of up to 1,000 tokens counts as one request, and a call of 1,001 to 2,000 tokens counts as two.</p>
+        </div>
+        <div class="note">
+          <h3>Plans are for Decision only</h3>
+          <p>A plan covers Pranata V1 and nothing else. The roleplay models above are priced per token.</p>
+        </div>
+      </div>
+
+      <h3 class="sub-title">Plans</h3>
+      <div class="grid plans">
+        <article class="card plan"><h3>Welcome</h3><p class="plan-price" data-price="decision:welcome">$1</p><p class="plan-reqs">10,000 requests</p><p class="plan-term">for 30 days</p></article>
+        <article class="card plan"><h3>Expand</h3><p class="plan-price" data-price="decision:expand">$5</p><p class="plan-reqs">100,000 requests</p><p class="plan-term">for 30 days</p></article>
+        <article class="card plan"><h3>Huh?</h3><p class="plan-price" data-price="decision:huh">$10</p><p class="plan-reqs">250,000 requests</p><p class="plan-term">for 30 days</p></article>
+        <article class="card plan"><h3>Question about decision?</h3><p class="plan-price" data-price="decision:question">$25</p><p class="plan-reqs">750,000 requests</p><p class="plan-term">for 30 days</p></article>
+        <article class="card plan"><h3>Is this even enough for you?</h3><p class="plan-price" data-price="decision:enough">$50</p><p class="plan-reqs">2,000,000 requests</p><p class="plan-term">for 30 days</p></article>
+      </div>
+
+      <div class="cta models-cta">
+        <a class="btn btn-ghost" href="/models#pranata-v1">Live figures for Pranata V1 →</a>
+        <a class="btn btn-primary" href="#contact">Ask for a plan</a>
+      </div>
+    </div>
+  </section>
+
   <!-- ============================================================ faq -->
-  <section class="section section-tint" id="faq">
+  <section class="section" id="faq">
     <div class="wrap narrow">
       <h2 class="sec-title">FAQ</h2>
 
@@ -264,14 +313,24 @@
         <summary>What does a refused request cost?</summary>
         <p><span data-price="refusal">$0.05</span> flat for that request, not the price of a full answer.</p>
       </details>
+
+      <details class="faq">
+        <summary>What counts as one request on a Decision plan?</summary>
+        <p>A call of up to 1,000 tokens is one request; a call of 1,001 to 2,000 tokens is two. No call can be longer than 2,000 tokens. Per-token pricing does not count requests at all: the price is on the tokens.</p>
+      </details>
+
+      <details class="faq">
+        <summary>Does a Decision plan cover the roleplay models?</summary>
+        <p>No. Plans are for <a href="#decision">Pranata V1</a> only; Jagad, Asmarandana and Wissangeni are priced per token.</p>
+      </details>
     </div>
   </section>
 
   <!-- ======================================================== contact -->
-  <section class="section" id="contact">
+  <section class="section section-tint" id="contact">
     <div class="wrap narrow center">
       <h2 class="sec-title">Request a key</h2>
-      <p class="sec-lede">Tell us which models you want and roughly what volume you expect. Your key arrives with everything you need to connect.</p>
+      <p class="sec-lede">Tell us which models you want, or which Decision plan, and roughly what volume you expect. Your key arrives with everything you need to connect.</p>
 
       <div class="contact">
         <a class="btn btn-primary" href="mailto:manukmiberxzeikoai.com?subject=ZeikoAI%20API%20key%20request">manukmiberxzeikoai.com</a>
@@ -288,6 +347,7 @@
     <nav aria-label="Footer links">
       <a href="/models">Models</a>
       <a href="#pricing">Pricing</a>
+      <a href="#decision">Decision</a>
       <a href="#faq">FAQ</a>
       <a href="#contact">Contact</a>
     </nav>
