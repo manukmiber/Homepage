@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Models — ZeikoAI</title>
-<meta name="description" content="Every ZeikoAI model with its specs, full rate card and live performance — the roleplay models, and ZeikoAI Decision on its own — updated every hour.">
+<meta name="description" content="Every ZeikoAI model with its specs, full rate card and live performance — the roleplay models, and Pranata V1 on its own — updated every hour.">
 <meta name="color-scheme" content="light dark">
 <meta property="og:title" content="ZeikoAI models">
 <meta property="og:description" content="Specs, full rate card and live performance for every ZeikoAI roleplay model.">
@@ -49,13 +49,13 @@
     <div class="wrap">
       <p class="crumbs"><a href="/">Home</a> <span aria-hidden="true">/</span> Models</p>
       <h1>Models</h1>
-      <p class="lede">Three roleplay models, each with its full rate card and live performance, and ZeikoAI Decision in a section of its own below. Prices are USD.</p>
+      <p class="lede">Three roleplay models, each with its full rate card and live performance, and Pranata V1 in a section of its own below. Prices are USD.</p>
       <nav class="chips" aria-label="Jump to a model">
         <a class="chip" href="#Jagad-512B-V1"><i class="dot-ok" aria-hidden="true"></i>Jagad-512B-V1</a>
         <a class="chip" href="#Asmarandana-512B-V1"><i class="dot-warn" aria-hidden="true"></i>Asmarandana-512B-V1</a>
         <a class="chip" href="#Wissangeni-512B-V1"><i class="dot-err" aria-hidden="true"></i>Wissangeni-512B-V1</a>
         <span class="chips-sep" aria-hidden="true">·</span>
-        <a class="chip" href="#zeikoai/decision"><i class="dot-brand" aria-hidden="true"></i>zeikoai/decision</a>
+        <a class="chip" href="#pranata-v1"><i class="dot-brand" aria-hidden="true"></i>pranata-v1</a>
       </nav>
       <div class="perf-bar" data-perf-bar hidden></div>
     </div>
@@ -239,7 +239,7 @@
   </section>
 
   <!-- ======================================================= decision -->
-  <!-- ZeikoAI Decision on its own: not in the at-a-glance table above, and
+  <!-- Pranata V1 on its own: not in the at-a-glance table above, and
        its figures are calls rather than streamed replies. -->
   <section class="section section-tint" aria-labelledby="decisionTitle">
     <div class="wrap sheets">
@@ -248,29 +248,29 @@
         <p class="sec-lede">Answers typed questions with a probability for every option. Priced and planned apart from the roleplay models.</p>
       </div>
 
-      <article class="card sheet" id="zeikoai/decision">
+      <article class="card sheet" id="pranata-v1">
         <header class="sheet-head">
-          <h2>ZeikoAI Decision</h2>
+          <h2>Pranata V1</h2>
           <p class="sheet-id">
-            <code id="id-decision">zeikoai/decision</code>
+            <code id="id-decision">pranata-v1</code>
             <button class="copy" type="button" data-copy="#id-decision">Copy ID</button>
           </p>
-          <p class="sheet-lede">Ask it yes or no, pick one, or score it, about the data you send, and get a probability for every option instead of a paragraph.</p>
+          <p class="sheet-lede">A decision model built fully in-house. Pranata delivers fast, consistent decisions — yes or no, pick one, score it, with a probability for every option — at a price that barely registers.</p>
         </header>
         <div class="notice" role="note">
           <p><strong>Very high demand right now.</strong> We're sorry for the higher latency, and for results that may be less steady than usual, while so many calls come in. We're working on a much larger expansion.</p>
         </div>
         <div class="sheet-body">
           <dl class="specs">
+            <div><dt>Active users</dt><dd>About 890</dd></div>
             <div><dt>Questions</dt><dd>Yes/no, pick one, score</dd></div>
-            <div><dt>Answer</dt><dd>A probability per option</dd></div>
             <div><dt>Longest call</dt><dd>2,000 tokens</dd></div>
             <div><dt>One plan request</dt><dd>Up to 1,000 tokens</dd></div>
           </dl>
           <table class="rates">
             <caption>Rates · USD</caption>
             <tbody>
-              <tr><th scope="row">Input <small>per 1M tokens</small></th><td data-price="zeikoai/decision:input">$0.003</td></tr>
+              <tr><th scope="row">Input <small>per 1M tokens</small></th><td data-price="pranata-v1:input">$0.003</td></tr>
               <tr class="rates-flat"><th scope="row">Answers</th><td>Included</td></tr>
               <tr><th scope="row">Welcome <small>10,000 requests, 30 days</small></th><td data-price="decision:welcome">$1</td></tr>
               <tr><th scope="row">Expand <small>100,000 requests, 30 days</small></th><td data-price="decision:expand">$5</td></tr>
@@ -280,8 +280,8 @@
             </tbody>
           </table>
         </div>
-        <p class="fineprint">Plans cover ZeikoAI Decision only. On a plan, a call over 1,000 tokens counts as two requests.</p>
-        <section class="perf" data-perf="zeikoai/decision" aria-label="ZeikoAI Decision performance">
+        <p class="fineprint">Plans cover Pranata V1 only. On a plan, a call over 1,000 tokens counts as two requests.</p>
+        <section class="perf" data-perf="pranata-v1" aria-label="Pranata V1 performance">
           <p class="perf-empty">Live performance figures are not available right now.</p>
         </section>
       </article>
@@ -298,8 +298,7 @@
         <div><dt>Output speed</dt><dd>Output tokens per second while the answer is being written.</dd></div>
         <div><dt>Availability</dt><dd>The share of requests answered without a server error.</dd></div>
         <div><dt>Cache rate</dt><dd>The share of input tokens read from cache, at the cache-read rate.</dd></div>
-        <div><dt>Calls per second</dt><dd>ZeikoAI Decision's answered calls, divided by the seconds in the window.</dd></div>
-        <div><dt>Answered to date</dt><dd>Every call ZeikoAI Decision has answered so far.</dd></div>
+        <div><dt>Calls per second</dt><dd>Pranata V1's answered calls, divided by the seconds in the window.</dd></div>
       </dl>
       <p class="fineprint">Medians over the window you pick, beside the same window just before it. Times are in UTC.</p>
     </div>

@@ -110,7 +110,7 @@ Each rate appears in several places, and every one of them is marked with
 (standard band), `out-none` and `out-max`. The refused-request fee is just
 `data-price="refusal"`.
 
-ZeikoAI Decision has its own keys: `zeikoai/decision:input` (per million
+Pranata V1 has its own keys: `pranata-v1:input` (per million
 input tokens) and `decision:<plan-id>` for each plan (`welcome`, `expand`,
 `huh`, `question`, `enough`).
 
@@ -126,7 +126,7 @@ The estimator reads its rates from the pricing table (`#rateTable`), and the
 hero bars size themselves from their prices, so neither needs editing.
 Any new `$` amount on a page must carry a `data-price` key too.
 
-## ZeikoAI Decision stands apart
+## Pranata V1 stands apart
 
 The decision model is not one of the roleplay models and must not be mixed in
 with them: it has its own section on both pages (`#decision` on the landing
@@ -135,9 +135,11 @@ pricing table, the estimator, the at-a-glance table or the "Models: 3" stat,
 and plans cover it only. Its figures on `/models` come from the snapshot's
 `decisions` block and `per_second` (calls, not streamed replies:
 `render.js::decisionSection`) — measured counts only. Never put a made-up,
-animated or "live-looking" number on the page; the figures are hourly and say
-so. The high-demand notice is the operator's wording; take it down when they
-say so.
+animated or "live-looking" number in the figures; they are hourly and say so.
+"Active users: about 890" is the operator's own figure, written as static copy
+beside the specs, never in the measured panel; change it when they do. The
+high-demand notice is the operator's wording; take it down when they say so.
+The model's id is `pranata-v1` (display name Pranata V1).
 
 ## Adding, renaming or removing a model
 

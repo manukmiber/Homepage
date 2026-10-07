@@ -73,7 +73,7 @@ export function sanitize(doc) {
       daily: series(m.daily, 30),
       decision: d !== null,
       totals: d
-        ? { answered: num(d.answered_to_date), lastHour: num(d.per_second_last_hour), busiest: num(d.per_second_busiest_minute_24h) }
+        ? { lastHour: num(d.per_second_last_hour), busiest: num(d.per_second_busiest_minute_24h) }
         : null,
     };
   }
@@ -388,11 +388,10 @@ function decisionTable(pts, win) {
     `<tbody>${body}</tbody></table></div></details>`;
 }
 
-/** The decision model: what it has answered so far, then each window. */
+/** The decision model: how fast calls arrive now, then each window. */
 function decisionSection(m) {
   const t = m.totals || {};
-  let html = '<h3 class="perf-title">Traffic</h3><div class="tiles tiles-3">' + [
-    tile('Answered to date', fmt.compact(t.answered), t.answered != null ? `${fmt.count(t.answered)} calls` : '', ''),
+  let html = '<h3 class="perf-title">Traffic</h3><div class="tiles tiles-2">' + [
     tile('Calls per second', fmt.rate(t.lastHour), 'last full hour, average', ''),
     tile('Busiest minute', fmt.rate(t.busiest), 'last 24 hours, per second', ''),
   ].join('') + '</div>';
