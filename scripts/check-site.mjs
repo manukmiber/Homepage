@@ -132,10 +132,16 @@ const files = walk(PUBLIC).filter((f) => TEXT_EXT.has(extname(f)));
 const html = [];
 const prices = new Map(); // key -> [{ value, file, index, src }]
 
+// The one contact address is the operator's own mailbox; its local part is
+// not a word on the page. Only this exact address is let through, blanked to
+// the same length so line numbers stay true.
+const CONTACT = 'admin@zeiko.biz.id';
+
 function scan(file, src) {
+  const words = src.split(CONTACT).join(' '.repeat(CONTACT.length));
   for (const [what, re] of BANNED) {
     const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
-    for (const m of src.matchAll(g)) report(file, m.index, src, `${what}: "${m[0]}"`);
+    for (const m of words.matchAll(g)) report(file, m.index, src, `${what}: "${m[0]}"`);
   }
 
   for (const re of NETWORK) {
