@@ -110,15 +110,34 @@ Each rate appears in several places, and every one of them is marked with
 (standard band), `out-none` and `out-max`. The refused-request fee is just
 `data-price="refusal"`.
 
+ZeikoAI Decision has its own keys: `zeikoai/decision:input` (per million
+input tokens) and `decision:<plan-id>` for each plan (`welcome`, `expand`,
+`huh`, `question`, `enough`).
+
 When a rate changes, change **every** element that carries its key:
 
 - `index.html`: the hero rate card (Jagad only), the model cards, the pricing
   table, and the refusal note and FAQ entry.
 - `models.html`: the at-a-glance table and that model's rate card.
+- Decision: `index.html`'s `#decision` section (per-token card and plan
+  cards) and `models.html`'s Decision sheet (its rate table).
 
 The estimator reads its rates from the pricing table (`#rateTable`), and the
 hero bars size themselves from their prices, so neither needs editing.
 Any new `$` amount on a page must carry a `data-price` key too.
+
+## ZeikoAI Decision stands apart
+
+The decision model is not one of the roleplay models and must not be mixed in
+with them: it has its own section on both pages (`#decision` on the landing
+page, its own sheet below the roleplay sheets on `/models`), it is not in the
+pricing table, the estimator, the at-a-glance table or the "Models: 3" stat,
+and plans cover it only. Its figures on `/models` come from the snapshot's
+`decisions` block and `per_second` (calls, not streamed replies:
+`render.js::decisionSection`) — measured counts only. Never put a made-up,
+animated or "live-looking" number on the page; the figures are hourly and say
+so. The high-demand notice is the operator's wording; take it down when they
+say so.
 
 ## Adding, renaming or removing a model
 
