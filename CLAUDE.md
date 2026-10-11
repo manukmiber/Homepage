@@ -70,6 +70,8 @@ site* is built and deployed is fine.
   and stop there.
 - How to request a key (the contact section) for the roleplay models, and
   "Buy" / "Create an account" for Pranata V1.
+- The playground (`#try`, below): "5 free tries every 30 minutes" and
+  nothing more about what a try costs or whose plan it uses.
 - A "Sign in" link to `/account`.
 
 ## Layout
@@ -86,6 +88,7 @@ public/
   css/style.css   the only stylesheet; colour tokens for light and dark
   js/main.js      theme, mobile menu, topbar, copy buttons, effort bars, plan
                   value, estimator, chart hover
+  js/try.js       the homepage playground (#try): asks the account door's /v1/try
   account/index.html  /account and every page under it: one plain page
   js/account/     Zeiko Accounts: app.js asks the account door, views.js draws
 src/
@@ -115,11 +118,12 @@ whose script talks to the account door and nowhere else:
 - **Never serve the snapshot to the browser**, whole or in part: no data
   file, no JSON endpoint, no inline JSON. Only finished HTML goes out.
 - **No runtime requests.** No `fetch`, XHR, WebSocket, analytics, web fonts or
-  CDN scripts. The network tab shows only this site's own files. The one
-  exception is `public/js/account/app.js` calling the account door.
+  CDN scripts. The network tab shows only this site's own files. Two
+  exceptions, both to the account door only: `public/js/account/app.js`, and
+  the homepage playground `public/js/try.js` (see "The playground").
 - **No build step**, no framework, no dependencies besides wrangler.
-- Every page must read fine with JavaScript off, except the account area,
-  which needs it and says so (`<noscript>`). The figures and charts are
+- Every page must read fine with JavaScript off, except the account area
+  and the playground, which need it and say so (`<noscript>`). The figures and charts are
   rendered on the server; JavaScript only adds chart hover, the estimator
   and the plans' "requests per dollar" line (both stay hidden without it).
 - If the snapshot is missing or unreadable, `/models` goes out as the static
@@ -168,6 +172,31 @@ GitHub keys. Google and GitHub sign-in start and finish at the door
   progress bars are SVG attributes).
 - UI words: "Account", never "dashboard" (banned); CSS class names ship in
   `public/` and are scanned too (`.funds`, not `.topup`).
+
+## The playground (`#try` on the homepage, `public/js/try.js`)
+
+On the operator's request, anyone can ask Pranata V1 one real question of
+each kind — yes or no (`noul`), pick one (`choice`), score it (`score`) — right
+after the hero, and see the answer with its probabilities.
+
+- **It asks the account door, `GET`/`POST /v1/try`, and nothing else.** The
+  door's address is the homepage's `<meta name="zeiko-accounts">`; the
+  `POST` carries `X-Zeiko: 1` and the visitor's own cookie for the door
+  (`credentials: 'include'`), so a signed-in visitor counts as their account.
+  `npm run check` lets `fetch(DOOR …)` and the door's `/v1` path through in
+  `try.js` only, and the door's address in that one `<meta>` only.
+- **The limit lives in the account door**, never here: 5 free tries per 30
+  minutes per visitor, a ceiling across everybody, free tries never touch a
+  plan. Past them a signed-in
+  person's tries go through their plan, then their balance, then are owed up
+  to a small cap; the account page shows what is owed. **The public page says
+  only "5 free tries every 30 minutes"** — never what a try costs, whose plan
+  it uses or what is owed (billing stays off the public pages).
+- **Every value that comes back goes in as text** (`textContent`), never as
+  markup; 4xx messages from the door are shown as written, anything else is
+  "not available right now".
+- The examples in the form are fixed, made-up texts; the answer is the
+  model's own, live. Nothing from a try is kept on the site.
 
 ## Prices: one key, many places
 

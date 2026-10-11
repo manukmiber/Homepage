@@ -146,20 +146,37 @@ const prices = new Map(); // key -> [{ value, file, index, src }]
 // the same length so line numbers stay true.
 const CONTACT = 'admin@zeiko.biz.id';
 
+// The homepage's playground (#try) is the one exception outside the account
+// area, on the operator's request: js/try.js may call the account door —
+// `fetch(DOOR …)` and the door's /v1 path, nothing else — and index.html may
+// name the door in its <meta name="zeiko-accounts">, nowhere else. Every
+// other rule, billing included, holds for both.
+const PLAYGROUND = join(PUBLIC, 'js', 'try.js');
+const HOME = join(PUBLIC, 'index.html');
+const DOOR_META = `<meta name="zeiko-accounts" content="${DOOR}">`;
+
 function scan(file, src) {
   const words = src.split(CONTACT).join(' '.repeat(CONTACT.length));
   for (const [what, re] of BANNED) {
     const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
-    for (const m of words.matchAll(g)) report(file, m.index, src, `${what}: "${m[0]}"`);
+    for (const m of words.matchAll(g)) {
+      if (file === PLAYGROUND && what === 'connection detail' && /^\/v1$/i.test(m[0])) continue;
+      report(file, m.index, src, `${what}: "${m[0]}"`);
+    }
   }
 
   for (const re of NETWORK) {
     const g = new RegExp(re.source, re.flags + 'g');
-    for (const m of src.matchAll(g)) report(file, m.index, src, `network call: "${m[0]}" (the site fetches nothing)`);
+    for (const m of src.matchAll(g)) {
+      if (file === PLAYGROUND && src.startsWith('fetch(DOOR ', m.index)) continue;
+      report(file, m.index, src, `network call: "${m[0]}" (the site fetches nothing; the playground asks only the account door)`);
+    }
   }
 
   for (const m of src.matchAll(URL_RE)) {
-    if (!URL_OK.some((ok) => ok.test(m[0]))) report(file, m.index, src, `external URL: "${m[0]}"`);
+    if (URL_OK.some((ok) => ok.test(m[0]))) continue;
+    if (file === HOME && m[0] === DOOR && src.slice(m.index - DOOR_META.indexOf(DOOR)).startsWith(DOOR_META)) continue;
+    report(file, m.index, src, `external URL: "${m[0]}"`);
   }
 }
 
@@ -172,6 +189,13 @@ for (const file of files) {
   }
   scan(file, src);
   if (extname(file) === '.html') html.push({ file, src });
+}
+
+if (files.includes(PLAYGROUND)) {
+  const home = html.find((h) => h.file === HOME);
+  if (!home || !home.src.includes(DOOR_META)) {
+    problems.push(`public/index.html: the playground (js/try.js) reads the account door from ${DOOR_META}`);
+  }
 }
 
 // ---------------------------------------------------------------- prices
@@ -303,6 +327,7 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
     },
     usage: { used: 81234, amount: 100000, periodStart: Date.UTC(2026, 9, 1), resetsAt: Date.UTC(2026, 10, 1) },
     balance: { micro: 4_200_000, text: '$4.20', shared: true },
+    owed: { micro: 1240, text: evil },
     prepaid: true,
     plans: [{ id: 'welcome', name: evil, priceUsd: 1, days: 30, requests: 10000, subscription: true }],
     topUps: [2, 5], minTopUpUsd: 2, maxTopUpUsd: 1000,

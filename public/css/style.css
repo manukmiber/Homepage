@@ -1449,6 +1449,78 @@ body:has(#win-30d:checked) [data-w="30d"] { display: revert; }
   .calc-out strong { font-size: 1.25rem; }
 }
 
+/* ============================================================ playground */
+/* The homepage's live question to Pranata V1 (js/try.js): the form beside
+   the answer, which reuses the hero card's bars (.odds, .hist). */
+
+.section-try { padding-top: clamp(40px, 6vw, 72px); }
+.try { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 16px; align-items: start; }
+.try-off { margin: 0; color: var(--text-2); }
+
+.try-form { display: grid; gap: 16px; padding: clamp(18px, 3vw, 26px); }
+.try-tabs { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px; border: 1px solid var(--border); border-radius: var(--r-full); background: var(--surface-2); width: fit-content; max-width: 100%; }
+.try-tab {
+  display: inline-flex; align-items: center; gap: 7px;
+  min-height: 40px; padding: 8px 14px;
+  border: 0; border-radius: var(--r-full);
+  background: none; color: var(--text-2);
+  font: 600 .9rem/1.2 var(--sans);
+  cursor: pointer;
+  transition: background var(--fast), color var(--fast);
+}
+.try-tab .ico { width: 16px; height: 16px; }
+.try-tab:hover { color: var(--text); }
+.try-tab[aria-selected="true"] { background: var(--surface); color: var(--dec-ink); box-shadow: var(--shadow); }
+.try-tab:focus-visible { box-shadow: var(--ring-dec); border-radius: var(--r-full); }
+
+.try-field { display: grid; gap: 6px; margin: 0; color: var(--text-2); font-size: .86rem; font-weight: 600; }
+.try-field small { color: var(--muted); font-weight: 500; }
+.try-field textarea, .try-field input, .try-pair input {
+  width: 100%;
+  padding: 10px 13px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r);
+  background: var(--surface);
+  color: var(--text);
+  font: 400 .95rem/1.5 var(--sans);
+  resize: vertical;
+  transition: border-color var(--fast), box-shadow var(--fast);
+}
+.try-field input, .try-pair input { min-height: 44px; }
+.try-field textarea:focus-visible, .try-field input:focus-visible, .try-pair input:focus-visible { border-color: var(--dec); box-shadow: var(--ring-dec); border-radius: var(--r); }
+.try-sides summary { width: fit-content; color: var(--dec-ink); cursor: pointer; }
+.try-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+.try-pair label { display: grid; gap: 6px; }
+
+.try-go { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; }
+.try-go .btn { min-height: 46px; }
+.try-go .btn:hover { transform: none; }
+.card .try-left, .try-left { margin: 0; color: var(--muted); font-size: .86rem; font-variant-numeric: tabular-nums; }
+
+.try-out { position: sticky; top: 84px; padding: clamp(18px, 3vw, 24px); }
+.try-out .demo-head { margin-bottom: 14px; }
+.try-result { display: grid; gap: 14px; min-height: 180px; align-content: start; }
+.card .try-wait, .card .try-err { margin: 0; padding: 22px 16px; border: 1px dashed var(--border-strong); border-radius: var(--r); color: var(--muted); text-align: center; font-size: .92rem; }
+.card .try-err { border-style: solid; border-color: color-mix(in srgb, var(--err) 35%, var(--border)); background: var(--err-soft); color: var(--text); }
+.try-head .ask-kind { margin-bottom: 4px; }
+.card .try-big { margin: 0; color: var(--text); font-size: clamp(1.5rem, 3vw, 1.9rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.15; overflow-wrap: anywhere; }
+.card .try-small { margin: 4px 0 0; color: var(--dec-ink); font-size: .9rem; font-weight: 600; }
+.try-result .hist { height: 150px; }
+.try-legend { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: -4px 0 0; padding: 0; list-style: none; color: var(--muted); font-size: .8rem; }
+.try-legend b { color: var(--text-2); font-variant-numeric: tabular-nums; }
+.card .try-foot { margin: 0; color: var(--muted); font-size: .78rem; }
+
+@media (max-width: 900px) {
+  .try { grid-template-columns: minmax(0, 1fr); }
+  .try-out { position: static; }
+}
+@media (max-width: 520px) {
+  .try-tabs { width: 100%; }
+  .try-tab { flex: 1 1 auto; justify-content: center; padding-inline: 10px; }
+  .try-pair { grid-template-columns: minmax(0, 1fr); }
+  .try-go .btn { width: 100%; }
+}
+
 /* ============================================================== account */
 /* Zeiko Accounts: the sign-in pages and the customer's own area. app.js
    draws them in the browser; the shell says so when JavaScript is off. */
@@ -1678,6 +1750,8 @@ body:has(#win-30d:checked) [data-w="30d"] { display: revert; }
 .card .stat-sub strong { color: var(--text); font-variant-numeric: tabular-nums; }
 .card .stat-foot { margin: 6px 0 16px; color: var(--muted); font-size: .82rem; }
 .card .stat-foot:empty { margin-top: 0; }
+.card .stat-owed { display: flex; gap: 8px; align-items: flex-start; margin: -6px 0 16px; padding: 8px 10px; border-radius: var(--r-sm); background: var(--warn-soft); color: var(--text-2); font-size: .82rem; }
+.stat-owed .ico { flex: none; width: 16px; height: 16px; margin-top: 1px; color: var(--warn); }
 .stat-card .btn { margin-top: auto; align-self: flex-start; }
 
 .meter { display: block; width: 100%; height: 8px; margin: 10px 0 2px; }

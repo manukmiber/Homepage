@@ -6,6 +6,8 @@
 <title>ZeikoAI — Pranata V1 and roleplay models</title>
 <meta name="description" content="Pranata V1: fast, consistent decisions with a probability for every option, priced per million input tokens or by plan. Plus three roleplay models, from safe-for-work to unrestricted.">
 <meta name="color-scheme" content="light dark">
+<!-- The playground (#try) asks this address; nothing else on the page asks anything. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
 <meta property="og:title" content="ZeikoAI — Pranata V1 and roleplay models">
 <meta property="og:description" content="Pranata V1 for decisions, with plans of its own. Three roleplay models with 256K context and three pricing bands.">
 <meta property="og:type" content="website">
@@ -76,7 +78,7 @@
         </p>
         <div class="cta">
           <a class="btn btn-dec btn-lg" href="/account/signup">Create an account <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-          <a class="btn btn-ghost btn-lg" href="#plans">See the plans</a>
+          <a class="btn btn-ghost btn-lg" href="#try">Try it free</a>
         </div>
         <p class="hero-signin">No key request needed. Already have an account? <a href="/account">Sign in</a></p>
 
@@ -140,6 +142,69 @@
       <div class="notice notice-hero" role="note">
         <span class="notice-dot" aria-hidden="true"></span>
         <p><strong>Very high demand right now.</strong> We're sorry for the higher latency, and for results that may be less steady than usual, while so many calls come in. We're working on a much larger expansion.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== playground -->
+  <!-- A real question to Pranata V1, answered live by js/try.js. Without
+       JavaScript the section says so and nothing else. -->
+  <section class="section section-try" id="try" aria-labelledby="tryTitle">
+    <div class="wrap">
+      <div class="sec-head sec-head-split">
+        <div>
+          <p class="kicker kicker-dec">Playground</p>
+          <h2 class="sec-title" id="tryTitle">Ask Pranata V1 yourself.</h2>
+          <p class="sec-lede">Pick a kind of question, change the example or write your own, and see the answer with a probability for every option. 5 free tries every 30 minutes, no account needed.</p>
+        </div>
+      </div>
+
+      <noscript><p class="card try-off">The playground needs JavaScript. Turn it on for this site to try Pranata V1 here.</p></noscript>
+
+      <div class="try" id="tryBox" hidden>
+        <form class="try-form card" id="tryForm" novalidate>
+          <div class="try-tabs" role="tablist" aria-label="Kind of question">
+            <button class="try-tab" type="button" role="tab" id="tab-noul" data-kind="noul" aria-selected="true" aria-controls="tryForm"><svg class="ico" aria-hidden="true"><use href="#i-yesno"/></svg>Yes or no</button>
+            <button class="try-tab" type="button" role="tab" id="tab-choice" data-kind="choice" aria-selected="false" aria-controls="tryForm" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-pick"/></svg>Pick one</button>
+            <button class="try-tab" type="button" role="tab" id="tab-score" data-kind="score" aria-selected="false" aria-controls="tryForm" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-score"/></svg>Score it</button>
+          </div>
+
+          <label class="try-field">Text to judge
+            <textarea name="state" rows="4" maxlength="4000" required></textarea>
+          </label>
+          <label class="try-field">Question
+            <input type="text" name="instructions" maxlength="500" required autocomplete="off">
+          </label>
+
+          <details class="try-field try-sides" data-for="noul">
+            <summary>Say what yes and no mean <small>optional</small></summary>
+            <div class="try-pair">
+              <label>Yes means<input type="text" name="yes" maxlength="120" autocomplete="off"></label>
+              <label>No means<input type="text" name="no" maxlength="120" autocomplete="off"></label>
+            </div>
+          </details>
+          <label class="try-field" data-for="choice" hidden>Options <small>one per line, 2 to 8</small>
+            <textarea name="options" rows="4"></textarea>
+          </label>
+          <label class="try-field" data-for="score" hidden>Levels <small>one per line, lowest first, 2 to 10</small>
+            <textarea name="levels" rows="5"></textarea>
+          </label>
+
+          <div class="try-go">
+            <button class="btn btn-dec" type="submit" id="tryAsk">Ask Pranata V1</button>
+            <p class="try-left" id="tryLeft" aria-live="polite"></p>
+          </div>
+        </form>
+
+        <section class="try-out card" id="tryOut" aria-live="polite" aria-labelledby="tryOutTitle">
+          <div class="demo-head">
+            <span class="demo-id"><span class="demo-dot" aria-hidden="true"></span><code>pranata-v1</code></span>
+            <span class="demo-note" id="tryOutTitle">Answer</span>
+          </div>
+          <div class="try-result" id="tryResult">
+            <p class="try-wait">Ask a question and the answer shows here.</p>
+          </div>
+        </section>
       </div>
     </div>
   </section>
@@ -599,5 +664,6 @@
 </footer>
 
 <script src="js/main.js"></script>
+<script src="js/try.js"></script>
 </body>
 </html>

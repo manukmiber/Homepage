@@ -284,6 +284,7 @@ function balanceCard(o) {
     <p class="stat-value">${esc(o.balance.text)}</p>
     <p class="stat-sub">Pays for Pranata V1 calls past your plan and Zeiko Chat replies past your chat plan.</p>
     <p class="stat-foot">${o.balance.shared ? 'The same balance in Zeiko Chat.' : ''}</p>
+    ${o.owed && o.owed.text ? `<p class="stat-owed">${icon(I.alert)}<span>You owe <strong>${esc(o.owed.text)}</strong> for playground tries past your plan. It comes off the next balance you add.</span></p>` : ''}
     <a class="btn ${low ? 'btn-primary' : 'btn-ghost'} btn-sm" href="/account/plans#topup">Add balance</a>
   </article>`;
 }
