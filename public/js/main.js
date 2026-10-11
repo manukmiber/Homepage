@@ -77,36 +77,56 @@
   }
 
   /* -------------------------------------------------------- copy button */
+  /* One listener on the document, so buttons drawn after the page loads
+     (the account area draws its key box later) copy too. */
 
-  document.querySelectorAll('.copy').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      var target = document.querySelector(btn.getAttribute('data-copy'));
-      if (!target) return;
-      var text = target.textContent;
-      var done = function () {
-        var before = btn.textContent;
-        btn.textContent = 'Copied';
-        setTimeout(function () { btn.textContent = before; }, 1600);
-      };
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('.copy[data-copy]');
+    if (!btn) return;
+    var target = document.querySelector(btn.getAttribute('data-copy'));
+    if (!target) return;
+    var text = target.textContent.trim();
+    var label = btn.getAttribute('data-label') || btn.textContent;
+    btn.setAttribute('data-label', label);
+    var say = function (word) {
+      btn.textContent = word;
+      clearTimeout(btn._copyTimer);
+      btn._copyTimer = setTimeout(function () { btn.textContent = label; }, 1600);
+    };
+    var done = function () { say('Copied'); };
+    // Nothing worked: select the text so it can be copied by hand.
+    var fail = function () { selectText(target); say('Selected'); };
 
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(done, function () { copyViaTextarea(text, done); });
-      } else {
-        copyViaTextarea(text, done);
-      }
-    });
+    if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(done, function () { copyViaTextarea(text, done, fail); });
+    } else {
+      copyViaTextarea(text, done, fail);
+    }
   });
 
-  function copyViaTextarea(text, done) {
+  function copyViaTextarea(text, done, fail) {
     var ta = document.createElement('textarea');
     ta.value = text;
     ta.setAttribute('readonly', '');
     ta.style.position = 'fixed';
+    ta.style.top = '0';
     ta.style.opacity = '0';
     document.body.appendChild(ta);
     ta.select();
-    try { document.execCommand('copy'); done(); } catch (e) { /* ignore */ }
+    ta.setSelectionRange(0, text.length);
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
     document.body.removeChild(ta);
+    if (ok) done(); else fail();
+  }
+
+  function selectText(el) {
+    var sel = window.getSelection && window.getSelection();
+    if (!sel) return;
+    var range = document.createRange();
+    range.selectNodeContents(el);
+    sel.removeAllRanges();
+    sel.addRange(range);
   }
 
   /* ------------------------------------------------------------ prices */
