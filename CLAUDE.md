@@ -81,6 +81,8 @@ public/
   models.html     /models: at-a-glance table, then each model's specs and rate card
   404.html
   _redirects      old /models/<id> links → /models#<id>
+  img/            logo.svg / logo-day.svg: the Zeiko mark, shared with Zeiko Chat,
+                  night and day drawings shown by theme (`.logo-night`, `.logo-day`)
   css/style.css   the only stylesheet; colour tokens for light and dark
   js/main.js      theme, mobile menu, topbar, copy buttons, effort bars, plan
                   value, estimator, chart hover

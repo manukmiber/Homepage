@@ -18,16 +18,20 @@ const params = here.searchParams;
 
 /* ------------------------------------------------------------- the door */
 
-/** One call to the door: `{status, data}`; status 0 when it did not answer. */
+/** One call to the door: `{status, data}`; status 0 when it did not answer
+ *  (or took longer than 20 seconds, so a page never waits forever). */
 async function ask(method, tail, body) {
   const headers = { 'x-zeiko': '1' };
   if (body !== undefined) headers['content-type'] = 'application/json';
+  const stop = new AbortController();
+  const timer = setTimeout(() => stop.abort(), 20_000);
   try {
     const res = await fetch(`${DOOR}/v1${tail}`, {
       method,
       credentials: 'include',
       headers: method === 'GET' ? {} : headers,
       body: body === undefined ? undefined : JSON.stringify(body),
+      signal: stop.signal,
     });
     let data = null;
     try {
@@ -38,6 +42,8 @@ async function ask(method, tail, body) {
     return { status: res.status, data };
   } catch {
     return { status: 0, data: null };
+  } finally {
+    clearTimeout(timer);
   }
 }
 
@@ -113,6 +119,12 @@ function draw(html) {
   root.innerHTML = html;
   const focus = root.querySelector('[role="alert"]');
   if (focus) focus.scrollIntoView({ block: 'nearest' });
+  // On the sign-in pages, the first empty box is ready to type in — with a
+  // mouse only, so a phone's keyboard does not jump up unasked.
+  if (root.querySelector('.auth form') && matchMedia('(pointer: fine)').matches) {
+    const box = [...root.querySelectorAll('.auth input:not([type="hidden"])')].find((i) => !i.value);
+    if (box) box.focus();
+  }
 }
 
 function setNav(signedIn) {
@@ -278,13 +290,44 @@ document.addEventListener('submit', async (e) => {
   const fields = {};
   for (const [k, v] of new FormData(form).entries()) if (typeof v === 'string') fields[k] = v.slice(0, 4096);
   const buttons = form.querySelectorAll('button');
+  // The button pressed says what is happening ("Signing in…") until the
+  // door answers.
+  const pressed = e.submitter && form.contains(e.submitter) ? e.submitter : form.querySelector('button[type="submit"]');
+  const before = pressed ? pressed.innerHTML : '';
+  if (pressed && pressed.dataset.busy) pressed.textContent = pressed.dataset.busy;
+  form.setAttribute('aria-busy', 'true');
   buttons.forEach((b) => { b.disabled = true; });
   try {
     await act(form.dataset.act, fields, e.submitter || null);
   } finally {
     buttons.forEach((b) => { b.disabled = false; });
+    form.removeAttribute('aria-busy');
+    if (pressed && pressed.dataset.busy) pressed.innerHTML = before;
   }
 });
+
+// Show or hide a password as it is typed.
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-reveal]');
+  if (!btn) return;
+  const box = document.getElementById(btn.dataset.reveal);
+  if (!box) return;
+  const show = box.type === 'password';
+  box.type = show ? 'text' : 'password';
+  btn.setAttribute('aria-pressed', String(show));
+  btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+  box.focus();
+});
+
+// "Caps Lock is on" under a password box, while it is.
+function capsNote(e) {
+  const box = e.target;
+  if (!(box instanceof HTMLInputElement) || !box.closest('.pw') || typeof e.getModifierState !== 'function') return;
+  const note = box.closest('.field')?.querySelector('.caps-note');
+  if (note) note.hidden = !e.getModifierState('CapsLock');
+}
+document.addEventListener('keydown', capsNote);
+document.addEventListener('keyup', capsNote);
 
 /* ----------------------------------------------------------------- start */
 

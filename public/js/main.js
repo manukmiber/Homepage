@@ -81,17 +81,20 @@
      (the account area draws its key box later) copy too. */
 
   document.addEventListener('click', function (e) {
-    var btn = e.target.closest && e.target.closest('.copy[data-copy]');
+    var btn = e.target.closest && e.target.closest('button[data-copy]');
     if (!btn) return;
     var target = document.querySelector(btn.getAttribute('data-copy'));
     if (!target) return;
     var text = target.textContent.trim();
-    var label = btn.getAttribute('data-label') || btn.textContent;
+    // A button with an icon keeps it: only its .copy-label text changes.
+    var out = btn.querySelector('.copy-label') || btn;
+    var label = btn.getAttribute('data-label') || out.textContent;
     btn.setAttribute('data-label', label);
     var say = function (word) {
-      btn.textContent = word;
+      out.textContent = word;
+      btn.classList.toggle('is-copied', word === 'Copied');
       clearTimeout(btn._copyTimer);
-      btn._copyTimer = setTimeout(function () { btn.textContent = label; }, 1600);
+      btn._copyTimer = setTimeout(function () { out.textContent = label; btn.classList.remove('is-copied'); }, 1600);
     };
     var done = function () { say('Copied'); };
     // Nothing worked: select the text so it can be copied by hand.

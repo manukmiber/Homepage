@@ -38,6 +38,26 @@ function when(ms) {
   return `${day(ms)}, ${hh}:${mm} UTC`;
 }
 
+/* ----------------------------------------------------------------- icons */
+// Line icons, 24×24, drawn in the text colour. Decorative: always aria-hidden.
+
+const icon = (body, cls = '') => `<svg class="ico${cls ? ` ${cls}` : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
+const I = {
+  check: '<path d="M20 6 9 17l-5-5"/>',
+  copy: '<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+  eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>',
+  eyeOff: '<path d="M9.9 4.2A10 10 0 0 1 12 4c6.5 0 10 8 10 8a17 17 0 0 1-2.2 3.2M6.6 6.6C3.9 8.4 2 12 2 12s3.5 7 10 7c1.9 0 3.6-.6 5-1.5"/><path d="M14.1 14.2a3 3 0 0 1-4.3-4.3M2 2l20 20"/>',
+  mail: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/>',
+  key: '<circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 9.3-9.3M17 6l3 3M14 9l2 2"/>',
+  wallet: '<path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3"/><path d="M21 11h-5a2 2 0 0 0 0 4h5Z"/>',
+  layers: '<path d="m12 2 10 5-10 5L2 7Z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/>',
+  chat: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/>',
+  alert: '<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/>',
+  arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
+  out: '<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+};
+
+const LOGO = `<img class="logo-night" src="/img/logo.svg" alt="" width="40" height="40"><img class="logo-day" src="/img/logo-day.svg" alt="" width="40" height="40">`;
 
 /** The top bar's links, signed in or not. */
 export function nav(signedIn) {
@@ -54,7 +74,7 @@ export function nav(signedIn) {
 }
 
 export function loading() {
-  return `<section class="auth"><div class="auth-card card"><p class="auth-sub">Loading…</p></div></section>`;
+  return `<section class="auth"><div class="auth-card card auth-loading"><span class="spinner" aria-hidden="true"></span><p class="auth-sub">Loading your account…</p></div></section>`;
 }
 
 function alert(kind, text) {
@@ -78,55 +98,85 @@ function oneClick(opts, next, door, ref) {
   return `<div class="auth-oneclick">${buttons.join('')}</div><p class="auth-or"><span>or with your email</span></p>`;
 }
 
-function authShell(heading, sub, inner) {
-  return `<section class="auth">
-  <div class="auth-card card">
-    <h1>${heading}</h1>
-    ${sub ? `<p class="auth-sub">${sub}</p>` : ''}
-    ${inner}
+/** A password box with a show/hide button and a Caps Lock note (app.js). */
+function password({ id, label, name = 'password', autocomplete, hint = '', side = '', min = 0 }) {
+  return `<div class="field">
+      <div class="label-row"><label for="${id}">${label}${hint ? ` <small>${hint}</small>` : ''}</label>${side}</div>
+      <div class="pw">
+        <input id="${id}" type="password" name="${name}" autocomplete="${autocomplete}" required${min ? ` minlength="${min}"` : ''} maxlength="200">
+        <button class="pw-toggle" type="button" data-reveal="${id}" aria-controls="${id}" aria-pressed="false" aria-label="Show password">${icon(I.eye, 'i-show')}${icon(I.eyeOff, 'i-hide')}</button>
+      </div>
+      <p class="field-note caps-note" hidden>Caps Lock is on.</p>
+    </div>`;
+}
+
+// What one Zeiko Account gives, beside the sign-in and sign-up forms.
+const AUTH_ASIDE = `<aside class="auth-aside" aria-label="About Zeiko Accounts">
+    <p class="auth-kicker">${LOGO}<span>Zeiko Account</span></p>
+    <p class="auth-pitch">One sign-in for ZeikoAI and Zeiko Chat.</p>
+    <ul class="auth-points">
+      <li>${icon(I.layers)}<span><strong>Both products, one login.</strong> Email and password, Google or GitHub — it works in Zeiko Chat too.</span></li>
+      <li>${icon(I.wallet)}<span><strong>One balance.</strong> Add funds once; they pay for Pranata V1 calls and Zeiko Chat replies.</span></li>
+      <li>${icon(I.key)}<span><strong>Your key, kept here.</strong> Plans, usage and your Pranata V1 key on one page.</span></li>
+    </ul>
+  </aside>`;
+
+function authShell(heading, sub, inner, { aside = false } = {}) {
+  return `<section class="auth${aside ? ' auth-split' : ''}">
+  <div class="auth-grid">
+    ${aside ? AUTH_ASIDE : ''}
+    <div class="auth-card card">
+      <p class="auth-logo">${LOGO}</p>
+      <h1>${heading}</h1>
+      ${sub ? `<p class="auth-sub">${sub}</p>` : ''}
+      ${inner}
+    </div>
   </div>
 </section>`;
 }
 
 export function signIn({ error, notice, email = '', next = '', opts, door }) {
-  return authShell('Sign in', 'One Zeiko Account for ZeikoAI and Zeiko Chat.', `
+  return authShell('Welcome back', 'Sign in to your Zeiko Account.', `
     ${alert('err', error)}${alert('ok', notice)}
     ${oneClick(opts, next, door, '')}
     <form data-act="signin" class="form">
       <input type="hidden" name="next" value="${esc(next)}">
-      <label>Email<input type="email" name="email" autocomplete="email" required maxlength="254" value="${esc(email)}"></label>
-      <label><span class="label-row">Password<a href="/account/forgot">Forgot it?</a></span>
-        <input type="password" name="password" autocomplete="current-password" required maxlength="200"></label>
-      <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+      <label>Email<input type="email" name="email" autocomplete="email" inputmode="email" required maxlength="254" value="${esc(email)}"></label>
+      ${password({ id: 'signin-password', label: 'Password', autocomplete: 'current-password', side: '<a href="/account/forgot">Forgot it?</a>' })}
+      <button class="btn btn-primary btn-block" type="submit" data-busy="Signing in…">Sign in</button>
     </form>
-    <p class="auth-foot">New here? <a href="/account/signup${next ? `?next=${encodeURIComponent(next)}` : ''}">Create an account</a></p>`);
+    <p class="auth-foot">New here? <a href="/account/signup${next ? `?next=${encodeURIComponent(next)}` : ''}">Create an account</a></p>`, { aside: true });
 }
 
 export function signUp({ error, email = '', username = '', next = '', ref = '', opts, door }) {
-  return authShell('Create your Zeiko Account', 'One account for ZeikoAI and Zeiko Chat: plans, one balance and your key in one place.', `
+  return authShell('Create your Zeiko Account', 'Free to make. Buy a plan or add balance when you are ready.', `
     ${alert('err', error)}
     ${oneClick(opts, next, door, ref)}
     <form data-act="signup" class="form">
       <input type="hidden" name="next" value="${esc(next)}">
-      <label>Email<input type="email" name="email" autocomplete="email" required maxlength="254" value="${esc(email)}"></label>
+      <label>Email<input type="email" name="email" autocomplete="email" inputmode="email" required maxlength="254" value="${esc(email)}"></label>
       <label>Username <small>3–24 letters, numbers or _</small><input type="text" name="username" autocomplete="username" required minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" autocapitalize="off" spellcheck="false" value="${esc(username)}"></label>
-      <label>Password <small>8 characters or more</small><input type="password" name="password" autocomplete="new-password" required minlength="8" maxlength="200"></label>
-      <label>Referral code <small>optional</small><input type="text" name="referral" maxlength="32" autocapitalize="characters" spellcheck="false" value="${esc(ref)}"></label>
-      <button class="btn btn-primary btn-block" type="submit">Create account</button>
+      ${password({ id: 'signup-password', label: 'Password', autocomplete: 'new-password', hint: '8 characters or more', min: 8 })}
+      <details class="ref-field"${ref ? ' open' : ''}>
+        <summary>Have a referral code?</summary>
+        <label>Referral code <small>optional</small><input type="text" name="referral" maxlength="32" autocapitalize="characters" spellcheck="false" value="${esc(ref)}"></label>
+      </details>
+      <button class="btn btn-primary btn-block" type="submit" data-busy="Creating your account…">Create account</button>
     </form>
-    <p class="auth-foot">Already have one? <a href="/account/signin${next ? `?next=${encodeURIComponent(next)}` : ''}">Sign in</a></p>`);
+    <p class="auth-foot">Already have one? <a href="/account/signin${next ? `?next=${encodeURIComponent(next)}` : ''}">Sign in</a></p>`, { aside: true });
 }
 
 export function forgot({ error, sent }) {
   if (sent) {
-    return authShell('Check your inbox', '', `${alert('ok', 'If that email has an account, a link to choose a new password is on its way. The new password works here and in Zeiko Chat.')}
-      <p class="auth-foot"><a href="/account/signin">Back to sign in</a></p>`);
+    return authShell('Check your inbox', '', `<div class="auth-done">${icon(I.mail)}</div>
+      <p class="auth-sub">If that email has an account, a link to choose a new password is on its way. It works for 30 minutes, here and in Zeiko Chat.</p>
+      <a class="btn btn-ghost btn-block" href="/account/signin">Back to sign in</a>`);
   }
-  return authShell('Forgot your password?', 'We will email you a link to choose a new one.', `
+  return authShell('Forgot your password?', 'Type your email and we will send you a link to choose a new one.', `
     ${alert('err', error)}
     <form data-act="forgot" class="form">
-      <label>Email<input type="email" name="email" autocomplete="email" required maxlength="254"></label>
-      <button class="btn btn-primary btn-block" type="submit">Send the link</button>
+      <label>Email<input type="email" name="email" autocomplete="email" inputmode="email" required maxlength="254"></label>
+      <button class="btn btn-primary btn-block" type="submit" data-busy="Sending…">Send the link</button>
     </form>
     <p class="auth-foot"><a href="/account/signin">Back to sign in</a></p>`);
 }
@@ -137,8 +187,8 @@ export function reset({ error, token }) {
     ${alert('err', error)}
     <form data-act="reset" class="form">
       <input type="hidden" name="token" value="${esc(token)}">
-      <label>New password <small>8 characters or more</small><input type="password" name="password" autocomplete="new-password" required minlength="8" maxlength="200"></label>
-      <button class="btn btn-primary btn-block" type="submit">Save and sign in</button>
+      ${password({ id: 'reset-password', label: 'New password', autocomplete: 'new-password', hint: '8 characters or more', min: 8 })}
+      <button class="btn btn-primary btn-block" type="submit" data-busy="Saving…">Save and sign in</button>
     </form>`);
 }
 
@@ -155,25 +205,42 @@ const TABS = [
   ['settings', '/account/settings', 'Settings'],
 ];
 
+function verifyBanner(a) {
+  return `<div class="verify" role="status">
+      <span class="verify-icon">${icon(I.mail)}</span>
+      <div class="verify-text">
+        <p class="verify-title">Confirm your email</p>
+        <p>We sent a 6-digit code to <strong>${esc(a.email)}</strong>. Renewal links for plans go there too.</p>
+      </div>
+      <div class="verify-actions">
+        <form data-act="verify-code" class="verify-form">
+          <label class="sr" for="verify-code">Confirmation code</label>
+          <input id="verify-code" class="otp" type="text" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="000000" required>
+          <button class="btn btn-sm btn-primary" type="submit" data-busy="Checking…">Confirm</button>
+        </form>
+        <form data-act="verify-send"><button class="btn-link" type="submit" data-busy="Sending…">Send a new code</button></form>
+      </div>
+    </div>`;
+}
+
 function shell(tab, o, inner, flash) {
   const a = o.account;
   const name = a.name || a.username || a.email || 'there';
+  const title = tab === 'overview' ? `Hi, ${esc(name)}` : esc(TABS.find((t) => t[0] === tab)[2]);
   return `<section class="acct">
   <div class="wrap">
     <header class="acct-head">
-      <div>
-        <p class="crumbs">Account</p>
-        <h1>${tab === 'overview' ? `Hi, ${esc(name)}` : esc(TABS.find((t) => t[0] === tab)[2])}</h1>
+      <div class="acct-title">
+        <p class="crumbs">Zeiko Account</p>
+        <h1>${title}</h1>
       </div>
-      <div class="acct-who"><span class="avatar" aria-hidden="true">${esc((name[0] || 'Z').toUpperCase())}</span><span>${esc(a.email || name)}</span></div>
+      <div class="acct-who"><span class="avatar" aria-hidden="true">${esc((name[0] || 'Z').toUpperCase())}</span><span class="acct-who-text"><strong>${esc(a.username ? '@' + a.username : name)}</strong><span>${esc(a.email || '')}</span></span></div>
     </header>
     <nav class="acct-tabs" aria-label="Account sections">
       ${TABS.map(([id, href, label]) => `<a href="${href}"${id === tab ? ' aria-current="page"' : ''}>${label}</a>`).join('')}
     </nav>
     ${flash || ''}
-    ${!a.emailVerified && a.email && o.mail ? `<div class="alert alert-warn" role="status"><p><strong>Confirm your email.</strong> We sent a code to ${esc(a.email)}; renewal links for subscriptions go there too.</p>
-      <form data-act="verify-code" class="form-inline"><label>Code<input type="text" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required></label><button class="btn btn-sm btn-primary" type="submit">Confirm</button></form>
-      <form data-act="verify-send"><button class="btn btn-sm btn-ghost" type="submit">Send it again</button></form></div>` : ''}
+    ${!a.emailVerified && a.email && o.mail ? verifyBanner(a) : ''}
     ${inner}
   </div>
 </section>`;
@@ -191,18 +258,19 @@ function planCard(o) {
   const u = o.usage;
   if (u) {
     const left = Math.max(0, u.amount - u.used);
+    const share = u.amount ? u.used / u.amount : 0;
     return `<article class="card stat-card">
-      <p class="stat-label">Plan</p>
+      <p class="stat-label">${icon(I.layers)}Plan</p>
       <p class="stat-value">${esc(p.name)}</p>
       <p class="stat-sub"><strong>${num(left)}</strong> of ${num(u.amount)} requests left</p>
-      ${bar(u.amount ? u.used / u.amount : 0)}
-      <p class="stat-foot">Resets ${esc(day(u.resetsAt))}${p.expiresAt ? ` · ends ${esc(day(p.expiresAt))}` : ''}</p>
+      ${bar(share)}
+      <p class="stat-foot">${Math.round(share * 100)}% used · resets ${esc(day(u.resetsAt))}${p.expiresAt ? ` · ends ${esc(day(p.expiresAt))}` : ''}</p>
       <a class="btn btn-ghost btn-sm" href="/account/plans">Change plan</a>
     </article>`;
   }
   return `<article class="card stat-card">
-    <p class="stat-label">Plan</p>
-    <p class="stat-value">${p.paygo ? 'Per token' : 'No plan'}</p>
+    <p class="stat-label">${icon(I.layers)}Plan</p>
+    <p class="stat-value">${p.paygo ? 'Per token' : 'No plan yet'}</p>
     <p class="stat-sub">${p.paygo ? 'Every call is paid from your balance.' : 'Buy a plan, or add balance, to start calling Pranata V1.'}</p>
     <p class="stat-foot">A plan gives you a set number of requests for 30 days.</p>
     <a class="btn btn-primary btn-sm" href="/account/plans">See plans</a>
@@ -212,24 +280,33 @@ function planCard(o) {
 function balanceCard(o) {
   const low = Number(o.balance.micro) <= 0;
   return `<article class="card stat-card">
-    <p class="stat-label">Balance</p>
+    <p class="stat-label">${icon(I.wallet)}Balance</p>
     <p class="stat-value">${esc(o.balance.text)}</p>
-    <p class="stat-sub">Pays for Pranata V1 calls past your plan and Zeiko Chat replies past your chat plan.${o.balance.shared ? ' The same balance in Zeiko Chat.' : ''}</p>
+    <p class="stat-sub">Pays for Pranata V1 calls past your plan and Zeiko Chat replies past your chat plan.</p>
+    <p class="stat-foot">${o.balance.shared ? 'The same balance in Zeiko Chat.' : ''}</p>
     <a class="btn ${low ? 'btn-primary' : 'btn-ghost'} btn-sm" href="/account/plans#topup">Add balance</a>
   </article>`;
 }
 
 function keyCard(o) {
   return `<article class="card stat-card">
-    <p class="stat-label">API key</p>
+    <p class="stat-label">${icon(I.key)}API key</p>
     <p class="stat-value stat-mono">${o.key ? esc(o.key.shown) : 'Not ready yet'}</p>
-    <p class="stat-sub">Works with every Pranata V1 model on your plan or balance.</p>
+    <p class="stat-sub">Works with every model on your plan or balance.</p>
     <p class="stat-foot">${o.models.map((m) => `<code>${esc(m.id)}</code>`).join(' ')}</p>
-    <a class="btn btn-ghost btn-sm" href="/account/key">Show key</a>
+    <a class="btn btn-ghost btn-sm" href="/account/key">Show and copy</a>
   </article>`;
 }
 
-/** Calls per day, the last 30 days: thin bars, a hairline grid, a table beside. */
+function compact(v) {
+  if (v >= 1e6) return `${+(v / 1e6).toFixed(1)}M`;
+  if (v >= 1e3) return `${+(v / 1e3).toFixed(1)}K`;
+  return String(Math.round(v));
+}
+
+/** Calls per day, the last 30 days: thin bars, a hairline grid, a table under.
+ *  The bars stretch to any width; the labels are plain text beside them, so
+ *  they stay readable on a phone and on a wide screen alike. */
 function usageChart(daily) {
   const DAY = 86_400_000;
   const today = Date.now() - (Date.now() % DAY);
@@ -237,46 +314,43 @@ function usageChart(daily) {
   const days = [];
   for (let i = 29; i >= 0; i--) {
     const t = today - i * DAY;
-    const d = byDay.get(t) || { day: t, calls: 0, units: 0, inputTokens: 0 };
-    days.push(d);
+    days.push(byDay.get(t) || { day: t, calls: 0, units: 0, inputTokens: 0 });
   }
   const total = days.reduce((s, d) => s + d.calls, 0);
   if (!total) {
-    return `<p class="muted-note">No calls in the last 30 days yet. Once your key is in use, each day shows up here.</p>`;
+    return `<div class="empty">${icon(I.layers)}<p><strong>No calls in the last 30 days yet.</strong> Once your key is in use, each day shows up here.</p><a class="btn btn-ghost btn-sm" href="/account/key">Get your key</a></div>`;
   }
+  const units = days.reduce((s, d) => s + d.units, 0);
+  const tokens = days.reduce((s, d) => s + d.inputTokens, 0);
   const max = Math.max(...days.map((d) => d.calls), 1);
-  const W = 600, H = 160, L = 36, T = 8, B = 22, PW = W - L - 4, PH = H - T - B;
-  const step = PW / days.length;
   const nice = (v) => {
     const p = 10 ** Math.floor(Math.log10(v));
     const n = v / p;
     return (n <= 1 ? 1 : n <= 2 ? 2 : n <= 5 ? 5 : 10) * p;
   };
   const top = nice(max);
-  const grid = [0, 0.5, 1].map((f) => {
-    const y = T + PH - f * PH;
-    return `<line class="grid" x1="${L}" x2="${W - 4}" y1="${y.toFixed(1)}" y2="${y.toFixed(1)}"/><text class="axis" x="${L - 6}" y="${(y + 4).toFixed(1)}" text-anchor="end">${esc(compact(top * f))}</text>`;
-  }).join('');
+  const W = 300, H = 100, step = W / days.length;
+  const grid = [0, 0.5, 1].map((f) => `<line class="grid" x1="0" x2="${W}" y1="${(H - f * H).toFixed(2)}" y2="${(H - f * H).toFixed(2)}"/>`).join('');
   const bars = days.map((d, i) => {
-    const h = (d.calls / top) * PH;
-    const x = L + i * step + step * 0.18;
-    return `<rect x="${x.toFixed(1)}" y="${(T + PH - h).toFixed(1)}" width="${(step * 0.64).toFixed(1)}" height="${Math.max(h, d.calls ? 1 : 0).toFixed(1)}" rx="1.5"><title>${esc(day(d.day))}: ${num(d.calls)} calls</title></rect>`;
+    const h = (d.calls / top) * H;
+    return `<rect x="${(i * step + step * 0.18).toFixed(2)}" y="${(H - h).toFixed(2)}" width="${(step * 0.64).toFixed(2)}" height="${Math.max(h, d.calls ? 0.8 : 0).toFixed(2)}"><title>${esc(day(d.day))}: ${num(d.calls)} calls</title></rect>`;
   }).join('');
-  const labels = [0, 14, 29].map((i) => `<text class="axis" x="${(L + i * step + step / 2).toFixed(1)}" y="${H - 6}" text-anchor="middle">${esc(day(days[i].day).replace(/ \d{4}$/, ''))}</text>`).join('');
+  const short = (d) => esc(day(d.day).replace(/ \d{4}$/, ''));
   const rows = days.filter((d) => d.calls).reverse().map((d) => `<tr><th scope="row">${esc(day(d.day))}</th><td>${num(d.calls)}</td><td>${num(d.units)}</td><td>${num(d.inputTokens)}</td></tr>`).join('');
-  return `<figure class="chart acct-chart">
-    <figcaption><span class="chart-title">Calls per day</span><span class="chart-sub">Last 30 days, UTC · ${num(total)} calls</span></figcaption>
-    <div class="chart-plot"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Calls per day over the last 30 days"><g>${grid}</g><g class="bars">${bars}</g>${labels}</svg></div>
+  return `<dl class="usage-sums">
+      <div><dt>Calls</dt><dd>${num(total)}</dd></div>
+      <div><dt>Plan requests</dt><dd>${num(units)}</dd></div>
+      <div><dt>Input tokens</dt><dd>${esc(compact(tokens))}</dd></div>
+    </dl>
+    <figure class="uchart">
+      <figcaption class="sr">Calls per day over the last 30 days, UTC</figcaption>
+      <div class="uchart-y" aria-hidden="true"><span>${esc(compact(top))}</span><span>${esc(compact(top / 2))}</span><span>0</span></div>
+      <div class="uchart-plot"><svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="Calls per day over the last 30 days"><g>${grid}</g><g class="bars">${bars}</g></svg></div>
+      <div class="uchart-x" aria-hidden="true"><span>${short(days[0])}</span><span>${short(days[15])}</span><span>Today</span></div>
+    </figure>
     <details class="perf-table"><summary>Show as a table</summary>
-      <div class="table-scroll"><table class="table"><thead><tr><th scope="col">Day</th><th scope="col">Calls</th><th scope="col">Plan requests</th><th scope="col">Input tokens</th></tr></thead><tbody>${rows}</tbody></table></div>
-    </details>
-  </figure>`;
-}
-
-function compact(v) {
-  if (v >= 1e6) return `${+(v / 1e6).toFixed(1)}M`;
-  if (v >= 1e3) return `${+(v / 1e3).toFixed(1)}K`;
-  return String(Math.round(v));
+      <div class="table-scroll"><table class="table acct-table"><thead><tr><th scope="col">Day</th><th scope="col">Calls</th><th scope="col">Plan requests</th><th scope="col">Input tokens</th></tr></thead><tbody>${rows}</tbody></table></div>
+    </details>`;
 }
 
 const STATUS = {
@@ -293,21 +367,22 @@ const STATUS = {
 };
 
 function payments(list) {
-  if (!list.length) return `<p class="muted-note">No payments yet.</p>`;
+  if (!list.length) return `<div class="empty">${icon(I.wallet)}<p><strong>No payments yet.</strong> Plans and balance you buy show up here.</p></div>`;
   const rows = list.map((p) => {
     const [label, tone] = p.paid ? ['Paid', 'ok'] : STATUS[p.status] || [p.status, ''];
     const open = p.invoiceUrl && !p.paid ? `<a class="btn btn-ghost btn-xs" href="${esc(p.invoiceUrl)}" rel="noopener">Finish paying</a>` : '';
-    return `<tr><th scope="row">${esc(p.what)}</th><td>${esc(p.amountText)}</td><td><span class="tag tag-${tone}">${esc(label)}</span></td><td>${esc(day(p.createdAt))}</td><td>${open}</td></tr>`;
+    return `<tr><th scope="row">${esc(p.what)}</th><td data-label="Amount">${esc(p.amountText)}</td><td data-label="Status"><span class="tag tag-${tone}">${esc(label)}</span></td><td data-label="Date">${esc(day(p.createdAt))}</td><td class="ledger-act">${open}</td></tr>`;
   }).join('');
-  return `<div class="table-scroll"><table class="table acct-table"><thead><tr><th scope="col">What</th><th scope="col">Amount</th><th scope="col">Status</th><th scope="col">Date</th><th scope="col"><span class="sr">Action</span></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  return `<div class="table-scroll"><table class="table acct-table ledger"><thead><tr><th scope="col">What</th><th scope="col">Amount</th><th scope="col">Status</th><th scope="col">Date</th><th scope="col"><span class="sr">Action</span></th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 
 function chatStrip(o) {
   const c = o.chat || {};
   if (!c.planName) return '';
-  const link = c.url ? `<a class="btn btn-ghost btn-sm" href="${esc(c.url)}" rel="noopener">Open Zeiko Chat</a>` : '';
+  const link = c.url ? `<a class="btn btn-ghost btn-sm" href="${esc(c.url)}" rel="noopener">Open Zeiko Chat${icon(I.out)}</a>` : '';
   return `<section class="card acct-strip">
-    <div><p class="stat-label">Zeiko Chat</p><p class="strip-main"><strong>${esc(c.planName)}</strong> plan${c.expiresAt ? ` · until ${esc(day(c.expiresAt))}` : ''}</p>
+    <span class="strip-icon">${icon(I.chat)}</span>
+    <div class="strip-text"><p class="stat-label">Zeiko Chat</p><p class="strip-main"><strong>${esc(c.planName)}</strong> plan${c.expiresAt ? ` · until ${esc(day(c.expiresAt))}` : ''}</p>
     <p class="muted-note">The same account signs in there${o.balance.shared ? ', and the same balance pays for replies past your chat plan' : ''}.</p></div>
     ${link}
   </section>`;
@@ -318,7 +393,7 @@ export function overview(o, flash) {
     <div class="stat-grid">${planCard(o)}${balanceCard(o)}${keyCard(o)}</div>
     ${chatStrip(o)}
     <section class="card acct-section">
-      <h2>Usage</h2>
+      <div class="section-row"><h2>Usage</h2><p class="muted-note">Last 30 days, UTC</p></div>
       ${usageChart(o.daily)}
     </section>
     <section class="card acct-section">
@@ -337,33 +412,32 @@ export function plans(o, { flash, pick }) {
     const picked = product === 'pranata' && p.id === pick;
     const which = `<input type="hidden" name="product" value="${product}"><input type="hidden" name="plan" value="${esc(p.id)}">`;
     const forms = buying
-      ? `<form data-act="buy">${which}<button class="btn ${picked ? 'btn-primary' : 'btn-ghost'} btn-block" type="submit">${mine ? `Add ${num(p.days)} days` : `Buy for ${num(p.days)} days`}</button></form>
-        ${p.subscription && o.subscriptionsActive ? `<form data-act="subscribe">${which}<button class="btn btn-link btn-block" type="submit">Or renew every ${num(p.days)} days by email</button></form>` : ''}`
+      ? `<form data-act="buy">${which}<button class="btn ${picked || mine ? 'btn-primary' : 'btn-ghost'} btn-block" type="submit" data-busy="Opening…">${mine ? `Add ${num(p.days)} days` : `Buy for ${num(p.days)} days`}</button></form>
+        ${p.subscription && o.subscriptionsActive ? `<form data-act="subscribe">${which}<button class="btn-link" type="submit" data-busy="Sending…">Or renew every ${num(p.days)} days by email</button></form>` : ''}`
       : '';
     const what = p.requests ? `<strong>${num(p.requests)}</strong> requests` : esc(p.tagline || 'Zeiko Chat plan');
-    return `<article class="plan acct-plan${picked ? ' is-picked' : ''}${mine ? ' is-mine' : ''}" id="${product === 'chat' ? 'chat-' : ''}plan-${esc(p.id)}">
-      ${mine ? '<span class="plan-tag">Your plan</span>' : ''}
-      <h3>${esc(p.name)}</h3>
-      <p class="plan-price">${esc(usd(p.priceUsd))}</p>
-      <p class="plan-reqs">${what}<br><span>${num(p.days)} days</span></p>
+    return `<article class="acct-plan${picked ? ' is-picked' : ''}${mine ? ' is-mine' : ''}" id="${product === 'chat' ? 'chat-' : ''}plan-${esc(p.id)}">
+      <div class="acct-plan-top"><h3>${esc(p.name)}</h3>${mine ? `<span class="tag tag-ok">${icon(I.check)}Your plan</span>` : ''}</div>
+      <p class="acct-plan-price">${esc(usd(p.priceUsd))}<span> / ${num(p.days)} days</span></p>
+      <p class="acct-plan-what">${what}</p>
       <div class="plan-actions">${forms}</div>
     </article>`;
   };
   const cards = o.plans.map((p) => card(p, 'pranata', o.plan.id)).join('');
   const chat = o.chat || {};
   const chatCards = (chat.plans || []).map((p) => card(p, 'chat', chat.plan)).join('');
-  const chips = (o.topUps || []).map((n) => `<button class="chip-btn" type="submit" name="amount" value="${esc(n)}">${esc(usd(n))}</button>`).join('');
+  const chips = (o.topUps || []).map((n) => `<button class="chip-btn" type="submit" name="amount" value="${esc(n)}" data-busy="…">${esc(usd(n))}</button>`).join('');
   const subs = (o.subscriptions || []).filter((s) => s.status && !['EXPIRED', 'CANCELED', 'CANCELLED'].includes(s.status));
   const body = `
     ${!buying ? alert('warn', 'Buying online is not open yet. Please try again later.') : ''}
     <section class="acct-section-plain">
-      <div class="section-row"><h2>Plans</h2><p class="muted-note">Pranata V1 only · a call over 1,000 tokens counts as two requests</p></div>
-      <div class="plans acct-plans">${cards}</div>
+      <div class="section-row"><h2>Pranata V1 plans</h2><p class="muted-note">A call over 1,000 tokens counts as two requests</p></div>
+      <div class="acct-plans">${cards}</div>
       <p class="fineprint">Buying the plan you are on adds 30 days to it. Buying another starts it now, and what is left of the current one comes back to your balance.${subs.length ? ` Renewing: ${subs.map((s) => esc(s.planName)).join(', ')} — the next link arrives by email.` : ''}</p>
     </section>
     ${chatCards ? `<section class="acct-section-plain" id="chat">
-      <div class="section-row"><h2>Zeiko Chat</h2><p class="muted-note">The same account signs in to Zeiko Chat</p></div>
-      <div class="plans acct-plans">${chatCards}</div>
+      <div class="section-row"><h2>Zeiko Chat plans</h2><p class="muted-note">The same account signs in to Zeiko Chat</p></div>
+      <div class="acct-plans">${chatCards}</div>
     </section>` : ''}
     <section class="card acct-section" id="topup">
       <div class="section-row"><h2>Balance</h2><p class="balance-now">${esc(o.balance.text)}</p></div>
@@ -372,7 +446,7 @@ export function plans(o, { flash, pick }) {
         <div class="chips-row" role="group" aria-label="Add this amount">${chips}</div>
         <div class="funds-custom">
           <label>Other amount, USD<input type="number" name="custom" min="${esc(o.minTopUpUsd)}" max="${esc(o.maxTopUpUsd)}" step="1" inputmode="numeric" placeholder="${esc(o.minTopUpUsd)}–${esc(o.maxTopUpUsd)}"></label>
-          <button class="btn btn-primary" type="submit" name="amount" value="custom">Add balance</button>
+          <button class="btn btn-primary" type="submit" name="amount" value="custom" data-busy="Opening…">Add balance</button>
         </div>
       </form>` : ''}
       <p class="fineprint">You finish paying in crypto on the NOWPayments page and come back here. Network and exchange fees are yours.</p>
@@ -380,18 +454,28 @@ export function plans(o, { flash, pick }) {
   return shell('plans', o, body, flash);
 }
 
+/** A value with its copy button (main.js copies whatever `data-copy` names). */
+function copyRow(id, value, label, primary) {
+  return `<div class="key-box">
+      <code id="${id}">${esc(value)}</code>
+      <button class="btn ${primary ? 'btn-primary' : 'btn-ghost'} btn-sm copy-btn" type="button" data-copy="#${id}" aria-label="${label}">${icon(I.copy)}<span class="copy-label">Copy</span></button>
+    </div>`;
+}
+
 export function key(o, { flash, shown: revealed, apiBase }) {
   const shown = revealed
-    ? `<div class="key-box"><code id="the-key">${esc(revealed)}</code><button class="copy" type="button" data-copy="#the-key">Copy</button></div>
-       <p class="fineprint">Keep it private: anyone with it can spend your plan and balance. Leave this page and it is hidden again.</p>`
-    : `<div class="key-box"><code>${o.key ? esc(o.key.shown) : 'Not ready yet — try again in a minute'}</code>
-         <form data-act="key-reveal"><button class="btn btn-ghost btn-sm" type="submit">Show</button></form></div>`;
+    ? `${copyRow('the-key', revealed, 'Copy the key', true)}
+       <p class="key-note">${icon(I.alert)}<span>Keep it private: anyone with it can spend your plan and balance. Leave this page and it is hidden again.</span></p>`
+    : `<div class="key-box">
+         <code>${o.key ? esc(o.key.shown) : 'Not ready yet — try again in a minute'}</code>
+         ${o.key ? `<form data-act="key-reveal"><button class="btn btn-primary btn-sm" type="submit" data-busy="Showing…">${icon(I.eye)}Show key</button></form>` : ''}
+       </div>`;
   const models = o.models.map((m) => `<tr><th scope="row"><code id="m-${esc(m.id)}">${esc(m.id)}</code></th><td>${esc(usd(m.usd))} / ${m.unit === 'request' ? 'call' : '1M input tokens'}</td><td>${num(m.window)} tokens</td></tr>`).join('');
   const body = `
     <section class="card acct-section">
       <h2>Your key</h2>
       ${shown}
-      ${apiBase ? `<dl class="kv"><div><dt>Address</dt><dd><code id="api-base">${esc(apiBase)}</code> <button class="copy" type="button" data-copy="#api-base">Copy</button></dd></div></dl>` : ''}
+      ${apiBase ? `<div class="key-addr"><p class="key-addr-label">Address</p>${copyRow('api-base', apiBase, 'Copy the address', false)}</div>` : ''}
     </section>
     <section class="card acct-section">
       <h2>Models this key can call</h2>
@@ -400,7 +484,7 @@ export function key(o, { flash, shown: revealed, apiBase }) {
     <section class="card acct-section danger-zone">
       <h2>Make a new key</h2>
       <p class="muted-note">The current key stops working at once. Do this if it may have been seen by someone else.</p>
-      <form data-act="key-rotate"><label class="check"><input type="checkbox" name="sure" value="1" required> I understand the old key stops working</label><button class="btn btn-danger btn-sm" type="submit">Make a new key</button></form>
+      <form data-act="key-rotate" class="rotate"><label class="check"><input type="checkbox" name="sure" value="1" required> I understand the old key stops working</label><button class="btn btn-danger btn-sm" type="submit" data-busy="Making…">Make a new key</button></form>
     </section>`;
   return shell('key', o, body, flash);
 }
@@ -408,7 +492,8 @@ export function key(o, { flash, shown: revealed, apiBase }) {
 export function settings(o, { flash, door }) {
   const a = o.account;
   const opts = o.signInWith || {};
-  const linked = (on, name) => `<li><span>${name}</span><span class="tag ${on ? 'tag-ok' : ''}">${on ? 'Connected' : 'Not connected'}</span>${!on && opts[name.toLowerCase()] ? `<a class="btn btn-ghost btn-xs" href="${esc(`${door}/oauth/${name.toLowerCase()}?next=/account/settings`)}">Connect</a>` : ''}</li>`;
+  const ICONS = { Google: GOOGLE_ICON, GitHub: GITHUB_ICON };
+  const linked = (on, name) => `<li><span class="linked-name">${ICONS[name]}${name}</span><span class="tag ${on ? 'tag-ok' : ''}">${on ? 'Connected' : 'Not connected'}</span>${!on && opts[name.toLowerCase()] ? `<a class="btn btn-ghost btn-xs" href="${esc(`${door}/oauth/${name.toLowerCase()}?next=/account/settings`)}">Connect</a>` : ''}</li>`;
   const body = `
     <section class="card acct-section">
       <h2>Profile</h2>
@@ -424,32 +509,33 @@ export function settings(o, { flash, door }) {
       <h2>Sign-in methods</h2>
       <p class="muted-note">One Zeiko Account: these sign you in here and in Zeiko Chat.</p>
       <ul class="linked">
-        <li><span>Email and password</span><span class="tag ${a.hasPassword ? 'tag-ok' : ''}">${a.hasPassword ? 'Set' : 'Not set'}</span></li>
+        <li><span class="linked-name">${icon(I.mail)}Email and password</span><span class="tag ${a.hasPassword ? 'tag-ok' : ''}">${a.hasPassword ? 'Set' : 'Not set'}</span></li>
         ${linked(a.google, 'Google')}
         ${linked(a.github, 'GitHub')}
       </ul>
     </section>
-    <section class="card acct-section">
-      <h2>${a.hasPassword ? 'Change password' : 'Set a password'}</h2>
-      <form data-act="password" class="form form-narrow">
-        ${a.hasPassword ? '<label>Current password<input type="password" name="current" autocomplete="current-password" required maxlength="200"></label>' : '<p class="muted-note">Add one to sign in with your email as well.</p>'}
-        <label>New password <small>8 characters or more</small><input type="password" name="password" autocomplete="new-password" required minlength="8" maxlength="200"></label>
-        <button class="btn btn-primary" type="submit">Save password</button>
-      </form>
-    </section>
-    ${a.hasPassword ? `<section class="card acct-section">
-      <h2>Change email</h2>
-      <p class="muted-note">The new address signs you in here and in Zeiko Chat once you confirm it with the code we send there.</p>
-      <form data-act="email" class="form form-narrow">
-        <label>New email<input type="email" name="email" autocomplete="email" required maxlength="254"></label>
-        <label>Password<input type="password" name="current" autocomplete="current-password" required maxlength="200"></label>
-        <button class="btn btn-primary" type="submit">Change email</button>
-      </form>
-    </section>` : ''}
-    <section class="card acct-section">
-      <h2>Sign out</h2>
-      <p class="muted-note">Signs you out on this device.</p>
-      <form data-act="signout"><button class="btn btn-ghost btn-sm" type="submit">Sign out</button></form>
+    <div class="settings-pair">
+      <section class="card acct-section">
+        <h2>${a.hasPassword ? 'Change password' : 'Set a password'}</h2>
+        <form data-act="password" class="form">
+          ${a.hasPassword ? password({ id: 'pw-current', label: 'Current password', name: 'current', autocomplete: 'current-password' }) : '<p class="muted-note">Add one to sign in with your email as well.</p>'}
+          ${password({ id: 'pw-new', label: 'New password', autocomplete: 'new-password', hint: '8 characters or more', min: 8 })}
+          <button class="btn btn-primary" type="submit" data-busy="Saving…">Save password</button>
+        </form>
+      </section>
+      ${a.hasPassword ? `<section class="card acct-section">
+        <h2>Change email</h2>
+        <p class="muted-note">The new address signs you in here and in Zeiko Chat once you confirm it with the code we send there.</p>
+        <form data-act="email" class="form">
+          <label>New email<input type="email" name="email" autocomplete="email" inputmode="email" required maxlength="254"></label>
+          ${password({ id: 'email-current', label: 'Password', name: 'current', autocomplete: 'current-password' })}
+          <button class="btn btn-primary" type="submit" data-busy="Saving…">Change email</button>
+        </form>
+      </section>` : ''}
+    </div>
+    <section class="card acct-section acct-signout">
+      <div><h2>Sign out</h2><p class="muted-note">Signs you out on this device.</p></div>
+      <form data-act="signout"><button class="btn btn-ghost btn-sm" type="submit" data-busy="Signing out…">Sign out</button></form>
     </section>`;
   return shell('settings', o, body, flash);
 }

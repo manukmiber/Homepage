@@ -8,7 +8,7 @@
 <meta name="color-scheme" content="light dark">
 <meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://auth.zeiko.biz.id; img-src 'self' data:; style-src 'self'; script-src 'self'; base-uri 'none'; form-action 'self'">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><path d='M21 9H11l6 6-6 8h10' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>">
+<link rel="icon" href="/img/logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="acct-body">
@@ -18,7 +18,7 @@
 <header class="topbar">
   <div class="wrap topbar-in">
     <a class="brand" href="/">
-      <span class="brand-mark" aria-hidden="true">Z</span>
+      <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
       <span class="brand-name">ZeikoAI</span>
     </a>
     <nav class="nav" id="nav" aria-label="Main navigation">
@@ -42,7 +42,7 @@
 
 <main id="main">
   <div id="acct" aria-live="polite">
-    <section class="auth"><div class="auth-card card"><p class="auth-sub">Loading…</p>
+    <section class="auth"><div class="auth-card card auth-loading"><span class="spinner" aria-hidden="true"></span><p class="auth-sub">Loading your account…</p>
       <noscript><p class="auth-sub">Your account needs JavaScript. Turn it on for this site, then reload the page.</p></noscript>
     </div></section>
   </div>
