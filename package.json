@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "wrangler dev",
     "seed:local": "node dev/sample-stats.mjs | wrangler r2 object put zeiko-models/models.json --pipe --local --content-type application/json",
+    "accounts:dev": "node dev/accounts.mjs",
     "check": "node scripts/check-site.mjs",
     "deploy": "npm run check && wrangler deploy"
   },

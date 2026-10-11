@@ -242,7 +242,7 @@ function planCard(o) {
   return `<article class="card stat-card">
     <p class="stat-label">Plan</p>
     <p class="stat-value">${p.paygo ? 'Per token' : 'No plan'}</p>
-    <p class="stat-sub">${o.prepaid ? 'Calls are paid from your balance.' : 'Calls are priced per token.'}</p>
+    <p class="stat-sub">${p.paygo ? 'Calls are priced per token.' : 'Buy a plan to start calling Pranata V1.'}</p>
     <p class="stat-foot">A plan gives you a set number of requests for 30 days.</p>
     <a class="btn btn-primary btn-sm" href="/account/plans">See plans</a>
   </article>`;
@@ -253,8 +253,7 @@ function balanceCard(o) {
   return `<article class="card stat-card">
     <p class="stat-label">Balance</p>
     <p class="stat-value">${esc(o.balance.text)}</p>
-    <p class="stat-sub">${low ? (o.usage ? 'Add a balance to keep calling once your plan runs out.' : 'Add a balance to start calling.') : 'Used once a plan’s requests are spent.'}${o.balance.shared ? ' Shared with Zeiko Chat.' : ''}</p>
-    <p class="stat-foot">Pranata V1: ${o.models.length ? o.models.map((m) => `${esc(usd(m.usd))} per ${m.unit === 'request' ? 'call' : 'million input tokens'}`).join(', ') : 'priced per token'}</p>
+    <p class="stat-sub">Pays for Zeiko Chat replies past your chat plan.${o.balance.shared ? ' The same balance in Zeiko Chat.' : ''}</p>
     <a class="btn ${low ? 'btn-primary' : 'btn-ghost'} btn-sm" href="/account/plans#topup">Add balance</a>
   </article>`;
 }
@@ -369,22 +368,29 @@ export function overview(o, flash) {
 }
 
 export function plans(o, { csrf, flash, pick }) {
-  const current = o.plan.id;
   const buying = o.paymentsActive;
-  const cards = o.plans.map((p) => {
+  // One card for a Pranata V1 plan or a Zeiko Chat one; `product` tells the
+  // checkout which.
+  const card = (p, product, current) => {
     const mine = p.id === current;
+    const picked = product === 'pranata' && p.id === pick;
+    const which = `<input type="hidden" name="csrf" value="${esc(csrf)}"><input type="hidden" name="product" value="${product}"><input type="hidden" name="plan" value="${esc(p.id)}">`;
     const forms = buying
-      ? `<form method="post" action="/account/buy"><input type="hidden" name="csrf" value="${esc(csrf)}"><input type="hidden" name="plan" value="${esc(p.id)}"><button class="btn ${p.id === pick ? 'btn-primary' : 'btn-ghost'} btn-block" type="submit">${mine ? 'Add 30 days' : 'Buy for 30 days'}</button></form>
-        ${p.subscription && o.subscriptionsActive ? `<form method="post" action="/account/subscribe"><input type="hidden" name="csrf" value="${esc(csrf)}"><input type="hidden" name="plan" value="${esc(p.id)}"><button class="btn btn-link btn-block" type="submit">Or renew every ${num(p.days)} days by email</button></form>` : ''}`
+      ? `<form method="post" action="/account/buy">${which}<button class="btn ${picked ? 'btn-primary' : 'btn-ghost'} btn-block" type="submit">${mine ? `Add ${num(p.days)} days` : `Buy for ${num(p.days)} days`}</button></form>
+        ${p.subscription && o.subscriptionsActive ? `<form method="post" action="/account/subscribe">${which}<button class="btn btn-link btn-block" type="submit">Or renew every ${num(p.days)} days by email</button></form>` : ''}`
       : '';
-    return `<article class="plan acct-plan${p.id === pick ? ' is-picked' : ''}${mine ? ' is-mine' : ''}" id="plan-${esc(p.id)}">
+    const what = p.requests ? `<strong>${num(p.requests)}</strong> requests` : esc(p.tagline || 'Zeiko Chat plan');
+    return `<article class="plan acct-plan${picked ? ' is-picked' : ''}${mine ? ' is-mine' : ''}" id="${product === 'chat' ? 'chat-' : ''}plan-${esc(p.id)}">
       ${mine ? '<span class="plan-tag">Your plan</span>' : ''}
       <h3>${esc(p.name)}</h3>
       <p class="plan-price">${esc(usd(p.priceUsd))}</p>
-      <p class="plan-reqs"><strong>${num(p.requests)}</strong> requests<br><span>${num(p.days)} days</span></p>
+      <p class="plan-reqs">${what}<br><span>${num(p.days)} days</span></p>
       <div class="plan-actions">${forms}</div>
     </article>`;
-  }).join('');
+  };
+  const cards = o.plans.map((p) => card(p, 'pranata', o.plan.id)).join('');
+  const chat = o.chat || {};
+  const chatCards = (chat.plans || []).map((p) => card(p, 'chat', chat.plan)).join('');
   const chips = (o.topUps || []).map((n) => `<button class="chip-btn" type="submit" name="amount" value="${esc(n)}">${esc(usd(n))}</button>`).join('');
   const subs = (o.subscriptions || []).filter((s) => s.status && !['EXPIRED', 'CANCELED', 'CANCELLED'].includes(s.status));
   const body = `
@@ -394,9 +400,13 @@ export function plans(o, { csrf, flash, pick }) {
       <div class="plans acct-plans">${cards}</div>
       <p class="fineprint">Buying the plan you are on adds 30 days to it. Buying another starts it now, and what is left of the current one comes back to your balance.${subs.length ? ` Renewing: ${subs.map((s) => esc(s.planName)).join(', ')} — the next link arrives by email.` : ''}</p>
     </section>
+    ${chatCards ? `<section class="acct-section-plain" id="chat">
+      <div class="section-row"><h2>Zeiko Chat</h2><p class="muted-note">The same account signs in to Zeiko Chat</p></div>
+      <div class="plans acct-plans">${chatCards}</div>
+    </section>` : ''}
     <section class="card acct-section" id="topup">
       <div class="section-row"><h2>Balance</h2><p class="balance-now">${esc(o.balance.text)}</p></div>
-      <p class="muted-note">One balance for ZeikoAI and Zeiko Chat. It pays for Pranata V1 calls once a plan’s requests are used — or for every call when you have no plan. Pranata V1 is ${o.models.map((m) => `${esc(usd(m.usd))} per ${m.unit === 'request' ? 'call' : 'million input tokens'}`).join(', ') || 'priced per token'}; answers cost nothing extra.</p>
+      <p class="muted-note">Your balance pays for Zeiko Chat replies past your chat plan. It is the same balance in Zeiko Chat.</p>
       ${buying ? `<form method="post" action="/account/topup" class="funds">
         <input type="hidden" name="csrf" value="${esc(csrf)}">
         <div class="chips-row" role="group" aria-label="Add this amount">${chips}</div>

@@ -130,7 +130,7 @@ function safeNext(next) {
 // is the visitor's text, and putting it on the page would be a way to make
 // the site say anything.
 const FLASH = {
-  welcome: ['ok', 'Your account is ready. Buy a plan or add a balance to start calling Pranata V1.'],
+  welcome: ['ok', 'Your account is ready, here and in Zeiko Chat. Buy a plan to start calling Pranata V1.'],
   'verify-sent': ['ok', 'We sent a new confirmation email. Open it and follow the link (or type the code in Zeiko Chat).'],
   'verify-failed': ['err', 'The confirmation email could not be sent. Try again in a few minutes.'],
   password: ['ok', 'Your password is saved.'],
@@ -138,7 +138,15 @@ const FLASH = {
   cancelled: ['warn', 'Nothing was charged. Pick a plan or an amount whenever you are ready.'],
   linked: ['ok', 'That sign-in method is connected.'],
   'link-taken': ['err', 'That account is already connected to another Zeiko Account.'],
+  // Where NOWPayments sends a subscriber back (set on each subscription plan
+  // there): /account?m=subscription-paid, -failed or -partial.
+  'subscription-paid': ['ok', 'Payment received — thank you. Your plan is renewed; the next link arrives by email before it runs out.'],
+  'subscription-failed': ['err', 'That payment did not go through. Nothing was charged; the link in the email still works.'],
+  'subscription-partial': ['warn', 'Only part of the amount arrived. Finish it from the same payment page, or contact us.'],
 };
+
+/** Which product a form is buying: Zeiko Chat, or Pranata V1. */
+const product = (f) => (f.product === 'chat' ? 'chat' : 'pranata');
 
 /* ---------------------------------------------------------------- pages */
 
@@ -337,7 +345,7 @@ async function action(c, id, path) {
 
   switch (path) {
     case '/account/buy': {
-      const r = await c.ask('POST', `/accounts/${enc}/checkout`, { kind: 'plan', plan: f.plan || '', returnUrl });
+      const r = await c.ask('POST', `/accounts/${enc}/checkout`, { product: product(f), kind: 'plan', plan: f.plan || '', returnUrl });
       if (r.status === 200 && r.data && r.data.invoiceUrl) return c.redirect(r.data.invoiceUrl);
       return back('plans', problem(r));
     }
@@ -345,12 +353,13 @@ async function action(c, id, path) {
       const raw = f.amount === 'custom' ? f.custom : f.amount;
       const amountUsd = Math.floor(Number(raw));
       if (!Number.isFinite(amountUsd) || amountUsd <= 0) return back('plans', 'Pick an amount, or type one in whole dollars.');
-      const r = await c.ask('POST', `/accounts/${enc}/checkout`, { kind: 'credit', amountUsd, returnUrl });
+      // The balance is Zeiko Chat credit.
+      const r = await c.ask('POST', `/accounts/${enc}/checkout`, { product: 'chat', kind: 'credit', amountUsd, returnUrl });
       if (r.status === 200 && r.data && r.data.invoiceUrl) return c.redirect(r.data.invoiceUrl);
       return back('plans', problem(r));
     }
     case '/account/subscribe': {
-      const r = await c.ask('POST', `/accounts/${enc}/subscribe`, { plan: f.plan || '' });
+      const r = await c.ask('POST', `/accounts/${enc}/subscribe`, { product: product(f), plan: f.plan || '' });
       if (r.status === 200) return back('plans', 'We emailed you a payment link for this plan. A new one arrives before every renewal.', 'ok', 200);
       return back('plans', problem(r));
     }

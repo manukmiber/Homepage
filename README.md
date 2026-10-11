@@ -56,7 +56,22 @@ npx wrangler dev          # http://localhost:8787
 `ACCOUNTS_URL`, `ACCOUNTS_TOKEN`, `SESSION_SECRET` (32+ characters), and
 optionally `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`,
 `GITHUB_CLIENT_ID`/`GITHUB_CLIENT_SECRET` and `API_BASE_URL`. Without the
-first three it says accounts open soon. In production set each with
+first three it says accounts open soon.
+
+To try `/account` without the real accounts service, run the local
+stand-in in a second terminal before `wrangler dev`:
+
+```bash
+npm run accounts:dev      # fills .dev.vars on its first run
+npx wrangler dev
+```
+
+It signs in the made-up accounts in `dev/accounts-seed.json` (the
+"Zeiko account", password in that file), takes new sign-ups, and treats
+every purchase as paid at once. Its accounts live in
+`.wrangler/dev-accounts.json`; delete that file to start over.
+
+In production set each with
 `npx wrangler secret put <NAME>`. The Google and GitHub apps' redirect
 URIs are `https://<site>/account/oauth/google/callback` and
 `https://<site>/account/oauth/github/callback`.

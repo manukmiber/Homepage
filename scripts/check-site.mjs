@@ -245,7 +245,10 @@ const ACCOUNT = 'rendered /account (made-up account)';
     account: { id: 'a1', username: 'acme', name: evil, email: 'ops@acme.test', emailVerified: false, hasPassword: false, google: true, github: false, createdAt: Date.UTC(2026, 8, 1) },
     mail: true,
     plan: { id: 'expand', name: 'Expand', paygo: false, requests: 100000, days: 30, expiresAt: Date.UTC(2026, 10, 1) },
-    chat: { planName: 'Free', expiresAt: null, url: 'https://chat.example' },
+    chat: {
+      planName: 'Free', plan: 'free', expiresAt: null, url: 'https://chat.example',
+      plans: [{ id: 'plus', name: evil, priceUsd: 3, days: 30, requests: 0, tagline: evil, subscription: true }],
+    },
     usage: { used: 81234, amount: 100000, periodStart: Date.UTC(2026, 9, 1), resetsAt: Date.UTC(2026, 10, 1) },
     balance: { micro: 4_200_000, text: '$4.20', shared: true },
     prepaid: true,

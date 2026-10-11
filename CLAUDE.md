@@ -91,6 +91,8 @@ src/
                   crypto.js signed cookies, service.js the accounts service
 dev/
   sample-stats.mjs  made-up figures for local development and the check
+  accounts.mjs      local stand-in for the accounts service (npm run accounts:dev);
+                    accounts-seed.json holds its made-up accounts
 scripts/
   check-site.mjs  leak scan + price consistency + rendered /models and /account (npm run check)
 wrangler.jsonc    static assets, plus the worker for /models and /account and its R2 binding
@@ -138,9 +140,14 @@ Worker from the accounts service (`service.js`, server to server with
 - **4xx messages from the service are shown as written** (they are written
   for customers); a 5xx or an unreachable service is "not available right
   now". `next=` only ever points at `/account…` (`safeNext`).
-- Sign-up asks for a username: the account is also a Zeiko Chat account.
-  Confirmation and password-reset emails are Zeiko Chat's own (its links,
-  its reset page); this site sends no mail.
+- Sign-up asks for a username: the account is also a Zeiko Chat account (one
+  sign-in for both, made in either place). Zeiko Chat's plans and the balance
+  (Zeiko Chat credit) are bought here too, beside Pranata V1's: the buy and
+  subscribe forms carry `product` (`chat`, or Pranata V1), top-ups are always
+  Zeiko Chat credit. NOWPayments' subscription return pages point at
+  `/account?m=subscription-paid|-failed|-partial` (fixed sentences in `FLASH`).
+- No confirmation or reset mail exists yet: the accounts service answers those
+  with a 4xx sentence, which the pages show as written. This site sends no mail.
 - Pages answer with `no-store`, `X-Frame-Options: DENY` and a CSP of
   `'self'` only (no inline styles: progress bars are SVG attributes).
 - Settings are Worker secrets, never in `wrangler.jsonc`: `ACCOUNTS_URL`,
