@@ -3,17 +3,20 @@
 //
 //   1. Nothing on the site may describe how the API is built or run.
 //   2. The site makes no requests of its own: no scripts, fonts or data
-//      from anywhere else, no fetch/XHR/WebSocket.
+//      from anywhere else, no fetch/XHR/WebSocket — except the account area
+//      (public/account/, public/js/account/), whose script talks to the
+//      account door and nowhere else.
 //   3. Every price carries a data-price key, and a key reads the same
 //      everywhere it appears.
 //   4. Every /models#<id> link lands on a model that exists.
 //   5. What src/render.js puts into /models on the server passes the same
 //      rules, carries no text out of the snapshot, and fills every
 //      placeholder models.html has.
-//   6. The account pages (src/account/views.js), rendered from a made-up
-//      account, pass the same rules except billing words and the details a
-//      customer gets with their key — the account area is where both
-//      belong — and escape everything the account holds.
+//   6. The account area — its files, and its pages (public/js/account/
+//      views.js) rendered from a made-up account — passes the same rules
+//      except billing words and the details a customer gets with their key
+//      (the account area is where both belong), and escapes everything the
+//      account holds.
 //
 // Exits 1 with one line per problem. Reword the page; never trim the lists
 // below to make a check pass.
@@ -23,7 +26,7 @@ import { join, relative, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { render, sanitize } from '../src/render.js';
 import { sampleSnapshot } from '../dev/sample-stats.mjs';
-import * as accountViews from '../src/account/views.js';
+import * as accountViews from '../public/js/account/views.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const PUBLIC = join(ROOT, 'public');
@@ -129,6 +132,12 @@ function walk(dir) {
 }
 
 const files = walk(PUBLIC).filter((f) => TEXT_EXT.has(extname(f)));
+
+// The account area: the one place that talks to anything but this site, and
+// only to the account door.
+const ACCOUNT_DIRS = [join(PUBLIC, 'account'), join(PUBLIC, 'js', 'account')];
+const inAccount = (f) => ACCOUNT_DIRS.some((d) => f.startsWith(d + '/') || f.startsWith(d + '\\'));
+const DOOR = 'https://auth.zeiko.biz.id';
 const html = [];
 const prices = new Map(); // key -> [{ value, file, index, src }]
 
@@ -154,8 +163,13 @@ function scan(file, src) {
   }
 }
 
+const accountFiles = [];
 for (const file of files) {
   const src = readFileSync(file, 'utf8');
+  if (inAccount(file)) {
+    accountFiles.push({ file, src });
+    continue;
+  }
   scan(file, src);
   if (extname(file) === '.html') html.push({ file, src });
 }
@@ -239,6 +253,44 @@ if (!view) {
 const ACCOUNT_OK = new Set(['billing', 'connection detail']);
 const ACCOUNT_BANNED = BANNED.filter(([what]) => !ACCOUNT_OK.has(what));
 const ACCOUNT = 'rendered /account (made-up account)';
+
+function scanAccount(file, src) {
+  const words = src.split(CONTACT).join(' '.repeat(CONTACT.length));
+  for (const [what, re] of ACCOUNT_BANNED) {
+    const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
+    for (const m of words.matchAll(g)) {
+      // "Continue with Google" is a sign-in button, not a model's origin.
+      if (what === 'model origin' && /^google$/i.test(m[0])) continue;
+      report(file, m.index, src, `${what}: "${m[0]}"`);
+    }
+  }
+}
+
+// Its files: the account door is the one address they may name, and the
+// app script the one place that may call it.
+const APP = join(PUBLIC, 'js', 'account', 'app.js');
+for (const { file, src } of accountFiles) {
+  scanAccount(file, src);
+  for (const re of NETWORK) {
+    const g = new RegExp(re.source, re.flags + 'g');
+    for (const m of src.matchAll(g)) {
+      if (file === APP && m[0].startsWith('fetch')) continue;
+      report(file, m.index, src, `network call: "${m[0]}" (only the account script calls the account door)`);
+    }
+  }
+  for (const m of src.matchAll(URL_RE)) {
+    // A policy lists addresses with a `;` after each.
+    const url = m[0].replace(/;$/, '');
+    if (url === DOOR || URL_OK.some((ok) => ok.test(url))) continue;
+    report(file, m.index, src, `external URL: "${m[0]}" (the account door is the only one)`);
+  }
+}
+const shell = accountFiles.find((f) => f.file === join(PUBLIC, 'account', 'index.html'));
+if (!shell) problems.push('public/account/index.html is missing — /account must exist');
+else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shell.src.includes(`connect-src 'self' ${DOOR};`)) {
+  problems.push(`public/account/index.html: the account door (${DOOR}) must be its <meta name="zeiko-accounts"> and its only connect-src`);
+}
+
 {
   const evil = '<script>CANARY</script>';
   const o = {
@@ -255,30 +307,29 @@ const ACCOUNT = 'rendered /account (made-up account)';
     plans: [{ id: 'welcome', name: evil, priceUsd: 1, days: 30, requests: 10000, subscription: true }],
     topUps: [2, 5], minTopUpUsd: 2, maxTopUpUsd: 1000,
     paymentsActive: true, subscriptionsActive: true,
-    key: { id: 'k1', masked: 'abcd…wxyz', enabled: true },
+    key: { id: 'k1', shown: 'abcd…wxyz', enabled: true },
     models: [{ id: 'pranata-v1', unit: 'mtok', usd: 0.003, window: 2000 }],
     payments: [{ id: 'p1', kind: 'credit', what: evil, amountText: '$5.00', status: 'waiting', paid: false, invoiceUrl: 'https://pay.example/i', createdAt: Date.now() }],
     subscriptions: [],
     daily: [{ day: Date.now() - (Date.now() % 86_400_000), calls: 12, units: 14, inputTokens: 9000 }],
   };
   const opts = { google: true, github: true };
+  o.signInWith = opts;
+  o.referral = { code: evil, discountPct: 20 };
+  const door = DOOR;
   const pages = [
-    accountViews.page({ title: 'Account', body: accountViews.overview(o, ''), signedIn: true }),
-    accountViews.plans(o, { csrf: 'x', flash: '', pick: 'welcome' }),
-    accountViews.key(o, { csrf: 'x', flash: '', secret: 'k-123', apiBase: 'https://example.test' }),
-    accountViews.settings(o, { csrf: 'x', flash: '', opts }),
-    accountViews.signIn({ csrf: 'x', error: evil, notice: '', email: evil, next: '/account', opts }),
-    accountViews.signUp({ csrf: 'x', error: '', email: '', username: evil, next: '', opts }),
-    accountViews.forgot({ csrf: 'x', error: '', sent: false }),
+    accountViews.nav(true),
+    accountViews.nav(false),
+    accountViews.overview(o, ''),
+    accountViews.plans(o, { flash: '', pick: 'welcome' }),
+    accountViews.key(o, { flash: '', shown: 'k-123', apiBase: 'https://example.test' }),
+    accountViews.settings(o, { flash: '', door }),
+    accountViews.signIn({ error: evil, notice: '', email: evil, next: '/account', opts, door }),
+    accountViews.signUp({ error: '', email: '', username: evil, next: '', ref: evil, opts, door }),
+    accountViews.forgot({ error: '', sent: false }),
+    accountViews.reset({ error: evil, token: evil }),
   ].join('\n');
-  for (const [what, re] of ACCOUNT_BANNED) {
-    const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
-    for (const m of pages.matchAll(g)) {
-      // "Continue with Google" is a sign-in button, not a model's origin.
-      if (what === 'model origin' && /^google$/i.test(m[0])) continue;
-      report(ACCOUNT, m.index, pages, `${what}: "${m[0]}"`);
-    }
-  }
+  scanAccount(ACCOUNT, pages);
   for (const m of pages.matchAll(/<script>CANARY/g)) report(ACCOUNT, m.index, pages, 'an account value reached the page unescaped');
   for (const re of NETWORK) {
     const g = new RegExp(re.source, re.flags + 'g');
@@ -295,4 +346,4 @@ if (problems.length) {
   process.exit(1);
 }
 
-console.log(`check-site: ${files.length} files, the rendered /models and the account pages clean, ${prices.size} price keys consistent.`);
+console.log(`check-site: ${files.length} files (${accountFiles.length} in the account area), the rendered /models and the account pages clean, ${prices.size} price keys consistent.`);

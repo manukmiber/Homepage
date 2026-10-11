@@ -1,6 +1,7 @@
-// The account area's pages, as finished HTML. Every value that came from a
-// visitor or from the accounts service goes through `esc`; nothing else is
-// put into a page. The pages work with JavaScript off: every action is a form.
+// The account area's pages, drawn in the visitor's browser by app.js from
+// what the account door answers. Every value that came from a visitor or
+// from the door goes through `esc`; nothing else is put into a page. Every
+// action is a form with `data-act`, which app.js sends to the door.
 
 export function esc(v) {
   return String(v ?? '')
@@ -37,79 +38,23 @@ function when(ms) {
   return `${day(ms)}, ${hh}:${mm} UTC`;
 }
 
-const FAVICON = `data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><path d='M21 9H11l6 6-6 8h10' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/></svg>`;
 
-const THEME_BUTTON = `<button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
-        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-      </button>`;
-
-const MENU_BUTTON = `<button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      </button>`;
-
-/** The whole page around `body`. */
-export function page({ title, body, signedIn = false, bare = false }) {
-  const nav = signedIn
+/** The top bar's links, signed in or not. */
+export function nav(signedIn) {
+  return signedIn
     ? `<a href="/#decision">Pranata V1</a>
       <a href="/models">Models</a>
       <a href="/account" aria-current="page">Account</a>
-      <form method="post" action="/account/signout" class="nav-form"><input type="hidden" name="csrf" value="__CSRF__"><button class="btn btn-sm btn-ghost" type="submit">Sign out</button></form>`
+      <form data-act="signout" class="nav-form"><button class="btn btn-sm btn-ghost" type="submit">Sign out</button></form>`
     : `<a href="/#decision">Pranata V1</a>
       <a href="/#pricing">Pricing</a>
       <a href="/models">Models</a>
-      <a class="nav-account" href="/account">Sign in</a>
+      <a class="nav-account" href="/account/signin">Sign in</a>
       <a class="btn btn-sm btn-primary" href="/account/signup">Create account</a>`;
-  return `<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>${esc(title)} — ZeikoAI</title>
-<meta name="robots" content="noindex">
-<meta name="color-scheme" content="light dark">
-<link rel="icon" href="${FAVICON}">
-<link rel="stylesheet" href="/css/style.css">
-</head>
-<body class="acct-body">
+}
 
-<a class="skip" href="#main">Skip to content</a>
-
-<header class="topbar">
-  <div class="wrap topbar-in">
-    <a class="brand" href="/">
-      <span class="brand-mark" aria-hidden="true">Z</span>
-      <span class="brand-name">ZeikoAI</span>
-    </a>
-    ${bare ? '' : `<nav class="nav" id="nav" aria-label="Main navigation">
-      ${nav}
-    </nav>`}
-    <div class="topbar-tools">
-      ${THEME_BUTTON}
-      ${bare ? '' : MENU_BUTTON}
-    </div>
-  </div>
-</header>
-
-<main id="main">
-${body}
-</main>
-
-<footer class="footer">
-  <div class="wrap footer-in">
-    <p>© ${new Date().getUTCFullYear()} ZeikoAI</p>
-    <nav aria-label="Footer links">
-      <a href="/">Home</a>
-      <a href="/#decision">Pranata V1</a>
-      <a href="/models">Models</a>
-      <a href="/#contact">Contact</a>
-    </nav>
-  </div>
-</footer>
-
-<script src="/js/main.js"></script>
-</body>
-</html>`;
+export function loading() {
+  return `<section class="auth"><div class="auth-card card"><p class="auth-sub">Loading…</p></div></section>`;
 }
 
 function alert(kind, text) {
@@ -120,11 +65,15 @@ function alert(kind, text) {
 const GOOGLE_ICON = `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3Z"/><path fill="#34A853" d="M12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22Z"/><path fill="#FBBC05" d="M6.4 14c-.2-.6-.3-1.3-.3-2s.1-1.4.3-2V7.4H3.1a10 10 0 0 0 0 9.2L6.4 14Z"/><path fill="#EA4335" d="M12 5.9c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 0 0 3.1 7.4L6.4 10c.8-2.3 3-4.1 5.6-4.1Z"/></svg>`;
 const GITHUB_ICON = `<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.7c-2.8.6-3.4-1.3-3.4-1.3-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 2.9.8.1-.6.4-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.3-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.4.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.3 4.7-4.6 5 .4.3.7.9.7 1.9V21c0 .3.2.6.7.5A10 10 0 0 0 12 2Z"/></svg>`;
 
-function providers(opts, next) {
-  const q = next ? `?next=${encodeURIComponent(next)}` : '';
+/** Google and GitHub, when the door has them on. `door` is its address. */
+function oneClick(opts, next, door, ref) {
+  const q = new URLSearchParams();
+  if (next) q.set('next', next);
+  if (ref) q.set('ref', ref);
+  const tail = q.toString() ? `?${q}` : '';
   const buttons = [];
-  if (opts.google) buttons.push(`<a class="btn btn-ghost btn-block btn-signin-with" href="/account/oauth/google${q}">${GOOGLE_ICON}<span>Continue with Google</span></a>`);
-  if (opts.github) buttons.push(`<a class="btn btn-ghost btn-block btn-signin-with" href="/account/oauth/github${q}">${GITHUB_ICON}<span>Continue with GitHub</span></a>`);
+  if (opts.google) buttons.push(`<a class="btn btn-ghost btn-block btn-signin-with" href="${esc(`${door}/oauth/google${tail}`)}">${GOOGLE_ICON}<span>Continue with Google</span></a>`);
+  if (opts.github) buttons.push(`<a class="btn btn-ghost btn-block btn-signin-with" href="${esc(`${door}/oauth/github${tail}`)}">${GITHUB_ICON}<span>Continue with GitHub</span></a>`);
   if (!buttons.length) return '';
   return `<div class="auth-oneclick">${buttons.join('')}</div><p class="auth-or"><span>or with your email</span></p>`;
 }
@@ -139,13 +88,12 @@ function authShell(heading, sub, inner) {
 </section>`;
 }
 
-export function signIn({ csrf, error, notice, email = '', next = '', opts }) {
-  const hidden = `<input type="hidden" name="csrf" value="${esc(csrf)}"><input type="hidden" name="next" value="${esc(next)}">`;
+export function signIn({ error, notice, email = '', next = '', opts, door }) {
   return authShell('Sign in', 'One Zeiko Account for ZeikoAI and Zeiko Chat.', `
     ${alert('err', error)}${alert('ok', notice)}
-    ${providers(opts, next)}
-    <form method="post" action="/account/signin" class="form">
-      ${hidden}
+    ${oneClick(opts, next, door, '')}
+    <form data-act="signin" class="form">
+      <input type="hidden" name="next" value="${esc(next)}">
       <label>Email<input type="email" name="email" autocomplete="email" required maxlength="254" value="${esc(email)}"></label>
       <label><span class="label-row">Password<a href="/account/forgot">Forgot it?</a></span>
         <input type="password" name="password" autocomplete="current-password" required maxlength="200"></label>
@@ -154,33 +102,44 @@ export function signIn({ csrf, error, notice, email = '', next = '', opts }) {
     <p class="auth-foot">New here? <a href="/account/signup${next ? `?next=${encodeURIComponent(next)}` : ''}">Create an account</a></p>`);
 }
 
-export function signUp({ csrf, error, email = '', username = '', next = '', opts }) {
+export function signUp({ error, email = '', username = '', next = '', ref = '', opts, door }) {
   return authShell('Create your Zeiko Account', 'One account for ZeikoAI and Zeiko Chat: plans, one balance and your key in one place.', `
     ${alert('err', error)}
-    ${providers(opts, next)}
-    <form method="post" action="/account/signup" class="form">
-      <input type="hidden" name="csrf" value="${esc(csrf)}"><input type="hidden" name="next" value="${esc(next)}">
+    ${oneClick(opts, next, door, ref)}
+    <form data-act="signup" class="form">
+      <input type="hidden" name="next" value="${esc(next)}">
       <label>Email<input type="email" name="email" autocomplete="email" required maxlength="254" value="${esc(email)}"></label>
       <label>Username <small>3–24 letters, numbers or _</small><input type="text" name="username" autocomplete="username" required minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" autocapitalize="off" spellcheck="false" value="${esc(username)}"></label>
       <label>Password <small>8 characters or more</small><input type="password" name="password" autocomplete="new-password" required minlength="8" maxlength="200"></label>
+      <label>Referral code <small>optional</small><input type="text" name="referral" maxlength="32" autocapitalize="characters" spellcheck="false" value="${esc(ref)}"></label>
       <button class="btn btn-primary btn-block" type="submit">Create account</button>
     </form>
     <p class="auth-foot">Already have one? <a href="/account/signin${next ? `?next=${encodeURIComponent(next)}` : ''}">Sign in</a></p>`);
 }
 
-export function forgot({ csrf, error, sent }) {
+export function forgot({ error, sent }) {
   if (sent) {
     return authShell('Check your inbox', '', `${alert('ok', 'If that email has an account, a link to choose a new password is on its way. The new password works here and in Zeiko Chat.')}
       <p class="auth-foot"><a href="/account/signin">Back to sign in</a></p>`);
   }
   return authShell('Forgot your password?', 'We will email you a link to choose a new one.', `
     ${alert('err', error)}
-    <form method="post" action="/account/forgot" class="form">
-      <input type="hidden" name="csrf" value="${esc(csrf)}">
+    <form data-act="forgot" class="form">
       <label>Email<input type="email" name="email" autocomplete="email" required maxlength="254"></label>
       <button class="btn btn-primary btn-block" type="submit">Send the link</button>
     </form>
     <p class="auth-foot"><a href="/account/signin">Back to sign in</a></p>`);
+}
+
+/** The page the reset email links to: the token is in the address. */
+export function reset({ error, token }) {
+  return authShell('Choose a new password', 'It works here and in Zeiko Chat.', `
+    ${alert('err', error)}
+    <form data-act="reset" class="form">
+      <input type="hidden" name="token" value="${esc(token)}">
+      <label>New password <small>8 characters or more</small><input type="password" name="password" autocomplete="new-password" required minlength="8" maxlength="200"></label>
+      <button class="btn btn-primary btn-block" type="submit">Save and sign in</button>
+    </form>`);
 }
 
 export function message({ heading, text, link = '/account', label = 'Go to your account' }) {
@@ -212,7 +171,9 @@ function shell(tab, o, inner, flash) {
       ${TABS.map(([id, href, label]) => `<a href="${href}"${id === tab ? ' aria-current="page"' : ''}>${label}</a>`).join('')}
     </nav>
     ${flash || ''}
-    ${!a.emailVerified && a.email && o.mail ? `<div class="alert alert-warn" role="status"><p><strong>Confirm your email.</strong> We sent a code to ${esc(a.email)}; renewal links for subscriptions go there too.</p><form method="post" action="/account/verify/send"><input type="hidden" name="csrf" value="__CSRF__"><button class="btn btn-sm btn-ghost" type="submit">Send it again</button></form></div>` : ''}
+    ${!a.emailVerified && a.email && o.mail ? `<div class="alert alert-warn" role="status"><p><strong>Confirm your email.</strong> We sent a code to ${esc(a.email)}; renewal links for subscriptions go there too.</p>
+      <form data-act="verify-code" class="form-inline"><label>Code<input type="text" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" required></label><button class="btn btn-sm btn-primary" type="submit">Confirm</button></form>
+      <form data-act="verify-send"><button class="btn btn-sm btn-ghost" type="submit">Send it again</button></form></div>` : ''}
     ${inner}
   </div>
 </section>`;
@@ -242,7 +203,7 @@ function planCard(o) {
   return `<article class="card stat-card">
     <p class="stat-label">Plan</p>
     <p class="stat-value">${p.paygo ? 'Per token' : 'No plan'}</p>
-    <p class="stat-sub">${p.paygo ? 'Calls are priced per token.' : 'Buy a plan to start calling Pranata V1.'}</p>
+    <p class="stat-sub">${p.paygo ? 'Every call is paid from your balance.' : 'Buy a plan, or add balance, to start calling Pranata V1.'}</p>
     <p class="stat-foot">A plan gives you a set number of requests for 30 days.</p>
     <a class="btn btn-primary btn-sm" href="/account/plans">See plans</a>
   </article>`;
@@ -253,7 +214,7 @@ function balanceCard(o) {
   return `<article class="card stat-card">
     <p class="stat-label">Balance</p>
     <p class="stat-value">${esc(o.balance.text)}</p>
-    <p class="stat-sub">Pays for Zeiko Chat replies past your chat plan.${o.balance.shared ? ' The same balance in Zeiko Chat.' : ''}</p>
+    <p class="stat-sub">Pays for Pranata V1 calls past your plan and Zeiko Chat replies past your chat plan.${o.balance.shared ? ' The same balance in Zeiko Chat.' : ''}</p>
     <a class="btn ${low ? 'btn-primary' : 'btn-ghost'} btn-sm" href="/account/plans#topup">Add balance</a>
   </article>`;
 }
@@ -261,7 +222,7 @@ function balanceCard(o) {
 function keyCard(o) {
   return `<article class="card stat-card">
     <p class="stat-label">API key</p>
-    <p class="stat-value stat-mono">${o.key ? esc(o.key.masked) : 'Not ready yet'}</p>
+    <p class="stat-value stat-mono">${o.key ? esc(o.key.shown) : 'Not ready yet'}</p>
     <p class="stat-sub">Works with every Pranata V1 model on your plan or balance.</p>
     <p class="stat-foot">${o.models.map((m) => `<code>${esc(m.id)}</code>`).join(' ')}</p>
     <a class="btn btn-ghost btn-sm" href="/account/key">Show key</a>
@@ -367,17 +328,17 @@ export function overview(o, flash) {
   return shell('overview', o, body, flash);
 }
 
-export function plans(o, { csrf, flash, pick }) {
+export function plans(o, { flash, pick }) {
   const buying = o.paymentsActive;
   // One card for a Pranata V1 plan or a Zeiko Chat one; `product` tells the
   // checkout which.
   const card = (p, product, current) => {
     const mine = p.id === current;
     const picked = product === 'pranata' && p.id === pick;
-    const which = `<input type="hidden" name="csrf" value="${esc(csrf)}"><input type="hidden" name="product" value="${product}"><input type="hidden" name="plan" value="${esc(p.id)}">`;
+    const which = `<input type="hidden" name="product" value="${product}"><input type="hidden" name="plan" value="${esc(p.id)}">`;
     const forms = buying
-      ? `<form method="post" action="/account/buy">${which}<button class="btn ${picked ? 'btn-primary' : 'btn-ghost'} btn-block" type="submit">${mine ? `Add ${num(p.days)} days` : `Buy for ${num(p.days)} days`}</button></form>
-        ${p.subscription && o.subscriptionsActive ? `<form method="post" action="/account/subscribe">${which}<button class="btn btn-link btn-block" type="submit">Or renew every ${num(p.days)} days by email</button></form>` : ''}`
+      ? `<form data-act="buy">${which}<button class="btn ${picked ? 'btn-primary' : 'btn-ghost'} btn-block" type="submit">${mine ? `Add ${num(p.days)} days` : `Buy for ${num(p.days)} days`}</button></form>
+        ${p.subscription && o.subscriptionsActive ? `<form data-act="subscribe">${which}<button class="btn btn-link btn-block" type="submit">Or renew every ${num(p.days)} days by email</button></form>` : ''}`
       : '';
     const what = p.requests ? `<strong>${num(p.requests)}</strong> requests` : esc(p.tagline || 'Zeiko Chat plan');
     return `<article class="plan acct-plan${picked ? ' is-picked' : ''}${mine ? ' is-mine' : ''}" id="${product === 'chat' ? 'chat-' : ''}plan-${esc(p.id)}">
@@ -406,9 +367,8 @@ export function plans(o, { csrf, flash, pick }) {
     </section>` : ''}
     <section class="card acct-section" id="topup">
       <div class="section-row"><h2>Balance</h2><p class="balance-now">${esc(o.balance.text)}</p></div>
-      <p class="muted-note">Your balance pays for Zeiko Chat replies past your chat plan. It is the same balance in Zeiko Chat.</p>
-      ${buying ? `<form method="post" action="/account/topup" class="funds">
-        <input type="hidden" name="csrf" value="${esc(csrf)}">
+      <p class="muted-note">Your balance pays for Pranata V1 calls past your plan and for Zeiko Chat replies past your chat plan. It is the same balance in Zeiko Chat.</p>
+      ${buying ? `<form data-act="topup" class="funds">
         <div class="chips-row" role="group" aria-label="Add this amount">${chips}</div>
         <div class="funds-custom">
           <label>Other amount, USD<input type="number" name="custom" min="${esc(o.minTopUpUsd)}" max="${esc(o.maxTopUpUsd)}" step="1" inputmode="numeric" placeholder="${esc(o.minTopUpUsd)}–${esc(o.maxTopUpUsd)}"></label>
@@ -420,12 +380,12 @@ export function plans(o, { csrf, flash, pick }) {
   return shell('plans', o, body, flash);
 }
 
-export function key(o, { csrf, flash, secret, apiBase }) {
-  const shown = secret
-    ? `<div class="key-box"><code id="the-key">${esc(secret)}</code><button class="copy" type="button" data-copy="#the-key">Copy</button></div>
+export function key(o, { flash, shown: revealed, apiBase }) {
+  const shown = revealed
+    ? `<div class="key-box"><code id="the-key">${esc(revealed)}</code><button class="copy" type="button" data-copy="#the-key">Copy</button></div>
        <p class="fineprint">Keep it private: anyone with it can spend your plan and balance. Leave this page and it is hidden again.</p>`
-    : `<div class="key-box"><code>${o.key ? esc(o.key.masked) : 'Not ready yet — try again in a minute'}</code>
-         <form method="post" action="/account/key/reveal"><input type="hidden" name="csrf" value="${esc(csrf)}"><button class="btn btn-ghost btn-sm" type="submit">Show</button></form></div>`;
+    : `<div class="key-box"><code>${o.key ? esc(o.key.shown) : 'Not ready yet — try again in a minute'}</code>
+         <form data-act="key-reveal"><button class="btn btn-ghost btn-sm" type="submit">Show</button></form></div>`;
   const models = o.models.map((m) => `<tr><th scope="row"><code id="m-${esc(m.id)}">${esc(m.id)}</code></th><td>${esc(usd(m.usd))} / ${m.unit === 'request' ? 'call' : '1M input tokens'}</td><td>${num(m.window)} tokens</td></tr>`).join('');
   const body = `
     <section class="card acct-section">
@@ -440,14 +400,15 @@ export function key(o, { csrf, flash, secret, apiBase }) {
     <section class="card acct-section danger-zone">
       <h2>Make a new key</h2>
       <p class="muted-note">The current key stops working at once. Do this if it may have been seen by someone else.</p>
-      <form method="post" action="/account/key/rotate"><input type="hidden" name="csrf" value="${esc(csrf)}"><label class="check"><input type="checkbox" name="sure" value="1" required> I understand the old key stops working</label><button class="btn btn-danger btn-sm" type="submit">Make a new key</button></form>
+      <form data-act="key-rotate"><label class="check"><input type="checkbox" name="sure" value="1" required> I understand the old key stops working</label><button class="btn btn-danger btn-sm" type="submit">Make a new key</button></form>
     </section>`;
   return shell('key', o, body, flash);
 }
 
-export function settings(o, { csrf, flash, opts }) {
+export function settings(o, { flash, door }) {
   const a = o.account;
-  const linked = (on, name) => `<li><span>${name}</span><span class="tag ${on ? 'tag-ok' : ''}">${on ? 'Connected' : 'Not connected'}</span>${!on && opts[name.toLowerCase()] ? `<a class="btn btn-ghost btn-xs" href="/account/oauth/${name.toLowerCase()}?next=/account/settings">Connect</a>` : ''}</li>`;
+  const opts = o.signInWith || {};
+  const linked = (on, name) => `<li><span>${name}</span><span class="tag ${on ? 'tag-ok' : ''}">${on ? 'Connected' : 'Not connected'}</span>${!on && opts[name.toLowerCase()] ? `<a class="btn btn-ghost btn-xs" href="${esc(`${door}/oauth/${name.toLowerCase()}?next=/account/settings`)}">Connect</a>` : ''}</li>`;
   const body = `
     <section class="card acct-section">
       <h2>Profile</h2>
@@ -456,6 +417,7 @@ export function settings(o, { csrf, flash, opts }) {
         <div><dt>Name</dt><dd>${esc(a.name || '—')}</dd></div>
         <div><dt>Email</dt><dd>${esc(a.email || '—')} ${a.email ? `<span class="tag ${a.emailVerified ? 'tag-ok' : 'tag-warn'}">${a.emailVerified ? 'Confirmed' : 'Not confirmed'}</span>` : ''}</dd></div>
         <div><dt>Member since</dt><dd>${esc(day(a.createdAt))}</dd></div>
+        ${o.referral && o.referral.code ? `<div><dt>Referral code</dt><dd><code>${esc(o.referral.code)}</code>${o.referral.discountPct ? ` · ${esc(o.referral.discountPct)}% off plans` : ''}</dd></div>` : ''}
       </dl>
     </section>
     <section class="card acct-section">
@@ -469,17 +431,25 @@ export function settings(o, { csrf, flash, opts }) {
     </section>
     <section class="card acct-section">
       <h2>${a.hasPassword ? 'Change password' : 'Set a password'}</h2>
-      <form method="post" action="/account/password" class="form form-narrow">
-        <input type="hidden" name="csrf" value="${esc(csrf)}">
+      <form data-act="password" class="form form-narrow">
         ${a.hasPassword ? '<label>Current password<input type="password" name="current" autocomplete="current-password" required maxlength="200"></label>' : '<p class="muted-note">Add one to sign in with your email as well.</p>'}
         <label>New password <small>8 characters or more</small><input type="password" name="password" autocomplete="new-password" required minlength="8" maxlength="200"></label>
         <button class="btn btn-primary" type="submit">Save password</button>
       </form>
     </section>
+    ${a.hasPassword ? `<section class="card acct-section">
+      <h2>Change email</h2>
+      <p class="muted-note">The new address signs you in here and in Zeiko Chat once you confirm it with the code we send there.</p>
+      <form data-act="email" class="form form-narrow">
+        <label>New email<input type="email" name="email" autocomplete="email" required maxlength="254"></label>
+        <label>Password<input type="password" name="current" autocomplete="current-password" required maxlength="200"></label>
+        <button class="btn btn-primary" type="submit">Change email</button>
+      </form>
+    </section>` : ''}
     <section class="card acct-section">
       <h2>Sign out</h2>
       <p class="muted-note">Signs you out on this device.</p>
-      <form method="post" action="/account/signout"><input type="hidden" name="csrf" value="${esc(csrf)}"><button class="btn btn-ghost btn-sm" type="submit">Sign out</button></form>
+      <form data-act="signout"><button class="btn btn-ghost btn-sm" type="submit">Sign out</button></form>
     </section>`;
   return shell('settings', o, body, flash);
 }

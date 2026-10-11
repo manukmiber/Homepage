@@ -1,17 +1,36 @@
 // The only code that runs on the server side of the site.
 //
 // `run_worker_first` in wrangler.jsonc sends /models and /account here;
-// every other path is a plain file and never reaches this code. /account is
-// Zeiko Accounts (src/account/). For /models, the static page
-// is fetched as usual and the latest hourly snapshot in R2 is rendered into
-// its placeholders (see src/render.js). The visitor's browser only ever
-// receives finished HTML: no data file, no script fetching one.
+// every other path is a plain file and never reaches this code.
 //
-// If the snapshot is missing or unreadable, the static page goes out as is,
-// with its "not available right now" notes.
+// /account and every page under it is one plain file,
+// public/account/index.html: the visitor's browser signs in with the account
+// door itself (public/js/account/), so nothing here knows who anyone is and
+// this code holds no secret. It only hands every account address the same
+// page, so a link to /account/plans or /account/reset?token=… opens.
+//
+// For /models, the static page is fetched as usual and the latest hourly
+// snapshot in R2 is rendered into its placeholders (see src/render.js). The
+// visitor's browser only ever receives finished HTML: no data file, no script
+// fetching one. If the snapshot is missing or unreadable, the static page
+// goes out as is, with its "not available right now" notes.
 
 import { render, sanitize } from './render.js';
-import { handleAccount } from './account/index.js';
+
+/** The account page, whatever account address was asked for. */
+async function accountShell(request, env) {
+  const url = new URL(request.url);
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
+    return new Response('method not allowed', { status: 405, headers: { allow: 'GET, HEAD' } });
+  }
+  const page = await env.ASSETS.fetch(new Request(new URL('/account/', url), { method: request.method }));
+  const headers = new Headers(page.headers);
+  headers.set('cache-control', 'no-store');
+  headers.set('x-frame-options', 'DENY');
+  headers.set('x-content-type-options', 'nosniff');
+  headers.set('referrer-policy', 'same-origin');
+  return new Response(page.body, { status: page.status, headers });
+}
 
 const OBJECT = 'models.json';
 
@@ -19,7 +38,7 @@ export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
     if (url.pathname === '/account' || url.pathname.startsWith('/account/')) {
-      return handleAccount(request, env, ctx);
+      return accountShell(request, env);
     }
     if (url.pathname !== '/models') return env.ASSETS.fetch(request);
 

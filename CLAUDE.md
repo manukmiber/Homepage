@@ -84,25 +84,25 @@ public/
   css/style.css   the only stylesheet; colour tokens for light and dark
   js/main.js      theme, mobile menu, topbar, copy buttons, effort bars, plan
                   value, estimator, chart hover
+  account/index.html  /account and every page under it: one plain page
+  js/account/     Zeiko Accounts: app.js asks the account door, views.js draws
 src/
   worker.js       runs for /models only: fills its placeholders from the snapshot
   render.js       snapshot → HTML for those placeholders; numbers only
-  account/        Zeiko Accounts (/account): index.js routes, views.js pages,
-                  crypto.js signed cookies, service.js the accounts service
 dev/
   sample-stats.mjs  made-up figures for local development and the check
-  accounts.mjs      local stand-in for the accounts service (npm run accounts:dev);
-                    accounts-seed.json holds its made-up accounts
 scripts/
   check-site.mjs  leak scan + price consistency + rendered /models and /account (npm run check)
 wrangler.jsonc    static assets, plus the worker for /models and /account and its R2 binding
 ```
 
-Everything is a static file except `/models` and `/account`, and the browser
-never asks for anything but this site's own files:
+Everything is a static file except `/models`, and the browser never asks
+for anything but this site's own files — **except the account area** (below),
+whose script talks to the account door and nowhere else:
 
 - **One piece of server code.** `src/worker.js` runs for `/models` and
-  `/account` only (`run_worker_first`). It reads the hourly snapshot from the `MODELS` R2
+  `/account` only (`run_worker_first`); for `/account…` it only hands back
+  `public/account/index.html`, so deep links open. It reads the hourly snapshot from the `MODELS` R2
   binding and fills the page's placeholders (`data-perf-bar`, `data-perf`,
   `data-stat`) before the page leaves. Every other path never reaches it.
 - **`src/render.js` is the only door from the snapshot to the page.** It
@@ -113,50 +113,57 @@ never asks for anything but this site's own files:
 - **Never serve the snapshot to the browser**, whole or in part: no data
   file, no JSON endpoint, no inline JSON. Only finished HTML goes out.
 - **No runtime requests.** No `fetch`, XHR, WebSocket, analytics, web fonts or
-  CDN scripts. The network tab shows only this site's own files.
+  CDN scripts. The network tab shows only this site's own files. The one
+  exception is `public/js/account/app.js` calling the account door.
 - **No build step**, no framework, no dependencies besides wrangler.
-- Every page must read fine with JavaScript off. The figures and charts are
+- Every page must read fine with JavaScript off, except the account area,
+  which needs it and says so (`<noscript>`). The figures and charts are
   rendered on the server; JavaScript only adds chart hover, the estimator
   and the plans' "requests per dollar" line (both stay hidden without it).
 - If the snapshot is missing or unreadable, `/models` goes out as the static
   file, with "not available right now" where the figures would be.
 
-## Zeiko Accounts (`src/account/`)
+## Zeiko Accounts (`public/account/`, `public/js/account/`)
 
 One account for ZeikoAI and Zeiko Chat: the same login (email and password,
-Google, GitHub) and **one balance** for both. `/account` is rendered by the
-Worker from the accounts service (`service.js`, server to server with
-`ACCOUNTS_URL` + `ACCOUNTS_TOKEN`); the browser never sees that address.
+Google, GitHub) and **one balance** for both. `/account` is one plain page;
+its script (`app.js`) asks the **account door** —
+`https://auth.zeiko.biz.id`, the page's `<meta name="zeiko-accounts">` — for
+everything, with the visitor's own cookie for the door
+(`credentials: 'include'`). **The site holds no secret and no sign-in for
+it**: no Worker code, no `ACCOUNTS_*`, no `SESSION_SECRET`, no Google or
+GitHub keys. Google and GitHub sign-in start and finish at the door
+(`/oauth/<name>`), which sends the browser back to `/account…`.
 
-- **Nothing is stored here.** The session is an HMAC-signed cookie
-  (`zk_s`, `crypto.js`, `SESSION_SECRET`), the Google/GitHub state another
-  (`zk_o`, ten minutes). Every page asks the service again.
-- **Every page works with JavaScript off**: every action is a `<form>` POST
-  with a CSRF value that must equal its `zk_c` cookie, and a foreign
-  `Origin` is refused. No `fetch` in `public/` still holds.
-- **Only fixed sentences come from the address bar** (`?m=` → `FLASH`). A
-  query string is the visitor's text; printing it would let anyone make the
-  site say anything. Everything from the service goes through `esc`.
-- **4xx messages from the service are shown as written** (they are written
-  for customers); a 5xx or an unreachable service is "not available right
-  now". `next=` only ever points at `/account…` (`safeNext`).
-- Sign-up asks for a username: the account is also a Zeiko Chat account (one
-  sign-in for both, made in either place). Zeiko Chat's plans and the balance
-  (Zeiko Chat credit) are bought here too, beside Pranata V1's: the buy and
-  subscribe forms carry `product` (`chat`, or Pranata V1), top-ups are always
-  Zeiko Chat credit. NOWPayments' subscription return pages point at
-  `/account?m=subscription-paid|-failed|-partial` (fixed sentences in `FLASH`).
-- No confirmation or reset mail exists yet: the accounts service answers those
-  with a 4xx sentence, which the pages show as written. This site sends no mail.
-- Pages answer with `no-store`, `X-Frame-Options: DENY` and a CSP of
-  `'self'` only (no inline styles: progress bars are SVG attributes).
-- Settings are Worker secrets, never in `wrangler.jsonc`: `ACCOUNTS_URL`,
-  `ACCOUNTS_TOKEN`, `SESSION_SECRET` (32+), optional `GOOGLE_CLIENT_ID`/
-  `GOOGLE_CLIENT_SECRET`, `GITHUB_CLIENT_ID`/`GITHUB_CLIENT_SECRET`,
-  `API_BASE_URL`. Locally: `.dev.vars` (gitignored).
-- `npm run check` renders every account page from a made-up account laced
-  with `<script>` and holds it to the banned list minus billing and
-  connection details. Keep new pages in that list.
+- **The door answers this site's pages only** and wants `X-Zeiko: 1` on every
+  post (`app.js::ask` adds it). The address is in two places in
+  `index.html` — the `<meta>` and the `connect-src` of its
+  Content-Security-Policy — and `npm run check` holds both to it.
+- **The account area is the only place allowed a request**, to the door
+  only, and only from `app.js`; `npm run check` scans its files with the
+  account rules (money words and key details allowed, everything else
+  banned — field names too: the door says `shown` for the key's ends, `key`
+  for the key, `signInWith` for Google and GitHub).
+- **Every value from the door or the visitor goes through `esc`**
+  (`views.js`); the check renders every page from a made-up account laced
+  with `<script>`.
+- **Only fixed sentences come from the address bar** (`?m=` → `FLASH` in
+  `app.js`). `next=` only ever points at `/account…` (`safeNext`).
+- **4xx messages from the door are shown as written** (they are written for
+  customers); a 5xx or no answer is "not available right now".
+- Sign-up asks for a username and takes an optional **referral code**
+  (pre-filled from `?ref=` on any account page, kept 30 days on the
+  browser). The door keeps the code and gives its discount at checkout.
+- Zeiko Chat's plans and the balance are bought here beside Pranata V1's
+  (`product` on the buy and subscribe forms); top-ups go to the balance. The
+  door's payment page sends the buyer back to `/account?paid=<id>`, and the
+  subscription plans to `/account?m=subscription-paid|-failed|-partial`.
+- Confirmation codes and reset links are mailed by the door. The reset link
+  opens `/account/reset?token=…`, the confirmation link
+  `/account/verify?token=…`; the code is typed in the banner.
+- The shell answers with `no-store`, `X-Frame-Options: DENY` (from the
+  worker) and its own CSP of `'self'` plus the door (no inline styles:
+  progress bars are SVG attributes).
 - UI words: "Account", never "dashboard" (banned); CSS class names ship in
   `public/` and are scanned too (`.funds`, not `.topup`).
 

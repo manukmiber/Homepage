@@ -11,13 +11,8 @@
     // plain file.
     "run_worker_first": ["/models", "/account", "/account/*"]
   },
-  // Zeiko Accounts (src/account/) reads these, each set with
-  // `wrangler secret put <NAME>` (locally: .dev.vars), never written here:
-  //   ACCOUNTS_URL, ACCOUNTS_TOKEN, SESSION_SECRET (32+ characters);
-  //   optional: GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET,
-  //   GITHUB_CLIENT_ID + GITHUB_CLIENT_SECRET, MAIL_URL + MAIL_TOKEN
-  //   (email confirmation and password reset), API_BASE_URL (shown beside
-  //   the customer's key).
+  // /account is one plain page (public/account/index.html) whose script signs
+  // in with the account door itself: no secret is set for it here.
   // Read-only: the hourly model snapshot, rendered into /models.
   "r2_buckets": [
     { "binding": "MODELS", "bucket_name": "zeiko-models" }

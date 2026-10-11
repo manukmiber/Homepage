@@ -13,7 +13,9 @@ performing.
 - `/account` is Zeiko Accounts: one account for ZeikoAI and Zeiko Chat
   (email and password, Google or GitHub), and the customer's own area —
   plan and requests left, the one balance, buying plans and balance, payments,
-  the key, settings. Light and dark, and every page works with JavaScript off.
+  the key, settings. A plain page whose script asks the account door
+  (`https://auth.zeiko.biz.id`) itself: the site keeps no sign-in and no
+  setting for it.
 
 **Read [CLAUDE.md](CLAUDE.md) before changing anything.** It lists what the
 site must never show, and every place a price has to be updated.
@@ -28,10 +30,11 @@ public/
   _redirects      /models/<id> → /models#<id>
   css/style.css   one stylesheet, light and dark
   js/main.js      theme, menu, topbar, copy buttons, plan value, estimator, chart hover
+  account/index.html  /account and every page under it (one page)
+  js/account/     app.js: asks the account door and draws the page; views.js: the pages
 src/
   worker.js       runs for /models and /account only
   render.js       the hourly snapshot → the figures and charts on /models
-  account/        Zeiko Accounts: sessions, sign-in with Google/GitHub, pages
 dev/
   sample-stats.mjs  made-up figures for local development
 scripts/
@@ -52,29 +55,13 @@ npm run seed:local        # made-up figures into the local bucket
 npx wrangler dev          # http://localhost:8787
 ```
 
-`/account` needs its settings in `.dev.vars` (never committed):
-`ACCOUNTS_URL`, `ACCOUNTS_TOKEN`, `SESSION_SECRET` (32+ characters), and
-optionally `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`,
-`GITHUB_CLIENT_ID`/`GITHUB_CLIENT_SECRET` and `API_BASE_URL`. Without the
-first three it says accounts open soon.
-
-To try `/account` without the real accounts service, run the local
-stand-in in a second terminal before `wrangler dev`:
-
-```bash
-npm run accounts:dev      # fills .dev.vars on its first run
-npx wrangler dev
-```
-
-It signs in the made-up accounts in `dev/accounts-seed.json` (the
-"Zeiko account", password in that file), takes new sign-ups, and treats
-every purchase as paid at once. Its accounts live in
-`.wrangler/dev-accounts.json`; delete that file to start over.
-
-In production set each with
-`npx wrangler secret put <NAME>`. The Google and GitHub apps' redirect
-URIs are `https://<site>/account/oauth/google/callback` and
-`https://<site>/account/oauth/github/callback`.
+`/account` asks the account door named in its `<meta name="zeiko-accounts">`
+(and allowed by the page's `connect-src`). The door answers only the site's
+own address and the ones its operator adds, so to work on these pages
+locally, have it list `http://localhost:8787` and change both places in
+`public/account/index.html` to the door you are using — and put them back
+before a commit (`npm run check` fails otherwise). Google and GitHub are
+set up on the door, not here.
 
 ## Check
 
@@ -87,7 +74,8 @@ anywhere else, and confirms that each price reads the same everywhere it
 appears. It also renders the made-up figures through `src/render.js`, holds
 the result to the same rules, and fails if any text from the snapshot would
 reach the page, and renders the account pages from a made-up account to the
-same rules (money words allowed there). Run it before every commit. `npm run deploy` runs it first
+same rules (money words allowed there). The account area's files are the
+only ones that may make a request, and only to the account door. Run it before every commit. `npm run deploy` runs it first
 and stops if it fails.
 
 ## Deploy
