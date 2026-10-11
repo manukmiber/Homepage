@@ -1,5 +1,5 @@
-/* ZeikoAI site — only what the pages need: theme, menu, copy, cost estimator,
- * chart hover.
+/* ZeikoAI site — only what the pages need: theme, menu, topbar, copy, plan
+ * value, cost estimator, chart hover.
  * Every page still reads fine if this file never loads. */
 
 (function () {
@@ -48,6 +48,32 @@
         navToggle.setAttribute('aria-expanded', 'false');
       }
     });
+  }
+
+  /* ------------------------------------------------------------ topbar */
+  /* A shadow under the bar once the page has moved, and the nav link of
+     the section in view marked. */
+
+  var topbar = document.querySelector('.topbar');
+  if (topbar) {
+    var onScroll = function () { topbar.classList.toggle('is-scrolled', window.scrollY > 8); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  if (nav && 'IntersectionObserver' in window) {
+    var byId = {};
+    nav.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      var el = document.getElementById(a.getAttribute('href').slice(1));
+      if (el) byId[el.id] = a;
+    });
+    var spy = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        var a = byId[e.target.id];
+        if (a) a.classList.toggle('is-here', e.isIntersecting);
+      });
+    }, { rootMargin: '-40% 0px -55% 0px' });
+    Object.keys(byId).forEach(function (id) { spy.observe(document.getElementById(id)); });
   }
 
   /* -------------------------------------------------------- copy button */
@@ -114,6 +140,35 @@
       if (fill) fill.style.width = Math.round(values[i] / max * 100) + '%';
     });
   });
+
+  /* Plan value: requests per dollar for each Decision plan, worked out from
+     the plan's own price and request count, with a meter scaled to the best
+     one, which gets the "Best value" tag. Without JavaScript the line stays
+     hidden; the price and the requests already say it all. */
+  var plans = [].slice.call(document.querySelectorAll('.plan[data-requests]'));
+  var perDollar = plans.map(function (plan) {
+    var price = plan.querySelector('.plan-price[data-price]');
+    var usd = price ? dollars(price.textContent) : 0;
+    var reqs = Number(plan.getAttribute('data-requests'));
+    return usd > 0 && reqs > 0 ? reqs / usd : 0;
+  });
+  var bestValue = Math.max.apply(null, perDollar.concat(0));
+  if (bestValue > 0) {
+    plans.forEach(function (plan, i) {
+      var v = perDollar[i];
+      var value = plan.querySelector('.plan-value');
+      if (!v || !value) return;
+      value.querySelector('.plan-per').textContent =
+        Math.round(v).toLocaleString('en-US') + ' requests per dollar';
+      value.querySelector('.plan-meter > span').style.setProperty('--w', Math.max(6, Math.round(v / bestValue * 100)) + '%');
+      value.hidden = false;
+      if (v === bestValue && plans.length > 1) {
+        plan.classList.add('is-best');
+        var tag = plan.querySelector('.plan-best');
+        if (tag) tag.hidden = false;
+      }
+    });
+  }
 
   /* ------------------------------------------------------ cost estimator */
   /* Reads its rates from the pricing table, so the table stays the only

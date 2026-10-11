@@ -76,12 +76,14 @@ site* is built and deployed is fine.
 
 ```
 public/
-  index.html      landing: hero, models, pricing + cost estimator, FAQ, contact
+  index.html      landing: Pranata V1 hero and #decision first, then the roleplay
+                  models, pricing + cost estimator, FAQ, contact
   models.html     /models: at-a-glance table, then each model's specs and rate card
   404.html
   _redirects      old /models/<id> links → /models#<id>
   css/style.css   the only stylesheet; colour tokens for light and dark
-  js/main.js      theme, mobile menu, copy buttons, hero bars, estimator, chart hover
+  js/main.js      theme, mobile menu, topbar, copy buttons, effort bars, plan
+                  value, estimator, chart hover
 src/
   worker.js       runs for /models only: fills its placeholders from the snapshot
   render.js       snapshot → HTML for those placeholders; numbers only
@@ -112,8 +114,8 @@ never asks for anything but this site's own files:
   CDN scripts. The network tab shows only this site's own files.
 - **No build step**, no framework, no dependencies besides wrangler.
 - Every page must read fine with JavaScript off. The figures and charts are
-  rendered on the server; JavaScript only adds chart hover and the estimator
-  (which stays hidden without it).
+  rendered on the server; JavaScript only adds chart hover, the estimator
+  and the plans' "requests per dollar" line (both stay hidden without it).
 - If the snapshot is missing or unreadable, `/models` goes out as the static
   file, with "not available right now" where the figures would be.
 
@@ -164,14 +166,19 @@ input tokens) and `decision:<plan-id>` for each plan (`welcome`, `expand`,
 
 When a rate changes, change **every** element that carries its key:
 
-- `index.html`: the hero rate card (Jagad only), the model cards, the pricing
-  table, and the refusal note and FAQ entry.
+- `index.html`: the effort card in `#models` (Jagad only), the model cards,
+  the pricing table, and the refusal card and FAQ entry.
 - `models.html`: the at-a-glance table and that model's rate card.
-- Decision: `index.html`'s `#decision` section (per-token card and plan
-  cards) and `models.html`'s Decision sheet (its rate table).
+- Decision: `index.html`'s hero (the lede and the facts under the buttons:
+  `pranata-v1:input` and `decision:welcome`), its `#decision` section (the
+  facts strip and the plan cards) and `models.html`'s Decision sheet (its
+  rate table).
 
-The estimator reads its rates from the pricing table (`#rateTable`), and the
-hero bars size themselves from their prices, so neither needs editing.
+The estimator reads its rates from the pricing table (`#rateTable`), the
+effort bars size themselves from their prices, and each plan's "requests per
+dollar" line, its meter and the "Best value" tag are worked out from the
+plan's `data-price` and `data-requests`, so none of them needs editing. A
+plan's `data-requests` must match the requests written on its card.
 Any new `$` amount on a page must carry a `data-price` key too.
 
 ## Pranata V1 stands apart
@@ -191,13 +198,21 @@ plan ids there must stay the accounts service's (`welcome`, `expand`, `huh`,
 `question`, `enough`).
 The model's id is `pranata-v1` (display name Pranata V1).
 
+Pranata V1 leads the landing page, on the operator's request: the hero is
+its own (name, price, "Create an account", the example answers card), then
+`#decision`, and only then the roleplay models. It has its own accent,
+`--dec` (teal), beside the site's `--brand` (indigo) used for the roleplay
+models. The example answers card in the hero is illustrative and labelled
+so ("Example answers"): fixed, made-up percentages showing what an answer
+looks like, never a measured figure and never animated.
+
 ## Adding, renaming or removing a model
 
 - `index.html`: the model card, a `<tr data-model="…">` row in the pricing
   table, the "Models" stat, and "three"/"3" in the copy and meta tags.
 - `models.html`: a jump chip, an at-a-glance row, and a full
   `<article id="<model-id>">` sheet (copy one of the existing ones).
-- The FAQ entry "Which model should I pick?".
+- The FAQ entry "Which roleplay model should I pick?".
 - `models.html`: the model's `data-perf` section and its three `data-stat`
   cells in the at-a-glance table. Its figures appear once the snapshot
   carries that model id.

@@ -51,13 +51,14 @@ const MENU_BUTTON = `<button class="icon-btn nav-toggle" id="navToggle" type="bu
 /** The whole page around `body`. */
 export function page({ title, body, signedIn = false, bare = false }) {
   const nav = signedIn
-    ? `<a href="/models">Models</a>
-      <a href="/#decision">Decision</a>
+    ? `<a href="/#decision">Pranata V1</a>
+      <a href="/models">Models</a>
       <a href="/account" aria-current="page">Account</a>
       <form method="post" action="/account/signout" class="nav-form"><input type="hidden" name="csrf" value="__CSRF__"><button class="btn btn-sm btn-ghost" type="submit">Sign out</button></form>`
-    : `<a href="/models">Models</a>
+    : `<a href="/#decision">Pranata V1</a>
       <a href="/#pricing">Pricing</a>
-      <a href="/#decision">Decision</a>
+      <a href="/models">Models</a>
+      <a class="nav-account" href="/account">Sign in</a>
       <a class="btn btn-sm btn-primary" href="/account/signup">Create account</a>`;
   return `<!doctype html>
 <html lang="en">
@@ -99,8 +100,8 @@ ${body}
     <p>© ${new Date().getUTCFullYear()} ZeikoAI</p>
     <nav aria-label="Footer links">
       <a href="/">Home</a>
+      <a href="/#decision">Pranata V1</a>
       <a href="/models">Models</a>
-      <a href="/#decision">Decision</a>
       <a href="/#contact">Contact</a>
     </nav>
   </div>

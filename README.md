@@ -3,8 +3,9 @@
 The public ZeikoAI website: the models, their prices, and how each model is
 performing.
 
-- `/` is the landing page: the models, the pricing table, a cost estimator,
-  a pricing FAQ, and how to request a key.
+- `/` is the landing page: Pranata V1 first (hero, what it decides, its
+  plans), then the roleplay models, the pricing table, a cost estimator,
+  a FAQ, and the two ways to get a key.
 - `/models` lists every model with its specs, full rate card and live
   performance: time to first token, output speed, latency, availability,
   requests, tokens and cache rate over 24 hours, 7 days and 30 days, with
@@ -26,7 +27,7 @@ public/
   404.html
   _redirects      /models/<id> → /models#<id>
   css/style.css   one stylesheet, light and dark
-  js/main.js      theme, menu, copy buttons, estimator, chart hover
+  js/main.js      theme, menu, topbar, copy buttons, plan value, estimator, chart hover
 src/
   worker.js       runs for /models and /account only
   render.js       the hourly snapshot → the figures and charts on /models
