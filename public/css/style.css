@@ -509,6 +509,16 @@ h1 em { font-style: normal; color: var(--brand-ink); }
   font-size: .74rem; font-weight: 600;
 }
 
+.demo-try {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin-top: 14px; padding: 11px 14px;
+  border: 1px dashed var(--dec-line); border-radius: var(--r);
+  color: var(--dec-ink); font-size: .9rem; font-weight: 650;
+  transition: background var(--fast), border-color var(--fast);
+}
+.demo-try:hover { background: var(--dec-soft); border-color: var(--dec); text-decoration: none; }
+.demo-try .ico { width: 16px; height: 16px; }
+
 .ask {
   padding: 14px 16px 15px;
   border: 1px solid var(--border);
