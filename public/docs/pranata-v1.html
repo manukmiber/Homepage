@@ -126,7 +126,7 @@
   <div><dt>Model ID</dt><dd><code>pranata-v1</code></dd></div>
   <div><dt>Per million input tokens</dt><dd><span data-price="pranata-v1:input">$0.003</span></dd></div>
   <div><dt>Answers</dt><dd>Included</dd></div>
-  <div><dt>Longest call</dt><dd>2,000 <small>tokens</small></dd></div>
+  <div><dt>Longest call</dt><dd>2,048 <small>tokens</small></dd></div>
 </dl>
 
 <h2 id="kinds">Three kinds of decision</h2>
@@ -148,7 +148,7 @@
   <li><strong>Questions</strong>: one or more, each under an id you choose, with its kind, the question itself (<code>instructions</code>) and what the answers mean (<code>criteria</code>).</li>
   <li><strong>Answers</strong>: one per question, under the same id, each with its probabilities.</li>
 </ol>
-<p>Several questions about the same state go in one call. The whole call, the state and every question together, can be up to 2,000 tokens. The format is in the <a href="/docs/api-decisions">Decisions API</a> reference.</p>
+<p>Several questions about the same state go in one call. The whole call, the state and every question together, can be up to 2,048 tokens. The format is in the <a href="/docs/api-decisions">Decisions API</a> reference.</p>
 
 <h2 id="writing">Writing good questions</h2>
 <ul>
@@ -171,11 +171,11 @@
 <div class="doc-table-wrap"><table class="doc-table doc-table-kv">
     <thead><tr><th scope="col"></th><th scope="col"></th></tr></thead>
     <tbody>
-      <tr><th scope="row">Longest call</th><td>2,000 tokens: the state and every question together</td></tr>
-      <tr><th scope="row">Questions per call</th><td>Up to 256, within the 2,000 tokens</td></tr>
+      <tr><th scope="row">Longest call</th><td>2,048 tokens: the state and every question together</td></tr>
+      <tr><th scope="row">Questions per call</th><td>Up to 256, within the 2,048 tokens</td></tr>
       <tr><th scope="row">Pick one</th><td>2 to 255 options</td></tr>
       <tr><th scope="row">Score it</th><td>2 to 10 levels</td></tr>
-      <tr><th scope="row">One plan request</th><td>1,000 tokens: a call of 1,001 to 2,000 tokens counts as two</td></tr>
+      <tr><th scope="row">One plan request</th><td>1,000 tokens: a call of 1,001 to 2,000 tokens counts as two, and one over 2,000 as three</td></tr>
     </tbody>
   </table></div>
 

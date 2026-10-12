@@ -439,7 +439,7 @@ export function plans(o, { flash, pick }) {
   const body = `
     ${!buying ? alert('warn', 'Buying online is not open yet. Please try again later.') : ''}
     <section class="acct-section-plain">
-      <div class="section-row"><h2>Pranata V1 plans</h2><p class="muted-note">A call over 1,000 tokens counts as two requests</p></div>
+      <div class="section-row"><h2>Pranata V1 plans</h2><p class="muted-note">Every 1,000 tokens of a call, or part of them, is one request</p></div>
       <div class="acct-plans">${cards}</div>
       <p class="fineprint">Buying the plan you are on adds 30 days to it. Buying another starts it now, and what is left of the current one comes back to your balance.${subs.length ? ` Renewing: ${subs.map((s) => esc(s.planName)).join(', ')} — the next link arrives by email.` : ''}</p>
     </section>

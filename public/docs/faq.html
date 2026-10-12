@@ -133,7 +133,7 @@
 <h3 id="too-many">Other <code>429</code> errors</h3>
 <p>Wait as many seconds as <code>Retry-After</code> says, then send the request again. Without the header, back off from about a second, doubling each time. See <a href="/docs/api#retries">Retries and limits</a>.</p>
 <h3 id="invalid-request"><code>422 invalid_request</code> from Pranata V1</h3>
-<p><code>error.param</code> names the field that is wrong, such as <code>questions.mood.criteria</code>, and the message says what it should be. A call over 2,000 tokens is a <code>422</code> on <code>state</code>: split the state, or ask the long question in a call of its own.</p>
+<p><code>error.param</code> names the field that is wrong, such as <code>questions.mood.criteria</code>, and the message says what it should be. A call over 2,048 tokens is a <code>422</code> on <code>state</code>: split the state, or ask the long question in a call of its own.</p>
 <h3 id="context"><code>413 context_length_exceeded</code></h3>
 <p>The conversation is longer than the model's 256K context. It is never cut short for you: drop or summarise the oldest messages and send it again.</p>
 <h3 id="not-json">The error is not JSON</h3>

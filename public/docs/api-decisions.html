@@ -250,14 +250,14 @@
 <div class="doc-table-wrap"><table class="doc-table doc-table-kv">
     <thead><tr><th scope="col"></th><th scope="col"></th></tr></thead>
     <tbody>
-      <tr><th scope="row">Longest call</th><td>2,000 tokens: the state, and every question's instructions and criteria</td></tr>
-      <tr><th scope="row">Questions per call</th><td>Up to 256, within the 2,000 tokens</td></tr>
+      <tr><th scope="row">Longest call</th><td>2,048 tokens: the state, and every question's instructions and criteria</td></tr>
+      <tr><th scope="row">Questions per call</th><td>Up to 256, within the 2,048 tokens</td></tr>
       <tr><th scope="row">Options per <code>choice</code></th><td>2 to 255</td></tr>
       <tr><th scope="row">Levels per <code>score</code></th><td>2 to 10</td></tr>
-      <tr><th scope="row">One plan request</th><td>1,000 tokens: a call of 1,001 to 2,000 tokens counts as two</td></tr>
+      <tr><th scope="row">One plan request</th><td>1,000 tokens: a call of 1,001 to 2,000 tokens counts as two, and one over 2,000 as three</td></tr>
     </tbody>
   </table></div>
-<p>A call over 2,000 tokens is refused with <code>422</code> before anything is used. Split the state, or ask a long question in a call of its own.</p>
+<p>A call over 2,048 tokens is refused with <code>422</code> before anything is used. Split the state, or ask a long question in a call of its own.</p>
 
 <h2 id="errors">Errors</h2>
 <p>The error body has two extras here: <code>param</code> names the field that was wrong, and <code>detail</code> repeats the message.</p>

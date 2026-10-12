@@ -313,7 +313,7 @@ code, which hide without it).
 - **What the API does is written from the API itself**, never guessed: the
   request and answer shapes, limits and error codes are the ones the API
   returns. Change the docs with the API. Figures the site already states
-  (256K context, 32,000 output tokens, 2,000 tokens per Pranata call) are
+  (256K context, 32,000 output tokens, 2,048 tokens per Pranata call) are
   the site's.
 - **The docs list is in every page twice** — `.docs-list` beside the page,
   `.docs-menu` (a `<details>`) on a phone — in `index.html`'s order, with
