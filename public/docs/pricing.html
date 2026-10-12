@@ -136,7 +136,7 @@
 
 <h3 id="requests">What counts as a request</h3>
 <ul>
-  <li>A call of up to 1,000 tokens is one request, 1,001 to 2,000 tokens is two, and 2,001 to 2,048 is three. No call can be longer than 2,048 tokens.</li>
+  <li>A call of up to 1,024 tokens is one request; a call of 1,025 to 2,048 tokens is two. No call can be longer than 2,048 tokens.</li>
   <li>A plan's requests are used first. After that, or once the plan has ended, calls come out of your balance at the per-token price.</li>
   <li>When neither covers a call, the call is refused and nothing is used. Add balance or buy a plan to keep going.</li>
   <li>Requests are counted per 30-day period of your plan. Your account's Overview shows what is left, and when the count starts again.</li>

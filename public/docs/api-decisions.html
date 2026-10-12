@@ -254,7 +254,7 @@
       <tr><th scope="row">Questions per call</th><td>Up to 256, within the 2,048 tokens</td></tr>
       <tr><th scope="row">Options per <code>choice</code></th><td>2 to 255</td></tr>
       <tr><th scope="row">Levels per <code>score</code></th><td>2 to 10</td></tr>
-      <tr><th scope="row">One plan request</th><td>1,000 tokens: a call of 1,001 to 2,000 tokens counts as two, and one over 2,000 as three</td></tr>
+      <tr><th scope="row">One plan request</th><td>1,024 tokens: a call of 1,025 to 2,048 tokens counts as two</td></tr>
     </tbody>
   </table></div>
 <p>A call over 2,048 tokens is refused with <code>422</code> before anything is used. Split the state, or ask a long question in a call of its own.</p>
