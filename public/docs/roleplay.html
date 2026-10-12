@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Roleplay models — ZeikoAI Docs</title>
+<meta name="description" content="Jagad, Asmarandana and Wisanggeni: three ZeikoAI roleplay models with 256K context, streaming and three content ratings.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="Roleplay models — ZeikoAI Docs">
+<meta property="og:description" content="Jagad, Asmarandana and Wisanggeni: three ZeikoAI roleplay models with 256K context, streaming and three content ratings.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/">
+      <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
+      <span class="brand-name">ZeikoAI</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Main navigation">
+      <a href="/#decision">Pranata V1</a>
+      <a href="/#models">Roleplay</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/models">Models</a>
+      <a href="/docs/" aria-current="page">Docs</a>
+      <a class="nav-account" href="/account">Sign in</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup">Create account</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Docs">
+      <details class="docs-menu">
+        <summary>Docs menu <span>Roleplay models</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay" aria-current="page">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay" aria-current="page">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/docs/">Docs</a> <span aria-hidden="true">/</span> Models</p>
+      <h1>Roleplay models</h1>
+      <p class="lede">Three models for roleplay and creative writing, from safe-for-work to unrestricted. Same context, same reply length, same API: they differ in what they will say, and in price.</p>
+      <nav class="docs-toc" aria-label="On this page">
+        <p>On this page</p>
+        <ul>
+          <li><a href="#models">The models</a></li>
+          <li><a href="#specs">What all three share</a></li>
+          <li><a href="#effort">Thinking effort</a></li>
+          <li><a href="#refusals">What they are for</a></li>
+          <li><a href="#choosing">Which one should I pick?</a></li>
+          <li><a href="#performance">Live performance</a></li>
+          <li><a href="#access">Getting a key</a></li>
+        </ul>
+      </nav>
+
+<h2 id="models">The models</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Model</th><th scope="col">ID to send</th><th scope="col">Rating</th><th scope="col">Best for</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><a href="/models#jagad-512b-v1">Jagad 512B V1</a></th><td data-label="ID to send"><code>jagad-512b-v1</code></td><td data-label="Rating"><span class="badge badge-ok">SFW</span></td><td data-label="Best for">Safe-for-work roleplay. The default pick when you are not sure where to start.</td></tr>
+      <tr><th scope="row"><a href="/models#asmarandana-512b-v1">Asmarandana 512B V1</a></th><td data-label="ID to send"><code>asmarandana-512b-v1</code></td><td data-label="Rating"><span class="badge badge-warn">Adult</span></td><td data-label="Best for">Adult roleplay, for callers who gate their own users.</td></tr>
+      <tr><th scope="row"><a href="/models#wisanggeni-512b-v1">Wisanggeni 512B V1</a></th><td data-label="ID to send"><code>wisanggeni-512b-v1</code></td><td data-label="Rating"><span class="badge badge-err">Unrestricted</span></td><td data-label="Best for">Unrestricted roleplay: the one that rarely says no, and the highest rate of the three.</td></tr>
+    </tbody>
+  </table></div>
+<p>Send the ID exactly as written, in lowercase.</p>
+
+<h2 id="specs">What all three share</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-kv">
+    <thead><tr><th scope="col"></th><th scope="col"></th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Context</th><td>256K tokens</td></tr>
+      <tr><th scope="row">Longest reply</th><td>32,000 tokens</td></tr>
+      <tr><th scope="row">Streaming</th><td>Yes</td></tr>
+      <tr><th scope="row">Thinking effort</th><td><code>none</code>, <code>minimal</code>, <code>low</code>, <code>medium</code>, <code>high</code>, <code>max</code></td></tr>
+      <tr><th scope="row">Works with</th><td>The official OpenAI SDKs</td></tr>
+    </tbody>
+  </table></div>
+
+<h2 id="effort">Thinking effort</h2>
+<p>Each request can set how hard the model thinks before it answers, with <code>reasoning_effort</code>. Leave it out and the model thinks at <code>high</code>. The effort picks the output rate:</p>
+<div class="doc-table-wrap"><table class="doc-table">
+    <thead><tr><th scope="col">Band</th><th scope="col">Efforts</th><th scope="col" class="num">Jagad output, per 1M tokens</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">No thinking</th><td><code>none</code> <code>minimal</code></td><td class="num"><span data-price="jagad-512b-v1:out-none">$1.20</span></td></tr>
+      <tr><th scope="row">Standard</th><td><code>low</code> <code>medium</code> <code>high</code></td><td class="num"><span data-price="jagad-512b-v1:out">$1.50</span></td></tr>
+      <tr><th scope="row">Max thinking</th><td><code>max</code></td><td class="num"><span data-price="jagad-512b-v1:out-max">$2.00</span></td></tr>
+    </tbody>
+  </table></div>
+<p>Reasoning tokens count as output tokens, at the band's rate, so asking for less thinking lowers both the rate and the number of tokens. Input and cache read cost the same at every effort. Every model's rates are on <a href="/docs/pricing#roleplay">Pricing &amp; plans</a>.</p>
+<p>To leave the reasoning text out of the reply, send <code>"include_reasoning": false</code>. It is still produced, and still counted.</p>
+
+<h2 id="refusals">What they are for</h2>
+<p>The roleplay models are for roleplay and the writing around it. Other requests, such as code, homework or general questions, get a short refusal. It comes back as an ordinary reply (HTTP <code>200</code>, <code>finish_reason: "stop"</code>) and costs a flat <span data-price="refusal">$0.05</span> in place of its token price.</p>
+
+<h2 id="choosing">Which one should I pick?</h2>
+<p><strong>Jagad</strong> for safe-for-work roleplay, and when you are not sure. <strong>Asmarandana</strong> for adult roleplay, if you gate your own users: offer it only to people you have checked are adults. <strong>Wisanggeni</strong> when you need a model that rarely says no; it carries the highest rate.</p>
+
+<h2 id="performance">Live performance</h2>
+<p>Time to first token, output speed, latency and availability for each model, over the last 24 hours, 7 days and 30 days, are on <a href="/models">/models</a>, updated every hour.</p>
+
+<h2 id="access">Getting a key</h2>
+<p>Email <a href="mailto:admin@zeiko.biz.id?subject=ZeikoAI%20API%20key%20request">admin@zeiko.biz.id</a> with the models you want and roughly what volume you expect. Your key arrives with everything you need to connect; the <a href="/docs/api-chat">Chat API</a> page covers the rest.</p>
+
+      <nav class="docs-pager" aria-label="Previous and next page">
+        <a class="prev" href="/docs/pranata-v1"><small>Previous</small>Pranata V1</a>
+        <a class="next" href="/docs/pricing"><small>Next</small>Pricing &amp; plans</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> ZeikoAI</p>
+    <nav aria-label="Footer links">
+      <a href="/">Home</a>
+      <a href="/models">Models</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/docs/">Docs</a>
+      <a href="/#contact">Contact</a>
+      <a href="/account">Account</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+</body>
+</html>

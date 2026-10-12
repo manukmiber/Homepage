@@ -17,6 +17,9 @@
 //      except billing words and the details a customer gets with their key
 //      (the account area is where both belong), and escapes everything the
 //      account holds.
+//   7. The docs (public/docs/) pass the same rules except the details a
+//      caller needs to connect, and every link to a docs page, and to a
+//      heading on one, lands.
 //
 // Exits 1 with one line per problem. Reword the page; never trim the lists
 // below to make a check pass.
@@ -155,19 +158,33 @@ const PLAYGROUND = join(PUBLIC, 'js', 'try.js');
 const HOME = join(PUBLIC, 'index.html');
 const DOOR_META = `<meta name="zeiko-accounts" content="${DOOR}">`;
 
+// The docs are the one public place allowed the details a caller needs to
+// connect, on the operator's request: the API's address (the only other
+// address they may name), its paths, the Authorization header, and curl and
+// SDK examples, whose key parameter is `api_key` / `apiKey`. The examples
+// are text in <pre> blocks, so a fetch( there is not a request; the pages
+// run main.js and nothing else. Every other rule, billing included, holds.
+const DOCS = join(PUBLIC, 'docs');
+const inDocs = (f) => f.startsWith(DOCS + '/') || f.startsWith(DOCS + '\\');
+const API_ADDR = 'https://ai.zeiko.biz.id';
+const SDK_KEY = /^api_?key$/i;
+const blankPre = (src) => src.replace(/<pre\b[\s\S]*?<\/pre>/gi, (m) => m.replace(/[^\n]/g, ' '));
+
 function scan(file, src) {
   const words = src.split(CONTACT).join(' '.repeat(CONTACT.length));
   for (const [what, re] of BANNED) {
     const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
     for (const m of words.matchAll(g)) {
       if (file === PLAYGROUND && what === 'connection detail' && /^\/v1$/i.test(m[0])) continue;
+      if (inDocs(file) && (what === 'connection detail' || (what === 'infrastructure' && SDK_KEY.test(m[0])))) continue;
       report(file, m.index, src, `${what}: "${m[0]}"`);
     }
   }
 
+  const code = inDocs(file) ? blankPre(src) : src;
   for (const re of NETWORK) {
     const g = new RegExp(re.source, re.flags + 'g');
-    for (const m of src.matchAll(g)) {
+    for (const m of code.matchAll(g)) {
       if (file === PLAYGROUND && src.startsWith('fetch(DOOR ', m.index)) continue;
       report(file, m.index, src, `network call: "${m[0]}" (the site fetches nothing; the playground asks only the account door)`);
     }
@@ -176,7 +193,14 @@ function scan(file, src) {
   for (const m of src.matchAll(URL_RE)) {
     if (URL_OK.some((ok) => ok.test(m[0]))) continue;
     if (file === HOME && m[0] === DOOR && src.slice(m.index - DOOR_META.indexOf(DOOR)).startsWith(DOOR_META)) continue;
+    if (inDocs(file) && (m[0] === API_ADDR || m[0].startsWith(API_ADDR + '/'))) continue;
     report(file, m.index, src, `external URL: "${m[0]}"`);
+  }
+
+  if (inDocs(file)) {
+    for (const m of src.matchAll(/<script\b[^>]*>/gi)) {
+      if (m[0] !== '<script src="/js/main.js">') report(file, m.index, src, `script on a docs page: "${m[0]}" (the docs run main.js only)`);
+    }
   }
 }
 
@@ -240,6 +264,48 @@ if (!models) {
   }
 }
 
+// ------------------------------------------------------------ docs links
+
+// Every link to a docs page names a file that exists, and a #heading on it
+// (or on the same docs page) names an id that page has.
+const docsPages = new Map(html.filter((h) => inDocs(h.file)).map((h) => [h.file, h.src]));
+for (const { file, src } of [...html, ...accountFiles]) {
+  for (const m of src.matchAll(/href="\/docs\/([a-z0-9-]*)(?:#([^"]+))?"/g)) {
+    const name = m[1] || 'index';
+    const page = docsPages.get(join(DOCS, `${name}.html`));
+    if (!page) report(file, m.index, src, `link to /docs/${m[1]}, but there is no public/docs/${name}.html`);
+    else if (m[2] && !page.includes(`id="${m[2]}"`)) report(file, m.index, src, `link to /docs/${m[1]}#${m[2]}, but that page has no id="${m[2]}"`);
+  }
+  if (!inDocs(file)) continue;
+  for (const m of src.matchAll(/href="#([^"]+)"/g)) {
+    if (!src.includes(`id="${m[1]}"`)) report(file, m.index, src, `link to #${m[1]}, but this page has no id="${m[1]}"`);
+  }
+}
+
+// The docs list is written into every docs page twice (beside the page, and
+// the phone's "Docs menu"): every copy lists every docs page, in the same
+// order, and marks the page it is on.
+const sideOf = (src, cls) => {
+  const at = src.indexOf(`class="${cls}"`);
+  if (at < 0) return null;
+  const end = src.indexOf(cls === 'docs-menu' ? '</details>' : '</nav>', at);
+  return src.slice(at, end);
+};
+const hrefs = (part) => [...part.matchAll(/<a href="(\/docs\/[a-z0-9-]*)"/g)].map((m) => m[1]);
+const docsIndex = docsPages.get(join(DOCS, 'index.html'));
+const order = docsIndex && sideOf(docsIndex, 'docs-list') ? hrefs(sideOf(docsIndex, 'docs-list')) : [];
+for (const [file, src] of docsPages) {
+  const name = relative(DOCS, file).replace(/\.html$/, '');
+  const self = name === 'index' ? '/docs/' : `/docs/${name}`;
+  if (!order.includes(self)) problems.push(`public/docs/${name}.html is not in the docs list (public/docs/index.html)`);
+  for (const cls of ['docs-list', 'docs-menu']) {
+    const part = sideOf(src, cls);
+    if (!part) { problems.push(`${relative(ROOT, file)}: no .${cls}`); continue; }
+    if (hrefs(part).join(' ') !== order.join(' ')) problems.push(`${relative(ROOT, file)}: its .${cls} does not list the docs pages as public/docs/index.html does`);
+    if (!part.includes(`<a href="${self}" aria-current="page">`)) problems.push(`${relative(ROOT, file)}: its .${cls} does not mark this page (aria-current)`);
+  }
+}
+
 // ------------------------------------------------------ rendered /models
 
 // Render the made-up sample through the same code the server runs, with
@@ -285,6 +351,9 @@ function scanAccount(file, src) {
     for (const m of words.matchAll(g)) {
       // "Continue with Google" is a sign-in button, not a model's origin.
       if (what === 'model origin' && /^google$/i.test(m[0])) continue;
+      // Gemini is also a crypto exchange: the buying guide lists it, as a
+      // table row of its own, and nowhere else.
+      if (what === 'model origin' && m[0] === 'Gemini' && words.startsWith('<th scope="row">Gemini</th>', m.index - 16)) continue;
       report(file, m.index, src, `${what}: "${m[0]}"`);
     }
   }
@@ -349,6 +418,7 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
     accountViews.plans(o, { flash: '', pick: 'welcome' }),
     accountViews.key(o, { flash: '', shown: 'k-123', apiBase: 'https://example.test' }),
     accountViews.settings(o, { flash: '', door }),
+    accountViews.howToBuy(o, ''),
     accountViews.signIn({ error: evil, notice: '', email: evil, next: '/account', opts, door }),
     accountViews.signUp({ error: '', email: '', username: evil, next: '', ref: evil, opts, door }),
     accountViews.forgot({ error: '', sent: false }),

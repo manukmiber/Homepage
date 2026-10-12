@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Docs — ZeikoAI</title>
+<meta name="description" content="How Pranata V1 and the ZeikoAI roleplay models work, what they cost, your Zeiko Account, and the API.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="ZeikoAI docs">
+<meta property="og:description" content="How Pranata V1 and the ZeikoAI roleplay models work, what they cost, your Zeiko Account, and the API.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/">
+      <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
+      <span class="brand-name">ZeikoAI</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Main navigation">
+      <a href="/#decision">Pranata V1</a>
+      <a href="/#models">Roleplay</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/models">Models</a>
+      <a href="/docs/" aria-current="page">Docs</a>
+      <a class="nav-account" href="/account">Sign in</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup">Create account</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Docs">
+      <details class="docs-menu">
+        <summary>Docs menu <span>Introduction</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/" aria-current="page">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/" aria-current="page">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/docs/">Docs</a> <span aria-hidden="true">/</span> Get started</p>
+      <h1>ZeikoAI docs</h1>
+      <p class="lede">How Pranata V1 and the roleplay models work, what they cost, how your Zeiko Account works, and how to call the API.</p>
+      <nav class="docs-toc" aria-label="On this page">
+        <p>On this page</p>
+        <ul>
+          <li><a href="#products">Two kinds of model</a></li>
+          <li><a href="#quickstart-pranata">Quickstart: Pranata V1</a></li>
+          <li><a href="#quickstart-roleplay">Quickstart: roleplay models</a></li>
+          <li><a href="#at-a-glance">The API at a glance</a></li>
+          <li><a href="#next">Where to next</a></li>
+        </ul>
+      </nav>
+
+<h2 id="products">Two kinds of model</h2>
+<div class="doc-cards">
+  <a class="doc-card doc-card-dec" href="/docs/pranata-v1"><strong>Pranata V1</strong><span>A decision model. Ask yes or no, pick one, or score it, and get a probability for every option. Yours as soon as you have an account.</span></a>
+  <a class="doc-card" href="/docs/roleplay"><strong>Roleplay models</strong><span>Jagad, Asmarandana and Wisanggeni: 256K context, streaming, three content ratings. Keys on request.</span></a>
+</div>
+<p>They are separate products with separate prices: Pranata V1 has plans of its own, and the roleplay models are priced per token. One <a href="/docs/api">API</a> serves both.</p>
+
+<h2 id="quickstart-pranata">Quickstart: Pranata V1</h2>
+<ol class="steps">
+  <li><strong>Create an account</strong><a href="/account/signup">Create a Zeiko Account</a> with your email, or with a one-click sign-in.</li>
+  <li><strong>Confirm your email</strong>Type the 6-digit code we send into the banner on your account page, or open the link in the email.</li>
+  <li><strong>Buy a plan or add balance</strong>On <a href="/account/plans">Plans &amp; balance</a>. Plans start at <span data-price="decision:welcome">$1</span> for 30 days; without one, calls come out of your balance at the per-token price.</li>
+  <li><strong>Copy your key</strong>On <a href="/account/key">API key</a>, press <em>Show key</em>, then <em>Copy</em>. The address that goes with it is on the same page.</li>
+  <li><strong>Ask your first question</strong>Keep the key in an environment variable, <code>ZEIKO_API_KEY</code> here, and send:</li>
+</ol>
+<div class="code">
+  <div class="code-bar"><span>curl</span><button class="copy" type="button" data-copy="#code-1" aria-label="Copy the curl example">Copy</button></div>
+  <pre id="code-1"><code>curl https://ai.zeiko.biz.id/v1/decisions \
+  -H "Authorization: Bearer $ZEIKO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "pranata-v1",
+    "state": "Thanks so much! The order came a day early and works perfectly.",
+    "questions": {
+      "positive": {
+        "type": "noul",
+        "instructions": "Is this review positive?"
+      }
+    }
+  }'</code></pre>
+</div>
+<p>The answer is the probability that the answer is yes:</p>
+<div class="code">
+  <div class="code-bar"><span>Answer</span><button class="copy" type="button" data-copy="#code-2" aria-label="Copy the Answer example">Copy</button></div>
+  <pre id="code-2"><code>{
+  "model": "pranata-v1",
+  "answers": {
+    "positive": { "type": "noul", "noul": 0.97 }
+  },
+  "usage": { "input_tokens": 24, "output_tokens": 0 }
+}</code></pre>
+</div>
+<p>Every field, the two other kinds of question and the errors are in the <a href="/docs/api-decisions">Decisions API</a>. No code yet? Try Pranata V1 in the <a href="/docs/playground">playground</a> first: 5 free tries every 30 minutes.</p>
+
+<h2 id="quickstart-roleplay">Quickstart: roleplay models</h2>
+<ol class="steps">
+  <li><strong>Ask for a key</strong>Email <a href="mailto:admin@zeiko.biz.id?subject=ZeikoAI%20API%20key%20request">admin@zeiko.biz.id</a> with the models you want and roughly what volume you expect.</li>
+  <li><strong>Get your key</strong>It arrives with everything you need to connect.</li>
+  <li><strong>Send a chat request</strong>Any official OpenAI SDK works: give it the base URL below and your key. Or send it yourself:</li>
+</ol>
+<div class="code">
+  <div class="code-bar"><span>curl</span><button class="copy" type="button" data-copy="#code-3" aria-label="Copy the curl example">Copy</button></div>
+  <pre id="code-3"><code>curl https://ai.zeiko.biz.id/v1/chat/completions \
+  -H "Authorization: Bearer $ZEIKO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "jagad-512b-v1",
+    "messages": [
+      {"role": "system", "content": "You are Aria, a cheerful barista in a rainy harbour town."},
+      {"role": "user", "content": "*shakes off my umbrella* One hot chocolate, please."}
+    ]
+  }'</code></pre>
+</div>
+<p>Parameters, streaming and the reply's fields are in the <a href="/docs/api-chat">Chat API</a>.</p>
+
+<h2 id="at-a-glance">The API at a glance</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-kv">
+    <thead><tr><th scope="col"></th><th scope="col"></th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Base URL</th><td><code>https://ai.zeiko.biz.id/v1</code></td></tr>
+      <tr><th scope="row">Key</th><td><code>Authorization: Bearer YOUR_API_KEY</code> on every request</td></tr>
+      <tr><th scope="row">Format</th><td>JSON over HTTPS; chat replies can stream as server-sent events</td></tr>
+      <tr><th scope="row">Pranata V1</th><td><code>POST /v1/decisions</code></td></tr>
+      <tr><th scope="row">Roleplay models</th><td><code>POST /v1/chat/completions</code></td></tr>
+      <tr><th scope="row">Model list</th><td><code>GET /v1/models</code>, no key needed</td></tr>
+    </tbody>
+  </table></div>
+
+<h2 id="next">Where to next</h2>
+<div class="doc-cards">
+  <a class="doc-card" href="/docs/account"><strong>Your account</strong><span>Sign-up, plans and balance, your key, settings.</span></a>
+  <a class="doc-card" href="/docs/pricing"><strong>Pricing &amp; plans</strong><span>Every rate, every plan, and how a request's cost adds up.</span></a>
+  <a class="doc-card" href="/docs/api"><strong>API basics</strong><span>The base URL, keys, model IDs, errors and retries.</span></a>
+  <a class="doc-card" href="/docs/faq"><strong>Troubleshooting</strong><span>What an error means and what to do about it.</span></a>
+</div>
+
+      <nav class="docs-pager" aria-label="Previous and next page">
+        <span></span>
+        <a class="next" href="/docs/account"><small>Next</small>Your account</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> ZeikoAI</p>
+    <nav aria-label="Footer links">
+      <a href="/">Home</a>
+      <a href="/models">Models</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/docs/">Docs</a>
+      <a href="/#contact">Contact</a>
+      <a href="/account">Account</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+</body>
+</html>

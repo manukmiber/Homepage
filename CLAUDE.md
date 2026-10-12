@@ -6,7 +6,8 @@ customer's own Zeiko Account** (`/account`): where Pranata V1 plans and the
 balance are bought and the key is handed over.
 
 `/models` stays: it is where visitors look the models up, with each model's
-live performance figures.
+live performance figures. `/docs` is the documentation: the products, the
+account, pricing, and the API (below).
 
 ## The rule: never leak anything about how the API works
 
@@ -48,6 +49,16 @@ else above stays banned there too — architecture, what runs the models,
 infrastructure, decision logic — and the public pages keep the rule whole:
 a plan card says "Buy", never how payment works.
 
+**The second exception is the docs (`public/docs/`)**, on the operator's
+explicit request: they may show the connection details a caller needs — the
+API's address (`https://ai.zeiko.biz.id/v1`, the only other address they may
+name), its endpoint paths, the `Authorization: Bearer` header, and `curl`
+and SDK examples (whose key parameter is `api_key` / `apiKey`). A key is
+always `YOUR_API_KEY` or `$ZEIKO_API_KEY`: never the key format, its prefix
+or an example key. Everything else above stays banned there too — billing
+included: the docs say "buy a plan" and "add balance", never how payment
+works; that is the buying guide's, inside the account area.
+
 The same rule covers everything else in this repository: README, code
 comments, commit messages, PR titles and PR descriptions. Never name or
 describe the API's backend or the relay. Writing about how *this static
@@ -57,7 +68,7 @@ site* is built and deployed is fine.
 
 - Each model's display name, model ID, one-line description, and content
   rating (SFW / Adult / Unrestricted).
-- Context window (256K), max output (8,192 tokens), streaming support, the
+- Context window (256K), max output (32,000 tokens), streaming support, the
   thinking-effort levels (`none` … `max`), and "works with the official
   OpenAI SDKs".
 - Every rate: input, cache read, the output rate in each of the three bands,
@@ -72,6 +83,7 @@ site* is built and deployed is fine.
   "Buy" / "Create an account" for Pranata V1.
 - The playground (`#try`, below): "5 free tries every 30 minutes" and
   nothing more about what a try costs or whose plan it uses.
+- The docs (`/docs`, below): all of the above, plus how to call the API.
 - A "Sign in" link to `/account`.
 
 ## Layout
@@ -89,15 +101,18 @@ public/
   js/main.js      theme, mobile menu, topbar, copy buttons, effort bars, plan
                   value, estimator, chart hover
   js/try.js       the homepage playground (#try): asks the account door's /v1/try
+  docs/           /docs: one plain page per topic (index.html is /docs/)
   account/index.html  /account and every page under it: one plain page
-  js/account/     Zeiko Accounts: app.js asks the account door, views.js draws
+  js/account/     Zeiko Accounts: app.js asks the account door, views.js draws,
+                  payguide.js is the buying guide's text
 src/
   worker.js       runs for /models only: fills its placeholders from the snapshot
   render.js       snapshot → HTML for those placeholders; numbers only
 dev/
   sample-stats.mjs  made-up figures for local development and the check
 scripts/
-  check-site.mjs  leak scan + price consistency + rendered /models and /account (npm run check)
+  check-site.mjs  leak scan + price consistency + rendered /models and /account
+                  + docs links and docs list (npm run check)
 wrangler.jsonc    static assets, plus the worker for /models and /account and its R2 binding
 ```
 
@@ -172,6 +187,17 @@ GitHub keys. Google and GitHub sign-in start and finish at the door
   progress bars are SVG attributes).
 - UI words: "Account", never "dashboard" (banned); CSS class names ship in
   `public/` and are scanned too (`.funds`, not `.topup`).
+- **The buying guide is `/account/how-to-buy`** ("Paying with crypto",
+  `views.js::howToBuy`, text in `payguide.js`): Zeiko Chat's
+  `public/docs/payments.md`, copied word for word except what differs here
+  (the website's button names, both products sold here, no emails the
+  website does not send) and the words the account rules ban ("provider" is
+  "platform"). Linked from Plans & balance, the Overview's Payments and the
+  public docs. Not a tab: `PAGES` in `views.js` titles it. Exchanges are
+  named, never linked (a mistyped exchange link is a phishing page); its one
+  address is payment@zeiko.biz.id. Gemini is an exchange too: the check lets
+  that one word through as a table row of its own (`<th scope="row">`).
+  The public pages may not say "payments", so the path is `how-to-buy`.
 
 ## The playground (`#try` on the homepage, `public/js/try.js`)
 
@@ -209,7 +235,8 @@ Pranata V1 has its own keys: `pranata-v1:input` (per million
 input tokens) and `decision:<plan-id>` for each plan (`welcome`, `expand`,
 `huh`, `question`, `enough`).
 
-When a rate changes, change **every** element that carries its key:
+When a rate changes, change **every** element that carries its key
+(`npm run check` fails until they all agree):
 
 - `index.html`: the effort card in `#models` (Jagad only), the model cards,
   the pricing table, and the refusal card and FAQ entry.
@@ -218,6 +245,10 @@ When a rate changes, change **every** element that carries its key:
   `pranata-v1:input` and `decision:welcome`), its `#decision` section (the
   facts strip and the plan cards) and `models.html`'s Decision sheet (its
   rate table).
+- Docs: `docs/pricing.html` (every rate and plan), `docs/pranata-v1.html`
+  (`pranata-v1:input`, `decision:welcome`), `docs/index.html`
+  (`decision:welcome`), `docs/roleplay.html` (Jagad's three output bands,
+  `refusal`), `docs/api-chat.html` and `docs/faq.html` (`refusal`).
 
 The estimator reads its rates from the pricing table (`#rateTable`), the
 effort bars size themselves from their prices, and each plan's "requests per
@@ -253,6 +284,11 @@ looks like, never a measured figure and never animated.
 
 ## Adding, renaming or removing a model
 
+A model ID on the site is the API's own, exactly as `GET /v1/models` lists
+it: lowercase (`jagad-512b-v1`, `wisanggeni-512b-v1`). It is what callers
+copy, and the snapshot's figures are keyed on it. The display name
+("Wisanggeni 512B V1") is only a label.
+
 - `index.html`: the model card, a `<tr data-model="…">` row in the pricing
   table, the "Models" stat, and "three"/"3" in the copy and meta tags.
 - `models.html`: a jump chip, an at-a-glance row, and a full
@@ -261,6 +297,37 @@ looks like, never a measured figure and never animated.
 - `models.html`: the model's `data-perf` section and its three `data-stat`
   cells in the at-a-glance table. Its figures appear once the snapshot
   carries that model id.
+- The docs: `docs/roleplay.html` (the models table), `docs/pricing.html`
+  (the rates table), `docs/api.html` (Model IDs), `docs/api-chat.html`
+  (`model`), and "three" in their copy.
+
+## The docs (`public/docs/`)
+
+`/docs` is ten plain pages, one per topic, grouped Get started (`index`,
+`account`, `playground`), Models (`pranata-v1`, `roleplay`, `pricing`) and
+API (`api`, `api-decisions`, `api-chat`, `faq`). `/docs/<name>` serves
+`docs/<name>.html`; `/docs` itself goes to `/docs/`. They read fine with
+JavaScript off and load `main.js` only (theme, menu, the copy buttons on
+code, which hide without it).
+
+- **What the API does is written from the API itself**, never guessed: the
+  request and answer shapes, limits and error codes are the ones the API
+  returns. Change the docs with the API. Figures the site already states
+  (256K context, 32,000 output tokens, 2,000 tokens per Pranata call) are
+  the site's.
+- **The docs list is in every page twice** — `.docs-list` beside the page,
+  `.docs-menu` (a `<details>`) on a phone — in `index.html`'s order, with
+  `aria-current="page"` on the page itself. A new page goes into all of
+  them, and into the previous and next page's pager. `npm run check` holds
+  every copy to `index.html`'s.
+- Every `<h2>` has an `id`; the "On this page" box lists them. Links to
+  `/docs/<name>#<id>`, and `#<id>` inside a docs page, must land: the check
+  follows them.
+- Code examples are `<div class="code">` with a `.code-bar` (label, Copy)
+  and a `<pre id="code-N">`, its text HTML-escaped. Tables are
+  `.doc-table` in a `.doc-table-wrap`; one of three columns or more with no
+  figures to compare is also `.doc-table-cards` (one card per row on a
+  phone, each `<td>` with a `data-label`).
 
 ## Before every commit
 
@@ -269,8 +336,9 @@ npm run check
 ```
 
 It fails on banned words, external URLs, network calls, a price that reads
-differently in two places, a `$` amount without `data-price`, or a link to a
-model that `models.html` does not have. It also renders the made-up sample
+differently in two places, a `$` amount without `data-price`, a link to a
+model that `models.html` does not have, or a docs link or docs list that
+does not match the docs pages. It also renders the made-up sample
 through `src/render.js` and holds that output to the same rules, fails if any
 text from the snapshot reaches it, and fails if a placeholder on `/models`
 would stay empty. Reword the page until it passes. Never shorten the banned

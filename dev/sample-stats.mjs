@@ -10,9 +10,9 @@ const HOUR = 3600000;
 const DAY = 24 * HOUR;
 
 const PROFILES = [
-  { id: 'Jagad-512B-V1', rph: 9, ttft: 720, tps: 48, reply: 350, prompt: 4500, cache: 0.33, err: 0.004, seed: 11 },
-  { id: 'Asmarandana-512B-V1', rph: 6, ttft: 910, tps: 42, reply: 420, prompt: 5200, cache: 0.28, err: 0.006, seed: 23 },
-  { id: 'Wissangeni-512B-V1', rph: 4, ttft: 1310, tps: 36, reply: 500, prompt: 6100, cache: 0.22, err: 0.009, seed: 37 },
+  { id: 'jagad-512b-v1', rph: 9, ttft: 720, tps: 48, reply: 350, prompt: 4500, cache: 0.33, err: 0.004, seed: 11 },
+  { id: 'asmarandana-512b-v1', rph: 6, ttft: 910, tps: 42, reply: 420, prompt: 5200, cache: 0.28, err: 0.006, seed: 23 },
+  { id: 'wisanggeni-512b-v1', rph: 4, ttft: 1310, tps: 36, reply: 500, prompt: 6100, cache: 0.22, err: 0.009, seed: 37 },
   // The decision model: many short calls, answered in one step.
   { id: 'pranata-v1', decision: true, rph: 900, ttft: 0, tps: 0, reply: 0, latency: 180, prompt: 600, cache: 0, err: 0.002, seed: 53 },
 ];

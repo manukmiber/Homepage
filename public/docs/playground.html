@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Playground — ZeikoAI Docs</title>
+<meta name="description" content="Ask Pranata V1 a real question on the ZeikoAI homepage: 5 free tries every 30 minutes, no account needed.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="Playground — ZeikoAI Docs">
+<meta property="og:description" content="Ask Pranata V1 a real question on the ZeikoAI homepage: 5 free tries every 30 minutes, no account needed.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/">
+      <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
+      <span class="brand-name">ZeikoAI</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Main navigation">
+      <a href="/#decision">Pranata V1</a>
+      <a href="/#models">Roleplay</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/models">Models</a>
+      <a href="/docs/" aria-current="page">Docs</a>
+      <a class="nav-account" href="/account">Sign in</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup">Create account</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Docs">
+      <details class="docs-menu">
+        <summary>Docs menu <span>Playground</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground" aria-current="page">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground" aria-current="page">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/docs/">Docs</a> <span aria-hidden="true">/</span> Get started</p>
+      <h1>Playground</h1>
+      <p class="lede">Ask Pranata V1 a real question on the <a href="/#try">homepage</a> and see its answer, with a probability for every option. No account and no code needed.</p>
+      <nav class="docs-toc" aria-label="On this page">
+        <p>On this page</p>
+        <ul>
+          <li><a href="#tries">Free tries</a></li>
+          <li><a href="#kinds">Pick a kind of question</a></li>
+          <li><a href="#fields">The fields</a></li>
+          <li><a href="#reading">Reading the answer</a></li>
+          <li><a href="#to-the-api">From the playground to the API</a></li>
+        </ul>
+      </nav>
+
+<h2 id="tries">Free tries</h2>
+<p>5 free tries every 30 minutes. Under the <em>Ask Pranata V1</em> button, the playground says how many are left and when the next one comes back. It needs JavaScript.</p>
+
+<h2 id="kinds">Pick a kind of question</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Tab</th><th scope="col">What you fill in</th><th scope="col">What comes back</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Yes or no</th><td data-label="What you fill in">The text, the question, and, if you like, what yes and no mean.</td><td data-label="What comes back">The probability of yes and of no.</td></tr>
+      <tr><th scope="row">Pick one</th><td data-label="What you fill in">The text, the question, and the options, one per line (2 to 8).</td><td data-label="What comes back">Every option with its probability; the top one is marked.</td></tr>
+      <tr><th scope="row">Score it</th><td data-label="What you fill in">The text, the question, and the levels, one per line, lowest first (2 to 10).</td><td data-label="What comes back">Every level with its probability; the top one is marked.</td></tr>
+    </tbody>
+  </table></div>
+<p>Each tab starts with a made-up example. Change it, or write your own.</p>
+
+<h2 id="fields">The fields</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Field</th><th scope="col">Up to</th><th scope="col">What to put in it</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Text to judge</th><td data-label="Up to">4,000 characters</td><td data-label="What to put in it">What Pranata V1 reads: a message, a reply, a review, a listing.</td></tr>
+      <tr><th scope="row">Question</th><td data-label="Up to">500 characters</td><td data-label="What to put in it">What you want to know about it. One thing per question.</td></tr>
+      <tr><th scope="row">Yes means / No means</th><td data-label="Up to">120 characters each</td><td data-label="What to put in it">Optional. A short description of each answer sharpens it.</td></tr>
+      <tr><th scope="row">Options</th><td data-label="Up to">2 to 8 lines</td><td data-label="What to put in it">The choices, one per line.</td></tr>
+      <tr><th scope="row">Levels</th><td data-label="Up to">2 to 10 lines</td><td data-label="What to put in it">The scale, one level per line, lowest first.</td></tr>
+    </tbody>
+  </table></div>
+
+<h2 id="reading">Reading the answer</h2>
+<p>The probabilities add up to 100%. A clear winner, say 90% or more, is a confident answer. A near-even split means the text does not settle the question: rewording the question, or describing what each answer means, usually helps.</p>
+
+<h2 id="to-the-api">From the playground to the API</h2>
+<p>The three tabs are the three question types of the <a href="/docs/api-decisions">Decisions API</a>:</p>
+<div class="doc-table-wrap"><table class="doc-table">
+    <thead><tr><th scope="col">Playground</th><th scope="col">API</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Yes or no</th><td><code>"type": "noul"</code></td></tr>
+      <tr><th scope="row">Pick one</th><td><code>"type": "choice"</code></td></tr>
+      <tr><th scope="row">Score it</th><td><code>"type": "score"</code></td></tr>
+      <tr><th scope="row">Text to judge</th><td><code>state</code></td></tr>
+      <tr><th scope="row">Question</th><td><code>instructions</code></td></tr>
+      <tr><th scope="row">Yes means / No means, Options, Levels</th><td><code>criteria</code></td></tr>
+    </tbody>
+  </table></div>
+<p>The API also takes several questions about the same text in one call, and up to 255 options. <a href="/account/signup">Create an account</a> for your key.</p>
+
+      <nav class="docs-pager" aria-label="Previous and next page">
+        <a class="prev" href="/docs/account"><small>Previous</small>Your account</a>
+        <a class="next" href="/docs/pranata-v1"><small>Next</small>Pranata V1</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> ZeikoAI</p>
+    <nav aria-label="Footer links">
+      <a href="/">Home</a>
+      <a href="/models">Models</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/docs/">Docs</a>
+      <a href="/#contact">Contact</a>
+      <a href="/account">Account</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+</body>
+</html>

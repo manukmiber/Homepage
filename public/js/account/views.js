@@ -3,6 +3,8 @@
 // from the door goes through `esc`; nothing else is put into a page. Every
 // action is a form with `data-act`, which app.js sends to the door.
 
+import { PAY_GUIDE } from './payguide.js';
+
 export function esc(v) {
   return String(v ?? '')
     .replace(/&/g, '&amp;')
@@ -64,11 +66,13 @@ export function nav(signedIn) {
   return signedIn
     ? `<a href="/#decision">Pranata V1</a>
       <a href="/models">Models</a>
+      <a href="/docs/">Docs</a>
       <a href="/account" aria-current="page">Account</a>
       <form data-act="signout" class="nav-form"><button class="btn btn-sm btn-ghost" type="submit">Sign out</button></form>`
     : `<a href="/#decision">Pranata V1</a>
       <a href="/#pricing">Pricing</a>
       <a href="/models">Models</a>
+      <a href="/docs/">Docs</a>
       <a class="nav-account" href="/account/signin">Sign in</a>
       <a class="btn btn-sm btn-primary" href="/account/signup">Create account</a>`;
 }
@@ -204,6 +208,8 @@ const TABS = [
   ['key', '/account/key', 'API key'],
   ['settings', '/account/settings', 'Settings'],
 ];
+// Account pages that are not tabs: reached by a link, titled here.
+const PAGES = { howtobuy: 'Paying with crypto' };
 
 function verifyBanner(a) {
   return `<div class="verify" role="status">
@@ -226,7 +232,8 @@ function verifyBanner(a) {
 function shell(tab, o, inner, flash) {
   const a = o.account;
   const name = a.name || a.username || a.email || 'there';
-  const title = tab === 'overview' ? `Hi, ${esc(name)}` : esc(TABS.find((t) => t[0] === tab)[2]);
+  const tabbed = TABS.find((t) => t[0] === tab);
+  const title = tab === 'overview' ? `Hi, ${esc(name)}` : esc(tabbed ? tabbed[2] : PAGES[tab]);
   return `<section class="acct">
   <div class="wrap">
     <header class="acct-head">
@@ -398,7 +405,7 @@ export function overview(o, flash) {
       ${usageChart(o.daily)}
     </section>
     <section class="card acct-section">
-      <div class="section-row"><h2>Payments</h2><a class="btn btn-ghost btn-sm" href="/account/plans">Buy a plan or add balance</a></div>
+      <div class="section-row"><h2>Payments</h2><span class="row-links"><a class="btn-link" href="/account/how-to-buy">How to pay</a><a class="btn btn-ghost btn-sm" href="/account/plans">Buy a plan or add balance</a></span></div>
       ${payments(o.payments)}
     </section>`;
   return shell('overview', o, body, flash);
@@ -450,7 +457,7 @@ export function plans(o, { flash, pick }) {
           <button class="btn btn-primary" type="submit" name="amount" value="custom" data-busy="Opening…">Add balance</button>
         </div>
       </form>` : ''}
-      <p class="fineprint">You finish paying in crypto on the NOWPayments page and come back here. Network and exchange fees are yours.</p>
+      <p class="fineprint">You finish paying in crypto on the NOWPayments page and come back here. Network and exchange fees are yours. <a href="/account/how-to-buy">How to pay with crypto, step by step</a></p>
     </section>`;
   return shell('plans', o, body, flash);
 }
@@ -488,6 +495,11 @@ export function key(o, { flash, shown: revealed, apiBase }) {
       <form data-act="key-rotate" class="rotate"><label class="check"><input type="checkbox" name="sure" value="1" required> I understand the old key stops working</label><button class="btn btn-danger btn-sm" type="submit" data-busy="Making…">Make a new key</button></form>
     </section>`;
   return shell('key', o, body, flash);
+}
+
+/** The buying guide: fixed text (payguide.js), in the account's frame. */
+export function howToBuy(o, flash) {
+  return shell('howtobuy', o, `<article class="card acct-section guide prose">${PAY_GUIDE}</article>`, flash);
 }
 
 export function settings(o, { flash, door }) {

@@ -10,10 +10,14 @@ performing.
   performance: time to first token, output speed, latency, availability,
   requests, tokens and cache rate over 24 hours, 7 days and 30 days, with
   charts. The old `/models/<id>` links redirect to `/models#<id>`.
+- `/docs` is the documentation: getting started, the Zeiko Account, the
+  playground, Pranata V1, the roleplay models, pricing and plans, and the
+  API (basics, decisions, chat, troubleshooting). Plain pages, one per
+  topic.
 - `/account` is Zeiko Accounts: one account for ZeikoAI and Zeiko Chat
   (email and password, Google or GitHub), and the customer's own area —
   plan and requests left, the one balance, buying plans and balance, payments,
-  the key, settings. A plain page whose script asks the account door
+  the key, settings, and the buying guide (`/account/how-to-buy`). A plain page whose script asks the account door
   (`https://auth.zeiko.biz.id`) itself: the site keeps no sign-in and no
   setting for it.
 
@@ -30,8 +34,10 @@ public/
   _redirects      /models/<id> → /models#<id>
   css/style.css   one stylesheet, light and dark
   js/main.js      theme, menu, topbar, copy buttons, plan value, estimator, chart hover
+  docs/           /docs, one page per topic
   account/index.html  /account and every page under it (one page)
-  js/account/     app.js: asks the account door and draws the page; views.js: the pages
+  js/account/     app.js: asks the account door and draws the page; views.js: the pages;
+                  payguide.js: the buying guide
 src/
   worker.js       runs for /models and /account only
   render.js       the hourly snapshot → the figures and charts on /models
@@ -41,7 +47,7 @@ scripts/
   check-site.mjs  npm run check
 ```
 
-Every path but `/models` is a plain static file. For `/models`, the worker
+Every path but `/models` and `/account…` is a plain static file. For `/models`, the worker
 reads the hourly snapshot from the `zeiko-models` R2 bucket and renders the
 figures into the page before it is sent, so the browser receives finished
 HTML and never asks for a data file. If there is no snapshot yet, `/models`

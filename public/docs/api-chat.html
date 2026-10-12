@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chat API — ZeikoAI Docs</title>
+<meta name="description" content="The chat completions endpoint for the ZeikoAI roleplay models: parameters, replies, streaming, errors and examples.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="Chat API — ZeikoAI Docs">
+<meta property="og:description" content="The chat completions endpoint for the ZeikoAI roleplay models: parameters, replies, streaming, errors and examples.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/">
+      <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
+      <span class="brand-name">ZeikoAI</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Main navigation">
+      <a href="/#decision">Pranata V1</a>
+      <a href="/#models">Roleplay</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/models">Models</a>
+      <a href="/docs/" aria-current="page">Docs</a>
+      <a class="nav-account" href="/account">Sign in</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup">Create account</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Docs">
+      <details class="docs-menu">
+        <summary>Docs menu <span>Chat API</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat" aria-current="page">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat" aria-current="page">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/docs/">Docs</a> <span aria-hidden="true">/</span> API</p>
+      <h1>Chat API</h1>
+      <p class="lede">The roleplay models use the chat completions format the OpenAI SDKs speak: messages in, a reply out, streamed or all at once.</p>
+      <nav class="docs-toc" aria-label="On this page">
+        <p>On this page</p>
+        <ul>
+          <li><a href="#example">A complete example</a></li>
+          <li><a href="#parameters">Request parameters</a></li>
+          <li><a href="#response">The reply</a></li>
+          <li><a href="#streaming">Streaming</a></li>
+          <li><a href="#refusals">Refusals</a></li>
+          <li><a href="#errors">Errors</a></li>
+          <li><a href="#examples">Examples</a></li>
+        </ul>
+      </nav>
+
+<p class="endpoint"><span class="verb verb-post">POST</span><code>https://ai.zeiko.biz.id/v1/chat/completions</code></p>
+
+<h2 id="example">A complete example</h2>
+<div class="code">
+  <div class="code-bar"><span>curl</span><button class="copy" type="button" data-copy="#code-1" aria-label="Copy the curl example">Copy</button></div>
+  <pre id="code-1"><code>curl https://ai.zeiko.biz.id/v1/chat/completions \
+  -H "Authorization: Bearer $ZEIKO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "jagad-512b-v1",
+    "messages": [
+      {"role": "system", "content": "You are Aria, a cheerful barista in a rainy harbour town."},
+      {"role": "user", "content": "*shakes off my umbrella* One hot chocolate, please."}
+    ],
+    "stream": false,
+    "max_tokens": 1024,
+    "temperature": 0.9,
+    "reasoning_effort": "low",
+    "user": "user-9f3c1ab7"
+  }'</code></pre>
+</div>
+<p>The reply:</p>
+<div class="code">
+  <div class="code-bar"><span>Reply</span><button class="copy" type="button" data-copy="#code-2" aria-label="Copy the Reply example">Copy</button></div>
+  <pre id="code-2"><code>{
+  "id": "32dadfde-f3dd-4ad8-acc5-387b72415f46",
+  "object": "chat.completion",
+  "created": 1789936200,
+  "model": "jagad-512b-v1",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "*slides a steaming mug across the counter* Extra marshmallows, on the house.",
+        "reasoning_content": "The customer just came in from the rain..."
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 42,
+    "completion_tokens": 310,
+    "total_tokens": 352,
+    "prompt_tokens_details": { "cached_tokens": 32 },
+    "completion_tokens_details": { "reasoning_tokens": 250 },
+    "cost": 0.0004717
+  }
+}</code></pre>
+</div>
+
+<h2 id="parameters">Request parameters</h2>
+<div class="doc-table-wrap"><table class="doc-table">
+    <thead><tr><th scope="col">Parameter</th><th scope="col">Notes</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>model</code></th><td>Required. <code>jagad-512b-v1</code>, <code>asmarandana-512b-v1</code> or <code>wisanggeni-512b-v1</code>.</td></tr>
+      <tr><th scope="row"><code>messages</code></th><td>Required. The conversation, oldest first. Each item is <code>{"role", "content"}</code>: <code>role</code> is <code>system</code>, <code>user</code> or <code>assistant</code>, and <code>content</code> is a string.</td></tr>
+      <tr><th scope="row"><code>stream</code></th><td><code>true</code> for a stream of events (<a href="#streaming">below</a>), <code>false</code> for one JSON reply. Defaults to <code>false</code>.</td></tr>
+      <tr><th scope="row"><code>max_tokens</code><br><code>max_completion_tokens</code></th><td>The longest reply you want, in tokens, up to 32,000.</td></tr>
+      <tr><th scope="row"><code>temperature</code><br><code>top_p</code></th><td>Sampling, as in the OpenAI API. Each model has its own defaults when you leave them out.</td></tr>
+      <tr><th scope="row"><code>stop</code></th><td>A string, or an array of strings: the reply stops before any of them. Only the first four are used.</td></tr>
+      <tr><th scope="row"><code>reasoning_effort</code></th><td><code>none</code>, <code>minimal</code>, <code>low</code>, <code>medium</code>, <code>high</code> or <code>max</code>: how much the model thinks before it answers, and so which <a href="/docs/pricing#bands">output rate</a> applies. <code>high</code> when you send none. <code>reasoning: {"effort": "…"}</code> works too.</td></tr>
+      <tr><th scope="row"><code>include_reasoning</code></th><td><code>false</code> leaves the reasoning text out of the reply; <code>reasoning: {"exclude": true}</code> does the same. It is still produced, and counted in <code>usage</code>.</td></tr>
+      <tr><th scope="row"><code>user</code></th><td>Recommended. A stable, anonymous id for the person the request is for. <code>user_id</code> works too. <a href="#user">More below.</a></td></tr>
+    </tbody>
+  </table></div>
+
+<h3 id="user">The <code>user</code> field</h3>
+<p>If one key serves many people, send each person's id as <code>user</code>. It helps repeated input be read from cache, at the cache-read rate (see <code>usage.prompt_tokens_details.cached_tokens</code>). Make it:</p>
+<ul>
+  <li><strong>Stable</strong>: the same person always gets the same id.</li>
+  <li><strong>Unique</strong>: two people never share one.</li>
+  <li><strong>Anonymous</strong>: a hash or an account number; never an email address, a phone number or a name. At most 120 characters.</li>
+</ul>
+<p>Leaving it out works too; every request on the key is then treated as coming from one person.</p>
+
+<h2 id="response">The reply</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Notes</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>id</code></th><td data-label="Type">string</td><td data-label="Notes">The request's id, also sent as the <code>X-Request-Id</code> header. Keep it if you may write to us about the request.</td></tr>
+      <tr><th scope="row"><code>object</code></th><td data-label="Type">string</td><td data-label="Notes"><code>"chat.completion"</code></td></tr>
+      <tr><th scope="row"><code>created</code></th><td data-label="Type">integer</td><td data-label="Notes">Unix time, in seconds.</td></tr>
+      <tr><th scope="row"><code>model</code></th><td data-label="Type">string</td><td data-label="Notes">The model ID you sent.</td></tr>
+      <tr><th scope="row"><code>choices[0].message.content</code></th><td data-label="Type">string</td><td data-label="Notes">The reply.</td></tr>
+      <tr><th scope="row"><code>choices[0].message.reasoning_content</code></th><td data-label="Type">string</td><td data-label="Notes">The model's reasoning, when there is any and you did not leave it out. Some replies call this field <code>reasoning</code>: read whichever is there.</td></tr>
+      <tr><th scope="row"><code>choices[0].finish_reason</code></th><td data-label="Type">string</td><td data-label="Notes"><code>stop</code> when the reply finished, <code>length</code> when it reached <code>max_tokens</code>.</td></tr>
+    </tbody>
+  </table></div>
+
+<h3 id="usage">Usage</h3>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Notes</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>usage.prompt_tokens</code></th><td data-label="Type">integer</td><td data-label="Notes">Input tokens: the messages you sent.</td></tr>
+      <tr><th scope="row"><code>usage.completion_tokens</code></th><td data-label="Type">integer</td><td data-label="Notes">Output tokens, reasoning included.</td></tr>
+      <tr><th scope="row"><code>usage.total_tokens</code></th><td data-label="Type">integer</td><td data-label="Notes">The two added up.</td></tr>
+      <tr><th scope="row"><code>usage.prompt_tokens_details.cached_tokens</code></th><td data-label="Type">integer</td><td data-label="Notes">How much of the input was read from cache. Left out when zero.</td></tr>
+      <tr><th scope="row"><code>usage.completion_tokens_details.reasoning_tokens</code></th><td data-label="Type">integer</td><td data-label="Notes">How much of the output was reasoning. Left out when zero.</td></tr>
+      <tr><th scope="row"><code>usage.cost</code></th><td data-label="Type">number</td><td data-label="Notes">What this request cost, in USD, to up to nine decimal places.</td></tr>
+    </tbody>
+  </table></div>
+
+<h3 id="headers">Headers</h3>
+<div class="doc-table-wrap"><table class="doc-table">
+    <thead><tr><th scope="col">Header</th><th scope="col">Value</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>Content-Type</code></th><td><code>application/json</code>, or <code>text/event-stream; charset=utf-8</code> when streaming.</td></tr>
+      <tr><th scope="row"><code>X-Request-Id</code></th><td>The same value as <code>id</code>.</td></tr>
+      <tr><th scope="row"><code>Retry-After</code></th><td>Seconds to wait before trying again, on some <code>429</code> replies.</td></tr>
+    </tbody>
+  </table></div>
+<p>Replies may carry fields that are not listed here. Ignore any you do not know.</p>
+
+<h2 id="streaming">Streaming</h2>
+<p>With <code>"stream": true</code> the reply is <code>text/event-stream</code>: one <code>data:</code> line per chunk, then a chunk with <code>usage</code>, then <code>data: [DONE]</code>.</p>
+<div class="code">
+  <div class="code-bar"><span>Stream</span><button class="copy" type="button" data-copy="#code-3" aria-label="Copy the Stream example">Copy</button></div>
+  <pre id="code-3"><code>data: {"id":"32dadfde…","object":"chat.completion.chunk","created":1789936200,"model":"jagad-512b-v1","choices":[{"index":0,"delta":{"role":"assistant","content":""},"finish_reason":null}]}
+
+data: {"id":"32dadfde…","object":"chat.completion.chunk","created":1789936200,"model":"jagad-512b-v1","choices":[{"index":0,"delta":{"content":"*slides a steaming"},"finish_reason":null}]}
+
+: keep-alive
+
+data: {"id":"32dadfde…","object":"chat.completion.chunk","created":1789936200,"model":"jagad-512b-v1","choices":[{"index":0,"delta":{"content":" mug across the counter*"},"finish_reason":"stop"}]}
+
+data: {"id":"32dadfde…","object":"chat.completion.chunk","created":1789936200,"model":"jagad-512b-v1","choices":[],"usage":{"prompt_tokens":42,"completion_tokens":310,"total_tokens":352,"cost":0.0004717}}
+
+data: [DONE]</code></pre>
+</div>
+<div class="doc-table-wrap"><table class="doc-table">
+    <thead><tr><th scope="col">Line</th><th scope="col">What to do with it</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Content chunks</th><td>Append each <code>choices[0].delta.content</code>, in order. The first chunk carries <code>role</code> and usually no text. Reasoning, when included, arrives as <code>delta.reasoning_content</code> (or <code>delta.reasoning</code>).</td></tr>
+      <tr><th scope="row">Lines starting with <code>:</code></th><td>Comments that keep the connection open while the model works. <strong>Ignore them</strong>; never parse them as JSON.</td></tr>
+      <tr><th scope="row">The usage chunk</th><td>The chunk with <code>usage</code>. Its <code>choices</code> is usually empty, but it can carry the last piece of text: check that <code>choices[0]</code> exists before reading it.</td></tr>
+      <tr><th scope="row">An error chunk</th><td>If something fails after the stream has started, a chunk <code>{"error": {"message", "type", "code"}}</code> comes before <code>[DONE]</code>. The status stays <code>200</code>: it was sent before the error happened.</td></tr>
+      <tr><th scope="row"><code>data: [DONE]</code></th><td>The end of the stream. It is not JSON.</td></tr>
+    </tbody>
+  </table></div>
+<ul>
+  <li><code>id</code>, <code>created</code> and <code>model</code> are the same on every chunk of one reply.</li>
+  <li>One chunk can arrive split across several reads. Buffer until a blank line (<code>
+
+</code> or <code>
+
+</code>) before parsing.</li>
+  <li>Turn off response buffering in your HTTP client; with curl, use <code>-N</code>.</li>
+  <li>Disconnecting in the middle stops the reply. What was produced until then still counts.</li>
+</ul>
+
+<h2 id="refusals">Refusals</h2>
+<p>The roleplay models are for roleplay and the writing around it. Other requests, such as code, homework or general questions, get a short refusal: an ordinary reply (HTTP <code>200</code>, <code>finish_reason: "stop"</code>) that costs a flat <span data-price="refusal">$0.05</span> in place of its token price, shown in <code>usage.cost</code>. Retrying it with the same request gets the same answer.</p>
+
+<h2 id="errors">Errors</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Status</th><th scope="col">Code</th><th scope="col">When</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>400</code></th><td data-label="Code">(none)</td><td data-label="When">The request has no <code>model</code>.</td></tr>
+      <tr><th scope="row"><code>400</code></th><td data-label="Code"><code>invalid_request</code></td><td data-label="When">The model did not accept the request, for example a parameter value it does not take.</td></tr>
+      <tr><th scope="row"><code>400</code></th><td data-label="Code"><code>wrong_endpoint</code></td><td data-label="When">You sent Pranata V1. Send it to <code>/v1/decisions</code>.</td></tr>
+      <tr><th scope="row"><code>401</code></th><td data-label="Code"><code>invalid_api_key</code></td><td data-label="When">The key is missing or unknown.</td></tr>
+      <tr><th scope="row"><code>403</code></th><td data-label="Code"><code>invalid_api_key</code></td><td data-label="When">The key is turned off.</td></tr>
+      <tr><th scope="row"><code>403</code></th><td data-label="Code"><code>model_forbidden</code></td><td data-label="When">Your key may not call that model.</td></tr>
+      <tr><th scope="row"><code>404</code></th><td data-label="Code"><code>model_not_found</code></td><td data-label="When">No model has that ID. IDs are lowercase.</td></tr>
+      <tr><th scope="row"><code>404</code></th><td data-label="Code">(none)</td><td data-label="When">No such path; <code>type</code> is <code>not_found</code>.</td></tr>
+      <tr><th scope="row"><code>413</code></th><td data-label="Code"><code>context_length_exceeded</code></td><td data-label="When">The input is longer than the model's context. It is never cut short to fit: the request is refused.</td></tr>
+      <tr><th scope="row"><code>413</code></th><td data-label="Code"><code>too_large</code></td><td data-label="When">The request is too large for this model.</td></tr>
+      <tr><th scope="row"><code>429</code></th><td data-label="Code"><code>rate_limit_exceeded</code></td><td data-label="When">Your key's per-minute limit or daily quota, or the model is busy. The per-minute case carries <code>Retry-After</code>.</td></tr>
+      <tr><th scope="row"><code>429</code></th><td data-label="Code"><code>overloaded</code></td><td data-label="When">Full for the moment. Carries <code>Retry-After</code>.</td></tr>
+      <tr><th scope="row"><code>500</code></th><td data-label="Code"><code>internal_error</code></td><td data-label="When">An unexpected error.</td></tr>
+      <tr><th scope="row"><code>502</code></th><td data-label="Code"><code>model_unavailable</code></td><td data-label="When">The model could not answer.</td></tr>
+      <tr><th scope="row"><code>504</code></th><td data-label="Code"><code>timeout</code></td><td data-label="When">The model took too long to answer.</td></tr>
+    </tbody>
+  </table></div>
+<p>Three errors are plain text, not JSON: a body that is not valid JSON (<code>400</code>), a missing <code>Content-Type: application/json</code> header (<code>415</code>), and a body over the size limit (<code>413</code>). Check an error's <code>Content-Type</code> before parsing it. When to retry: <a href="/docs/api#retries">API basics</a>.</p>
+
+<h2 id="examples">Examples</h2>
+<h3 id="curl-stream">curl, streaming</h3>
+<div class="code">
+  <div class="code-bar"><span>curl</span><button class="copy" type="button" data-copy="#code-4" aria-label="Copy the curl example">Copy</button></div>
+  <pre id="code-4"><code>curl -N https://ai.zeiko.biz.id/v1/chat/completions \
+  -H "Authorization: Bearer $ZEIKO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "jagad-512b-v1",
+    "messages": [{"role": "user", "content": "*waves* Hi there!"}],
+    "user": "user-9f3c1ab7",
+    "stream": true
+  }'</code></pre>
+</div>
+
+<h3 id="python">Python (OpenAI SDK), one reply</h3>
+<div class="code">
+  <div class="code-bar"><span>Python</span><button class="copy" type="button" data-copy="#code-5" aria-label="Copy the Python example">Copy</button></div>
+  <pre id="code-5"><code>import os
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://ai.zeiko.biz.id/v1",
+    api_key=os.environ["ZEIKO_API_KEY"],
+)
+
+reply = client.chat.completions.create(
+    model="jagad-512b-v1",
+    messages=[{"role": "user", "content": "*waves* Hi there!"}],
+    reasoning_effort="low",
+    user="user-9f3c1ab7",
+)
+print(reply.id)
+print(reply.choices[0].message.content)
+print(reply.usage.prompt_tokens, reply.usage.completion_tokens)
+print(reply.usage.model_extra.get("cost"))</code></pre>
+</div>
+
+<h3 id="python-stream">Python (OpenAI SDK), streaming</h3>
+<div class="code">
+  <div class="code-bar"><span>Python</span><button class="copy" type="button" data-copy="#code-6" aria-label="Copy the Python example">Copy</button></div>
+  <pre id="code-6"><code>stream = client.chat.completions.create(
+    model="jagad-512b-v1",
+    messages=[{"role": "user", "content": "*waves* Hi there!"}],
+    user="user-9f3c1ab7",
+    stream=True,
+)
+usage = None
+for chunk in stream:
+    if chunk.usage is not None:  # the usage chunk
+        usage = chunk.usage
+    if chunk.choices:  # never assume choices[0] is there
+        piece = chunk.choices[0].delta.content
+        if piece:
+            print(piece, end="", flush=True)
+print("\n", usage)</code></pre>
+</div>
+
+<h3 id="node">JavaScript (OpenAI SDK), streaming</h3>
+<div class="code">
+  <div class="code-bar"><span>JavaScript</span><button class="copy" type="button" data-copy="#code-7" aria-label="Copy the JavaScript example">Copy</button></div>
+  <pre id="code-7"><code>import OpenAI from "openai";
+
+const client = new OpenAI({
+  baseURL: "https://ai.zeiko.biz.id/v1",
+  apiKey: process.env.ZEIKO_API_KEY,
+});
+
+const stream = await client.chat.completions.create({
+  model: "jagad-512b-v1",
+  messages: [{ role: "user", content: "*waves* Hi there!" }],
+  user: "user-9f3c1ab7",
+  stream: true,
+});
+for await (const chunk of stream) {
+  const piece = chunk.choices[0]?.delta?.content;
+  if (piece) process.stdout.write(piece);
+  if (chunk.usage) console.log("\ntokens:", chunk.usage.total_tokens);
+}</code></pre>
+</div>
+
+<h3 id="fetch">JavaScript (fetch), streaming</h3>
+<div class="code">
+  <div class="code-bar"><span>JavaScript</span><button class="copy" type="button" data-copy="#code-8" aria-label="Copy the JavaScript example">Copy</button></div>
+  <pre id="code-8"><code>const res = await fetch("https://ai.zeiko.biz.id/v1/chat/completions", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer " + process.env.ZEIKO_API_KEY,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    model: "jagad-512b-v1",
+    messages: [{ role: "user", content: "*waves* Hi there!" }],
+    user: "user-9f3c1ab7",
+    stream: true,
+  }),
+});
+const reader = res.body.getReader();
+const decoder = new TextDecoder();
+let buf = "";
+while (true) {
+  const { done, value } = await reader.read();
+  if (done) break;
+  buf += decoder.decode(value, { stream: true });
+  // An event ends with a blank line; take CRLF too.
+  let m;
+  while ((m = /\r?\n\r?\n/.exec(buf)) !== null) {
+    const event = buf.slice(0, m.index);
+    buf = buf.slice(m.index + m[0].length);
+    for (const line of event.split(/\r?\n/)) {
+      if (!line.startsWith("data:")) continue; // ": keep-alive" too
+      const data = line.slice(5).trim();
+      if (data === "[DONE]") continue; // the end, not JSON
+      const json = JSON.parse(data);
+      if (json.error) { console.error(json.error.message); continue; }
+      const piece = json.choices?.[0]?.delta?.content;
+      if (piece) process.stdout.write(piece);
+      if (json.usage) console.log("\ncost:", json.usage.cost);
+    }
+  }
+}</code></pre>
+</div>
+
+      <nav class="docs-pager" aria-label="Previous and next page">
+        <a class="prev" href="/docs/api-decisions"><small>Previous</small>Decisions API</a>
+        <a class="next" href="/docs/faq"><small>Next</small>Troubleshooting</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> ZeikoAI</p>
+    <nav aria-label="Footer links">
+      <a href="/">Home</a>
+      <a href="/models">Models</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/docs/">Docs</a>
+      <a href="/#contact">Contact</a>
+      <a href="/account">Account</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+</body>
+</html>

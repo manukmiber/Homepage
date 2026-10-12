@@ -131,8 +131,8 @@ function setNav(signedIn) {
   if (navEl) navEl.innerHTML = view.nav(signedIn);
 }
 
-const TITLES = { '/account': 'Account', '/account/plans': 'Plans & balance', '/account/key': 'API key', '/account/settings': 'Settings' };
-const TABS = { '/account': 'overview', '/account/plans': 'plans', '/account/key': 'key', '/account/settings': 'settings' };
+const TITLES = { '/account': 'Account', '/account/plans': 'Plans & balance', '/account/key': 'API key', '/account/settings': 'Settings', '/account/how-to-buy': 'Paying with crypto' };
+const TABS = { '/account': 'overview', '/account/plans': 'plans', '/account/key': 'key', '/account/settings': 'settings', '/account/how-to-buy': 'howtobuy' };
 
 /* ----------------------------------------------------------------- pages */
 
@@ -194,6 +194,7 @@ async function accountPage(extra = {}) {
   if (tab === 'plans') draw(view.plans(o, { flash, pick: extra.pick || params.get('plan') || '' }));
   else if (tab === 'key') draw(view.key(o, { flash, shown: extra.shown, apiBase: o.apiBase || '' }));
   else if (tab === 'settings') draw(view.settings(o, { flash, door: DOOR }));
+  else if (tab === 'howtobuy') draw(view.howToBuy(o, flash));
   else draw(view.overview(o, flash));
   if (here.hash && !extra.flash) {
     const at = document.getElementById(here.hash.slice(1));

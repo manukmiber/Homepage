@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Decisions API — ZeikoAI Docs</title>
+<meta name="description" content="The Pranata V1 decisions endpoint: request, questions and criteria, answers, limits, errors and examples.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="Decisions API — ZeikoAI Docs">
+<meta property="og:description" content="The Pranata V1 decisions endpoint: request, questions and criteria, answers, limits, errors and examples.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/">
+      <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
+      <span class="brand-name">ZeikoAI</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Main navigation">
+      <a href="/#decision">Pranata V1</a>
+      <a href="/#models">Roleplay</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/models">Models</a>
+      <a href="/docs/" aria-current="page">Docs</a>
+      <a class="nav-account" href="/account">Sign in</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup">Create account</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Docs">
+      <details class="docs-menu">
+        <summary>Docs menu <span>Decisions API</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions" aria-current="page">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions" aria-current="page">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/docs/">Docs</a> <span aria-hidden="true">/</span> API</p>
+      <h1>Decisions API</h1>
+      <p class="lede">Ask Pranata V1 one or more questions about a text or a JSON object, and get a probability for every option.</p>
+      <nav class="docs-toc" aria-label="On this page">
+        <p>On this page</p>
+        <ul>
+          <li><a href="#example">A complete example</a></li>
+          <li><a href="#request">The request</a></li>
+          <li><a href="#response">The response</a></li>
+          <li><a href="#limits">Limits</a></li>
+          <li><a href="#errors">Errors</a></li>
+          <li><a href="#examples">Examples</a></li>
+        </ul>
+      </nav>
+
+<p class="endpoint"><span class="verb verb-post">POST</span><code>https://ai.zeiko.biz.id/v1/decisions</code></p>
+
+<h2 id="example">A complete example</h2>
+<p>Three questions, one of each kind, about the same reply:</p>
+<div class="code">
+  <div class="code-bar"><span>curl</span><button class="copy" type="button" data-copy="#code-1" aria-label="Copy the curl example">Copy</button></div>
+  <pre id="code-1"><code>curl https://ai.zeiko.biz.id/v1/decisions \
+  -H "Authorization: Bearer $ZEIKO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "pranata-v1",
+    "state": "Aria: *slides a steaming mug across the counter* Extra marshmallows, on the house. Rain like this calls for it.",
+    "questions": {
+      "in_character": {
+        "type": "noul",
+        "instructions": "Does the reply stay in character as Aria, a cheerful barista?",
+        "criteria": {
+          "true": "It sounds like Aria and stays in the scene",
+          "false": "It breaks character or talks about being an AI"
+        }
+      },
+      "mood": {
+        "type": "choice",
+        "instructions": "Which mood fits the next scene?",
+        "criteria": {
+          "calm": null,
+          "tense": "Danger or conflict is close",
+          "playful": null
+        }
+      },
+      "warmth": {
+        "type": "score",
+        "instructions": "How warm is the reply towards the customer?",
+        "criteria": ["Cold", "Polite", "Friendly", "Warm", "Very warm"]
+      }
+    }
+  }'</code></pre>
+</div>
+<p>The answer (the figures are illustrative):</p>
+<div class="code">
+  <div class="code-bar"><span>Answer</span><button class="copy" type="button" data-copy="#code-2" aria-label="Copy the Answer example">Copy</button></div>
+  <pre id="code-2"><code>{
+  "model": "pranata-v1",
+  "answers": {
+    "in_character": { "type": "noul", "noul": 0.91 },
+    "mood": {
+      "type": "choice",
+      "choice": "calm",
+      "probabilities": { "calm": 0.64, "tense": 0.18, "playful": 0.18 },
+      "confidence": 0.46
+    },
+    "warmth": {
+      "type": "score",
+      "score": 2.75,
+      "legend": { "0": "Cold", "1": "Polite", "2": "Friendly", "3": "Warm", "4": "Very warm" },
+      "probabilities": { "0": 0.03, "1": 0.07, "2": 0.22, "3": 0.48, "4": 0.2 },
+      "confidence": 0.458333
+    }
+  },
+  "usage": { "input_tokens": 131, "output_tokens": 0 }
+}</code></pre>
+</div>
+
+<h2 id="request">The request</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Notes</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>model</code></th><td data-label="Type">string</td><td data-label="Notes">Required. <code>pranata-v1</code>.</td></tr>
+      <tr><th scope="row"><code>state</code></th><td data-label="Type">string, object, array or <code>null</code></td><td data-label="Notes">Required. What is being judged: plain text, or JSON when it has parts, such as a conversation or a form. <code>null</code> when there is nothing to read.</td></tr>
+      <tr><th scope="row"><code>questions</code></th><td data-label="Type">object</td><td data-label="Notes">Required. 1 to 256 questions, each under an id you choose. The same ids come back as the keys of <code>answers</code>.</td></tr>
+    </tbody>
+  </table></div>
+
+<h3 id="question">A question</h3>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Notes</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>type</code></th><td data-label="Type">string</td><td data-label="Notes">Required. <code>noul</code> (yes or no), <code>choice</code> (pick one) or <code>score</code> (score it).</td></tr>
+      <tr><th scope="row"><code>instructions</code></th><td data-label="Type">string, object or array</td><td data-label="Notes">The question itself, such as “Does this reply stay in character?”. Optional, but almost always wanted.</td></tr>
+      <tr><th scope="row"><code>criteria</code></th><td data-label="Type">depends on the type</td><td data-label="Notes">What the answers mean. See below.</td></tr>
+    </tbody>
+  </table></div>
+
+<h3 id="criteria"><code>criteria</code>, by type</h3>
+<div class="doc-table-wrap"><table class="doc-table doc-table-wide">
+    <thead><tr><th scope="col">Type</th><th scope="col">What it takes</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>noul</code></th><td>Optional. An object with <code>"true"</code> and/or <code>"false"</code>, each describing that answer.<pre class="snippet"><code>{"true": "The reply sounds like the character", "false": "It breaks character"}</code></pre></td></tr>
+      <tr><th scope="row"><code>choice</code></th><td>Required. An object of 2 to 255 options: each option's name, then a description of it, or <code>null</code> for none. The names come back in the answer.<pre class="snippet"><code>{"calm": null, "tense": "Danger or conflict is close", "playful": null}</code></pre></td></tr>
+      <tr><th scope="row"><code>score</code></th><td>Required. An array of 2 to 10 levels, lowest first. Each level is a description, or <code>null</code>.<pre class="snippet"><code>["Not urgent", "Low", "Medium", "High", "Drop everything"]</code></pre></td></tr>
+    </tbody>
+  </table></div>
+<p>A description can be plain text, or an object or an array when that says it better, for example a description with a few examples of it.</p>
+
+<h3 id="ids">Question ids</h3>
+<p>The ids are yours: short names such as <code>in_character</code> or <code>mood</code>. They label the answers and are not priced; the model reads the instructions and the criteria, not the id.</p>
+
+<h2 id="response">The response</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Field</th><th scope="col">Type</th><th scope="col">Notes</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>model</code></th><td data-label="Type">string</td><td data-label="Notes">The model you asked.</td></tr>
+      <tr><th scope="row"><code>answers</code></th><td data-label="Type">object</td><td data-label="Notes">One answer per question, under the question's id.</td></tr>
+      <tr><th scope="row"><code>usage.input_tokens</code></th><td data-label="Type">integer</td><td data-label="Notes">The tokens in the state and the questions: what the call is priced on.</td></tr>
+      <tr><th scope="row"><code>usage.output_tokens</code></th><td data-label="Type">integer</td><td data-label="Notes">Always <code>0</code>: answers are not priced.</td></tr>
+    </tbody>
+  </table></div>
+<p>The request's id is in the <code>X-Request-Id</code> header.</p>
+
+<h3 id="answers">Answers, by type</h3>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Type</th><th scope="col">Field</th><th scope="col">Notes</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>noul</code></th><td data-label="Field"><code>noul</code></td><td data-label="Notes">The probability of yes (<code>true</code>), from 0 to 1. No is 1 minus it.</td></tr>
+      <tr><th scope="row"><code>choice</code></th><td data-label="Field"><code>choice</code></td><td data-label="Notes">The option that fits best. On a tie, the one written first.</td></tr>
+      <tr><th scope="row"><code>choice</code></th><td data-label="Field"><code>probabilities</code></td><td data-label="Notes">Every option with its probability. They add up to 1.</td></tr>
+      <tr><th scope="row"><code>choice</code></th><td data-label="Field"><code>confidence</code></td><td data-label="Notes">0 when the probabilities are even, 1 when one option has them all.</td></tr>
+      <tr><th scope="row"><code>score</code></th><td data-label="Field"><code>score</code></td><td data-label="Notes">The weighted average of the level positions: from 0 (the first level) to the number of levels minus 1. It can fall between levels.</td></tr>
+      <tr><th scope="row"><code>score</code></th><td data-label="Field"><code>legend</code></td><td data-label="Notes">Each position, <code>"0"</code> up, with its level exactly as you wrote it.</td></tr>
+      <tr><th scope="row"><code>score</code></th><td data-label="Field"><code>probabilities</code></td><td data-label="Notes">Each position with its probability. They add up to 1.</td></tr>
+      <tr><th scope="row"><code>score</code></th><td data-label="Field"><code>confidence</code></td><td data-label="Notes">From 0 to 1; higher when the probability sits close around the most likely level.</td></tr>
+    </tbody>
+  </table></div>
+<p>Every answer also has its <code>type</code>. Probabilities have up to six decimal places. Fields may be added later: ignore any you do not use.</p>
+
+<h2 id="limits">Limits</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-kv">
+    <thead><tr><th scope="col"></th><th scope="col"></th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Longest call</th><td>2,000 tokens: the state, and every question's instructions and criteria</td></tr>
+      <tr><th scope="row">Questions per call</th><td>Up to 256, within the 2,000 tokens</td></tr>
+      <tr><th scope="row">Options per <code>choice</code></th><td>2 to 255</td></tr>
+      <tr><th scope="row">Levels per <code>score</code></th><td>2 to 10</td></tr>
+      <tr><th scope="row">One plan request</th><td>1,000 tokens: a call of 1,001 to 2,000 tokens counts as two</td></tr>
+    </tbody>
+  </table></div>
+<p>A call over 2,000 tokens is refused with <code>422</code> before anything is used. Split the state, or ask a long question in a call of its own.</p>
+
+<h2 id="errors">Errors</h2>
+<p>The error body has two extras here: <code>param</code> names the field that was wrong, and <code>detail</code> repeats the message.</p>
+<div class="code">
+  <div class="code-bar"><span>Error</span><button class="copy" type="button" data-copy="#code-3" aria-label="Copy the Error example">Copy</button></div>
+  <pre id="code-3"><code>{
+  "error": {
+    "message": "question \"mood\": a choice needs at least two options",
+    "type": "invalid_request_error",
+    "code": "invalid_request",
+    "param": "questions.mood.criteria"
+  },
+  "detail": "question \"mood\": a choice needs at least two options"
+}</code></pre>
+</div>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Status</th><th scope="col">Code</th><th scope="col">When</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>400</code></th><td data-label="Code"><code>wrong_endpoint</code></td><td data-label="When">You sent a roleplay model. Send it to <code>/v1/chat/completions</code>.</td></tr>
+      <tr><th scope="row"><code>401</code></th><td data-label="Code"><code>invalid_api_key</code></td><td data-label="When">The key is missing or unknown.</td></tr>
+      <tr><th scope="row"><code>402</code></th><td data-label="Code"><code>insufficient_balance</code></td><td data-label="When">No plan covers the call, and it costs more than your balance.</td></tr>
+      <tr><th scope="row"><code>403</code></th><td data-label="Code"><code>invalid_api_key</code></td><td data-label="When">The key is turned off.</td></tr>
+      <tr><th scope="row"><code>403</code></th><td data-label="Code"><code>no_plan</code></td><td data-label="When">The key has nothing to call with right now. Buy a plan or add balance.</td></tr>
+      <tr><th scope="row"><code>403</code></th><td data-label="Code"><code>plan_expired</code></td><td data-label="When">Your plan has ended, and your balance does not cover the call.</td></tr>
+      <tr><th scope="row"><code>403</code></th><td data-label="Code"><code>model_forbidden</code></td><td data-label="When">The key may not call that model.</td></tr>
+      <tr><th scope="row"><code>404</code></th><td data-label="Code"><code>model_not_found</code></td><td data-label="When">No model has that ID. IDs are lowercase.</td></tr>
+      <tr><th scope="row"><code>422</code></th><td data-label="Code"><code>invalid_request</code></td><td data-label="When">The body is not right, or the call is too long. <code>param</code> names the field.</td></tr>
+      <tr><th scope="row"><code>429</code></th><td data-label="Code"><code>plan_limit_reached</code></td><td data-label="When">This period's plan requests are used, and your balance does not cover the call.</td></tr>
+      <tr><th scope="row"><code>429</code></th><td data-label="Code"><code>rate_limit_exceeded</code></td><td data-label="When">Your key's per-second, per-minute or daily limit.</td></tr>
+      <tr><th scope="row"><code>429</code></th><td data-label="Code"><code>model_busy</code></td><td data-label="When">A great many calls at once. Wait, then send it again.</td></tr>
+      <tr><th scope="row"><code>502</code></th><td data-label="Code"><code>model_unavailable</code></td><td data-label="When">The model could not answer. Retry with backoff.</td></tr>
+    </tbody>
+  </table></div>
+<p>Every <code>429</code> carries <code>Retry-After</code> (seconds) and <code>retry-after-ms</code> (milliseconds). Treat any other <code>429</code> code the same way.</p>
+
+<h2 id="examples">Examples</h2>
+<h3 id="python">Python</h3>
+<div class="code">
+  <div class="code-bar"><span>Python</span><button class="copy" type="button" data-copy="#code-4" aria-label="Copy the Python example">Copy</button></div>
+  <pre id="code-4"><code>import os
+import requests
+
+API = "https://ai.zeiko.biz.id/v1"
+KEY = os.environ["ZEIKO_API_KEY"]
+
+def decide(state, questions):
+    r = requests.post(
+        API + "/decisions",
+        headers={"Authorization": "Bearer " + KEY},
+        json={"model": "pranata-v1", "state": state, "questions": questions},
+        timeout=30,
+    )
+    if r.status_code == 429:
+        raise RuntimeError("busy, retry in %s s" % r.headers.get("Retry-After"))
+    r.raise_for_status()
+    return r.json()["answers"]
+
+answers = decide(
+    "Can someone call me back today? The heating is off and it is freezing.",
+    {
+        "urgency": {
+            "type": "score",
+            "instructions": "How urgent is this message?",
+            "criteria": ["Not urgent", "Low", "Medium", "High", "Drop everything"],
+        },
+        "team": {
+            "type": "choice",
+            "instructions": "Which team should take this message?",
+            "criteria": {
+                "repairs": "Something is broken",
+                "accounts": "Questions about money",
+                "other": None,
+            },
+        },
+    },
+)
+print(answers["urgency"]["score"], answers["team"]["choice"])</code></pre>
+</div>
+
+<h3 id="javascript">JavaScript (Node 18 or newer)</h3>
+<div class="code">
+  <div class="code-bar"><span>JavaScript</span><button class="copy" type="button" data-copy="#code-5" aria-label="Copy the JavaScript example">Copy</button></div>
+  <pre id="code-5"><code>const res = await fetch("https://ai.zeiko.biz.id/v1/decisions", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer " + process.env.ZEIKO_API_KEY,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    model: "pranata-v1",
+    state: "Can someone call me back today? The heating is off and it is freezing.",
+    questions: {
+      needs_reply: { type: "noul", instructions: "Does this message need a reply today?" },
+    },
+  }),
+});
+if (!res.ok) {
+  const err = await res.json().catch(() =&gt; null);
+  throw new Error(res.status + " " + (err?.error?.code ?? "") + ": " + (err?.error?.message ?? ""));
+}
+const { answers, usage } = await res.json();
+console.log(answers.needs_reply.noul, usage.input_tokens);</code></pre>
+</div>
+
+<h3 id="json-state">A JSON state, several questions</h3>
+<p>When the thing being judged has parts, send it as an object and name its fields in your questions:</p>
+<div class="code">
+  <div class="code-bar"><span>Request body</span><button class="copy" type="button" data-copy="#code-6" aria-label="Copy the Request body example">Copy</button></div>
+  <pre id="code-6"><code>{
+  "model": "pranata-v1",
+  "state": {
+    "title": "Handmade ceramic mug, 350 ml",
+    "description": "Glazed by hand. Dishwasher safe. Ships in 2 days.",
+    "photos": 3
+  },
+  "questions": {
+    "complete": {
+      "type": "noul",
+      "instructions": "Does the description say what the item is made of, its size and when it ships?"
+    },
+    "category": {
+      "type": "choice",
+      "instructions": "Which category does the listing belong in?",
+      "criteria": { "kitchen": null, "home_decor": null, "gifts": null, "other": "None of the others fit" }
+    },
+    "quality": {
+      "type": "score",
+      "instructions": "How useful is the description to a buyer?",
+      "criteria": ["Useless", "Poor", "Fine", "Good", "Excellent"]
+    }
+  }
+}</code></pre>
+</div>
+
+      <nav class="docs-pager" aria-label="Previous and next page">
+        <a class="prev" href="/docs/api"><small>Previous</small>API basics</a>
+        <a class="next" href="/docs/api-chat"><small>Next</small>Chat API</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> ZeikoAI</p>
+    <nav aria-label="Footer links">
+      <a href="/">Home</a>
+      <a href="/models">Models</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/docs/">Docs</a>
+      <a href="/#contact">Contact</a>
+      <a href="/account">Account</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+</body>
+</html>
