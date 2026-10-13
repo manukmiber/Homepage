@@ -136,7 +136,10 @@ const TABS = { '/account': 'overview', '/account/plans': 'plans', '/account/key'
 
 // A QRIS payment's page asks again every few seconds while it can still move.
 const PAY_POLL_MS = 8_000;
+// How long the thanks after "I've paid" stays before the account opens.
+const THANKS_MS = 10_000;
 let payTimer = 0;
+let thanked = false;
 const PAY_ID = /^[A-Za-z0-9_-]{1,64}$/;
 
 /* ----------------------------------------------------------------- pages */
@@ -214,6 +217,8 @@ async function payPage(flash) {
   const id = params.get('id') || '';
   if (!PAY_ID.test(id)) return location.replace('/account/plans');
   const r = await ask('GET', `/payments/${encodeURIComponent(id)}/qris`);
+  // A poll that was on its way when "I've paid" went through: the thanks stays.
+  if (thanked) return;
   if (r.status !== 200 || !r.data) {
     draw(view.message({ heading: 'Not available right now', text: problem(r), link: '/account/plans', label: 'Plans & balance' }));
     return;
@@ -226,6 +231,23 @@ async function payPage(flash) {
       return payPage('');
     }, PAY_POLL_MS);
   }
+}
+
+/** "I've paid" went through: thank them, then back to the account. */
+function thanks(q) {
+  thanked = true;
+  clearTimeout(payTimer);
+  const until = Date.now() + THANKS_MS;
+  draw(view.qrisThanks(o, q, THANKS_MS / 1000));
+  const tick = () => {
+    const left = Math.max(0, Math.ceil((until - Date.now()) / 1000));
+    const at = document.getElementById('qris-countdown');
+    if (at) at.textContent = String(left);
+    if (left === 0) return location.assign('/account');
+    payTimer = setTimeout(tick, 250);
+    return undefined;
+  };
+  payTimer = setTimeout(tick, 250);
 }
 
 /* --------------------------------------------------------------- actions */
@@ -290,7 +312,7 @@ async function act(name, f, submitter) {
     case 'qris-sent': {
       if (!PAY_ID.test(f.id || '')) return back('That payment was not found.');
       const r = await ask('POST', `/payments/${encodeURIComponent(f.id)}/sent`, {});
-      if (r.status === 200) return payPage('');
+      if (r.status === 200 && r.data) return thanks(r.data);
       return payPage(view.flash('err', problem(r)));
     }
     case 'subscribe': {

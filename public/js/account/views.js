@@ -565,6 +565,21 @@ export function qrisPay(o, q, flash) {
   return shell('pay', o, body, flash);
 }
 
+/** Right after "I've paid": thanks, then app.js takes the buyer back to
+ * their account when the countdown runs out. */
+export function qrisThanks(o, q, seconds) {
+  const body = `<section class="card acct-section qris qris-ok" role="status">
+      <div class="qris-state">
+        ${icon(I.check)}
+        <div><h2>Thanks, we're gonna check your payment</h2><p>We are looking for ${esc(q.rupiahText)} in our QRIS account, usually within 10 minutes. Your plan or balance switches on by itself.</p><p class="muted-note">Taking you back to your account in <span id="qris-countdown">${num(seconds)}</span> seconds.</p></div>
+      </div>
+      <div class="row-links">
+        <a class="btn btn-primary btn-sm" href="/account">Go to your account now</a>
+      </div>
+    </section>`;
+  return shell('pay', o, body, '');
+}
+
 /** A value with its copy button (main.js copies whatever `data-copy` names). */
 function copyRow(id, value, label, primary) {
   return `<div class="key-box">

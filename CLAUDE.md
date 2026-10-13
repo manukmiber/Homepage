@@ -192,9 +192,11 @@ GitHub keys. Google and GitHub sign-in start and finish at the door
   `method: "qris"`; the door answers the payment's `qris` (rupiah, merchant,
   NMID, state, and while it can be paid the QR as rows of `0`/`1`), and the
   page draws the QR as SVG itself (`qrSvg`, which draws nothing for anything
-  but 0 and 1). "I've paid" posts `/v1/payments/{id}/sent`; the page asks
-  again every 8 s until the operator pays it out or turns it down — only the
-  operator can, by hand. QRIS, rupiah and IDR are money words: account area
+  but 0 and 1). "I've paid" posts `/v1/payments/{id}/sent`, then the page
+  says "Thanks, we're gonna check your payment" and opens `/account` after
+  10 s (`thanks`, the operator's wording and timing). Opened again later,
+  the payment page asks every 8 s until the operator pays it out or turns it
+  down — only the operator can, by hand. QRIS, rupiah and IDR are money words: account area
   only, never on the public pages.
 - **The buying guide is `/account/how-to-buy`** ("How to pay", with a
   QRIS section of this site's own first, then
