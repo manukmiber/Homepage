@@ -168,6 +168,13 @@
      the plan's own price and request count, with a meter scaled to the best
      one, which gets the "Best value" tag. Without JavaScript the line stays
      hidden; the price and the requests already say it all. */
+  /* An opening offer with an end date takes itself down once it has passed
+     (the operator still removes the words from the page afterwards). */
+  [].slice.call(document.querySelectorAll('[data-offer-until]')).forEach(function (el) {
+    var until = Date.parse(el.getAttribute('data-offer-until'));
+    if (until && Date.now() >= until) el.hidden = true;
+  });
+
   var plans = [].slice.call(document.querySelectorAll('.plan[data-requests]'));
   var perDollar = plans.map(function (plan) {
     var price = plan.querySelector('.plan-price[data-price]');

@@ -57,6 +57,8 @@ const I = {
   alert: '<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/>',
   arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
   out: '<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
+  gift: '<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/>',
+  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
 };
 
 const LOGO = `<img class="logo-night" src="/img/logo.svg" alt="" width="40" height="40"><img class="logo-day" src="/img/logo-day.svg" alt="" width="40" height="40">`;
@@ -209,7 +211,7 @@ const TABS = [
   ['settings', '/account/settings', 'Settings'],
 ];
 // Account pages that are not tabs: reached by a link, titled here.
-const PAGES = { howtobuy: 'Paying with crypto' };
+const PAGES = { howtobuy: 'How to pay', pay: 'Pay by QRIS' };
 
 function verifyBanner(a) {
   return `<div class="verify" role="status">
@@ -378,8 +380,11 @@ function payments(list) {
   if (!list.length) return `<div class="empty">${icon(I.wallet)}<p><strong>No payments yet.</strong> Plans and balance you buy show up here.</p></div>`;
   const rows = list.map((p) => {
     const [label, tone] = p.paid ? ['Paid', 'ok'] : STATUS[p.status] || [p.status, ''];
-    const open = p.invoiceUrl && !p.paid ? `<a class="btn btn-ghost btn-xs" href="${esc(p.invoiceUrl)}" rel="noopener">Finish paying</a>` : '';
-    return `<tr><th scope="row">${esc(p.what)}</th><td data-label="Amount">${esc(p.amountText)}</td><td data-label="Status"><span class="tag tag-${tone}">${esc(label)}</span></td><td data-label="Date">${esc(day(p.createdAt))}</td><td class="ledger-act">${open}</td></tr>`;
+    const qris = p.method === 'qris';
+    const open = qris
+      ? (!p.paid && ['waiting', 'confirming'].includes(p.status) ? `<a class="btn btn-ghost btn-xs" href="/account/pay?id=${encodeURIComponent(p.id)}">${p.status === 'waiting' ? 'Open QR' : 'See status'}</a>` : '')
+      : p.invoiceUrl && !p.paid ? `<a class="btn btn-ghost btn-xs" href="${esc(p.invoiceUrl)}" rel="noopener">Finish paying</a>` : '';
+    return `<tr><th scope="row">${esc(p.what)}</th><td data-label="Amount">${esc(p.amountText)}${qris && p.localText ? `<small class="ledger-local">${esc(p.localText)} · QRIS</small>` : ''}</td><td data-label="Status"><span class="tag tag-${tone}">${esc(label)}</span></td><td data-label="Date">${esc(day(p.createdAt))}</td><td class="ledger-act">${open}</td></tr>`;
   }).join('');
   return `<div class="table-scroll"><table class="table acct-table ledger"><thead><tr><th scope="col">What</th><th scope="col">Amount</th><th scope="col">Status</th><th scope="col">Date</th><th scope="col"><span class="sr">Action</span></th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
@@ -412,22 +417,38 @@ export function overview(o, flash) {
 }
 
 export function plans(o, { flash, pick }) {
-  const buying = o.paymentsActive;
+  const crypto = Boolean(o.paymentsActive);
+  const qris = Boolean(o.qris && o.qris.active);
+  const buying = crypto || qris;
   // One card for a Pranata V1 plan or a Zeiko Chat one; `product` tells the
-  // checkout which.
+  // checkout which. Crypto and QRIS are two buttons of one form.
   const card = (p, product, current) => {
     const mine = p.id === current;
     const picked = product === 'pranata' && p.id === pick;
+    const offer = p.promo || null;
+    const days = offer ? offer.days : p.days;
     const which = `<input type="hidden" name="product" value="${product}"><input type="hidden" name="plan" value="${esc(p.id)}">`;
+    const label = mine ? `Add ${num(days)} days` : `Buy for ${num(days)} days`;
+    const first = picked || mine || offer ? 'btn-primary' : 'btn-ghost';
+    const buttons = [
+      crypto ? `<button class="btn ${first} btn-block" type="submit" name="method" value="crypto" data-busy="Opening…">${label}${qris ? ' · crypto' : ''}</button>` : '',
+      qris ? `<button class="btn ${crypto ? 'btn-ghost' : first} btn-block" type="submit" name="method" value="qris" data-busy="Opening…">${crypto ? 'Or pay by QRIS' : `${label} · QRIS`}</button>` : '',
+    ].join('');
     const forms = buying
-      ? `<form data-act="buy">${which}<button class="btn ${picked || mine ? 'btn-primary' : 'btn-ghost'} btn-block" type="submit" data-busy="Opening…">${mine ? `Add ${num(p.days)} days` : `Buy for ${num(p.days)} days`}</button></form>
-        ${p.subscription && o.subscriptionsActive ? `<form data-act="subscribe">${which}<button class="btn-link" type="submit" data-busy="Sending…">Or renew every ${num(p.days)} days by email</button></form>` : ''}`
+      ? `<form data-act="buy">${which}${buttons}</form>
+        ${crypto && p.subscription && o.subscriptionsActive ? `<form data-act="subscribe">${which}<button class="btn-link" type="submit" data-busy="Sending…">Or renew every ${num(p.days)} days by email</button></form>` : ''}`
       : '';
-    const what = p.requests ? `<strong>${num(p.requests)}</strong> requests` : esc(p.tagline || 'Zeiko Chat plan');
-    return `<article class="acct-plan${picked ? ' is-picked' : ''}${mine ? ' is-mine' : ''}" id="${product === 'chat' ? 'chat-' : ''}plan-${esc(p.id)}">
+    const what = p.requests
+      ? `<strong>${num(p.requests)}</strong> requests${offer ? ` every ${num(p.days)} days` : ''}`
+      : esc(p.tagline || 'Zeiko Chat plan');
+    const offerNote = offer
+      ? `<p class="acct-plan-offer">${icon(I.gift)}<span><strong>Opening offer:</strong> ${num(offer.days)} days for the price of ${num(p.days)}${offer.until ? `, until ${esc(day(offer.until - 1))}` : ''}${offer.left != null ? ` · ${num(offer.left)} place${offer.left === 1 ? '' : 's'} left` : ''}.</span></p>`
+      : '';
+    return `<article class="acct-plan${picked ? ' is-picked' : ''}${mine ? ' is-mine' : ''}${offer ? ' has-offer' : ''}" id="${product === 'chat' ? 'chat-' : ''}plan-${esc(p.id)}">
       <div class="acct-plan-top"><h3>${esc(p.name)}</h3>${mine ? `<span class="tag tag-ok">${icon(I.check)}Your plan</span>` : ''}</div>
-      <p class="acct-plan-price">${esc(usd(p.priceUsd))}<span> / ${num(p.days)} days</span></p>
+      <p class="acct-plan-price">${esc(usd(p.priceUsd))}<span> / ${num(days)} days</span></p>
       <p class="acct-plan-what">${what}</p>
+      ${offerNote}
       <div class="plan-actions">${forms}</div>
     </article>`;
   };
@@ -436,12 +457,22 @@ export function plans(o, { flash, pick }) {
   const chatCards = (chat.plans || []).map((p) => card(p, 'chat', chat.plan)).join('');
   const chips = (o.topUps || []).map((n) => `<button class="chip-btn" type="submit" name="amount" value="${esc(n)}" data-busy="…">${esc(usd(n))}</button>`).join('');
   const subs = (o.subscriptions || []).filter((s) => s.status && !['EXPIRED', 'CANCELED', 'CANCELLED'].includes(s.status));
+  const method = crypto && qris
+    ? `<fieldset class="funds-way"><legend>Pay with</legend>
+        <label><input type="radio" name="method" value="crypto" checked> Crypto</label>
+        <label><input type="radio" name="method" value="qris"> QRIS (rupiah)</label>
+      </fieldset>`
+    : `<input type="hidden" name="method" value="${qris ? 'qris' : 'crypto'}">`;
+  const ways = [
+    crypto ? 'in crypto on the NOWPayments page, and come back here. Network and exchange fees are yours' : '',
+    qris ? 'by QRIS in rupiah from any Indonesian bank or e-wallet app (and apps in Malaysia, Singapore and Thailand that pay QRIS abroad); we check each one by hand, usually within 10 minutes' : '',
+  ].filter(Boolean);
   const body = `
     ${!buying ? alert('warn', 'Buying online is not open yet. Please try again later.') : ''}
     <section class="acct-section-plain">
       <div class="section-row"><h2>Pranata V1 plans</h2><p class="muted-note">A call over 1,024 tokens counts as two requests</p></div>
       <div class="acct-plans">${cards}</div>
-      <p class="fineprint">Buying the plan you are on adds 30 days to it. Buying another starts it now, and what is left of the current one comes back to your balance.${subs.length ? ` Renewing: ${subs.map((s) => esc(s.planName)).join(', ')} — the next link arrives by email.` : ''}</p>
+      <p class="fineprint">Buying the plan you are on adds its days to it. Buying another starts it now, and what is left of the current one comes back to your balance.${subs.length ? ` Renewing: ${subs.map((s) => esc(s.planName)).join(', ')} — the next link arrives by email.` : ''}</p>
     </section>
     ${chatCards ? `<section class="acct-section-plain" id="chat">
       <div class="section-row"><h2>Zeiko Chat plans</h2><p class="muted-note">The same account signs in to Zeiko Chat</p></div>
@@ -451,15 +482,87 @@ export function plans(o, { flash, pick }) {
       <div class="section-row"><h2>Balance</h2><p class="balance-now">${esc(o.balance.text)}</p></div>
       <p class="muted-note">Your balance pays for Pranata V1 calls past your plan and for Zeiko Chat replies past your chat plan. It is the same balance in Zeiko Chat.</p>
       ${buying ? `<form data-act="topup" class="funds">
+        ${method}
         <div class="chips-row" role="group" aria-label="Add this amount">${chips}</div>
         <div class="funds-custom">
           <label>Other amount, USD<input type="number" name="custom" min="${esc(o.minTopUpUsd)}" max="${esc(o.maxTopUpUsd)}" step="1" inputmode="numeric" placeholder="${esc(o.minTopUpUsd)}–${esc(o.maxTopUpUsd)}"></label>
           <button class="btn btn-primary" type="submit" name="amount" value="custom" data-busy="Opening…">Add balance</button>
         </div>
       </form>` : ''}
-      <p class="fineprint">You finish paying in crypto on the NOWPayments page and come back here. Network and exchange fees are yours. <a href="/account/how-to-buy">How to pay with crypto, step by step</a></p>
+      ${ways.length ? `<p class="fineprint">You pay ${ways.join('; or ')}. <a href="/account/how-to-buy">How to pay, step by step</a></p>` : ''}
     </section>`;
   return shell('plans', o, body, flash);
+}
+
+/** The QR as SVG, from the door's rows of 0 and 1 (dark is 1), with the
+ * quiet zone round it. Black on white whatever the theme: that is what a
+ * scanner reads. Anything but 0 and 1 draws nothing. */
+function qrSvg(rows) {
+  if (!Array.isArray(rows) || !rows.length || !rows.every((r) => typeof r === 'string' && /^[01]+$/.test(r) && r.length === rows.length)) return '';
+  const quiet = 4;
+  const size = rows.length + quiet * 2;
+  let d = '';
+  rows.forEach((r, y) => {
+    for (let x = 0; x < r.length; x += 1) {
+      if (r[x] !== '1') continue;
+      let end = x;
+      while (end + 1 < r.length && r[end + 1] === '1') end += 1;
+      d += `M${x + quiet} ${y + quiet}h${end - x + 1}v1h-${end - x + 1}z`;
+      x = end;
+    }
+  });
+  return `<svg class="qris-svg" viewBox="0 0 ${size} ${size}" shape-rendering="crispEdges" role="img" aria-label="QRIS code to scan"><rect width="${size}" height="${size}" fill="#ffffff"/><path d="${d}" fill="#000000"/></svg>`;
+}
+
+/** A QRIS payment: the code to scan and the exact rupiah while it is open,
+ * then where it stands. app.js redraws it every few seconds until it is
+ * paid, turned down or closed. */
+export function qrisPay(o, q, flash) {
+  const back = q.product === 'chat' ? '/account/plans#chat' : '/account/plans';
+  let body;
+  if (q.status === 'waiting') {
+    const left = Math.max(0, Math.ceil((Number(q.expiresAt) - Date.now()) / 60000));
+    body = `<section class="card acct-section qris">
+      <div class="qris-grid">
+        <div class="qris-code">
+          ${qrSvg(q.qr)}
+          <p class="qris-merchant"><strong>${esc(q.merchant)}</strong><span>NMID ${esc(q.nmid)}</span></p>
+        </div>
+        <div class="qris-side">
+          <p class="stat-label">Pay exactly</p>
+          <p class="qris-amount">${esc(q.rupiahText)}</p>
+          <p class="muted-note">${esc(q.what)} · ${esc(q.amountText)}. The last digits are this payment's own code: send the exact amount, so we can match it to you.</p>
+          <ol class="qris-steps">
+            <li>Open an app that pays QRIS: any Indonesian bank or e-wallet. From Malaysia, Singapore or Thailand, an app that pays QRIS abroad.</li>
+            <li>Scan the code. The amount fills in by itself: check it reads <strong>${esc(q.rupiahText)}</strong>.</li>
+            <li>Pay, then press <strong>I've paid</strong>.</li>
+          </ol>
+          <form data-act="qris-sent"><input type="hidden" name="id" value="${esc(q.id)}"><button class="btn btn-primary btn-block" type="submit" data-busy="Sending…">I've paid</button></form>
+          <p class="fineprint">${icon(I.clock)} This code closes in ${num(left)} minute${left === 1 ? '' : 's'}. We check every QRIS payment by hand, usually within 10 minutes.</p>
+        </div>
+      </div>
+    </section>`;
+  } else {
+    const state = {
+      confirming: ['Checking your payment', `We are looking for ${q.rupiahText} in our QRIS account, usually within 10 minutes. Your plan or balance switches on by itself, and this page updates on its own: you can leave it.`, 'status'],
+      paid: ['Payment received — thank you', `${q.what} is yours.`, 'ok'],
+      failed: ['We could not find this payment', `If you did pay ${q.rupiahText}, write to payment@zeiko.biz.id with the amount, the time and your app's receipt.`, 'err'],
+      expired: ['This code has closed', `It was not marked as paid in time. If you already paid ${q.rupiahText}, write to payment@zeiko.biz.id with your app's receipt; otherwise start a new payment.`, 'warn'],
+    }[q.status] || ['Not available right now', 'Try again in a minute.', 'warn'];
+    const [heading, text, tone] = state;
+    body = `<section class="card acct-section qris qris-${esc(tone)}">
+      <div class="qris-state">
+        ${q.status === 'confirming' ? '<span class="spinner" aria-hidden="true"></span>' : icon(q.status === 'paid' ? I.check : I.alert)}
+        <div><h2>${esc(heading)}</h2><p>${esc(text)}</p><p class="muted-note">${esc(q.what)} · ${esc(q.rupiahText)} (${esc(q.amountText)})</p></div>
+      </div>
+      <div class="row-links">
+        ${q.status === 'paid' ? '<a class="btn btn-primary btn-sm" href="/account">Go to your account</a>' : ''}
+        ${q.status === 'failed' || q.status === 'expired' ? `<a class="btn btn-primary btn-sm" href="${back}">Start a new payment</a>` : ''}
+        <a class="btn btn-ghost btn-sm" href="/account/plans">Plans &amp; balance</a>
+      </div>
+    </section>`;
+  }
+  return shell('pay', o, body, flash);
 }
 
 /** A value with its copy button (main.js copies whatever `data-copy` names). */

@@ -398,12 +398,20 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
     balance: { micro: 4_200_000, text: '$4.20', shared: true },
     owed: { micro: 1240, text: evil },
     prepaid: true,
-    plans: [{ id: 'welcome', name: evil, priceUsd: 1, days: 30, requests: 10000, subscription: true }],
+    plans: [
+      { id: 'welcome', name: evil, priceUsd: 1, days: 30, requests: 10000, subscription: true },
+      { id: 'expand', name: 'Expand', priceUsd: 5, days: 30, requests: 150000, subscription: true, promo: { days: 90, until: null, left: 12 } },
+      { id: 'question', name: evil, priceUsd: 25, days: 30, requests: 750000, subscription: false, promo: { days: 90, until: Date.UTC(2026, 9, 31, 17), left: null } },
+    ],
+    qris: { active: true },
     topUps: [2, 5], minTopUpUsd: 2, maxTopUpUsd: 1000,
     paymentsActive: true, subscriptionsActive: true,
     key: { id: 'k1', shown: 'abcd…wxyz', enabled: true },
     models: [{ id: 'pranata-v1', unit: 'mtok', usd: 0.003, window: 2000 }],
-    payments: [{ id: 'p1', kind: 'credit', what: evil, amountText: '$5.00', status: 'waiting', paid: false, invoiceUrl: 'https://pay.example/i', createdAt: Date.now() }],
+    payments: [
+      { id: 'p1', kind: 'credit', what: evil, amountText: '$5.00', status: 'waiting', paid: false, invoiceUrl: 'https://pay.example/i', createdAt: Date.now(), method: 'crypto' },
+      { id: 'p2', kind: 'plan', what: evil, amountText: '$25.00', status: 'confirming', paid: false, createdAt: Date.now(), method: 'qris', localText: evil },
+    ],
     subscriptions: [],
     daily: [{ day: Date.now() - (Date.now() % 86_400_000), calls: 12, units: 14, inputTokens: 9000 }],
   };
@@ -419,6 +427,12 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
     accountViews.key(o, { flash: '', shown: 'k-123', apiBase: 'https://example.test' }),
     accountViews.settings(o, { flash: '', door }),
     accountViews.howToBuy(o, ''),
+    ...['waiting', 'confirming', 'paid', 'failed', 'expired', evil].map((status) => accountViews.qrisPay(o, {
+      id: evil, what: evil, amountText: evil, rupiah: 449237, rupiahText: evil, merchant: evil, nmid: evil, product: 'pranata',
+      qr: status === 'waiting' ? ['1010', '0101', '1100', '0011'] : [evil], status, createdAt: Date.now(), expiresAt: Date.now() + 3_600_000,
+    }, '')),
+    // Rows that are not all 0 and 1 draw no code at all.
+    accountViews.qrisPay(o, { id: 'q', status: 'waiting', qr: ['10', `1${evil}`], rupiahText: 'Rp 1', expiresAt: 0 }, ''),
     accountViews.signIn({ error: evil, notice: '', email: evil, next: '/account', opts, door }),
     accountViews.signUp({ error: '', email: '', username: evil, next: '', ref: evil, opts, door }),
     accountViews.forgot({ error: '', sent: false }),

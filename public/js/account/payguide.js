@@ -1,16 +1,18 @@
-// The buying guide (/account/how-to-buy): how to finish paying in crypto,
+// The buying guide (/account/how-to-buy): paying by QRIS in rupiah (this
+// site's own section, not in Zeiko Chat's guide), and how to finish paying in crypto,
 // where to buy it in each part of the world, and what to do when something
 // goes wrong. Zeiko Chat's guide, word for word except what differs here (the
 // button names, both products sold on this site). Fixed text: nothing in it
 // comes from the account door or the visitor. Exchanges are named, never
 // linked: a mistyped exchange link is a phishing page.
 
-export const PAY_GUIDE = `<p>ZeikoAI and Zeiko Chat take payment in crypto, through NOWPayments. You need a little crypto in an exchange account or a wallet, then you send it to the invoice that <strong>Buy for 30 days</strong> (or <strong>Add balance</strong>) opens on <strong>Plans &amp; balance</strong>. This guide covers where to buy it in your part of the world, whether you will have to show ID, how hard signing up is, which coin and network to use, and how to send it so it arrives in full. It ends with step-by-step walkthroughs for the most-used platforms.</p>
+export const PAY_GUIDE = `<p>ZeikoAI and Zeiko Chat take payment two ways: <strong>QRIS in rupiah</strong>, from any Indonesian bank or e-wallet app (see <a href="#paying-by-qris">Paying by QRIS</a>), or <strong>crypto</strong>, through NOWPayments. You need a little crypto in an exchange account or a wallet, then you send it to the invoice that <strong>Buy for 30 days</strong> (or <strong>Add balance</strong>) opens on <strong>Plans &amp; balance</strong>. This guide covers where to buy it in your part of the world, whether you will have to show ID, how hard signing up is, which coin and network to use, and how to send it so it arrives in full. It ends with step-by-step walkthroughs for the most-used platforms.</p>
 <p><strong>Fees and taxes are paid by you, the buyer.</strong> Network (gas) fees, exchange trading and withdrawal fees, card or bank fees, the exchange's spread and any tax in your country are all on your side. The amount on the invoice has to <em>arrive</em> in full: a payment that arrives short is "paid only in part" and does not switch your plan or balance on by itself.</p>
 <p>ZeikoAI does not sell crypto, and none of the places below are our partners. If you would rather not touch crypto at all, see <strong>Prefer a bank transfer or another fiat method?</strong> below. Which exchange is allowed, which coins it may sell you and what it asks of you depend on where you live, and they change often: check the platform's own app or site before you sign up. Menu names in the walkthroughs can differ a little between app versions. This is not financial advice.</p>
 <nav class="docs-toc" aria-label="In this guide">
 <p>In this guide</p>
 <ul>
+<li><a href="#paying-by-qris">Paying by QRIS</a></li>
 <li><a href="#the-short-version">The short version</a></li>
 <li><a href="#which-coin-to-pay-with">Which coin to pay with</a></li>
 <li><a href="#fees-and-taxes">Fees and taxes</a></li>
@@ -29,6 +31,17 @@ export const PAY_GUIDE = `<p>ZeikoAI and Zeiko Chat take payment in crypto, thro
 <li><a href="#when-something-goes-wrong">When something goes wrong</a></li>
 </ul>
 </nav>
+<h2 id="paying-by-qris">Paying by QRIS</h2>
+<p>QRIS is Indonesia's one QR code for paying: every Indonesian bank app and e-wallet scans it (GoPay, OVO, DANA, ShopeePay, LinkAja, BCA, Mandiri, BRI, BNI and the rest). From Malaysia, Singapore and Thailand, an app that pays QRIS abroad can scan it too; check that your app offers it before you start.</p>
+<ol>
+<li>On <strong>Plans &amp; balance</strong>, press <strong>Or pay by QRIS</strong> on a plan, or pick <strong>QRIS (rupiah)</strong> under <strong>Balance</strong> and choose an amount.</li>
+<li>A QR opens with the price in rupiah, at today's rate. The last digits are that payment's own code.</li>
+<li>Scan it in your app. The amount fills in by itself: check it is <strong>exactly</strong> the amount on the page, then pay.</li>
+<li>Back on the page, press <strong>I've paid</strong>.</li>
+<li>We check every QRIS payment by hand, usually within 10 minutes. Your plan or balance then switches on by itself, and the page says so.</li>
+</ol>
+<p>A code stays open for an hour; past that, start a new one. Send one payment per code, of the exact amount: a different amount cannot be matched to you. If something went wrong — you paid but the page says the code closed, or that the payment was not found — write to <strong><a href="mailto:payment@zeiko.biz.id">payment@zeiko.biz.id</a></strong> with your username, the amount, the time and your app's receipt.</p>
+<p>The rest of this guide is about paying in crypto.</p>
 <h2 id="the-short-version">The short version</h2>
 <ol>
 <li>On <strong>Plans &amp; balance</strong>, press <strong>Buy for 30 days</strong> on a plan (<strong>Add 30 days</strong> on the one you have), or pick an amount under <strong>Balance</strong> and press <strong>Add balance</strong>.</li>
@@ -464,7 +477,7 @@ export const PAY_GUIDE = `<p>ZeikoAI and Zeiko Chat take payment in crypto, thro
 </ul>
 <p>We recommend a long plan, paid in advance, and a cup of tea.</p>
 <h2 id="prefer-a-bank-transfer-or-another-fiat-method">Prefer a bank transfer or another fiat method?</h2>
-<p>Crypto is not the only way. If you would rather pay by bank transfer, an e-wallet or another ordinary (fiat) method, or P2P and exchanges are not an option where you live, email <strong><a href="mailto:payment@zeiko.biz.id">payment@zeiko.biz.id</a></strong> from the address on your account and tell us:</p>
+<p>Crypto is not the only way: in rupiah, <a href="#paying-by-qris">pay by QRIS</a>. If you would rather pay by bank transfer, an e-wallet or another ordinary (fiat) method, or P2P and exchanges are not an option where you live, email <strong><a href="mailto:payment@zeiko.biz.id">payment@zeiko.biz.id</a></strong> from the address on your account and tell us:</p>
 <ul>
 <li>your username (the <code>@name</code> on your profile);</li>
 <li>the plan or the top-up you want;</li>

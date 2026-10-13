@@ -187,7 +187,17 @@ GitHub keys. Google and GitHub sign-in start and finish at the door
   progress bars are SVG attributes).
 - UI words: "Account", never "dashboard" (banned); CSS class names ship in
   `public/` and are scanned too (`.funds`, not `.topup`).
-- **The buying guide is `/account/how-to-buy`** ("Paying with crypto",
+- **QRIS, beside crypto** (`/account/pay?id=`, `views.js::qrisPay`): a
+  plan card's second button and the balance's "Pay with" choice send
+  `method: "qris"`; the door answers the payment's `qris` (rupiah, merchant,
+  NMID, state, and while it can be paid the QR as rows of `0`/`1`), and the
+  page draws the QR as SVG itself (`qrSvg`, which draws nothing for anything
+  but 0 and 1). "I've paid" posts `/v1/payments/{id}/sent`; the page asks
+  again every 8 s until the operator pays it out or turns it down — only the
+  operator can, by hand. QRIS, rupiah and IDR are money words: account area
+  only, never on the public pages.
+- **The buying guide is `/account/how-to-buy`** ("How to pay", with a
+  QRIS section of this site's own first, then
   `views.js::howToBuy`, text in `payguide.js`): Zeiko Chat's
   `public/docs/payments.md`, copied word for word except what differs here
   (the website's button names, both products sold here, no emails the
@@ -235,6 +245,16 @@ Pranata V1 has its own keys: `decision:<plan-id>` for each plan (`welcome`,
 `expand`, `huh`, `question`, `enough`). On the operator's request Pranata V1
 is sold by plan only: the site shows no per-token price for it (the old
 `pranata-v1:input` key is gone; do not bring it back).
+
+**Opening offers** (the operator's, October 2026): Expand runs 90 days for
+the price of 30 for the first 1,000 people, once each; Question about
+decision? runs 90 days when bought by 31 October (WIB). The door decides who
+gets one (its plans carry `promo {days, until, left}`, which the account
+page shows); the public pages only say so, in a `.plan-offer` line on the
+plan card, the `/models` rate row and `docs/pricing.html`. A dated offer
+carries `data-offer-until` and `main.js` hides it once passed, but the words
+must still come off the pages afterwards — and the capped one when the
+door's `left` reaches 0, which the site cannot see.
 
 When a rate changes, change **every** element that carries its key
 (`npm run check` fails until they all agree):

@@ -131,8 +131,13 @@ function setNav(signedIn) {
   if (navEl) navEl.innerHTML = view.nav(signedIn);
 }
 
-const TITLES = { '/account': 'Account', '/account/plans': 'Plans & balance', '/account/key': 'API key', '/account/settings': 'Settings', '/account/how-to-buy': 'Paying with crypto' };
-const TABS = { '/account': 'overview', '/account/plans': 'plans', '/account/key': 'key', '/account/settings': 'settings', '/account/how-to-buy': 'howtobuy' };
+const TITLES = { '/account': 'Account', '/account/plans': 'Plans & balance', '/account/key': 'API key', '/account/settings': 'Settings', '/account/how-to-buy': 'How to pay', '/account/pay': 'Pay by QRIS' };
+const TABS = { '/account': 'overview', '/account/plans': 'plans', '/account/key': 'key', '/account/settings': 'settings', '/account/how-to-buy': 'howtobuy', '/account/pay': 'pay' };
+
+// A QRIS payment's page asks again every few seconds while it can still move.
+const PAY_POLL_MS = 8_000;
+let payTimer = 0;
+const PAY_ID = /^[A-Za-z0-9_-]{1,64}$/;
 
 /* ----------------------------------------------------------------- pages */
 
@@ -191,6 +196,7 @@ async function accountPage(extra = {}) {
   }
   const tab = TABS[path] || 'overview';
   document.title = `${TITLES[path] || 'Account'} — ZeikoAI`;
+  if (tab === 'pay') return payPage(flash);
   if (tab === 'plans') draw(view.plans(o, { flash, pick: extra.pick || params.get('plan') || '' }));
   else if (tab === 'key') draw(view.key(o, { flash, shown: extra.shown, apiBase: o.apiBase || '' }));
   else if (tab === 'settings') draw(view.settings(o, { flash, door: DOOR }));
@@ -202,9 +208,36 @@ async function accountPage(extra = {}) {
   }
 }
 
+/** A QRIS payment of the person's, redrawn until it stops moving. */
+async function payPage(flash) {
+  clearTimeout(payTimer);
+  const id = params.get('id') || '';
+  if (!PAY_ID.test(id)) return location.replace('/account/plans');
+  const r = await ask('GET', `/payments/${encodeURIComponent(id)}/qris`);
+  if (r.status !== 200 || !r.data) {
+    draw(view.message({ heading: 'Not available right now', text: problem(r), link: '/account/plans', label: 'Plans & balance' }));
+    return;
+  }
+  draw(view.qrisPay(o, r.data, flash || ''));
+  if (r.data.status === 'waiting' || r.data.status === 'confirming') {
+    payTimer = setTimeout(() => {
+      // Not while the person is pressing "I've paid".
+      if (root.querySelector('form[aria-busy="true"]')) return payPage(flash);
+      return payPage('');
+    }, PAY_POLL_MS);
+  }
+}
+
 /* --------------------------------------------------------------- actions */
 
 const SIGNED_OUT_PAGES = new Set(['/account/signin', '/account/signup', '/account/forgot', '/account/reset']);
+
+/** Where a checkout goes next: the crypto payment page, or the QR. */
+function paying(r, back) {
+  if (r.status === 200 && r.data && r.data.qris && PAY_ID.test(r.data.id || '')) return location.assign(`/account/pay?id=${encodeURIComponent(r.data.id)}`);
+  if (r.status === 200 && r.data && r.data.invoiceUrl) return location.assign(r.data.invoiceUrl);
+  return back(problem(r));
+}
 
 async function act(name, f, submitter) {
   const back = (text, kind = 'err') => accountPage({ flash: view.flash(kind, text) });
@@ -242,17 +275,23 @@ async function act(name, f, submitter) {
     }
     case 'buy': {
       const product = f.product === 'chat' ? 'chat' : 'pranata';
-      const r = await ask('POST', '/checkout', { product, kind: 'plan', plan: f.plan || '' });
-      if (r.status === 200 && r.data && r.data.invoiceUrl) return location.assign(r.data.invoiceUrl);
-      return back(problem(r));
+      const method = submitter && submitter.value === 'qris' ? 'qris' : 'crypto';
+      const r = await ask('POST', '/checkout', { product, kind: 'plan', plan: f.plan || '', method });
+      return paying(r, back);
     }
     case 'topup': {
       const raw = submitter && submitter.value === 'custom' ? f.custom : submitter ? submitter.value : f.custom;
       const amountUsd = Math.floor(Number(raw));
       if (!Number.isFinite(amountUsd) || amountUsd <= 0) return back('Pick an amount, or type one in whole dollars.');
-      const r = await ask('POST', '/checkout', { product: 'chat', kind: 'credit', amountUsd });
-      if (r.status === 200 && r.data && r.data.invoiceUrl) return location.assign(r.data.invoiceUrl);
-      return back(problem(r));
+      const method = f.method === 'qris' ? 'qris' : 'crypto';
+      const r = await ask('POST', '/checkout', { product: 'chat', kind: 'credit', amountUsd, method });
+      return paying(r, back);
+    }
+    case 'qris-sent': {
+      if (!PAY_ID.test(f.id || '')) return back('That payment was not found.');
+      const r = await ask('POST', `/payments/${encodeURIComponent(f.id)}/sent`, {});
+      if (r.status === 200) return payPage('');
+      return payPage(view.flash('err', problem(r)));
     }
     case 'subscribe': {
       const product = f.product === 'chat' ? 'chat' : 'pranata';

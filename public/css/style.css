@@ -1320,6 +1320,8 @@ body:has(#win-30d:checked) [data-w="30d"] { display: revert; }
 .plan-price { margin: 8px 0 0; font-size: 2rem; font-weight: 800; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
 .plan-reqs { margin: 0 0 14px; color: var(--muted); font-size: .88rem; }
 .plan-reqs strong { color: var(--text); font-variant-numeric: tabular-nums; }
+.plan-offer { margin: -8px 0 14px; padding: 7px 9px; border-radius: var(--r-sm); background: var(--dec-soft); color: var(--dec-ink); font-size: .8rem; line-height: 1.4; }
+.plan-offer strong { color: inherit; }
 .plan-value { display: grid; gap: 6px; margin: -2px 0 16px; }
 .plan-meter { display: block; height: 6px; border-radius: var(--r-full); background: var(--surface-3); overflow: hidden; }
 .plan-meter > span {
@@ -1852,6 +1854,38 @@ body:has(#win-30d:checked) [data-w="30d"] { display: revert; }
 .acct-plan-what { margin: 0 0 16px; color: var(--text-2); font-size: .9rem; }
 .acct-plan-what strong { color: var(--text); font-variant-numeric: tabular-nums; }
 .plan-actions { display: grid; gap: 4px; margin-top: auto; }
+.acct-plan.has-offer { border-color: var(--dec-line); }
+.acct-plan-offer { display: flex; gap: 8px; align-items: flex-start; margin: -6px 0 14px; padding: 8px 10px; border-radius: var(--r-sm); background: var(--dec-soft); color: var(--dec-ink); font-size: .82rem; line-height: 1.4; }
+.acct-plan-offer .ico { flex: none; width: 16px; height: 16px; margin-top: 1px; }
+.ledger-local { display: block; color: var(--muted); font-size: .78rem; font-variant-numeric: tabular-nums; }
+.funds-way { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center; margin: 0 0 12px; padding: 0; border: 0; }
+.funds-way legend { float: left; margin-right: 4px; padding: 0; color: var(--muted); font-size: .85rem; font-weight: 600; }
+.funds .funds-way label { display: inline-flex; flex-direction: row; gap: 6px; align-items: center; margin: 0; color: var(--text); font-size: .9rem; font-weight: 500; white-space: nowrap; }
+.funds .funds-way input[type="radio"] { width: 16px; height: 16px; min-height: 0; margin: 0; padding: 0; border: 0; box-shadow: none; accent-color: var(--brand); }
+
+/* QRIS: the code beside the amount, then where it stands. */
+.qris-grid { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 28px; align-items: start; }
+.qris-code { display: grid; gap: 10px; justify-items: center; }
+.qris-svg { display: block; width: 100%; max-width: 300px; height: auto; border-radius: var(--r); box-shadow: var(--shadow); }
+.qris-merchant { display: grid; margin: 0; text-align: center; color: var(--text); font-size: .9rem; }
+.qris-merchant span { color: var(--muted); font-size: .78rem; font-family: var(--mono); }
+.qris .qris-amount { margin: 2px 0 6px; color: var(--text); font-size: 2.1rem; font-weight: 800; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.qris-steps { margin: 14px 0 18px; padding-left: 20px; color: var(--text-2); font-size: .92rem; line-height: 1.55; }
+.qris-steps li + li { margin-top: 6px; }
+.qris-side .fineprint { display: flex; gap: 6px; align-items: flex-start; }
+.qris-side .fineprint .ico { flex: none; width: 15px; height: 15px; margin-top: 2px; }
+.qris-state { display: flex; gap: 14px; align-items: flex-start; }
+.qris-state > .ico, .qris-state > .spinner { flex: none; width: 28px; height: 28px; margin-top: 2px; }
+.qris-state h2 { margin: 0 0 6px; font-size: 1.2rem; }
+.qris-state p { margin: 0 0 6px; }
+.qris-ok .qris-state > .ico { color: var(--ok); }
+.qris-err .qris-state > .ico { color: var(--err); }
+.qris-warn .qris-state > .ico { color: var(--warn); }
+.qris .row-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+@media (max-width: 700px) {
+  .qris-grid { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .qris .qris-amount { font-size: 1.8rem; }
+}
 .plan-actions form { margin: 0; }
 .plan-actions .btn { width: 100%; padding-inline: 10px; font-size: .88rem; }
 .plan-actions .btn-link { justify-content: center; width: 100%; font-size: .82rem; text-align: center; }
