@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ZeikoAI — Pranata V1 and roleplay models</title>
-<meta name="description" content="Pranata V1: fast, consistent decisions with a probability for every option, priced per million input tokens or by plan. Plus three roleplay models, from safe-for-work to unrestricted.">
+<meta name="description" content="Pranata V1: fast, consistent decisions with a probability for every option, sold by 30-day plan. Plus three roleplay models, from safe-for-work to unrestricted.">
 <meta name="color-scheme" content="light dark">
 <!-- The playground (#try) asks this address; nothing else on the page asks anything. -->
 <meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
@@ -75,7 +75,7 @@
         </h1>
         <p class="lede">
           Yes or no, pick one, score it — with a probability for every option.
-          <strong data-price="pranata-v1:input">$0.003</strong> per million input tokens, and answers cost nothing extra.
+          Plans from <strong data-price="decision:welcome">$1</strong> for 30 days.
         </p>
         <div class="cta">
           <a class="btn btn-dec btn-lg" href="/account/signup">Create an account <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
@@ -85,8 +85,8 @@
 
         <dl class="hero-facts">
           <div>
-            <dt>Per million input tokens</dt>
-            <dd><span data-price="pranata-v1:input">$0.003</span></dd>
+            <dt>Requests per plan</dt>
+            <dd>10K–2M <small>/ 30 days</small></dd>
           </div>
           <div>
             <dt>Plans from</dt>
@@ -220,7 +220,7 @@
       <div class="sec-head sec-head-split">
         <div>
           <p class="kicker kicker-dec">Pranata V1</p>
-          <h2 class="sec-title" id="decTitle">Three kinds of decision. One price per token.</h2>
+          <h2 class="sec-title" id="decTitle">Three kinds of decision. Simple plans.</h2>
           <p class="sec-lede">Ask a question and give the options; Pranata answers with a probability for each one. It has a price and plans of its own, apart from the roleplay models.</p>
         </div>
         <a class="btn btn-ghost" href="/models#pranata-v1">Specs &amp; performance <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
@@ -246,14 +246,14 @@
 
       <dl class="facts">
         <div>
-          <dt>Per token</dt>
-          <dd><span data-price="pranata-v1:input">$0.003</span> <small>/ 1M input tokens</small></dd>
-          <p>From your account balance. No plan needed.</p>
+          <dt>Plans from</dt>
+          <dd><span data-price="decision:welcome">$1</span> <small>/ 30 days</small></dd>
+          <p>10,000 requests to start.</p>
         </div>
         <div>
-          <dt>Answers</dt>
-          <dd>Included</dd>
-          <p>Only input tokens are priced.</p>
+          <dt>Questions per call</dt>
+          <dd>Up to 256</dd>
+          <p>Within the 2,048 tokens.</p>
         </div>
         <div>
           <dt>Longest call</dt>
@@ -564,7 +564,7 @@
 
         <details class="faq">
           <summary>What counts as one request on a Decision plan?</summary>
-          <p>A call of up to 1,024 tokens is one request; a call of 1,025 to 2,048 tokens is two. No call can be longer than 2,048 tokens. Per-token pricing does not count requests at all: the price is on the tokens.</p>
+          <p>A call of up to 1,024 tokens is one request; a call of 1,025 to 2,048 tokens is two. No call can be longer than 2,048 tokens.</p>
         </details>
 
         <details class="faq">

@@ -231,9 +231,10 @@ Each rate appears in several places, and every one of them is marked with
 (standard band), `out-none` and `out-max`. The refused-request fee is just
 `data-price="refusal"`.
 
-Pranata V1 has its own keys: `pranata-v1:input` (per million
-input tokens) and `decision:<plan-id>` for each plan (`welcome`, `expand`,
-`huh`, `question`, `enough`).
+Pranata V1 has its own keys: `decision:<plan-id>` for each plan (`welcome`,
+`expand`, `huh`, `question`, `enough`). On the operator's request Pranata V1
+is sold by plan only: the site shows no per-token price for it (the old
+`pranata-v1:input` key is gone; do not bring it back).
 
 When a rate changes, change **every** element that carries its key
 (`npm run check` fails until they all agree):
@@ -242,11 +243,11 @@ When a rate changes, change **every** element that carries its key
   the pricing table, and the refusal card and FAQ entry.
 - `models.html`: the at-a-glance table and that model's rate card.
 - Decision: `index.html`'s hero (the lede and the facts under the buttons:
-  `pranata-v1:input` and `decision:welcome`), its `#decision` section (the
+  `decision:welcome`), its `#decision` section (the
   facts strip and the plan cards) and `models.html`'s Decision sheet (its
   rate table).
 - Docs: `docs/pricing.html` (every rate and plan), `docs/pranata-v1.html`
-  (`pranata-v1:input`, `decision:welcome`), `docs/index.html`
+  (`decision:welcome`), `docs/index.html`
   (`decision:welcome`), `docs/roleplay.html` (Jagad's three output bands,
   `refusal`), `docs/api-chat.html` and `docs/faq.html` (`refusal`).
 
