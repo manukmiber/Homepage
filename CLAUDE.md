@@ -7,7 +7,9 @@ balance are bought and the key is handed over.
 
 `/models` stays: it is where visitors look the models up, with each model's
 live performance figures. `/docs` is the documentation: the products, the
-account, pricing, and the API (below).
+account, pricing, and the API (below). `/drive` (and `/id/drive`) is **Zeiko
+Drive**, the file storage on the same account, whose app is served at
+`/dashboard` (below).
 
 ## The rule: never leak anything about how the API works
 
@@ -64,6 +66,14 @@ comments, commit messages, PR titles and PR descriptions. Never name or
 describe the API's backend or the relay. Writing about how *this static
 site* is built and deployed is fine.
 
+**The third exception is Zeiko Drive**, on the operator's request (October
+2026: the rule above is for the AI products). Its own pages (`drive.html`,
+`id/drive.html`) and blocks marked `<!-- drive:start -->` … `<!-- drive:end -->`
+may say what a storage product has to say — storage, prices in rupiah,
+paying for a plan — and every page may link to the app at `/dashboard` (the
+path only; the word on its own stays banned). Everything else above holds
+there too, and the AI products' copy keeps the rule whole.
+
 ## What the site may show
 
 - Each model's display name, model ID, one-line description, and content
@@ -90,8 +100,10 @@ site* is built and deployed is fine.
 
 ```
 public/
-  index.html      landing: Pranata V1 hero and #decision first, then the roleplay
-                  models, pricing + cost estimator, FAQ, contact
+  index.html      landing: Pranata V1 hero and #decision first, then Zeiko Drive
+                  (#drive), the roleplay models, pricing + cost estimator, FAQ, contact
+  drive.html      /drive: Zeiko Drive's features, plans (drawn from Drive's catalog), FAQ
+  id/drive.html   /id/drive: the same page in Indonesian
   models.html     /models: at-a-glance table, then each model's specs and rate card
   404.html
   _redirects      old /models/<id> links → /models#<id>
@@ -106,22 +118,27 @@ public/
   js/account/     Zeiko Accounts: app.js asks the account door, views.js draws,
                   payguide.js is the buying guide's text
 src/
-  worker.js       runs for /models only: fills its placeholders from the snapshot
+  worker.js       fills /models from the snapshot and /drive from Drive's catalog,
+                  hands Zeiko Drive's paths to Drive, answers 404.html for the rest
   render.js       snapshot → HTML for those placeholders; numbers only
+  drive.js        which paths are Drive's; Drive's catalog → plan cards (numbers
+                  and escaped plan names only)
 dev/
   sample-stats.mjs  made-up figures for local development and the check
 scripts/
   check-site.mjs  leak scan + price consistency + rendered /models and /account
                   + docs links and docs list (npm run check)
-wrangler.jsonc    static assets, plus the worker for /models and /account and its R2 binding
+wrangler.jsonc    static assets, plus the worker for /models, /drive and /account, its R2
+                  binding, and (in production) the DRIVE service binding
 ```
 
 Everything is a static file except `/models`, and the browser never asks
 for anything but this site's own files — **except the account area** (below),
 whose script talks to the account door and nowhere else:
 
-- **One piece of server code.** `src/worker.js` runs for `/models` and
-  `/account` only (`run_worker_first`); for `/account…` it only hands back
+- **One piece of server code.** `src/worker.js` runs first for `/models`,
+  `/drive`, `/id/drive` and `/account` (`run_worker_first`), and for any path
+  that is no file (Zeiko Drive's, below, or a 404); for `/account…` it only hands back
   `public/account/index.html`, so deep links open. It reads the hourly snapshot from the `MODELS` R2
   binding and fills the page's placeholders (`data-perf-bar`, `data-perf`,
   `data-stat`) before the page leaves. Every other path never reaches it.
@@ -143,6 +160,30 @@ whose script talks to the account door and nowhere else:
   and the plans' "requests per dollar" line (both stay hidden without it).
 - If the snapshot is missing or unreadable, `/models` goes out as the static
   file, with "not available right now" where the figures would be.
+
+## Zeiko Drive (`/drive`, `/dashboard`)
+
+Zeiko Drive is its own Worker. Here it is two things:
+
+- **The product page**, `/drive` and `/id/drive`: plain files whose plan
+  cards (`[data-drive-plans]`), lowest price (`[data-drive-from]`) and family
+  lines (`[data-drive-family]`, hidden until a family plan is on sale) are
+  filled by `src/worker.js` from Drive's public catalog, through
+  `src/drive.js`. Prices are set where Drive's plans are run, so the page
+  never carries a typed price; without Drive it says the plans show soon.
+- **The app's address**: `/dashboard`, Drive's `/api/*`, `/d/*`, `/z/*`,
+  `/ad/*`, `/share-target` and its shared links (`/<64>/<32>/…`) are handed to
+  Drive as they are (`isDrivePath`), through the `DRIVE` service binding.
+  Without the binding, `/dashboard` sends the visitor to `/drive`. Because
+  every unmatched path must reach the worker for this, `not_found_handling`
+  is `none` and the worker answers `404.html` itself.
+- Sign-in from Drive comes back through the account pages: `safeNext` lets
+  `/dashboard…` through, and a Drive QRIS payment's page goes back to Drive
+  (`driveBack`: this site or one of its subdomains, under `/dashboard`).
+- **EN | ID**: the `lang-switch` link beside the theme button goes to the
+  same page in the other language, and `main.js` keeps the choice in the
+  `zk_lang` cookie for the whole site — Drive reads it too. Only the Drive
+  pages have an Indonesian copy so far.
 
 ## Zeiko Accounts (`public/account/`, `public/js/account/`)
 
@@ -169,7 +210,8 @@ GitHub keys. Google and GitHub sign-in start and finish at the door
   (`views.js`); the check renders every page from a made-up account laced
   with `<script>`.
 - **Only fixed sentences come from the address bar** (`?m=` → `FLASH` in
-  `app.js`). `next=` only ever points at `/account…` (`safeNext`).
+  `app.js`). `next=` only ever points at `/account…` or Zeiko Drive's
+  `/dashboard…` (`safeNext`).
 - **4xx messages from the door are shown as written** (they are written for
   customers); a 5xx or no answer is "not available right now".
 - Sign-up asks for a username and takes an optional **referral code**

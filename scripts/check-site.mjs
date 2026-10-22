@@ -170,13 +170,41 @@ const API_ADDR = 'https://ai.zeiko.biz.id';
 const SDK_KEY = /^api_?key$/i;
 const blankPre = (src) => src.replace(/<pre\b[\s\S]*?<\/pre>/gi, (m) => m.replace(/[^\n]/g, ' '));
 
+// Zeiko Drive, the file storage product, is the third exception, on the
+// operator's request (October 2026: "that rule is for the AI project; for
+// this one it is safe"). Its own page (drive.html, and id/drive.html) and the
+// marked Drive blocks elsewhere (<!-- drive:start --> … <!-- drive:end -->)
+// may say what a storage product has to say — storage, its prices in rupiah,
+// paying for a plan — and link to the app at /dashboard. Only these words, and
+// "dashboard" only as that path; every other rule holds there too, and the
+// AI products' copy keeps the rule whole.
+const DRIVE_PAGES = new Set([join(PUBLIC, 'drive.html'), join(PUBLIC, 'id', 'drive.html')]);
+const DRIVE_WORDS = /^(storage|rupiah|pay|paid|pays)$/i;
+function driveRanges(file, src) {
+  if (DRIVE_PAGES.has(file)) return [[0, src.length]];
+  const out = [];
+  for (const m of src.matchAll(/<!-- drive:start -->[\s\S]*?<!-- drive:end -->/g)) out.push([m.index, m.index + m[0].length]);
+  return out;
+}
+const inRanges = (ranges, i) => ranges.some(([a, b]) => i >= a && i < b);
+// "/dashboard" is Zeiko Drive's address on this site, so as a path it is
+// allowed on every page and in the account area (sign-in may come back to
+// it); the word on its own is still banned everywhere.
+const drivePath = (src, m) => /^dashboard$/i.test(m[0]) && src[m.index - 1] === '/';
+function driveAllows(src, ranges, m) {
+  if (drivePath(src, m)) return true;
+  return inRanges(ranges, m.index) && DRIVE_WORDS.test(m[0]);
+}
+
 function scan(file, src) {
   const words = src.split(CONTACT).join(' '.repeat(CONTACT.length));
+  const drive = driveRanges(file, src);
   for (const [what, re] of BANNED) {
     const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
     for (const m of words.matchAll(g)) {
       if (file === PLAYGROUND && what === 'connection detail' && /^\/v1$/i.test(m[0])) continue;
       if (inDocs(file) && (what === 'connection detail' || (what === 'infrastructure' && SDK_KEY.test(m[0])))) continue;
+      if (driveAllows(words, drive, m)) continue;
       report(file, m.index, src, `${what}: "${m[0]}"`);
     }
   }
@@ -354,6 +382,7 @@ function scanAccount(file, src) {
       // Gemini is also a crypto exchange: the buying guide lists it, as a
       // table row of its own, and nowhere else.
       if (what === 'model origin' && m[0] === 'Gemini' && words.startsWith('<th scope="row">Gemini</th>', m.index - 16)) continue;
+      if (drivePath(words, m)) continue;
       report(file, m.index, src, `${what}: "${m[0]}"`);
     }
   }

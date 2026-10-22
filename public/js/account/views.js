@@ -518,7 +518,9 @@ function qrSvg(rows) {
  * then where it stands. app.js redraws it every few seconds until it is
  * paid, turned down or closed. */
 export function qrisPay(o, q, flash) {
-  const back = q.product === 'chat' ? '/account/plans#chat' : '/account/plans';
+  // A Zeiko Drive payment goes back to Drive (app.js checks the address).
+  const drive = q.product === 'drive' && q.driveBack ? String(q.driveBack) : '';
+  const back = drive || (q.product === 'chat' ? '/account/plans#chat' : '/account/plans');
   let body;
   if (q.status === 'waiting') {
     const left = Math.max(0, Math.ceil((Number(q.expiresAt) - Date.now()) / 60000));
@@ -544,7 +546,7 @@ export function qrisPay(o, q, flash) {
     </section>`;
   } else {
     const state = {
-      confirming: ['Checking your payment', `We are looking for ${q.rupiahText} in our QRIS account, usually within 10 minutes. Your plan or balance switches on by itself, and this page updates on its own: you can leave it.`, 'status'],
+      confirming: ['Checking your payment', `We are looking for ${q.rupiahText} in our QRIS account, usually within 10 minutes. ${drive ? 'Zeiko Drive updates' : 'Your plan or balance switches on'} by itself, and this page updates on its own: you can leave it.`, 'status'],
       paid: ['Payment received — thank you', `${q.what} is yours.`, 'ok'],
       failed: ['We could not find this payment', `If you did pay ${q.rupiahText}, write to payment@zeiko.biz.id with the amount, the time and your app's receipt.`, 'err'],
       expired: ['This code has closed', `It was not marked as paid in time. If you already paid ${q.rupiahText}, write to payment@zeiko.biz.id with your app's receipt; otherwise start a new payment.`, 'warn'],
@@ -556,9 +558,9 @@ export function qrisPay(o, q, flash) {
         <div><h2>${esc(heading)}</h2><p>${esc(text)}</p><p class="muted-note">${esc(q.what)} · ${esc(q.rupiahText)} (${esc(q.amountText)})</p></div>
       </div>
       <div class="row-links">
-        ${q.status === 'paid' ? '<a class="btn btn-primary btn-sm" href="/account">Go to your account</a>' : ''}
-        ${q.status === 'failed' || q.status === 'expired' ? `<a class="btn btn-primary btn-sm" href="${back}">Start a new payment</a>` : ''}
-        <a class="btn btn-ghost btn-sm" href="/account/plans">Plans &amp; balance</a>
+        ${q.status === 'paid' ? (drive ? `<a class="btn btn-primary btn-sm" href="${esc(drive)}">Back to Zeiko Drive</a>` : '<a class="btn btn-primary btn-sm" href="/account">Go to your account</a>') : ''}
+        ${q.status === 'failed' || q.status === 'expired' ? `<a class="btn btn-primary btn-sm" href="${esc(back)}">Start a new payment</a>` : ''}
+        ${drive ? '' : '<a class="btn btn-ghost btn-sm" href="/account/plans">Plans &amp; balance</a>'}
       </div>
     </section>`;
   }
@@ -566,15 +568,16 @@ export function qrisPay(o, q, flash) {
 }
 
 /** Right after "I've paid": thanks, then app.js takes the buyer back to
- * their account when the countdown runs out. */
+ * their account (or to Zeiko Drive) when the countdown runs out. */
 export function qrisThanks(o, q, seconds) {
+  const drive = q.product === 'drive' && q.driveBack ? String(q.driveBack) : '';
   const body = `<section class="card acct-section qris qris-ok" role="status">
       <div class="qris-state">
         ${icon(I.check)}
-        <div><h2>Thanks, we're gonna check your payment</h2><p>We are looking for ${esc(q.rupiahText)} in our QRIS account, usually within 10 minutes. Your plan or balance switches on by itself.</p><p class="muted-note">Taking you back to your account in <span id="qris-countdown">${num(seconds)}</span> seconds.</p></div>
+        <div><h2>Thanks, we're gonna check your payment</h2><p>We are looking for ${esc(q.rupiahText)} in our QRIS account, usually within 10 minutes. ${drive ? 'Zeiko Drive updates' : 'Your plan or balance switches on'} by itself.</p><p class="muted-note">Taking you back to ${drive ? 'Zeiko Drive' : 'your account'} in <span id="qris-countdown">${num(seconds)}</span> seconds.</p></div>
       </div>
       <div class="row-links">
-        <a class="btn btn-primary btn-sm" href="/account">Go to your account now</a>
+        <a class="btn btn-primary btn-sm" href="${esc(drive || '/account')}">${drive ? 'Back to Zeiko Drive now' : 'Go to your account now'}</a>
       </div>
     </section>`;
   return shell('pay', o, body, '');

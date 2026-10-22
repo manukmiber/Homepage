@@ -337,6 +337,21 @@
     });
   });
 
+  /* ------------------------------------------------------------ language */
+
+  // EN | ID is a plain link to the same page in the other language. The
+  // choice is kept for the whole site in the zk_lang cookie, which Zeiko
+  // Drive reads too; an Indonesian page sets it once if nothing is kept yet.
+  function keepLang(lang) {
+    document.cookie = 'zk_lang=' + (lang === 'id' ? 'id' : 'en') + '; Path=/; Max-Age=31536000; SameSite=Lax; Secure';
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('[data-lang]'), function (a) {
+    a.addEventListener('click', function () {
+      keepLang(a.getAttribute('data-lang'));
+    });
+  });
+  if (document.documentElement.lang === 'id' && !/(?:^|; )zk_lang=/.test(document.cookie)) keepLang('id');
+
   /* -------------------------------------------------------- footer year */
 
   var year = document.getElementById('year');

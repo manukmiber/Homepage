@@ -57,9 +57,25 @@ function problem(r) {
 
 /* --------------------------------------------------------------- helpers */
 
-/** Only our own account pages are places to come back to. */
+/** Only our own account pages, and Zeiko Drive's on this site (/dashboard,
+ * whose sign-in page carries where it was going), are places to come back to. */
 function safeNext(next) {
-  return typeof next === 'string' && /^\/account(\/[A-Za-z0-9/_-]*)?(\?[A-Za-z0-9=&_-]*)?(#[A-Za-z0-9_-]*)?$/.test(next) ? next : '';
+  if (typeof next !== 'string') return '';
+  if (/^\/account(\/[A-Za-z0-9/_-]*)?(\?[A-Za-z0-9=&_-]*)?(#[A-Za-z0-9_-]*)?$/.test(next)) return next;
+  return /^\/dashboard(\/[A-Za-z0-9/_-]*)?(\?[A-Za-z0-9=&_%.-]*)?$/.test(next) ? next : '';
+}
+
+/** Where a Zeiko Drive payment goes back to: Drive on this site, or on one
+ * of this site's own subdomains. Anything else, and it is the account. */
+function driveBack(q) {
+  if (!q || q.product !== 'drive' || typeof q.back !== 'string') return '';
+  try {
+    const u = new URL(q.back, location.origin);
+    const ours = u.origin === location.origin || (u.protocol === 'https:' && u.hostname.endsWith(`.${location.hostname}`));
+    return ours && /^\/dashboard(\/|$)/.test(u.pathname) ? u.href : '';
+  } catch {
+    return '';
+  }
 }
 
 // A referral code from a link (?ref=) is kept for 30 days on this browser,
@@ -223,7 +239,7 @@ async function payPage(flash) {
     draw(view.message({ heading: 'Not available right now', text: problem(r), link: '/account/plans', label: 'Plans & balance' }));
     return;
   }
-  draw(view.qrisPay(o, r.data, flash || ''));
+  draw(view.qrisPay(o, { ...r.data, driveBack: driveBack(r.data) }, flash || ''));
   if (r.data.status === 'waiting' || r.data.status === 'confirming') {
     payTimer = setTimeout(() => {
       // Not while the person is pressing "I've paid".
@@ -233,17 +249,19 @@ async function payPage(flash) {
   }
 }
 
-/** "I've paid" went through: thank them, then back to the account. */
+/** "I've paid" went through: thank them, then back to the account (or to
+ * Zeiko Drive, for a Drive payment). */
 function thanks(q) {
   thanked = true;
   clearTimeout(payTimer);
   const until = Date.now() + THANKS_MS;
-  draw(view.qrisThanks(o, q, THANKS_MS / 1000));
+  const back = driveBack(q);
+  draw(view.qrisThanks(o, { ...q, driveBack: back }, THANKS_MS / 1000));
   const tick = () => {
     const left = Math.max(0, Math.ceil((until - Date.now()) / 1000));
     const at = document.getElementById('qris-countdown');
     if (at) at.textContent = String(left);
-    if (left === 0) return location.assign('/account');
+    if (left === 0) return location.assign(back || '/account');
     payTimer = setTimeout(tick, 250);
     return undefined;
   };

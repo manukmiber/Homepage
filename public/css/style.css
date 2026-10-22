@@ -2150,3 +2150,24 @@ body:has(#win-30d:checked) [data-w="30d"] { display: revert; }
   .doc-table-kv tbody tr + tr th { border-top: 1px solid var(--border); }
   .doc-table-kv tbody td { padding-top: 0; border-top: 0 !important; }
 }
+
+/* ------------------------------------------------------------ language -- */
+/* EN | ID beside the theme button: a plain link to the same page in the
+   other language (public/id/ holds the Indonesian pages). */
+.lang-switch {
+  display: grid; place-items: center;
+  min-width: 38px; height: 38px; padding: 0 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-full);
+  color: var(--text-2);
+  font-size: .78rem; font-weight: 700; letter-spacing: .04em;
+  text-decoration: none;
+}
+.lang-switch:hover { color: var(--text); border-color: var(--border-strong); }
+
+/* ------------------------------------------------------------- drive -- */
+/* Zeiko Drive's plan cards reuse .plan; these are the bits only they have. */
+.plan-price small { margin-left: 2px; color: var(--muted); font-size: .9rem; font-weight: 600; letter-spacing: 0; }
+.drive-facts { display: grid; gap: 6px; margin: 0 0 16px; padding: 0; list-style: none; color: var(--text-2); font-size: .86rem; }
+.drive-facts li { position: relative; padding-left: 16px; }
+.drive-facts li::before { content: ""; position: absolute; left: 2px; top: .55em; width: 6px; height: 6px; border-radius: 50%; background: var(--brand); }

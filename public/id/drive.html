@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zeiko Drive — penyimpanan file murah, cepat, dan pribadi</title>
+<meta name="description" content="Zeiko Drive: simpan file dengan murah, cepat, dan pribadi. Upload dan download tanpa batas kecepatan, bagikan lewat link. Paket bulanan dalam rupiah.">
+<meta name="color-scheme" content="light dark">
+<meta property="og:title" content="Zeiko Drive — penyimpanan file murah, cepat, dan pribadi">
+<meta property="og:description" content="Upload dan download tanpa batas kecepatan, bagikan lewat link. Paket bulanan dalam rupiah.">
+<meta property="og:type" content="website">
+<link rel="alternate" hreflang="en" href="/drive">
+<link rel="alternate" hreflang="id" href="/id/drive">
+<link rel="icon" href="/img/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="10" cy="8" r="3.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 20a6.5 6.5 0 0 1 13 0M19 8.5v6M16 11.5h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-family" viewBox="0 0 24 24"><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="16.5" cy="9.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M2.5 19a5.5 5.5 0 0 1 11 0M13.5 19a4 4 0 0 1 8 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v5.5c0 4.2 2.9 7.8 7 9.5 4.1-1.7 7-5.3 7-9.5V6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m9 12 2 2 4-4.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-shrink" viewBox="0 0 24 24"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3.5 7.5A2 2 0 0 1 5.5 5.5h4l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+</svg>
+
+<a class="skip" href="#main">Langsung ke isi</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/">
+      <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
+      <span class="brand-name">ZeikoAI</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Navigasi utama">
+      <a href="/#decision">Pranata V1</a>
+      <a href="/id/drive" aria-current="page">Drive</a>
+      <a href="/#models">Roleplay</a>
+      <a href="/models">Model</a>
+      <a href="/docs/">Dokumentasi</a>
+      <a class="nav-account" href="/account">Masuk</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup">Buat akun</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <a class="lang-switch" href="/drive" hreflang="en" lang="en" data-lang="en">EN</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Ganti tema terang dan gelap">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="hero" id="top" aria-labelledby="heroTitle">
+    <div class="wrap hero-in hero-drive">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>Penyimpanan file · akun yang sama dengan ZeikoAI</p>
+        <h1 id="heroTitle">
+          <span class="h1-name">Zeiko Drive</span>
+          <span class="h1-line">Simpan file dengan murah, cepat, dan pribadi.</span>
+        </h1>
+        <p class="lede">
+          Upload dan download tanpa batas kecepatan, lalu bagikan apa saja lewat link.
+          <span data-drive-from-note hidden>Paket mulai <strong data-drive-from>–</strong> per bulan.</span>
+        </p>
+        <div class="cta">
+          <a class="btn btn-primary btn-lg" href="/dashboard">Buka Drive <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-ghost btn-lg" href="/account/signup?next=/dashboard"><svg class="ico" aria-hidden="true"><use href="#i-user"/></svg>Buat akun</a>
+        </div>
+        <p class="hero-signin">Satu Akun Zeiko untuk Drive, Pranata V1, dan Zeiko Chat. Sudah punya? <a href="/account/signin?next=/dashboard">Masuk</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="features" aria-labelledby="featTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Zeiko Drive</p>
+        <h2 class="sec-title" id="featTitle">Semua yang kamu butuhkan dari sebuah drive. Tanpa ribet.</h2>
+        <p class="sec-lede">Folder, pencarian, bintang, dan sampah yang bisa dipulihkan — seperti yang sudah kamu kenal, di HP maupun komputer.</p>
+      </div>
+      <div class="kinds">
+        <article class="kind">
+          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-bolt"/></svg></span>
+          <h3>Cepat, naik maupun turun</h3>
+          <p>Upload dan download tanpa batas kecepatan. Kalau koneksi putus, upload besar lanjut dari bagian terakhir.</p>
+        </article>
+        <article class="kind">
+          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-link"/></svg></span>
+          <h3>Bagikan lewat link</h3>
+          <p>Sekali klik langsung unduh, penerima tidak perlu masuk. Tambahkan password, tanggal berakhir, atau batas unduhan, lalu kirim lewat WhatsApp, Telegram, email, atau QR.</p>
+        </article>
+        <!-- Shown once a family plan is on sale. -->
+        <article class="kind" data-drive-family hidden>
+          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-family"/></svg></span>
+          <h3>Paket keluarga</h3>
+          <p>Satu paket untuk sekeluarga. Tiap orang punya Drive Saya yang pribadi, dan Drive Keluarga untuk yang dibagi bersama.</p>
+        </article>
+        <article class="kind">
+          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-shield"/></svg></span>
+          <h3>Pribadi sejak awal</h3>
+          <p>Hanya kamu yang bisa melihat file-mu. Pemilik keluarga hanya melihat berapa banyak tiap anggota memakai, bukan isinya.</p>
+        </article>
+        <article class="kind">
+          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-shrink"/></svg></span>
+          <h3>Perkecil foto dan video</h3>
+          <p>Kompres foto atau video dengan sekali ketuk. Kalau hasilnya tidak lebih kecil, file tetap seperti semula dan kreditmu kembali.</p>
+        </article>
+        <article class="kind">
+          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-folder"/></svg></span>
+          <h3>Unduh satu folder sekaligus</h3>
+          <p>Pilih beberapa file atau satu folder, lalu unduh jadi satu ZIP, langsung.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-tint" id="plans" aria-labelledby="plansTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Paket</p>
+        <h2 class="sec-title" id="plansTitle">Bayar sesuai ruang yang kamu pakai</h2>
+        <p class="sec-lede">Paket bulanan dalam rupiah. Naik paket kapan saja dan bayar selisihnya untuk sisa hari saja.</p>
+      </div>
+      <div class="plans" data-drive-plans>
+        <p class="fineprint">Daftar paket muncul di sini begitu Drive dibuka.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="faq" aria-labelledby="faqTitle">
+    <div class="wrap faq-layout">
+      <div class="faq-intro">
+        <p class="kicker">FAQ</p>
+        <h2 class="sec-title" id="faqTitle">Pertanyaan yang sering muncul</h2>
+        <p class="sec-lede">Ada pertanyaan lain? Tulis ke <a href="mailto:admin@zeiko.biz.id">admin@zeiko.biz.id</a>.</p>
+      </div>
+      <div class="faq-list">
+        <details class="faq" open>
+          <summary>Ada paket gratis?</summary>
+          <p>Tidak. Drive berbayar, jadi file-mu tidak pernah dijadikan barang dagangan — dan paket terkecilnya cukup murah untuk dicoba tanpa pikir panjang.</p>
+        </details>
+        <details class="faq">
+          <summary>Perlu bikin akun baru?</summary>
+          <p>Tidak. Drive memakai Akun Zeiko-mu — akun yang sama dengan Pranata V1 dan Zeiko Chat. <a href="/account/signup?next=/dashboard">Buat akun</a> kalau belum punya.</p>
+        </details>
+        <details class="faq">
+          <summary>Siapa yang bisa melihat file-ku?</summary>
+          <p>Hanya kamu, dan orang yang kamu kirimi link.<span data-drive-family hidden> Di paket keluarga, Drive Saya tiap orang tetap pribadi; hanya Drive Keluarga yang dibagi.</span></p>
+        </details>
+        <details class="faq">
+          <summary>Bagaimana kalau ruangnya penuh?</summary>
+          <p>Naik ke paket yang lebih besar, atau tambah ruang untuk sisa masa paketmu. Tidak ada yang dihapus saat penuh; kamu hanya belum bisa upload lagi.</p>
+        </details>
+        <details class="faq">
+          <summary>Apa yang terjadi kalau paket tidak diperpanjang?</summary>
+          <p>Kami ingatkan sebelum masa paket habis. Setelah itu file-mu hanya bisa dibaca untuk sementara, lalu dikunci, dan baru dihapus beberapa minggu kemudian — dengan pengingat di setiap tahap. Perpanjang kapan saja sebelum itu dan semuanya kembali.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="/">
+        <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
+        <span class="brand-name">ZeikoAI</span>
+      </a>
+      <p>Pranata V1 untuk keputusan, tiga model roleplay, dan Zeiko Drive untuk file-mu.</p>
+    </div>
+    <nav class="footer-cols" aria-label="Tautan bawah">
+      <div>
+        <h2>Drive</h2>
+        <a href="/id/drive#features">Fiturnya</a>
+        <a href="/id/drive#plans">Paket</a>
+        <a href="/dashboard">Buka Drive</a>
+      </div>
+      <div>
+        <h2>Model</h2>
+        <a href="/#decision">Pranata V1</a>
+        <a href="/#models">Model roleplay</a>
+        <a href="/models">Spesifikasi &amp; performa</a>
+      </div>
+      <div>
+        <h2>Dokumentasi</h2>
+        <a href="/docs/">Mulai</a>
+        <a href="/docs/api">Dasar API</a>
+        <a href="/docs/faq">Pemecahan masalah</a>
+      </div>
+      <div>
+        <h2>Akun</h2>
+        <a href="/account">Masuk</a>
+        <a href="/account/signup">Buat akun</a>
+      </div>
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <p>© <span id="year">2026</span> ZeikoAI</p>
+    <p>Harga Drive dalam rupiah.</p>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+</body>
+</html>
