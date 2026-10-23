@@ -45,6 +45,20 @@ const esc = (s) =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 const num = (n) => (Number.isFinite(n) ? Math.round(n) : 0);
+
+// Drive's catalog names its fields in camelCase (`priceIdr`); older answers
+// used snake_case (`price_idr`). Either is read, and only as a number.
+const FIELDS = {
+  price: ['priceIdr', 'price_idr'],
+  storage: ['storageBytes', 'storage_bytes'],
+  largest: ['maxFileBytes', 'max_file_bytes'],
+  members: ['maxMembers', 'max_members'],
+  compress: ['compressQuota', 'compress_quota'],
+};
+function field(p, name) {
+  for (const key of FIELDS[name]) if (p && Number.isFinite(p[key])) return num(p[key]);
+  return 0;
+}
 const rupiah = (n) => `Rp${num(n).toLocaleString('id-ID')}`;
 function size(bytes) {
   const gb = num(bytes) / GIB;
@@ -55,14 +69,14 @@ function size(bytes) {
 /** Whether a family plan (more than one person) is on sale. */
 export function hasFamily(catalog) {
   return Array.isArray(catalog && catalog.plans)
-    ? catalog.plans.some((p) => p && p.active !== false && num(p.price_idr) > 0 && num(p.max_members) > 1)
+    ? catalog.plans.some((p) => p && p.active !== false && field(p, 'price') > 0 && field(p, 'members') > 1)
     : false;
 }
 
 /** The cheapest plan's monthly price ("Rp1.000"), or null. */
 export function cheapest(catalog) {
   const prices = Array.isArray(catalog && catalog.plans)
-    ? catalog.plans.map((p) => num(p && p.price_idr)).filter((n) => n > 0)
+    ? catalog.plans.map((p) => field(p, 'price')).filter((n) => n > 0)
     : [];
   return prices.length ? rupiah(Math.min(...prices)) : null;
 }
@@ -71,23 +85,23 @@ export function cheapest(catalog) {
 export function renderPlans(catalog, lang = 'en') {
   const w = WORDS[lang] || WORDS.en;
   const plans = Array.isArray(catalog && catalog.plans)
-    ? catalog.plans.filter((p) => p && p.active !== false && num(p.price_idr) > 0 && num(p.storage_bytes) > 0)
+    ? catalog.plans.filter((p) => p && p.active !== false && field(p, 'price') > 0 && field(p, 'storage') > 0)
     : [];
   if (!plans.length) return null;
-  const perGb = (p) => num(p.price_idr) / (num(p.storage_bytes) / GIB);
+  const perGb = (p) => field(p, 'price') / (field(p, 'storage') / GIB);
   const best = plans.reduce((a, b) => (perGb(b) < perGb(a) ? b : a));
   const back = `${DRIVE_URL}/paket`;
   return plans
     .map((p) => {
       const facts = [
-        num(p.max_file_bytes) ? w.largest(size(p.max_file_bytes)) : null,
-        num(p.max_members) > 1 ? w.members(num(p.max_members)) : null,
-        num(p.compress_quota) ? w.compress(num(p.compress_quota).toLocaleString('id-ID')) : null,
+        field(p, 'largest') ? w.largest(size(field(p, 'largest'))) : null,
+        field(p, 'members') > 1 ? w.members(field(p, 'members')) : null,
+        field(p, 'compress') ? w.compress(field(p, 'compress').toLocaleString('id-ID')) : null,
       ].filter(Boolean);
       return `<article class="plan" id="drive-${esc(String(p.code || '').replace(/[^a-z0-9_-]/gi, ''))}">
   <div class="plan-top"><h4>${esc(p.name)}</h4>${p === best ? `<span class="plan-best">${w.best}</span>` : ''}</div>
-  <p class="plan-price">${rupiah(p.price_idr)}<small>${w.month}</small></p>
-  <p class="plan-reqs"><strong>${size(p.storage_bytes)}</strong></p>
+  <p class="plan-price">${rupiah(field(p, 'price'))}<small>${w.month}</small></p>
+  <p class="plan-reqs"><strong>${size(field(p, 'storage'))}</strong></p>
   <ul class="drive-facts">${facts.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
   <a class="btn btn-ghost btn-sm" href="${back}">${w.pick}</a>
 </article>`;

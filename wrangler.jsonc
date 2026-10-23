@@ -24,8 +24,6 @@
     { "binding": "MODELS", "bucket_name": "zeiko-models" }
   ],
   // Zeiko Drive is its own Worker at drive.zeiko.biz.id. /drive asks it for
-  // its plans through a service binding: add
-  //   "services": [{ "binding": "DRIVE", "service": "zeiko-production" }]
-  // after it is deployed (a binding to a Worker that does not exist yet
-  // fails the deploy). Until then /drive says the plans show soon.
+  // its plans through this binding (src/drive.js); nothing else goes over it.
+  "services": [{ "binding": "DRIVE", "service": "zeiko-production" }]
 }
