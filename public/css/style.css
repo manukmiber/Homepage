@@ -332,6 +332,10 @@ code {
 .nav .btn { margin-left: 8px; padding: 7px 16px; white-space: nowrap; }
 .nav .btn-primary, .nav .btn-primary:hover { color: var(--on-brand); }
 .nav-account { font-weight: 620 !important; color: var(--text) !important; }
+/* Signed in: the person's badge and name where "Sign in" was. */
+.nav a.nav-me { display: inline-flex; align-items: center; gap: 8px; min-width: 0; padding: 4px 12px 4px 4px; }
+.nav-me-name { max-width: 16ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.avatar.avatar-sm { width: 26px; height: 26px; font-size: .78rem; box-shadow: 0 0 0 2px var(--bg), 0 0 0 3px var(--brand-line); }
 
 .topbar-tools { display: flex; align-items: center; gap: 6px; }
 
@@ -1564,6 +1568,8 @@ body:has(#win-30d:checked) [data-w="30d"] { display: revert; }
   @keyframes drop { from { opacity: 0; transform: translateY(-6px) scale(.98); } }
   .nav:not(.is-open) { display: none; }
   .nav a { padding: 12px 14px; border-radius: var(--r); font-size: .98rem; }
+  .nav a.nav-me { padding: 8px 14px 8px 10px; }
+  .nav-me-name { max-width: none; }
   .nav a:hover { background: var(--surface-2); }
   .nav .btn { margin: 6px 0 0; min-height: 44px; }
   .topbar-in { position: relative; }

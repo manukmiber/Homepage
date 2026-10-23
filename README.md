@@ -37,7 +37,8 @@ public/
   docs/           /docs, one page per topic
   account/index.html  /account and every page under it (one page)
   js/account/     app.js: asks the account door and draws the page; views.js: the pages;
-                  payguide.js: the buying guide
+                  payguide.js: the buying guide; session.js: the top bar's "who is
+                  signed in" on every page; me.js: the name and badge both draw
 src/
   worker.js       runs for /models and /account only
   render.js       the hourly snapshot → the figures and charts on /models
@@ -60,6 +61,9 @@ npm install
 npm run seed:local        # made-up figures into the local bucket
 npx wrangler dev          # http://localhost:8787
 ```
+
+Every page with the top bar asks the same door who is signed in, and shows
+their name in place of "Sign in".
 
 `/account` asks the account door named in its `<meta name="zeiko-accounts">`
 (and allowed by the page's `connect-src`). The door answers only the site's

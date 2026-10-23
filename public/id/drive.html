@@ -6,6 +6,8 @@
 <title>Zeiko Drive — penyimpanan file murah, cepat, dan pribadi</title>
 <meta name="description" content="Zeiko Drive: simpan file dengan murah, cepat, dan pribadi. Upload dan download tanpa batas kecepatan, bagikan lewat link. Paket bulanan dalam rupiah.">
 <meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
 <meta property="og:title" content="Zeiko Drive — penyimpanan file murah, cepat, dan pribadi">
 <meta property="og:description" content="Upload dan download tanpa batas kecepatan, bagikan lewat link. Paket bulanan dalam rupiah.">
 <meta property="og:type" content="website">
@@ -43,7 +45,7 @@
       <a href="/models">Model</a>
       <a href="/docs/">Dokumentasi</a>
       <a class="nav-account" href="/account">Masuk</a>
-      <a class="btn btn-sm btn-primary" href="/account/signup">Buat akun</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Buat akun</a>
     </nav>
 
     <div class="topbar-tools">
@@ -75,9 +77,9 @@
         </p>
         <div class="cta">
           <a class="btn btn-primary btn-lg" href="https://drive.zeiko.biz.id">Buka Drive <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-          <a class="btn btn-ghost btn-lg" href="/account/signup?next=/dashboard"><svg class="ico" aria-hidden="true"><use href="#i-user"/></svg>Buat akun</a>
+          <a class="btn btn-ghost btn-lg" href="/account/signup?next=/dashboard" data-signed-out><svg class="ico" aria-hidden="true"><use href="#i-user"/></svg>Buat akun</a>
         </div>
-        <p class="hero-signin">Satu Akun Zeiko untuk Drive, Pranata V1, dan Zeiko Chat. Sudah punya? <a href="/account/signin?next=/dashboard">Masuk</a></p>
+        <p class="hero-signin" data-signed-out>Satu Akun Zeiko untuk Drive, Pranata V1, dan Zeiko Chat. Sudah punya? <a href="/account/signin?next=/dashboard">Masuk</a></p>
       </div>
       <figure class="drv" aria-label="Zeiko Drive, digambar sebagai contoh">
         <div class="drv-bar">
@@ -226,8 +228,9 @@
       </div>
       <div>
         <h2>Akun</h2>
-        <a href="/account">Masuk</a>
-        <a href="/account/signup">Buat akun</a>
+        <a href="/account" data-signed-out>Masuk</a>
+        <a href="/account/signup" data-signed-out>Buat akun</a>
+        <a href="/account" data-signed-in hidden>Akunmu</a>
       </div>
     </nav>
   </div>
@@ -238,5 +241,6 @@
 </footer>
 
 <script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
 </body>
 </html>

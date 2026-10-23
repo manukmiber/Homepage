@@ -95,7 +95,8 @@ there too, and the AI products' copy keeps the rule whole.
 - The playground (`#try`, below): "5 free tries every 30 minutes" and
   nothing more about what a try costs or whose plan it uses.
 - The docs (`/docs`, below): all of the above, plus how to call the API.
-- A "Sign in" link to `/account`.
+- A "Sign in" link to `/account`, which becomes the visitor's own name once
+  they are signed in (below, "Who is signed in").
 
 ## Layout
 
@@ -117,7 +118,8 @@ public/
   docs/           /docs: one plain page per topic (index.html is /docs/)
   account/index.html  /account and every page under it: one plain page
   js/account/     Zeiko Accounts: app.js asks the account door, views.js draws,
-                  payguide.js is the buying guide's text
+                  payguide.js is the buying guide's text, me.js names the person
+                  for the top bar, session.js (on every page) asks who is signed in
 src/
   worker.js       fills /models from the snapshot and /drive from Drive's catalog,
                   sends /dashboard… to Drive's address, answers 404.html for the rest
@@ -151,9 +153,10 @@ whose script talks to the account door and nowhere else:
 - **Never serve the snapshot to the browser**, whole or in part: no data
   file, no JSON endpoint, no inline JSON. Only finished HTML goes out.
 - **No runtime requests.** No `fetch`, XHR, WebSocket, analytics, web fonts or
-  CDN scripts. The network tab shows only this site's own files. Two
-  exceptions, both to the account door only: `public/js/account/app.js`, and
-  the homepage playground `public/js/try.js` (see "The playground").
+  CDN scripts. The network tab shows only this site's own files. Three
+  exceptions, all to the account door only: `public/js/account/app.js`, the
+  top bar's `public/js/account/session.js` (see "Who is signed in"), and the
+  homepage playground `public/js/try.js` (see "The playground").
 - **No build step**, no framework, no dependencies besides wrangler.
 - Every page must read fine with JavaScript off, except the account area
   and the playground, which need it and say so (`<noscript>`). The figures and charts are
@@ -177,16 +180,15 @@ things:
   never carries a typed price; without Drive it says the plans show soon.
 - **The way back to the app**: "Open Drive" links go straight to
   `https://drive.zeiko.biz.id` (`DRIVE_URL` in `src/drive.js`; the check lets
-  that one address through). `/dashboard…` — the app's old address here — is
-  sent there with the same path (`driveAddress`, 302), and it stays: the
-  account pages and the door's Google and GitHub sign-in only ever send a
-  visitor to a page of this site, so Drive's sign-in asks for
-  `next=/dashboard/masuk?…` and comes back through it. Because that path must
-  reach the worker, `not_found_handling` is `none` and the worker answers
-  `404.html` itself. The `DRIVE` service binding is only for the catalog.
-- Sign-in from Drive comes back through the account pages: `safeNext` lets
-  `/dashboard…` through, and a Drive QRIS payment's page goes back to Drive
-  (`driveBack`: one of this site's subdomains, or `/dashboard…` here).
+  that one address through, on any page and in the account files).
+  `/dashboard…` — the app's old address here — is sent there with the same
+  path (`driveAddress`, 302), for old links and the `?next=/dashboard` on
+  this site's own sign-up links. Because that path must reach the worker,
+  `not_found_handling` is `none` and the worker answers `404.html` itself.
+  The `DRIVE` service binding is only for the catalog.
+- Sign-in from Drive comes back straight to Drive (see "Signing in for Zeiko
+  Drive"), and a Drive QRIS payment's page goes back to Drive (`driveBack`:
+  one of this site's subdomains, or `/dashboard…` here).
 - **The Drive window** beside the copy on `/` (`#drive`), `/drive` and
   `/id/drive` (`.drv`) is an illustration and says so ("Illustration" /
   "Ilustrasi"): fixed, made-up files and sizes, never a real figure and
@@ -210,10 +212,11 @@ GitHub keys. Google and GitHub sign-in start and finish at the door
 
 - **The door answers this site's pages only** and wants `X-Zeiko: 1` on every
   post (`app.js::ask` adds it). The address is in two places in
-  `index.html` — the `<meta>` and the `connect-src` of its
-  Content-Security-Policy — and `npm run check` holds both to it.
+  `account/index.html` — the `<meta>` and the `connect-src` of its
+  Content-Security-Policy — and in the `<meta>` of every public page with
+  the top bar; `npm run check` holds them all to it.
 - **The account area is the only place allowed a request**, to the door
-  only, and only from `app.js`; `npm run check` scans its files with the
+  only, and only from `app.js` and `session.js`; `npm run check` scans its files with the
   account rules (money words and key details allowed, everything else
   banned — field names too: the door says `shown` for the key's ends, `key`
   for the key, `signInWith` for Google and GitHub).
@@ -221,8 +224,8 @@ GitHub keys. Google and GitHub sign-in start and finish at the door
   (`views.js`); the check renders every page from a made-up account laced
   with `<script>`.
 - **Only fixed sentences come from the address bar** (`?m=` → `FLASH` in
-  `app.js`). `next=` only ever points at `/account…` or Zeiko Drive's
-  `/dashboard…` (`safeNext`).
+  `app.js`). `next=` only ever points at `/account…`, a page of Zeiko Drive
+  at its own address, or `/dashboard…` (`safeNext`).
 - **4xx messages from the door are shown as written** (they are written for
   customers); a 5xx or no answer is "not available right now".
 - Sign-up asks for a username and takes an optional **referral code**
@@ -263,6 +266,49 @@ GitHub keys. Google and GitHub sign-in start and finish at the door
   address is payment@zeiko.biz.id. Gemini is an exchange too: the check lets
   that one word through as a table row of its own (`<th scope="row">`).
   The public pages may not say "payments", so the path is `how-to-buy`.
+
+## Who is signed in (`public/js/account/session.js`, `me.js`)
+
+The account door's session (its cookie on its own host) is the only sign-in
+there is: the site, Zeiko Drive and the account pages all ask it, and none
+keeps one of its own. So every page with the top bar shows who that is:
+
+- **Every page with the top bar** names the door in
+  `<meta name="zeiko-accounts">` and loads
+  `<script type="module" src="/js/account/session.js">`; `npm run check`
+  fails a page with `.nav-account` that lacks either. The script asks the
+  door `GET /v1/session` (with the visitor's cookie) and, signed in, puts the
+  person's badge and name (`me.js::meLink`) where "Sign in" was.
+- **`data-signed-out` / `data-signed-in`**: an element only for people
+  without an account ("Create an account", "Already have one? Sign in") is
+  hidden once someone is signed in; one only for people with one carries
+  `hidden` in the page and is shown. Without JavaScript, or with the door
+  not answering, the page stays as written: signed-out.
+- **The tab keeps a hint of the name** (`sessionStorage` `zeiko.me`, set by
+  `app.js` and `session.js`, dropped on sign-out), so the next page shows it
+  at once; the door's answer always replaces it. It is asked again when the
+  tab is looked at again, at most every 15 seconds.
+- The account pages draw the same badge and name in their top bar
+  (`views.js::nav(account)`), beside "Sign out".
+- Every value from the door goes in escaped (`me.js::esc`, the one `esc`
+  `views.js` uses too); the check renders the badge from a name laced with
+  `<script>`.
+
+## Signing in for Zeiko Drive (`next=`)
+
+Zeiko Drive (its own address, `https://drive.zeiko.biz.id`) has no sign-in
+of its own: it sends people to `/account/signin?next=https://drive.zeiko.biz.id/masuk?next=…`
+and signs in by itself when they come back. So `next=` may be:
+
+- one of the account pages (`/account…`);
+- a page of Drive at its own address (`APPS` in `app.js`: that origin
+  exactly, a plain path and query, no user, no fragment); the sign-in pages
+  then say "…to open Zeiko Drive";
+- `/dashboard…`, Drive's old address here, which `src/worker.js` still
+  forwards there for old links.
+
+Anything else goes to `/account`. The door's Google and GitHub sign-in hold
+`next` to the same rule (Drive's address there is the door's own setting).
 
 ## The playground (`#try` on the homepage, `public/js/try.js`)
 

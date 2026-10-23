@@ -4,8 +4,10 @@
 //   1. Nothing on the site may describe how the API is built or run.
 //   2. The site makes no requests of its own: no scripts, fonts or data
 //      from anywhere else, no fetch/XHR/WebSocket — except the account area
-//      (public/account/, public/js/account/), whose script talks to the
-//      account door and nowhere else.
+//      (public/account/, public/js/account/), whose scripts talk to the
+//      account door and nowhere else: app.js on the account pages, and
+//      session.js, which every page with the top bar loads to show who is
+//      signed in.
 //   3. Every price carries a data-price key, and a key reads the same
 //      everywhere it appears.
 //   4. Every /models#<id> link lands on a model that exists.
@@ -30,6 +32,7 @@ import { fileURLToPath } from 'node:url';
 import { render, sanitize } from '../src/render.js';
 import { sampleSnapshot } from '../dev/sample-stats.mjs';
 import * as accountViews from '../public/js/account/views.js';
+import * as accountMe from '../public/js/account/me.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const PUBLIC = join(ROOT, 'public');
@@ -151,12 +154,14 @@ const CONTACT = 'admin@zeiko.biz.id';
 
 // The homepage's playground (#try) is the one exception outside the account
 // area, on the operator's request: js/try.js may call the account door —
-// `fetch(DOOR …)` and the door's /v1 path, nothing else — and index.html may
-// name the door in its <meta name="zeiko-accounts">, nowhere else. Every
-// other rule, billing included, holds for both.
+// `fetch(DOOR …)` and the door's /v1 path, nothing else. Every page with the
+// top bar names the door in its <meta name="zeiko-accounts"> (the top bar's
+// script, js/account/session.js, and the playground read it there), and
+// nowhere else. Every other rule, billing included, holds.
 const PLAYGROUND = join(PUBLIC, 'js', 'try.js');
 const HOME = join(PUBLIC, 'index.html');
 const DOOR_META = `<meta name="zeiko-accounts" content="${DOOR}">`;
+const SESSION_SCRIPT = '<script type="module" src="/js/account/session.js">';
 
 // The docs are the one public place allowed the details a caller needs to
 // connect, on the operator's request: the API's address (the only other
@@ -224,15 +229,21 @@ function scan(file, src) {
   for (const m of src.matchAll(URL_RE)) {
     if (URL_OK.some((ok) => ok.test(m[0]))) continue;
     if (driveLink(m[0])) continue;
-    if (file === HOME && m[0] === DOOR && src.slice(m.index - DOOR_META.indexOf(DOOR)).startsWith(DOOR_META)) continue;
+    if (m[0] === DOOR && src.slice(m.index - DOOR_META.indexOf(DOOR)).startsWith(DOOR_META)) continue;
     if (inDocs(file) && (m[0] === API_ADDR || m[0].startsWith(API_ADDR + '/'))) continue;
     report(file, m.index, src, `external URL: "${m[0]}"`);
   }
 
   if (inDocs(file)) {
     for (const m of src.matchAll(/<script\b[^>]*>/gi)) {
-      if (m[0] !== '<script src="/js/main.js">') report(file, m.index, src, `script on a docs page: "${m[0]}" (the docs run main.js only)`);
+      if (m[0] !== '<script src="/js/main.js">' && m[0] !== SESSION_SCRIPT) report(file, m.index, src, `script on a docs page: "${m[0]}" (the docs run main.js and the top bar's session.js only)`);
     }
+  }
+  // A page with the top bar shows who is signed in: it names the door and
+  // loads the script that asks it.
+  if (extname(file) === '.html' && /class="nav-account"/.test(src)) {
+    if (!src.includes(DOOR_META)) report(file, 0, src, `the top bar needs ${DOOR_META} (js/account/session.js reads the door there)`);
+    if (!src.includes(SESSION_SCRIPT)) report(file, 0, src, `the top bar needs ${SESSION_SCRIPT}</script>`);
   }
 }
 
@@ -392,22 +403,23 @@ function scanAccount(file, src) {
   }
 }
 
-// Its files: the account door is the one address they may name, and the
-// app script the one place that may call it.
-const APP = join(PUBLIC, 'js', 'account', 'app.js');
+// Its files: the account door is the one address they may name (and Zeiko
+// Drive's, the app a sign-in may go back to), and the account script and the
+// top bar's the only places that may call it.
+const CALLERS = new Set([join(PUBLIC, 'js', 'account', 'app.js'), join(PUBLIC, 'js', 'account', 'session.js')]);
 for (const { file, src } of accountFiles) {
   scanAccount(file, src);
   for (const re of NETWORK) {
     const g = new RegExp(re.source, re.flags + 'g');
     for (const m of src.matchAll(g)) {
-      if (file === APP && m[0].startsWith('fetch')) continue;
-      report(file, m.index, src, `network call: "${m[0]}" (only the account script calls the account door)`);
+      if (CALLERS.has(file) && m[0].startsWith('fetch')) continue;
+      report(file, m.index, src, `network call: "${m[0]}" (only the account script and the top bar call the account door)`);
     }
   }
   for (const m of src.matchAll(URL_RE)) {
     // A policy lists addresses with a `;` after each.
     const url = m[0].replace(/;$/, '');
-    if (url === DOOR || URL_OK.some((ok) => ok.test(url))) continue;
+    if (url === DOOR || driveLink(url) || URL_OK.some((ok) => ok.test(url))) continue;
     report(file, m.index, src, `external URL: "${m[0]}" (the account door is the only one)`);
   }
 }
@@ -453,8 +465,10 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
   o.referral = { code: evil, discountPct: 20 };
   const door = DOOR;
   const pages = [
-    accountViews.nav(true),
-    accountViews.nav(false),
+    accountViews.nav(o.account),
+    accountViews.nav(null),
+    accountMe.meLink(accountMe.displayName(o.account), { title: evil }),
+    accountMe.meLink(accountMe.displayName({ username: evil })),
     accountViews.overview(o, ''),
     accountViews.plans(o, { flash: '', pick: 'welcome' }),
     accountViews.key(o, { flash: '', shown: 'k-123', apiBase: 'https://example.test' }),

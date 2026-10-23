@@ -8,6 +8,7 @@
 // own pages, and only with the `X-Zeiko` mark this script adds.
 
 import * as view from './views.js';
+import { remember } from './me.js';
 
 const DOOR = (document.querySelector('meta[name="zeiko-accounts"]') || {}).content?.replace(/\/+$/, '') || '';
 const root = document.getElementById('acct');
@@ -57,12 +58,30 @@ function problem(r) {
 
 /* --------------------------------------------------------------- helpers */
 
-/** Only our own account pages, and Zeiko Drive's on this site (/dashboard,
- * whose sign-in page carries where it was going), are places to come back to. */
+// The apps on this account that send people here to sign in, and ask to go
+// back afterwards: Zeiko Drive, at its own address.
+const APPS = ['https://drive.zeiko.biz.id'];
+
+/** Where a visitor may be sent after signing in: one of our own account
+ * pages, a page of an app on this account (APPS), or /dashboard… (Drive's
+ * old address here, which still leads to it). Anything else is ''. */
 function safeNext(next) {
-  if (typeof next !== 'string') return '';
+  if (typeof next !== 'string' || next.length > 500) return '';
   if (/^\/account(\/[A-Za-z0-9/_-]*)?(\?[A-Za-z0-9=&_-]*)?(#[A-Za-z0-9_-]*)?$/.test(next)) return next;
-  return /^\/dashboard(\/[A-Za-z0-9/_-]*)?(\?[A-Za-z0-9=&_%.-]*)?$/.test(next) ? next : '';
+  if (/^\/dashboard(\/[A-Za-z0-9/_-]*)?(\?[A-Za-z0-9=&_%.-]*)?$/.test(next)) return next;
+  try {
+    const u = new URL(next);
+    if (!APPS.includes(u.origin) || u.username || u.password || u.hash) return '';
+    if (!/^\/[A-Za-z0-9/_-]*$/.test(u.pathname) || !/^(\?[A-Za-z0-9=&_%.-]*)?$/.test(u.search)) return '';
+    return u.href;
+  } catch {
+    return '';
+  }
+}
+
+/** The app a `next` leads to, for the sign-in page's words. */
+function appOf(next) {
+  return next.startsWith('/dashboard') || next.startsWith(`${APPS[0]}/`) ? 'drive' : '';
 }
 
 /** Where a Zeiko Drive payment goes back to: Drive at its own address, one
@@ -145,8 +164,11 @@ function draw(html) {
   }
 }
 
-function setNav(signedIn) {
-  if (navEl) navEl.innerHTML = view.nav(signedIn);
+/** The top bar for `account` (null when signed out), and the name kept for
+ * the tab's next page (js/account/session.js). */
+function setNav(account) {
+  remember(account);
+  if (navEl) navEl.innerHTML = view.nav(account);
 }
 
 const TITLES = { '/account': 'Account', '/account/plans': 'Plans & balance', '/account/key': 'API key', '/account/settings': 'Settings', '/account/how-to-buy': 'How to pay', '/account/pay': 'Pay by QRIS' };
@@ -176,7 +198,7 @@ function publicPage(extra = {}) {
   const opts = session.signInWith || {};
   if (path === '/account/signup') {
     document.title = 'Create account — ZeikoAI';
-    draw(view.signUp({ error: extra.error || '', email: extra.email || '', username: extra.username || '', next, ref: extra.ref ?? (rememberRef() || savedRef()), opts, door: DOOR }));
+    draw(view.signUp({ error: extra.error || '', email: extra.email || '', username: extra.username || '', next, app: appOf(next), ref: extra.ref ?? (rememberRef() || savedRef()), opts, door: DOOR }));
   } else if (path === '/account/forgot') {
     document.title = 'Forgot password — ZeikoAI';
     draw(view.forgot({ error: extra.error || '', sent: Boolean(extra.sent) }));
@@ -186,7 +208,7 @@ function publicPage(extra = {}) {
   } else {
     document.title = 'Sign in — ZeikoAI';
     const note = SIGNIN_NOTE[params.get('m')] || '';
-    draw(view.signIn({ error: extra.error || note, notice: extra.notice || '', email: extra.email || '', next, opts, door: DOOR }));
+    draw(view.signIn({ error: extra.error || note, notice: extra.notice || '', email: extra.email || '', next, app: appOf(next), opts, door: DOOR }));
   }
 }
 
@@ -305,6 +327,7 @@ async function act(name, f, submitter) {
     }
     case 'signout': {
       await ask('POST', '/logout', {});
+      remember(null);
       return location.assign('/account/signin');
     }
     case 'verify-send': {
@@ -423,7 +446,8 @@ async function start() {
   if (path === '/account/verify') {
     const r = await ask('POST', '/verify', { token: params.get('token') || '' });
     const status = await loadSession();
-    setNav(Boolean(session.account));
+    if (status === 200) setNav(session.account);
+    else if (navEl) navEl.innerHTML = view.nav(null);
     if (r.status === 200) {
       if (session.account) return location.replace('/account?m=verified');
       return draw(view.message({ heading: 'Email confirmed', text: 'Thanks — your email is confirmed. Sign in to carry on.', link: '/account/signin', label: 'Sign in' }));
@@ -432,12 +456,13 @@ async function start() {
   }
   const status = await loadSession();
   if (status !== 200) {
-    setNav(false);
+    // The door did not answer: who this is stays unknown, not signed out.
+    if (navEl) navEl.innerHTML = view.nav(null);
     draw(view.message({ heading: 'Not available right now', text: 'Signing in is not available right now. Try again in a minute.', link: path, label: 'Try again' }));
     return;
   }
   const signedIn = Boolean(session.account);
-  setNav(signedIn);
+  setNav(session.account);
   if (SIGNED_OUT_PAGES.has(path)) {
     if (signedIn && path !== '/account/reset') return location.replace(safeNext(params.get('next') || '') || '/account');
     return publicPage();

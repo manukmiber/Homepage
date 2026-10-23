@@ -6,6 +6,8 @@
 <title>API basics — ZeikoAI Docs</title>
 <meta name="description" content="The ZeikoAI API: base URL, keys, endpoints, model IDs, errors and retries.">
 <meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
 <meta property="og:title" content="API basics — ZeikoAI Docs">
 <meta property="og:description" content="The ZeikoAI API: base URL, keys, endpoints, model IDs, errors and retries.">
 <meta property="og:type" content="article">
@@ -31,7 +33,7 @@
       <a href="/models">Models</a>
       <a href="/docs/" aria-current="page">Docs</a>
       <a class="nav-account" href="/account">Sign in</a>
-      <a class="btn btn-sm btn-primary" href="/account/signup">Create account</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Create account</a>
     </nav>
 
     <div class="topbar-tools">
@@ -253,5 +255,6 @@ const client = new OpenAI({
 </footer>
 
 <script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
 </body>
 </html>

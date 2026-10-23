@@ -6,7 +6,7 @@
 <title>ZeikoAI — Pranata V1 and roleplay models</title>
 <meta name="description" content="Pranata V1: fast, consistent decisions with a probability for every option, sold by 30-day plan. Plus three roleplay models, from safe-for-work to unrestricted.">
 <meta name="color-scheme" content="light dark">
-<!-- The playground (#try) asks this address; nothing else on the page asks anything. -->
+<!-- The top bar asks this address who is signed in, and the playground (#try) asks it its questions; nothing else on the page asks anything. -->
 <meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
 <meta property="og:title" content="ZeikoAI — Pranata V1 and roleplay models">
 <meta property="og:description" content="Pranata V1 for decisions, with plans of its own. Three roleplay models with 256K context and three pricing bands.">
@@ -47,7 +47,7 @@
       <a href="/docs/">Docs</a>
       <a href="#faq">FAQ</a>
       <a class="nav-account" href="/account">Sign in</a>
-      <a class="btn btn-sm btn-primary" href="/account/signup">Create account</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Create account</a>
     </nav>
 
     <div class="topbar-tools">
@@ -79,10 +79,11 @@
           Plans from <strong data-price="decision:welcome">$1</strong> for 30 days.
         </p>
         <div class="cta">
-          <a class="btn btn-dec btn-lg" href="/account/signup">Create an account <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-dec btn-lg" href="/account/signup" data-signed-out>Create an account <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-dec btn-lg" href="/account/plans" data-signed-in hidden>Choose a plan <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
           <a class="btn btn-ghost btn-lg" href="#try">Try it free</a>
         </div>
-        <p class="hero-signin">No key request needed. Already have an account? <a href="/account">Sign in</a></p>
+        <p class="hero-signin" data-signed-out>No key request needed. Already have an account? <a href="/account">Sign in</a></p>
 
         <dl class="hero-facts">
           <div>
@@ -315,8 +316,9 @@
       <div class="dec-foot">
         <p class="fineprint">Plans cover Pranata V1 only — the roleplay models are priced per token.</p>
         <div class="cta">
-          <a class="btn btn-dec" href="/account/signup"><svg class="ico" aria-hidden="true"><use href="#i-user"/></svg>Create an account</a>
-          <a class="btn btn-ghost" href="/account">Sign in</a>
+          <a class="btn btn-dec" href="/account/signup" data-signed-out><svg class="ico" aria-hidden="true"><use href="#i-user"/></svg>Create an account</a>
+          <a class="btn btn-ghost" href="/account" data-signed-out>Sign in</a>
+          <a class="btn btn-dec" href="/account/plans" data-signed-in hidden><svg class="ico" aria-hidden="true"><use href="#i-user"/></svg>Choose a plan</a>
         </div>
       </div>
     </div>
@@ -341,7 +343,7 @@
           <a class="btn btn-primary" href="https://drive.zeiko.biz.id">Open Drive <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
           <a class="btn btn-ghost" href="/drive">Plans &amp; features</a>
         </div>
-        <p class="hero-signin">New here? <a href="/account/signup?next=/dashboard">Create an account</a></p>
+        <p class="hero-signin" data-signed-out>New here? <a href="/account/signup?next=/dashboard">Create an account</a></p>
       </div>
       <figure class="drv" aria-label="Zeiko Drive, drawn as an example">
         <div class="drv-bar">
@@ -661,8 +663,9 @@
           <h3>Pranata V1</h3>
           <p>No key request needed. Create an account with your email or a one-click sign-in, buy a plan or add a balance, and your key is waiting on your account page.</p>
           <div class="cta">
-            <a class="btn btn-dec" href="/account/signup">Create an account</a>
-            <a class="btn btn-ghost" href="/account">Sign in</a>
+            <a class="btn btn-dec" href="/account/signup" data-signed-out>Create an account</a>
+            <a class="btn btn-ghost" href="/account" data-signed-out>Sign in</a>
+            <a class="btn btn-dec" href="/account/plans" data-signed-in hidden>Choose a plan</a>
           </div>
         </article>
         <article class="path">
@@ -717,8 +720,9 @@
       </div>
       <div>
         <h2>Account</h2>
-        <a href="/account">Sign in</a>
-        <a href="/account/signup">Create account</a>
+        <a href="/account" data-signed-out>Sign in</a>
+        <a href="/account/signup" data-signed-out>Create account</a>
+        <a href="/account" data-signed-in hidden>Your account</a>
         <a href="#contact">Contact</a>
       </div>
     </nav>
@@ -730,6 +734,7 @@
 </footer>
 
 <script src="js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
 <script src="js/try.js"></script>
 </body>
 </html>

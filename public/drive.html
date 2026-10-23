@@ -6,6 +6,8 @@
 <title>Zeiko Drive — cheap, fast, private file storage</title>
 <meta name="description" content="Zeiko Drive: keep your files cheap, fast and private. Full-speed uploads and downloads, share by link. Monthly plans in rupiah.">
 <meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
 <meta property="og:title" content="Zeiko Drive — cheap, fast, private file storage">
 <meta property="og:description" content="Full-speed uploads and downloads, share by link. Monthly plans in rupiah.">
 <meta property="og:type" content="website">
@@ -43,7 +45,7 @@
       <a href="/models">Models</a>
       <a href="/docs/">Docs</a>
       <a class="nav-account" href="/account">Sign in</a>
-      <a class="btn btn-sm btn-primary" href="/account/signup">Create account</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Create account</a>
     </nav>
 
     <div class="topbar-tools">
@@ -75,9 +77,9 @@
         </p>
         <div class="cta">
           <a class="btn btn-primary btn-lg" href="https://drive.zeiko.biz.id">Open Drive <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-          <a class="btn btn-ghost btn-lg" href="/account/signup?next=/dashboard"><svg class="ico" aria-hidden="true"><use href="#i-user"/></svg>Create an account</a>
+          <a class="btn btn-ghost btn-lg" href="/account/signup?next=/dashboard" data-signed-out><svg class="ico" aria-hidden="true"><use href="#i-user"/></svg>Create an account</a>
         </div>
-        <p class="hero-signin">One Zeiko Account for Drive, Pranata V1 and Zeiko Chat. Already have one? <a href="/account/signin?next=/dashboard">Sign in</a></p>
+        <p class="hero-signin" data-signed-out>One Zeiko Account for Drive, Pranata V1 and Zeiko Chat. Already have one? <a href="/account/signin?next=/dashboard">Sign in</a></p>
       </div>
       <figure class="drv" aria-label="Zeiko Drive, drawn as an example">
         <div class="drv-bar">
@@ -226,8 +228,9 @@
       </div>
       <div>
         <h2>Account</h2>
-        <a href="/account">Sign in</a>
-        <a href="/account/signup">Create account</a>
+        <a href="/account" data-signed-out>Sign in</a>
+        <a href="/account/signup" data-signed-out>Create account</a>
+        <a href="/account" data-signed-in hidden>Your account</a>
       </div>
     </nav>
   </div>
@@ -238,5 +241,6 @@
 </footer>
 
 <script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
 </body>
 </html>

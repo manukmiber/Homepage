@@ -4,15 +4,9 @@
 // action is a form with `data-act`, which app.js sends to the door.
 
 import { PAY_GUIDE } from './payguide.js';
+import { displayName, esc, meLink } from './me.js';
 
-export function esc(v) {
-  return String(v ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
+export { esc };
 
 const num = (n) => Number(n || 0).toLocaleString('en-US');
 
@@ -63,13 +57,16 @@ const I = {
 
 const LOGO = `<img class="logo-night" src="/img/logo.svg" alt="" width="40" height="40"><img class="logo-day" src="/img/logo-day.svg" alt="" width="40" height="40">`;
 
-/** The top bar's links, signed in or not. */
-export function nav(signedIn) {
-  return signedIn
+/** The top bar's links: signed in (`account`, as the door answers it), the
+ * person's name where "Sign in" is on every other page; signed out, as the
+ * page is written. */
+export function nav(account) {
+  return account
     ? `<a href="/#decision">Pranata V1</a>
+      <a href="/drive">Drive</a>
       <a href="/models">Models</a>
       <a href="/docs/">Docs</a>
-      <a href="/account" aria-current="page">Account</a>
+      ${meLink(displayName(account), { current: true })}
       <form data-act="signout" class="nav-form"><button class="btn btn-sm btn-ghost" type="submit">Sign out</button></form>`
     : `<a href="/#decision">Pranata V1</a>
       <a href="/#pricing">Pricing</a>
@@ -141,8 +138,12 @@ function authShell(heading, sub, inner, { aside = false } = {}) {
 </section>`;
 }
 
-export function signIn({ error, notice, email = '', next = '', opts, door }) {
-  return authShell('Welcome back', 'Sign in to your Zeiko Account.', `
+/** Where the sign-in pages say the visitor is headed, when an app sent them. */
+const GOING_TO = { drive: 'Zeiko Drive' };
+
+export function signIn({ error, notice, email = '', next = '', app = '', opts, door }) {
+  const sub = GOING_TO[app] ? `Sign in to your Zeiko Account to open ${GOING_TO[app]}.` : 'Sign in to your Zeiko Account.';
+  return authShell('Welcome back', sub, `
     ${alert('err', error)}${alert('ok', notice)}
     ${oneClick(opts, next, door, '')}
     <form data-act="signin" class="form">
@@ -154,8 +155,11 @@ export function signIn({ error, notice, email = '', next = '', opts, door }) {
     <p class="auth-foot">New here? <a href="/account/signup${next ? `?next=${encodeURIComponent(next)}` : ''}">Create an account</a></p>`, { aside: true });
 }
 
-export function signUp({ error, email = '', username = '', next = '', ref = '', opts, door }) {
-  return authShell('Create your Zeiko Account', 'Free to make. Buy a plan or add balance when you are ready.', `
+export function signUp({ error, email = '', username = '', next = '', app = '', ref = '', opts, door }) {
+  const sub = GOING_TO[app]
+    ? `Free to make. One account for ${GOING_TO[app]}, Pranata V1 and Zeiko Chat.`
+    : 'Free to make. Buy a plan or add balance when you are ready.';
+  return authShell('Create your Zeiko Account', sub, `
     ${alert('err', error)}
     ${oneClick(opts, next, door, ref)}
     <form data-act="signup" class="form">
@@ -233,7 +237,7 @@ function verifyBanner(a) {
 
 function shell(tab, o, inner, flash) {
   const a = o.account;
-  const name = a.name || a.username || a.email || 'there';
+  const name = displayName(a) || 'there';
   const tabbed = TABS.find((t) => t[0] === tab);
   const title = tab === 'overview' ? `Hi, ${esc(name)}` : esc(tabbed ? tabbed[2] : PAGES[tab]);
   return `<section class="acct">

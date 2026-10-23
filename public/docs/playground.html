@@ -6,6 +6,8 @@
 <title>Playground — ZeikoAI Docs</title>
 <meta name="description" content="Ask Pranata V1 a real question on the ZeikoAI homepage: 5 free tries every 30 minutes, no account needed.">
 <meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
 <meta property="og:title" content="Playground — ZeikoAI Docs">
 <meta property="og:description" content="Ask Pranata V1 a real question on the ZeikoAI homepage: 5 free tries every 30 minutes, no account needed.">
 <meta property="og:type" content="article">
@@ -31,7 +33,7 @@
       <a href="/models">Models</a>
       <a href="/docs/" aria-current="page">Docs</a>
       <a class="nav-account" href="/account">Sign in</a>
-      <a class="btn btn-sm btn-primary" href="/account/signup">Create account</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Create account</a>
     </nav>
 
     <div class="topbar-tools">
@@ -188,5 +190,6 @@
 </footer>
 
 <script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
 </body>
 </html>

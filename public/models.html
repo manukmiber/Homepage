@@ -6,6 +6,8 @@
 <title>Models — ZeikoAI</title>
 <meta name="description" content="Every ZeikoAI model with its specs, full rate card and live performance — the roleplay models, and Pranata V1 on its own — updated every hour.">
 <meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
 <meta property="og:title" content="ZeikoAI models">
 <meta property="og:description" content="Specs, full rate card and live performance for every ZeikoAI roleplay model.">
 <meta property="og:type" content="website">
@@ -32,7 +34,7 @@
       <a href="/docs/">Docs</a>
       <a href="/#faq">FAQ</a>
       <a class="nav-account" href="/account">Sign in</a>
-      <a class="btn btn-sm btn-primary" href="/account/signup">Create account</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Create account</a>
     </nav>
 
     <div class="topbar-tools">
@@ -345,5 +347,6 @@
 </footer>
 
 <script src="js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
 </body>
 </html>

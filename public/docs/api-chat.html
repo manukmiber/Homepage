@@ -6,6 +6,8 @@
 <title>Chat API — ZeikoAI Docs</title>
 <meta name="description" content="The chat completions endpoint for the ZeikoAI roleplay models: parameters, replies, streaming, errors and examples.">
 <meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
 <meta property="og:title" content="Chat API — ZeikoAI Docs">
 <meta property="og:description" content="The chat completions endpoint for the ZeikoAI roleplay models: parameters, replies, streaming, errors and examples.">
 <meta property="og:type" content="article">
@@ -31,7 +33,7 @@
       <a href="/models">Models</a>
       <a href="/docs/" aria-current="page">Docs</a>
       <a class="nav-account" href="/account">Sign in</a>
-      <a class="btn btn-sm btn-primary" href="/account/signup">Create account</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Create account</a>
     </nav>
 
     <div class="topbar-tools">
@@ -446,5 +448,6 @@ while (true) {
 </footer>
 
 <script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
 </body>
 </html>
