@@ -13,28 +13,30 @@
 </head>
 <body class="acct-body">
 
-<a class="skip" href="#main">Skip to content</a>
+<a class="skip" href="#main" data-id="Langsung ke isi">Skip to content</a>
 
 <header class="topbar">
   <div class="wrap topbar-in">
-    <a class="brand" href="/">
+    <a class="brand" href="/" data-id-href="/id/">
       <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
       <span class="brand-name">Zeiko</span>
     </a>
-    <nav class="nav" id="nav" aria-label="Main navigation">
-      <a href="/#decision">Pranata V1</a>
-      <a href="/#pricing">Pricing</a>
-      <a href="/models">Models</a>
-      <a href="/docs/">Docs</a>
-      <a class="nav-account" href="/account/signin">Sign in</a>
-      <a class="btn btn-sm btn-primary" href="/account/signup">Create account</a>
+    <nav class="nav" id="nav" aria-label="Main navigation" data-id-label="Navigasi utama">
+      <a href="/#decision" data-id-href="/id/#decision">Pranata V1</a>
+      <a href="/#pricing" data-id-href="/id/#pricing" data-id="Harga">Pricing</a>
+      <a href="/models" data-id-href="/id/models" data-id="Model">Models</a>
+      <a href="/docs/" data-id-href="/id/docs/" data-id="Dokumentasi">Docs</a>
+      <a class="nav-account" href="/account/signin" data-id="Masuk">Sign in</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-id="Buat akun">Create account</a>
     </nav>
     <div class="topbar-tools">
-      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
+      <!-- One page for both languages: app.js points this at the page itself in the other one. -->
+      <a class="lang-switch" id="langSwitch" href="/account" hreflang="id" lang="id" data-lang="id">ID</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme" data-id-label="Ganti tema terang dan gelap">
         <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
       </button>
-      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" data-id-label="Buka menu" aria-expanded="false" aria-controls="nav">
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
       </button>
     </div>
@@ -43,8 +45,8 @@
 
 <main id="main">
   <div id="acct" aria-live="polite">
-    <section class="auth"><div class="auth-card card auth-loading"><span class="spinner" aria-hidden="true"></span><p class="auth-sub">Loading your account…</p>
-      <noscript><p class="auth-sub">Your account needs JavaScript. Turn it on for this site, then reload the page.</p></noscript>
+    <section class="auth"><div class="auth-card card auth-loading"><span class="spinner" aria-hidden="true"></span><p class="auth-sub" data-id="Memuat akunmu…">Loading your account…</p>
+      <noscript><p class="auth-sub">Your account needs JavaScript. Turn it on for this site, then reload the page. · Akunmu butuh JavaScript. Nyalakan untuk situs ini, lalu muat ulang halaman.</p></noscript>
     </div></section>
   </div>
 </main>
@@ -52,12 +54,12 @@
 <footer class="footer">
   <div class="wrap footer-in">
     <p>© Zeiko</p>
-    <nav aria-label="Footer links">
-      <a href="/">Home</a>
-      <a href="/#decision">Pranata V1</a>
-      <a href="/models">Models</a>
-      <a href="/docs/">Docs</a>
-      <a href="/#contact">Contact</a>
+    <nav aria-label="Footer links" data-id-label="Tautan bawah">
+      <a href="/" data-id-href="/id/" data-id="Beranda">Home</a>
+      <a href="/#decision" data-id-href="/id/#decision">Pranata V1</a>
+      <a href="/models" data-id-href="/id/models" data-id="Model">Models</a>
+      <a href="/docs/" data-id-href="/id/docs/" data-id="Dokumentasi">Docs</a>
+      <a href="/#contact" data-id-href="/id/#contact" data-id="Kontak">Contact</a>
     </nav>
   </div>
 </footer>

@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Playground — Dokumentasi Zeiko</title>
+<meta name="description" content="Coba Pranata V1 di beranda tanpa akun: jenis pertanyaan, isian, cara membaca jawaban, dan padanannya di API.">
+<meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
+<meta property="og:title" content="Playground — Dokumentasi Zeiko">
+<meta property="og:description" content="Coba Pranata V1 di beranda tanpa akun: jenis pertanyaan, isian, cara membaca jawaban, dan padanannya di API.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Langsung ke isi</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/id/">
+      <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
+      <span class="brand-name">Zeiko</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Navigasi utama">
+      <a href="/id/#decision">Pranata V1</a>
+      <a href="/id/drive">Drive</a>
+      <a href="/id/#models">Roleplay</a>
+      <a href="/id/#pricing">Harga</a>
+      <a href="/id/models">Model</a>
+      <a href="/id/docs/" aria-current="page">Dokumentasi</a>
+      <a class="nav-account" href="/account">Masuk</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Buat akun</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <a class="lang-switch" href="/docs/playground" hreflang="en" lang="en" data-lang="en">EN</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Ganti tema terang dan gelap">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Dokumentasi">
+      <details class="docs-menu">
+        <summary>Menu dokumentasi <span>Playground</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Mulai</p>
+          <ul>
+            <li><a href="/id/docs/">Pengantar</a></li>
+            <li><a href="/id/docs/account">Akunmu</a></li>
+            <li><a href="/id/docs/playground" aria-current="page">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Model AI</p>
+          <ul>
+            <li><a href="/id/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
+            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/id/docs/api">Dasar API</a></li>
+            <li><a href="/id/docs/api-decisions">API Keputusan</a></li>
+            <li><a href="/id/docs/api-chat">API Chat</a></li>
+            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive">Dasar Drive</a></li>
+            <li><a href="/id/docs/drive-plans">Paket &amp; Saldo Drive</a></li>
+            <li><a href="/id/docs/drive-sharing">Berbagi &amp; unduhan</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Mulai</p>
+          <ul>
+            <li><a href="/id/docs/">Pengantar</a></li>
+            <li><a href="/id/docs/account">Akunmu</a></li>
+            <li><a href="/id/docs/playground" aria-current="page">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Model AI</p>
+          <ul>
+            <li><a href="/id/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
+            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/id/docs/api">Dasar API</a></li>
+            <li><a href="/id/docs/api-decisions">API Keputusan</a></li>
+            <li><a href="/id/docs/api-chat">API Chat</a></li>
+            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive">Dasar Drive</a></li>
+            <li><a href="/id/docs/drive-plans">Paket &amp; Saldo Drive</a></li>
+            <li><a href="/id/docs/drive-sharing">Berbagi &amp; unduhan</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/id/docs/">Dokumentasi</a> <span aria-hidden="true">/</span> Mulai</p>
+      <h1>Playground</h1>
+      <p class="lede">Ajukan pertanyaan sungguhan ke Pranata V1 di <a href="/id/#try">beranda</a> dan lihat jawabannya, dengan peluang untuk setiap pilihan. Tanpa akun dan tanpa kode.</p>
+      <nav class="docs-toc" aria-label="Di halaman ini">
+        <p>Di halaman ini</p>
+        <ul>
+          <li><a href="#tries">Percobaan gratis</a></li>
+          <li><a href="#kinds">Pilih jenis pertanyaan</a></li>
+          <li><a href="#fields">Isian</a></li>
+          <li><a href="#reading">Membaca jawaban</a></li>
+          <li><a href="#to-the-api">Dari playground ke API</a></li>
+        </ul>
+      </nav>
+
+<h2 id="tries">Percobaan gratis</h2>
+<p>5 percobaan gratis setiap 30 menit. Di bawah tombol <em>Tanya Pranata V1</em>, playground menunjukkan sisa percobaan dan kapan percobaan berikutnya kembali. Playground butuh JavaScript.</p>
+
+<h2 id="kinds">Pilih jenis pertanyaan</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Tab</th><th scope="col">Yang kamu isi</th><th scope="col">Yang kembali</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Ya atau tidak</th><td data-label="Yang kamu isi">Teksnya, pertanyaannya, dan kalau mau, arti ya dan tidak.</td><td data-label="Yang kembali">Peluang ya dan peluang tidak.</td></tr>
+      <tr><th scope="row">Pilih satu</th><td data-label="Yang kamu isi">Teksnya, pertanyaannya, dan pilihannya, satu per baris (2 sampai 8).</td><td data-label="Yang kembali">Setiap pilihan dengan peluangnya; yang teratas ditandai.</td></tr>
+      <tr><th scope="row">Beri skor</th><td data-label="Yang kamu isi">Teksnya, pertanyaannya, dan tingkatannya, satu per baris, dari yang terendah (2 sampai 10).</td><td data-label="Yang kembali">Setiap tingkat dengan peluangnya; yang teratas ditandai.</td></tr>
+    </tbody>
+  </table></div>
+<p>Setiap tab dimulai dengan contoh karangan. Ubah, atau tulis sendiri.</p>
+
+<h2 id="fields">Isian</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Isian</th><th scope="col">Maksimal</th><th scope="col">Isinya</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Teks yang dinilai</th><td data-label="Maksimal">4.000 karakter</td><td data-label="Isinya">Yang dibaca Pranata V1: pesan, balasan, ulasan, iklan jual.</td></tr>
+      <tr><th scope="row">Pertanyaan</th><td data-label="Maksimal">500 karakter</td><td data-label="Isinya">Yang ingin kamu ketahui tentang teks itu. Satu hal per pertanyaan.</td></tr>
+      <tr><th scope="row">Ya berarti / Tidak berarti</th><td data-label="Maksimal">120 karakter masing-masing</td><td data-label="Isinya">Opsional. Penjelasan singkat untuk tiap jawaban membuatnya lebih tajam.</td></tr>
+      <tr><th scope="row">Pilihan</th><td data-label="Maksimal">2 sampai 8 baris</td><td data-label="Isinya">Pilihan-pilihannya, satu per baris.</td></tr>
+      <tr><th scope="row">Tingkat</th><td data-label="Maksimal">2 sampai 10 baris</td><td data-label="Isinya">Skalanya, satu tingkat per baris, dari yang terendah.</td></tr>
+    </tbody>
+  </table></div>
+
+<h2 id="reading">Membaca jawaban</h2>
+<p>Jumlah semua peluang 100%. Pemenang yang jelas, misalnya 90% atau lebih, berarti jawabannya yakin. Hasil yang hampir seimbang berarti teksnya belum cukup untuk menjawab: mengubah kalimat pertanyaan, atau menjelaskan arti tiap jawaban, biasanya membantu.</p>
+
+<h2 id="to-the-api">Dari playground ke API</h2>
+<p>Ketiga tab itu adalah tiga jenis pertanyaan di <a href="/id/docs/api-decisions">API Keputusan</a>:</p>
+<div class="doc-table-wrap"><table class="doc-table">
+    <thead><tr><th scope="col">Playground</th><th scope="col">API</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Ya atau tidak</th><td><code>"type": "noul"</code></td></tr>
+      <tr><th scope="row">Pilih satu</th><td><code>"type": "choice"</code></td></tr>
+      <tr><th scope="row">Beri skor</th><td><code>"type": "score"</code></td></tr>
+      <tr><th scope="row">Teks yang dinilai</th><td><code>state</code></td></tr>
+      <tr><th scope="row">Pertanyaan</th><td><code>instructions</code></td></tr>
+      <tr><th scope="row">Ya berarti / Tidak berarti, Pilihan, Tingkat</th><td><code>criteria</code></td></tr>
+    </tbody>
+  </table></div>
+<p>API juga menerima beberapa pertanyaan tentang teks yang sama dalam satu panggilan, dan sampai 255 pilihan. <a href="/account/signup">Buat akun</a> untuk mendapatkan kuncimu.</p>
+
+      <nav class="docs-pager" aria-label="Halaman sebelum dan sesudah">
+        <a class="prev" href="/id/docs/account"><small>Sebelumnya</small>Akunmu</a>
+        <a class="next" href="/id/docs/pranata-v1"><small>Berikutnya</small>Pranata V1</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> Zeiko</p>
+    <nav aria-label="Tautan bawah">
+      <a href="/id/">Beranda</a>
+      <a href="/id/models">Model</a>
+      <a href="/id/#pricing">Harga</a>
+      <a href="/id/drive">Drive</a>
+      <a href="/id/docs/">Dokumentasi</a>
+      <a href="/id/#contact">Kontak</a>
+      <a href="/account">Akun</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
+</body>
+</html>

@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Troubleshooting — Zeiko Docs</title>
-<meta name="description" content="What a ZeikoAI API error means and what to do about it, plus common questions about keys, replies and Pranata V1.">
+<meta name="description" content="What a ZeikoAI API error means and what to do about it, plus common questions about keys, replies, Pranata V1 and Zeiko Drive.">
 <meta name="color-scheme" content="light dark">
 <!-- The top bar asks this address who is signed in. -->
 <meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
 <meta property="og:title" content="Troubleshooting — Zeiko Docs">
-<meta property="og:description" content="What a ZeikoAI API error means and what to do about it, plus common questions about keys, replies and Pranata V1.">
+<meta property="og:description" content="What a ZeikoAI API error means and what to do about it, plus common questions about keys, replies, Pranata V1 and Zeiko Drive.">
 <meta property="og:type" content="article">
 <link rel="icon" href="/img/logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/css/style.css">
@@ -135,6 +135,7 @@
           <li><a href="#errors">Errors</a></li>
           <li><a href="#replies">Replies</a></li>
           <li><a href="#keys">Keys and accounts</a></li>
+          <li><a href="#drive">Zeiko Drive</a></li>
           <li><a href="#contact">Still stuck?</a></li>
         </ul>
       </nav>
@@ -178,10 +179,22 @@
 <p>For Pranata V1, press <em>Make a new key</em> on <a href="/account/key">API key</a>: the old key stops working at once. For a roleplay key, write to <a href="mailto:admin@zeiko.biz.id">admin@zeiko.biz.id</a>.</p>
 <h3 id="one-key">Does my account's key call the roleplay models?</h3>
 <p>No: the account's key is for Pranata V1. Keys for the roleplay models are <a href="/docs/roleplay#access">requested by email</a>.</p>
-<h3 id="chat">Is this the same account as Zeiko Chat?</h3>
-<p>Yes. One Zeiko Account signs you in to both, with one balance. See <a href="/docs/account">Your account</a>.</p>
+<h3 id="chat">Is this the same account as Zeiko Chat and Zeiko Drive?</h3>
+<p>Yes. One Zeiko Account signs you in to all three. ZeikoAI and Zeiko Chat share one balance; Zeiko Drive has its own. See <a href="/docs/account">Your account</a>.</p>
 <h3 id="try">Can I try Pranata V1 first?</h3>
 <p>Yes: the <a href="/docs/playground">playground</a> on the homepage gives 5 free tries every 30 minutes, with no account.</p>
+
+<!-- drive:start -->
+<h2 id="drive">Zeiko Drive</h2>
+<h3 id="drive-email">Drive asks me to confirm my email</h3>
+<p>Drive opens once your Zeiko Account email is confirmed. Type the code from the email into the banner on <a href="/account">your account page</a>, or ask for a new code there, then press <em>Try again</em> in Drive.</p>
+<h3 id="drive-other">Drive shows somebody else's account</h3>
+<p>Drive follows whoever is signed in on this site, in the same browser. Sign out here, sign in as the right person, and Drive switches with you.</p>
+<h3 id="drive-unavailable">Drive says signing in isn't working</h3>
+<p>Wait a moment and press <em>Try again</em>. If it keeps happening, write to us with the time it happened.</p>
+<h3 id="drive-upload">I can't upload</h3>
+<p>Uploading needs a Drive plan with space left. Drive says why on a banner: no plan yet, storage full, or a renewal that has not gone through. See <a href="/docs/drive-plans">Drive plans &amp; balance</a>.</p>
+<!-- drive:end -->
 
 <h2 id="contact">Still stuck?</h2>
 <p>Write to <a href="mailto:admin@zeiko.biz.id">admin@zeiko.biz.id</a>. Include the request's <code>X-Request-Id</code>, or, for an error, the time, the model and the status code.</p>

@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pranata V1 — Dokumentasi Zeiko</title>
+<meta name="description" content="Pranata V1, model keputusan Zeiko: ya atau tidak, pilih satu, dan beri skor, dengan peluang untuk setiap pilihan.">
+<meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
+<meta property="og:title" content="Pranata V1 — Dokumentasi Zeiko">
+<meta property="og:description" content="Pranata V1, model keputusan Zeiko: ya atau tidak, pilih satu, dan beri skor, dengan peluang untuk setiap pilihan.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Langsung ke isi</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/id/">
+      <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
+      <span class="brand-name">Zeiko</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Navigasi utama">
+      <a href="/id/#decision">Pranata V1</a>
+      <a href="/id/drive">Drive</a>
+      <a href="/id/#models">Roleplay</a>
+      <a href="/id/#pricing">Harga</a>
+      <a href="/id/models">Model</a>
+      <a href="/id/docs/" aria-current="page">Dokumentasi</a>
+      <a class="nav-account" href="/account">Masuk</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Buat akun</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <a class="lang-switch" href="/docs/pranata-v1" hreflang="en" lang="en" data-lang="en">EN</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Ganti tema terang dan gelap">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Dokumentasi">
+      <details class="docs-menu">
+        <summary>Menu dokumentasi <span>Pranata V1</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Mulai</p>
+          <ul>
+            <li><a href="/id/docs/">Pengantar</a></li>
+            <li><a href="/id/docs/account">Akunmu</a></li>
+            <li><a href="/id/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Model AI</p>
+          <ul>
+            <li><a href="/id/docs/pranata-v1" aria-current="page">Pranata V1</a></li>
+            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
+            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/id/docs/api">Dasar API</a></li>
+            <li><a href="/id/docs/api-decisions">API Keputusan</a></li>
+            <li><a href="/id/docs/api-chat">API Chat</a></li>
+            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive">Dasar Drive</a></li>
+            <li><a href="/id/docs/drive-plans">Paket &amp; Saldo Drive</a></li>
+            <li><a href="/id/docs/drive-sharing">Berbagi &amp; unduhan</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Mulai</p>
+          <ul>
+            <li><a href="/id/docs/">Pengantar</a></li>
+            <li><a href="/id/docs/account">Akunmu</a></li>
+            <li><a href="/id/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Model AI</p>
+          <ul>
+            <li><a href="/id/docs/pranata-v1" aria-current="page">Pranata V1</a></li>
+            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
+            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/id/docs/api">Dasar API</a></li>
+            <li><a href="/id/docs/api-decisions">API Keputusan</a></li>
+            <li><a href="/id/docs/api-chat">API Chat</a></li>
+            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive">Dasar Drive</a></li>
+            <li><a href="/id/docs/drive-plans">Paket &amp; Saldo Drive</a></li>
+            <li><a href="/id/docs/drive-sharing">Berbagi &amp; unduhan</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/id/docs/">Dokumentasi</a> <span aria-hidden="true">/</span> Model AI</p>
+      <h1>Pranata V1</h1>
+      <p class="lede">Model keputusan, dibangun sendiri. Beri teks dan pertanyaan, dan ia menjawab dengan peluang untuk setiap pilihan: cepat, dan konsisten dari satu panggilan ke panggilan berikutnya.</p>
+      <nav class="docs-toc" aria-label="Di halaman ini">
+        <p>Di halaman ini</p>
+        <ul>
+          <li><a href="#kinds">Tiga jenis keputusan</a></li>
+          <li><a href="#how">Cara kerja satu panggilan</a></li>
+          <li><a href="#writing">Menulis pertanyaan yang baik</a></li>
+          <li><a href="#reading">Memakai jawabannya</a></li>
+          <li><a href="#limits">Batas</a></li>
+          <li><a href="#price">Harga</a></li>
+          <li><a href="#start">Mulai</a></li>
+        </ul>
+      </nav>
+
+<dl class="doc-facts">
+  <div><dt>ID model</dt><dd><code>pranata-v1</code></dd></div>
+  <div><dt>Paket mulai</dt><dd><span data-price="decision:welcome">$1</span> <small>/ 30 hari</small></dd></div>
+  <div><dt>Pertanyaan per panggilan</dt><dd>Sampai 256</dd></div>
+  <div><dt>Panggilan terpanjang</dt><dd>2.048 <small>token</small></dd></div>
+</dl>
+
+<h2 id="kinds">Tiga jenis keputusan</h2>
+<h3 id="noul">Ya atau tidak <code>noul</code></h3>
+<p>Jawaban lugas untuk pertanyaan lugas, beserta seberapa yakin. Jawabannya adalah peluang ya, dari 0 sampai 1. Kamu bisa menjelaskan arti ya dan tidak untuk kasusmu.</p>
+<p class="doc-eg">Contoh: “Apakah balasan ini tetap sesuai karakter?” “Apakah pesan ini spam?” “Apakah ulasan ini meminta uang kembali?”</p>
+
+<h3 id="choice">Pilih satu <code>choice</code></h3>
+<p>Tuliskan pilihannya, 2 sampai 255, dengan penjelasan singkat untuk tiap pilihan kalau mau. Jawabannya menyebut pilihan yang paling cocok, memberi peluang untuk setiap pilihan, dan menambahkan tingkat keyakinan dari 0 (terbagi rata) sampai 1 (semuanya di satu pilihan).</p>
+<p class="doc-eg">Contoh: “Suasana apa yang cocok untuk adegan berikutnya?” “Tim mana yang harus menangani tiket ini?” “Teks ini berbahasa apa?”</p>
+
+<h3 id="score">Beri skor <code>score</code></h3>
+<p>Berikan skala 2 sampai 10 tingkat, dari yang terendah. Jawabannya memberi peluang untuk setiap tingkat, sebuah skor (rata-rata tertimbang posisi tingkat, 0 untuk tingkat pertama), dan tingkat keyakinan yang tinggi bila peluangnya berkumpul di sekitar satu tingkat.</p>
+<p class="doc-eg">Contoh: “Seberapa mendesak pesan ini, dari 1 sampai 5?” “Seberapa dekat teks ini mengikuti arahan?” “Seberapa formal email ini?”</p>
+
+<h2 id="how">Cara kerja satu panggilan</h2>
+<ol>
+  <li><strong>State</strong>: hal yang dinilai. Sebuah pesan, percakapan, iklan produk: teks biasa, atau objek atau array JSON kalau punya beberapa bagian.</li>
+  <li><strong>Pertanyaan</strong>: satu atau lebih, masing-masing dengan id pilihanmu, jenisnya, pertanyaannya sendiri (<code>instructions</code>), dan arti jawabannya (<code>criteria</code>).</li>
+  <li><strong>Jawaban</strong>: satu per pertanyaan, dengan id yang sama, masing-masing beserta peluangnya.</li>
+</ol>
+<p>Beberapa pertanyaan tentang state yang sama masuk dalam satu panggilan. Seluruh panggilan, state dan semua pertanyaan, bisa sampai 2.048 token. Formatnya ada di referensi <a href="/id/docs/api-decisions">API Keputusan</a>.</p>
+
+<h2 id="writing">Menulis pertanyaan yang baik</h2>
+<ul>
+  <li><strong>Isi state seperlunya.</strong> Detail yang tidak berhubungan dengan pertanyaan hanya mengganggu, dan setiap token ikut dihitung dalam panjang dan harga panggilan.</li>
+  <li><strong>Satu hal per pertanyaan.</strong> “Apakah ini kasar dan keluar topik?” itu dua pertanyaan: tanyakan keduanya, terpisah, dalam panggilan yang sama.</li>
+  <li><strong>Sebut bagian yang kamu maksud.</strong> Kalau state berupa objek, sebut field-nya dengan namanya: “Apakah <code>latest_message</code> sebuah pertanyaan?”</li>
+  <li><strong>Jelaskan arti tiap jawaban.</strong> Satu baris penjelasan untuk ya dan tidak, atau untuk tiap pilihan, menajamkan jawaban lebih dari pertanyaan yang panjang. Contoh singkat untuk masing-masing paling membantu.</li>
+  <li><strong>Tulis tingkat dari terendah ke tertinggi</strong>, masing-masing jelas berbeda dari tetangganya.</li>
+  <li><strong>Tutup semua kemungkinan.</strong> Kalau mungkin tidak ada pilihan yang cocok, tambahkan satu untuk itu, misalnya <code>other</code>.</li>
+</ul>
+
+<h2 id="reading">Memakai jawabannya</h2>
+<ul>
+  <li><strong>Tentukan ambangmu sendiri.</strong> Bertindak atas jawaban ya hanya di atas peluang yang dibutuhkan kasusmu: 0,5 untuk keputusan ringan, 0,8 atau 0,9 untuk sesuatu yang sulit dibatalkan.</li>
+  <li><strong>Pakai tingkat keyakinannya.</strong> Untuk Pilih satu dan Beri skor, keyakinan rendah berarti teksnya belum cukup untuk menjawab. Serahkan ke orang, atau ajukan pertanyaan yang lebih tajam.</li>
+  <li><strong>Skor bisa jatuh di antara tingkat.</strong> 2,75 pada skala lima tingkat condong ke tingkat keempat (posisi 3) dengan sebagian bobot di bawahnya. Bulatkan, atau pakai peluangnya.</li>
+</ul>
+
+<h2 id="limits">Batas</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-kv">
+    <thead><tr><th scope="col"></th><th scope="col"></th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Panggilan terpanjang</th><td>2.048 token: state dan semua pertanyaan bersama-sama</td></tr>
+      <tr><th scope="row">Pertanyaan per panggilan</th><td>Sampai 256, dalam batas 2.048 token</td></tr>
+      <tr><th scope="row">Pilih satu</th><td>2 sampai 255 pilihan</td></tr>
+      <tr><th scope="row">Beri skor</th><td>2 sampai 10 tingkat</td></tr>
+      <tr><th scope="row">Satu permintaan paket</th><td>1.024 token: panggilan 1.025 sampai 2.048 token dihitung dua</td></tr>
+    </tbody>
+  </table></div>
+
+<h2 id="price">Harga</h2>
+<p>Pranata V1 dijual per paket: sejumlah permintaan untuk 30 hari, mulai dari <span data-price="decision:welcome">$1</span>. Semuanya ada di <a href="/id/docs/pricing#pranata">Harga &amp; paket</a>.</p>
+
+<h2 id="start">Mulai</h2>
+<p>Coba di <a href="/id/docs/playground">playground</a>, lalu <a href="/account/signup">buat akun</a> untuk mendapatkan kuncimu. Angka langsungnya, diperbarui setiap jam, ada di <a href="/id/models#pranata-v1">/models</a>.</p>
+
+      <nav class="docs-pager" aria-label="Halaman sebelum dan sesudah">
+        <a class="prev" href="/id/docs/playground"><small>Sebelumnya</small>Playground</a>
+        <a class="next" href="/id/docs/roleplay"><small>Berikutnya</small>Model roleplay</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> Zeiko</p>
+    <nav aria-label="Tautan bawah">
+      <a href="/id/">Beranda</a>
+      <a href="/id/models">Model</a>
+      <a href="/id/#pricing">Harga</a>
+      <a href="/id/drive">Drive</a>
+      <a href="/id/docs/">Dokumentasi</a>
+      <a href="/id/#contact">Kontak</a>
+      <a href="/account">Akun</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
+</body>
+</html>

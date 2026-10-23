@@ -20,26 +20,86 @@
   var askBtn = document.getElementById('tryAsk');
   var tabs = Array.prototype.slice.call(form.querySelectorAll('.try-tab'));
 
-  // A ready example for each kind, so the first press shows something.
-  var EXAMPLES = {
-    noul: {
-      state: 'Hi, my order #4821 arrived with a cracked screen. I need a replacement before Friday — that is when the event is. Please call me back today.',
-      instructions: 'Does this message need a reply today?',
-      yes: 'The writer needs an answer within a day',
-      no: ''
+  // Everything this file writes, in the page's own language (<html lang>):
+  // /id/ is Indonesian. Messages the door sends back are shown as written.
+  var W = document.documentElement.lang === 'id' ? {
+    // A ready example for each kind, so the first press shows something.
+    examples: {
+      noul: {
+        state: 'Halo, pesanan #4821 saya datang dengan layar retak. Saya butuh penggantinya sebelum Jumat — acaranya hari itu. Tolong telepon saya hari ini.',
+        instructions: 'Apakah pesan ini perlu dibalas hari ini?',
+        yes: 'Penulisnya butuh jawaban dalam sehari',
+        no: ''
+      },
+      choice: {
+        state: 'Paketnya telat dua hari dan kardusnya penyok, tapi headphone di dalamnya berfungsi baik.',
+        instructions: 'Tim mana yang harus menangani ini?',
+        options: 'Pengiriman\nKualitas produk\nRetur\nTidak perlu tindakan'
+      },
+      score: {
+        state: 'Pelayanannya lumayan. Makanannya agak lama, tapi stafnya ramah dan pencuci mulutnya enak sekali.',
+        instructions: 'Seberapa puas pelanggan ini?',
+        levels: 'Sangat tidak puas\nTidak puas\nBiasa saja\nPuas\nSangat puas'
+      }
     },
-    choice: {
-      state: 'The package came two days late and the box was crushed, but the headphones inside work fine.',
-      instructions: 'Which team should handle this?',
-      options: 'Shipping\nProduct quality\nReturns\nNo action needed'
+    kinds: { noul: 'Ya atau tidak', choice: 'Pilih satu', score: 'Beri skor' },
+    yes: 'Ya',
+    no: 'Tidak',
+    left: function (n, of) { return 'Sisa ' + n + ' dari ' + of + ' percobaan gratis'; },
+    next: function (m) { return ' · satu lagi dalam ' + m + ' menit'; },
+    usedUp: 'Percobaan gratis habis · kamu bisa lanjut selama masuk',
+    answered: function (ms) { return 'Dijawab dalam ' + ms + ' ms'; },
+    unreadable: 'Jawaban itu tidak bisa dibaca. Coba lagi.',
+    likely: function (p) { return 'kemungkinan ' + p; },
+    confidence: function (p) { return 'Keyakinan ' + p; },
+    level: function (n) { return 'Tingkat ' + n; },
+    score: function (s, n, c) { return 'Skor ' + s.replace('.', ',') + ' dari ' + n + ' · keyakinan ' + c; },
+    needText: 'Tulis dulu teks yang dinilai.',
+    needQuestion: 'Tulis dulu pertanyaannya.',
+    asking: 'Bertanya…',
+    askingLong: 'Bertanya ke Pranata V1…',
+    down: 'Sedang tidak tersedia. Coba lagi semenit lagi.',
+    shut: 'Playground sedang tutup. Kembali lagi nanti.'
+  } : {
+    examples: {
+      noul: {
+        state: 'Hi, my order #4821 arrived with a cracked screen. I need a replacement before Friday — that is when the event is. Please call me back today.',
+        instructions: 'Does this message need a reply today?',
+        yes: 'The writer needs an answer within a day',
+        no: ''
+      },
+      choice: {
+        state: 'The package came two days late and the box was crushed, but the headphones inside work fine.',
+        instructions: 'Which team should handle this?',
+        options: 'Shipping\nProduct quality\nReturns\nNo action needed'
+      },
+      score: {
+        state: 'The service was okay. The food took a while, but the staff were friendly and the dessert was great.',
+        instructions: 'How happy is this customer?',
+        levels: 'Very unhappy\nUnhappy\nNeutral\nHappy\nVery happy'
+      }
     },
-    score: {
-      state: 'The service was okay. The food took a while, but the staff were friendly and the dessert was great.',
-      instructions: 'How happy is this customer?',
-      levels: 'Very unhappy\nUnhappy\nNeutral\nHappy\nVery happy'
-    }
+    kinds: { noul: 'Yes or no', choice: 'Pick one', score: 'Score it' },
+    yes: 'Yes',
+    no: 'No',
+    left: function (n, of) { return n + ' of ' + of + ' free tries left'; },
+    next: function (m) { return ' · one more in ' + m + ' min'; },
+    usedUp: 'Free tries used · you can keep going while signed in',
+    answered: function (ms) { return 'Answered in ' + ms + ' ms'; },
+    unreadable: 'That answer could not be read. Try again.',
+    likely: function (p) { return p + ' likely'; },
+    confidence: function (p) { return 'Confidence ' + p; },
+    level: function (n) { return 'Level ' + n; },
+    score: function (s, n, c) { return 'Score ' + s + ' of ' + n + ' · confidence ' + c; },
+    needText: 'Write the text to judge first.',
+    needQuestion: 'Write the question first.',
+    asking: 'Asking…',
+    askingLong: 'Asking Pranata V1…',
+    down: 'Not available right now. Try again in a minute.',
+    shut: 'The playground is not open right now. Come back soon.'
   };
-  var KIND_NAME = { noul: 'Yes or no', choice: 'Pick one', score: 'Score it' };
+  var EXAMPLES = W.examples;
+  var KIND_NAME = W.kinds;
   var kind = 'noul';
   var drafts = {};
   var open = true;
@@ -116,9 +176,9 @@
 
   function counter(t, signedIn) {
     if (!t || typeof t.left !== 'number') { left.textContent = ''; return; }
-    var text = t.left + ' of ' + t.of + ' free tries left';
-    if (t.left < t.of && t.resetsAt) text += ' · one more in ' + minutes(t.resetsAt) + ' min';
-    if (t.left === 0 && signedIn) text = 'Free tries used · you can keep going while signed in';
+    var text = W.left(t.left, t.of);
+    if (t.left < t.of && t.resetsAt) text += W.next(minutes(t.resetsAt));
+    if (t.left === 0 && signedIn) text = W.usedUp;
     left.textContent = text;
   }
 
@@ -175,18 +235,18 @@
 
   function render(a, sent, ms) {
     result.textContent = '';
-    var foot = 'Answered in ' + ms + ' ms';
-    if (!a || typeof a !== 'object') { say('err', 'That answer could not be read. Try again.'); return; }
+    var foot = W.answered(ms);
+    if (!a || typeof a !== 'object') { say('err', W.unreadable); return; }
 
     if (a.type === 'noul') {
       var p = Number(a.noul) || 0;
       var yes = p >= 0.5;
-      result.appendChild(headline(KIND_NAME.noul, yes ? 'Yes' : 'No', pct(yes ? p : 1 - p) + ' likely'));
-      result.appendChild(odds([{ name: 'Yes', p: p }, { name: 'No', p: 1 - p }], yes ? 'Yes' : 'No'));
+      result.appendChild(headline(KIND_NAME.noul, yes ? W.yes : W.no, W.likely(pct(yes ? p : 1 - p))));
+      result.appendChild(odds([{ name: W.yes, p: p }, { name: W.no, p: 1 - p }], yes ? W.yes : W.no));
     } else if (a.type === 'choice') {
       var probs = a.probabilities || {};
       var rows = Object.keys(probs).map(function (k) { return { name: k, p: probs[k] }; });
-      result.appendChild(headline(KIND_NAME.choice, String(a.choice || ''), 'Confidence ' + pct(a.confidence)));
+      result.appendChild(headline(KIND_NAME.choice, String(a.choice || ''), W.confidence(pct(a.confidence))));
       result.appendChild(odds(rows, String(a.choice || '')));
     } else if (a.type === 'score') {
       var legend = a.legend || {};
@@ -195,8 +255,8 @@
       var n = keys.length;
       var best = keys.reduce(function (b, k) { return Number(pr[k]) > Number(pr[b]) ? k : b; }, keys[0]);
       var score = Number(a.score) || 0;
-      var label = function (k) { var v = legend[k]; return typeof v === 'string' ? v : 'Level ' + (Number(k) + 1); };
-      result.appendChild(headline(KIND_NAME.score, label(best), 'Score ' + (score + 1).toFixed(1) + ' of ' + n + ' · confidence ' + pct(a.confidence)));
+      var label = function (k) { var v = legend[k]; return typeof v === 'string' ? v : W.level(Number(k) + 1); };
+      result.appendChild(headline(KIND_NAME.score, label(best), W.score((score + 1).toFixed(1), n, pct(a.confidence))));
       var hist = el('ol', 'hist');
       hist.style.gridTemplateColumns = 'repeat(' + n + ', minmax(0, 1fr))';
       keys.forEach(function (k) {
@@ -220,7 +280,7 @@
       });
       result.appendChild(key);
     } else {
-      say('err', 'That answer could not be read. Try again.');
+      say('err', W.unreadable);
       return;
     }
     result.appendChild(el('p', 'try-foot', foot));
@@ -240,14 +300,14 @@
     if (kind === 'noul') { body.yes = d.yes; body.no = d.no; }
     if (kind === 'choice') body.options = lines(d.options);
     if (kind === 'score') body.levels = lines(d.levels);
-    if (!body.state.trim()) { say('err', 'Write the text to judge first.'); field('state').focus(); return; }
-    if (!body.instructions.trim()) { say('err', 'Write the question first.'); field('instructions').focus(); return; }
+    if (!body.state.trim()) { say('err', W.needText); field('state').focus(); return; }
+    if (!body.instructions.trim()) { say('err', W.needQuestion); field('instructions').focus(); return; }
 
     var before = askBtn.textContent;
     askBtn.disabled = true;
-    askBtn.textContent = 'Asking…';
+    askBtn.textContent = W.asking;
     form.setAttribute('aria-busy', 'true');
-    say('wait', 'Asking Pranata V1…');
+    say('wait', W.askingLong);
     var started = Date.now();
     ask('POST', body).then(function (r) {
       var ms = Date.now() - started;
@@ -259,7 +319,7 @@
         say('err', r.data.error.message);
         if (r.status === 409) closed(r.data.error.message);
       } else {
-        say('err', 'Not available right now. Try again in a minute.');
+        say('err', W.down);
       }
     }).then(function () {
       askBtn.disabled = !open;
@@ -272,8 +332,8 @@
 
   write(EXAMPLES[kind]);
   ask('GET').then(function (r) {
-    if (r.status !== 200 || !r.data) { closed('Not available right now. Try again in a minute.'); return; }
-    if (!r.data.open) { closed('The playground is not open right now. Come back soon.'); return; }
+    if (r.status !== 200 || !r.data) { closed(W.down); return; }
+    if (!r.data.open) { closed(W.shut); return; }
     counter(r.data.tries, r.data.signedIn);
   });
 })();

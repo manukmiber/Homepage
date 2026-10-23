@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dokumentasi — Zeiko</title>
+<meta name="description" content="Cara kerja Pranata V1, model roleplay ZeikoAI, dan Zeiko Drive, berapa harganya, Akun Zeiko-mu, dan API-nya.">
+<meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
+<meta property="og:title" content="Dokumentasi — Zeiko">
+<meta property="og:description" content="Cara kerja Pranata V1, model roleplay ZeikoAI, dan Zeiko Drive, berapa harganya, Akun Zeiko-mu, dan API-nya.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Langsung ke isi</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/id/">
+      <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
+      <span class="brand-name">Zeiko</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Navigasi utama">
+      <a href="/id/#decision">Pranata V1</a>
+      <a href="/id/drive">Drive</a>
+      <a href="/id/#models">Roleplay</a>
+      <a href="/id/#pricing">Harga</a>
+      <a href="/id/models">Model</a>
+      <a href="/id/docs/" aria-current="page">Dokumentasi</a>
+      <a class="nav-account" href="/account">Masuk</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Buat akun</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <a class="lang-switch" href="/docs/" hreflang="en" lang="en" data-lang="en">EN</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Ganti tema terang dan gelap">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Dokumentasi">
+      <details class="docs-menu">
+        <summary>Menu dokumentasi <span>Pengantar</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Mulai</p>
+          <ul>
+            <li><a href="/id/docs/" aria-current="page">Pengantar</a></li>
+            <li><a href="/id/docs/account">Akunmu</a></li>
+            <li><a href="/id/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Model AI</p>
+          <ul>
+            <li><a href="/id/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
+            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/id/docs/api">Dasar API</a></li>
+            <li><a href="/id/docs/api-decisions">API Keputusan</a></li>
+            <li><a href="/id/docs/api-chat">API Chat</a></li>
+            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive">Dasar Drive</a></li>
+            <li><a href="/id/docs/drive-plans">Paket &amp; Saldo Drive</a></li>
+            <li><a href="/id/docs/drive-sharing">Berbagi &amp; unduhan</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Mulai</p>
+          <ul>
+            <li><a href="/id/docs/" aria-current="page">Pengantar</a></li>
+            <li><a href="/id/docs/account">Akunmu</a></li>
+            <li><a href="/id/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Model AI</p>
+          <ul>
+            <li><a href="/id/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
+            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/id/docs/api">Dasar API</a></li>
+            <li><a href="/id/docs/api-decisions">API Keputusan</a></li>
+            <li><a href="/id/docs/api-chat">API Chat</a></li>
+            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive">Dasar Drive</a></li>
+            <li><a href="/id/docs/drive-plans">Paket &amp; Saldo Drive</a></li>
+            <li><a href="/id/docs/drive-sharing">Berbagi &amp; unduhan</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/id/docs/">Dokumentasi</a> <span aria-hidden="true">/</span> Mulai</p>
+      <h1>Dokumentasi Zeiko</h1>
+      <p class="lede">Cara kerja Pranata V1 dan model roleplay, berapa harganya, cara kerja Akun Zeiko-mu, cara memanggil API, dan cara memakai Zeiko Drive.</p>
+      <nav class="docs-toc" aria-label="Di halaman ini">
+        <p>Di halaman ini</p>
+        <ul>
+          <li><a href="#products">Dua jenis model</a></li>
+          <li><a href="#quickstart-pranata">Mulai cepat: Pranata V1</a></li>
+          <li><a href="#quickstart-roleplay">Mulai cepat: model roleplay</a></li>
+          <li><a href="#at-a-glance">API secara singkat</a></li>
+          <li><a href="#drive">Zeiko Drive</a></li>
+          <li><a href="#next">Selanjutnya</a></li>
+        </ul>
+      </nav>
+
+<h2 id="products">Dua jenis model</h2>
+<div class="doc-cards">
+  <a class="doc-card doc-card-dec" href="/id/docs/pranata-v1"><strong>Pranata V1</strong><span>Model keputusan. Tanyakan ya atau tidak, pilih satu, atau beri skor, dan dapatkan peluang untuk setiap pilihan. Langsung bisa dipakai begitu kamu punya akun.</span></a>
+  <a class="doc-card" href="/id/docs/roleplay"><strong>Model roleplay</strong><span>Jagad, Asmarandana, dan Wisanggeni: konteks 256K, streaming, tiga rating konten. Kunci diberikan atas permintaan.</span></a>
+</div>
+<p>Keduanya produk terpisah dengan harga terpisah: Pranata V1 punya paket sendiri, sedangkan model roleplay dihargai per token. Satu <a href="/id/docs/api">API</a> melayani keduanya.</p>
+
+<h2 id="quickstart-pranata">Mulai cepat: Pranata V1</h2>
+<ol class="steps">
+  <li><strong>Buat akun</strong><a href="/account/signup">Buat Akun Zeiko</a> dengan email, atau dengan masuk sekali klik.</li>
+  <li><strong>Konfirmasi email</strong>Ketik kode 6 digit yang kami kirim di banner halaman akunmu, atau buka link di email itu.</li>
+  <li><strong>Beli paket atau isi saldo</strong>Di <a href="/account/plans">Paket &amp; saldo</a>. Paket mulai dari <span data-price="decision:welcome">$1</span> untuk 30 hari; di luar paket, panggilan memakai saldomu.</li>
+  <li><strong>Salin kuncimu</strong>Di <a href="/account/key">Kunci API</a>, tekan <em>Tampilkan kunci</em>, lalu <em>Salin</em>. Alamat yang dipakai bersamanya ada di halaman yang sama.</li>
+  <li><strong>Ajukan pertanyaan pertamamu</strong>Simpan kunci di variabel lingkungan, di sini <code>ZEIKO_API_KEY</code>, lalu kirim:</li>
+</ol>
+<div class="code">
+  <div class="code-bar"><span>curl</span><button class="copy" type="button" data-copy="#code-1" aria-label="Salin contoh curl">Salin</button></div>
+  <pre id="code-1"><code>curl https://ai.zeiko.biz.id/v1/decisions \
+  -H "Authorization: Bearer $ZEIKO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "pranata-v1",
+    "state": "Makasih banyak! Pesanannya datang sehari lebih cepat dan berfungsi sempurna.",
+    "questions": {
+      "positive": {
+        "type": "noul",
+        "instructions": "Apakah ulasan ini positif?"
+      }
+    }
+  }'</code></pre>
+</div>
+<p>Jawabannya adalah peluang bahwa jawabannya ya:</p>
+<div class="code">
+  <div class="code-bar"><span>Jawaban</span><button class="copy" type="button" data-copy="#code-2" aria-label="Salin contoh jawaban">Salin</button></div>
+  <pre id="code-2"><code>{
+  "model": "pranata-v1",
+  "answers": {
+    "positive": { "type": "noul", "noul": 0.97 }
+  },
+  "usage": { "input_tokens": 31, "output_tokens": 0 }
+}</code></pre>
+</div>
+<p>Semua field, dua jenis pertanyaan lainnya, dan daftar error ada di <a href="/id/docs/api-decisions">API Keputusan</a>. Belum menulis kode? Coba Pranata V1 dulu di <a href="/id/docs/playground">playground</a>: 5 percobaan gratis setiap 30 menit.</p>
+
+<h2 id="quickstart-roleplay">Mulai cepat: model roleplay</h2>
+<ol class="steps">
+  <li><strong>Minta kunci</strong>Kirim email ke <a href="mailto:admin@zeiko.biz.id?subject=Permintaan%20kunci%20API%20ZeikoAI">admin@zeiko.biz.id</a> berisi model yang kamu mau dan perkiraan volume pemakaianmu.</li>
+  <li><strong>Terima kuncimu</strong>Kunci datang bersama semua yang kamu perlukan untuk tersambung.</li>
+  <li><strong>Kirim permintaan chat</strong>SDK resmi OpenAI mana pun bisa dipakai: beri base URL di bawah dan kuncimu. Atau kirim sendiri:</li>
+</ol>
+<div class="code">
+  <div class="code-bar"><span>curl</span><button class="copy" type="button" data-copy="#code-3" aria-label="Salin contoh curl">Salin</button></div>
+  <pre id="code-3"><code>curl https://ai.zeiko.biz.id/v1/chat/completions \
+  -H "Authorization: Bearer $ZEIKO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "jagad-512b-v1",
+    "messages": [
+      {"role": "system", "content": "Kamu Aria, barista ceria di kota pelabuhan yang sering hujan."},
+      {"role": "user", "content": "*mengibaskan payung* Satu cokelat panas, ya."}
+    ]
+  }'</code></pre>
+</div>
+<p>Parameter, streaming, dan field balasan ada di <a href="/id/docs/api-chat">API Chat</a>.</p>
+
+<h2 id="at-a-glance">API secara singkat</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-kv">
+    <thead><tr><th scope="col"></th><th scope="col"></th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Base URL</th><td><code>https://ai.zeiko.biz.id/v1</code></td></tr>
+      <tr><th scope="row">Kunci</th><td><code>Authorization: Bearer YOUR_API_KEY</code> di setiap permintaan</td></tr>
+      <tr><th scope="row">Format</th><td>JSON lewat HTTPS; balasan chat bisa di-stream sebagai server-sent events</td></tr>
+      <tr><th scope="row">Pranata V1</th><td><code>POST /v1/decisions</code></td></tr>
+      <tr><th scope="row">Model roleplay</th><td><code>POST /v1/chat/completions</code></td></tr>
+      <tr><th scope="row">Daftar model</th><td><code>GET /v1/models</code>, tanpa kunci</td></tr>
+    </tbody>
+  </table></div>
+
+<h2 id="drive">Zeiko Drive</h2>
+<p>Zeiko Drive menyimpan file-mu di Akun Zeiko yang sama: upload dengan kecepatan penuh, bagikan lewat link, unduh banyak file sekaligus. Drive tidak punya API sendiri; kamu memakainya di aplikasi <a href="https://drive.zeiko.biz.id">drive.zeiko.biz.id</a>.</p>
+<div class="doc-cards">
+  <a class="doc-card" href="/id/docs/drive"><strong>Dasar Drive</strong><span>Membuka Drive, paket pertamamu, upload, Sampah, dan datamu.</span></a>
+  <a class="doc-card" href="/id/docs/drive-sharing"><strong>Berbagi &amp; unduhan</strong><span>Link share, mengirimnya, arsip, kompres, paket keluarga.</span></a>
+</div>
+
+<h2 id="next">Selanjutnya</h2>
+<div class="doc-cards">
+  <a class="doc-card" href="/id/docs/account"><strong>Akunmu</strong><span>Daftar, paket dan saldo, kuncimu, pengaturan.</span></a>
+  <a class="doc-card" href="/id/docs/pricing"><strong>Harga &amp; paket</strong><span>Semua tarif, semua paket, dan cara biaya satu permintaan dihitung.</span></a>
+  <a class="doc-card" href="/id/docs/api"><strong>Dasar API</strong><span>Base URL, kunci, ID model, error, dan percobaan ulang.</span></a>
+  <a class="doc-card" href="/id/docs/faq"><strong>Pemecahan masalah</strong><span>Arti sebuah error dan apa yang harus dilakukan.</span></a>
+</div>
+
+      <nav class="docs-pager" aria-label="Halaman sebelum dan sesudah">
+        <span></span>
+        <a class="next" href="/id/docs/account"><small>Berikutnya</small>Akunmu</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> Zeiko</p>
+    <nav aria-label="Tautan bawah">
+      <a href="/id/">Beranda</a>
+      <a href="/id/models">Model</a>
+      <a href="/id/#pricing">Harga</a>
+      <a href="/id/drive">Drive</a>
+      <a href="/id/docs/">Dokumentasi</a>
+      <a href="/id/#contact">Kontak</a>
+      <a href="/account">Akun</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
+</body>
+</html>

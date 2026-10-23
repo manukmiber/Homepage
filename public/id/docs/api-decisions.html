@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>API Keputusan — Dokumentasi Zeiko</title>
+<meta name="description" content="Referensi POST /v1/decisions: permintaan, criteria per tipe, jawaban, batas, error, dan contoh.">
+<meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
+<meta property="og:title" content="API Keputusan — Dokumentasi Zeiko">
+<meta property="og:description" content="Referensi POST /v1/decisions: permintaan, criteria per tipe, jawaban, batas, error, dan contoh.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Langsung ke isi</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/id/">
+      <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
+      <span class="brand-name">Zeiko</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Navigasi utama">
+      <a href="/id/#decision">Pranata V1</a>
+      <a href="/id/drive">Drive</a>
+      <a href="/id/#models">Roleplay</a>
+      <a href="/id/#pricing">Harga</a>
+      <a href="/id/models">Model</a>
+      <a href="/id/docs/" aria-current="page">Dokumentasi</a>
+      <a class="nav-account" href="/account">Masuk</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Buat akun</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <a class="lang-switch" href="/docs/api-decisions" hreflang="en" lang="en" data-lang="en">EN</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Ganti tema terang dan gelap">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Dokumentasi">
+      <details class="docs-menu">
+        <summary>Menu dokumentasi <span>API Keputusan</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Mulai</p>
+          <ul>
+            <li><a href="/id/docs/">Pengantar</a></li>
+            <li><a href="/id/docs/account">Akunmu</a></li>
+            <li><a href="/id/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Model AI</p>
+          <ul>
+            <li><a href="/id/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
+            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/id/docs/api">Dasar API</a></li>
+            <li><a href="/id/docs/api-decisions" aria-current="page">API Keputusan</a></li>
+            <li><a href="/id/docs/api-chat">API Chat</a></li>
+            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive">Dasar Drive</a></li>
+            <li><a href="/id/docs/drive-plans">Paket &amp; Saldo Drive</a></li>
+            <li><a href="/id/docs/drive-sharing">Berbagi &amp; unduhan</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Mulai</p>
+          <ul>
+            <li><a href="/id/docs/">Pengantar</a></li>
+            <li><a href="/id/docs/account">Akunmu</a></li>
+            <li><a href="/id/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Model AI</p>
+          <ul>
+            <li><a href="/id/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
+            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/id/docs/api">Dasar API</a></li>
+            <li><a href="/id/docs/api-decisions" aria-current="page">API Keputusan</a></li>
+            <li><a href="/id/docs/api-chat">API Chat</a></li>
+            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive">Dasar Drive</a></li>
+            <li><a href="/id/docs/drive-plans">Paket &amp; Saldo Drive</a></li>
+            <li><a href="/id/docs/drive-sharing">Berbagi &amp; unduhan</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/id/docs/">Dokumentasi</a> <span aria-hidden="true">/</span> API</p>
+      <h1>API Keputusan</h1>
+      <p class="lede">Ajukan satu atau lebih pertanyaan ke Pranata V1 tentang sebuah teks atau objek JSON, dan dapatkan peluang untuk setiap pilihan.</p>
+      <nav class="docs-toc" aria-label="Di halaman ini">
+        <p>Di halaman ini</p>
+        <ul>
+          <li><a href="#example">Contoh lengkap</a></li>
+          <li><a href="#request">Permintaan</a></li>
+          <li><a href="#response">Respons</a></li>
+          <li><a href="#limits">Batas</a></li>
+          <li><a href="#errors">Error</a></li>
+          <li><a href="#examples">Contoh</a></li>
+        </ul>
+      </nav>
+
+<p class="endpoint"><span class="verb verb-post">POST</span><code>https://ai.zeiko.biz.id/v1/decisions</code></p>
+
+<h2 id="example">Contoh lengkap</h2>
+<p>Tiga pertanyaan, satu dari setiap jenis, tentang balasan yang sama:</p>
+<div class="code">
+  <div class="code-bar"><span>curl</span><button class="copy" type="button" data-copy="#code-1" aria-label="Salin contoh curl">Salin</button></div>
+  <pre id="code-1"><code>curl https://ai.zeiko.biz.id/v1/decisions \
+  -H "Authorization: Bearer $ZEIKO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "pranata-v1",
+    "state": "Aria: *slides a steaming mug across the counter* Extra marshmallows, on the house. Rain like this calls for it.",
+    "questions": {
+      "in_character": {
+        "type": "noul",
+        "instructions": "Does the reply stay in character as Aria, a cheerful barista?",
+        "criteria": {
+          "true": "It sounds like Aria and stays in the scene",
+          "false": "It breaks character or talks about being an AI"
+        }
+      },
+      "mood": {
+        "type": "choice",
+        "instructions": "Which mood fits the next scene?",
+        "criteria": {
+          "calm": null,
+          "tense": "Danger or conflict is close",
+          "playful": null
+        }
+      },
+      "warmth": {
+        "type": "score",
+        "instructions": "How warm is the reply towards the customer?",
+        "criteria": ["Cold", "Polite", "Friendly", "Warm", "Very warm"]
+      }
+    }
+  }'</code></pre>
+</div>
+<p>Jawabannya (angkanya hanya ilustrasi):</p>
+<div class="code">
+  <div class="code-bar"><span>Jawaban</span><button class="copy" type="button" data-copy="#code-2" aria-label="Salin contoh jawaban">Salin</button></div>
+  <pre id="code-2"><code>{
+  "model": "pranata-v1",
+  "answers": {
+    "in_character": { "type": "noul", "noul": 0.91 },
+    "mood": {
+      "type": "choice",
+      "choice": "calm",
+      "probabilities": { "calm": 0.64, "tense": 0.18, "playful": 0.18 },
+      "confidence": 0.46
+    },
+    "warmth": {
+      "type": "score",
+      "score": 2.75,
+      "legend": { "0": "Cold", "1": "Polite", "2": "Friendly", "3": "Warm", "4": "Very warm" },
+      "probabilities": { "0": 0.03, "1": 0.07, "2": 0.22, "3": 0.48, "4": 0.2 },
+      "confidence": 0.458333
+    }
+  },
+  "usage": { "input_tokens": 131, "output_tokens": 0 }
+}</code></pre>
+</div>
+
+<h2 id="request">Permintaan</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Field</th><th scope="col">Tipe</th><th scope="col">Catatan</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>model</code></th><td data-label="Tipe">string</td><td data-label="Catatan">Wajib. <code>pranata-v1</code>.</td></tr>
+      <tr><th scope="row"><code>state</code></th><td data-label="Tipe">string, objek, array, atau <code>null</code></td><td data-label="Catatan">Wajib. Hal yang dinilai: teks biasa, atau JSON kalau punya beberapa bagian, seperti percakapan atau formulir. <code>null</code> kalau tidak ada yang perlu dibaca.</td></tr>
+      <tr><th scope="row"><code>questions</code></th><td data-label="Tipe">objek</td><td data-label="Catatan">Wajib. 1 sampai 256 pertanyaan, masing-masing dengan id pilihanmu. Id yang sama kembali sebagai kunci di <code>answers</code>.</td></tr>
+    </tbody>
+  </table></div>
+
+<h3 id="question">Satu pertanyaan</h3>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Field</th><th scope="col">Tipe</th><th scope="col">Catatan</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>type</code></th><td data-label="Tipe">string</td><td data-label="Catatan">Wajib. <code>noul</code> (ya atau tidak), <code>choice</code> (pilih satu), atau <code>score</code> (beri skor).</td></tr>
+      <tr><th scope="row"><code>instructions</code></th><td data-label="Tipe">string, objek, atau array</td><td data-label="Catatan">Pertanyaannya sendiri, misalnya “Apakah balasan ini tetap sesuai karakter?”. Opsional, tapi hampir selalu diperlukan.</td></tr>
+      <tr><th scope="row"><code>criteria</code></th><td data-label="Tipe">tergantung tipenya</td><td data-label="Catatan">Arti jawaban-jawabannya. Lihat di bawah.</td></tr>
+    </tbody>
+  </table></div>
+
+<h3 id="criteria"><code>criteria</code>, per tipe</h3>
+<div class="doc-table-wrap"><table class="doc-table doc-table-wide">
+    <thead><tr><th scope="col">Tipe</th><th scope="col">Isinya</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>noul</code></th><td>Opsional. Objek dengan <code>"true"</code> dan/atau <code>"false"</code>, masing-masing menjelaskan jawaban itu.<pre class="snippet"><code>{"true": "The reply sounds like the character", "false": "It breaks character"}</code></pre></td></tr>
+      <tr><th scope="row"><code>choice</code></th><td>Wajib. Objek berisi 2 sampai 255 pilihan: nama tiap pilihan, lalu penjelasannya, atau <code>null</code> kalau tidak ada. Nama-nama itu kembali di jawaban.<pre class="snippet"><code>{"calm": null, "tense": "Danger or conflict is close", "playful": null}</code></pre></td></tr>
+      <tr><th scope="row"><code>score</code></th><td>Wajib. Array berisi 2 sampai 10 tingkat, dari yang terendah. Setiap tingkat berupa penjelasan, atau <code>null</code>.<pre class="snippet"><code>["Not urgent", "Low", "Medium", "High", "Drop everything"]</code></pre></td></tr>
+    </tbody>
+  </table></div>
+<p>Penjelasan bisa berupa teks biasa, atau objek atau array kalau itu lebih jelas, misalnya penjelasan dengan beberapa contohnya.</p>
+
+<h3 id="ids">Id pertanyaan</h3>
+<p>Id-nya kamu yang tentukan: nama pendek seperti <code>in_character</code> atau <code>mood</code>. Id hanya memberi label pada jawaban dan tidak dihitung harganya; model membaca instructions dan criteria, bukan id.</p>
+
+<h2 id="response">Respons</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Field</th><th scope="col">Tipe</th><th scope="col">Catatan</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>model</code></th><td data-label="Tipe">string</td><td data-label="Catatan">Model yang kamu tanya.</td></tr>
+      <tr><th scope="row"><code>answers</code></th><td data-label="Tipe">objek</td><td data-label="Catatan">Satu jawaban per pertanyaan, dengan id pertanyaan itu.</td></tr>
+      <tr><th scope="row"><code>usage.input_tokens</code></th><td data-label="Tipe">integer</td><td data-label="Catatan">Token di state dan pertanyaan: dasar harga panggilan ini.</td></tr>
+      <tr><th scope="row"><code>usage.output_tokens</code></th><td data-label="Tipe">integer</td><td data-label="Catatan">Selalu <code>0</code>: jawaban tidak dihitung harganya.</td></tr>
+    </tbody>
+  </table></div>
+<p>Id permintaan ada di header <code>X-Request-Id</code>.</p>
+
+<h3 id="answers">Jawaban, per tipe</h3>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Tipe</th><th scope="col">Field</th><th scope="col">Catatan</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>noul</code></th><td data-label="Field"><code>noul</code></td><td data-label="Catatan">Peluang ya (<code>true</code>), dari 0 sampai 1. Tidak = 1 dikurangi angka itu.</td></tr>
+      <tr><th scope="row"><code>choice</code></th><td data-label="Field"><code>choice</code></td><td data-label="Catatan">Pilihan yang paling cocok. Kalau seri, yang ditulis lebih dulu.</td></tr>
+      <tr><th scope="row"><code>choice</code></th><td data-label="Field"><code>probabilities</code></td><td data-label="Catatan">Setiap pilihan dengan peluangnya. Jumlahnya 1.</td></tr>
+      <tr><th scope="row"><code>choice</code></th><td data-label="Field"><code>confidence</code></td><td data-label="Catatan">0 kalau peluangnya terbagi rata, 1 kalau satu pilihan memegang semuanya.</td></tr>
+      <tr><th scope="row"><code>score</code></th><td data-label="Field"><code>score</code></td><td data-label="Catatan">Rata-rata tertimbang posisi tingkat: dari 0 (tingkat pertama) sampai jumlah tingkat dikurangi 1. Bisa jatuh di antara tingkat.</td></tr>
+      <tr><th scope="row"><code>score</code></th><td data-label="Field"><code>legend</code></td><td data-label="Catatan">Setiap posisi, mulai <code>"0"</code>, dengan tingkatnya persis seperti yang kamu tulis.</td></tr>
+      <tr><th scope="row"><code>score</code></th><td data-label="Field"><code>probabilities</code></td><td data-label="Catatan">Setiap posisi dengan peluangnya. Jumlahnya 1.</td></tr>
+      <tr><th scope="row"><code>score</code></th><td data-label="Field"><code>confidence</code></td><td data-label="Catatan">Dari 0 sampai 1; makin tinggi bila peluangnya berkumpul di sekitar tingkat yang paling mungkin.</td></tr>
+    </tbody>
+  </table></div>
+<p>Setiap jawaban juga membawa <code>type</code>-nya. Peluang punya sampai enam angka desimal. Field baru bisa ditambahkan nanti: abaikan yang tidak kamu pakai.</p>
+
+<h2 id="limits">Batas</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-kv">
+    <thead><tr><th scope="col"></th><th scope="col"></th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Panggilan terpanjang</th><td>2.048 token: state, serta instructions dan criteria setiap pertanyaan</td></tr>
+      <tr><th scope="row">Pertanyaan per panggilan</th><td>Sampai 256, dalam batas 2.048 token</td></tr>
+      <tr><th scope="row">Pilihan per <code>choice</code></th><td>2 sampai 255</td></tr>
+      <tr><th scope="row">Tingkat per <code>score</code></th><td>2 sampai 10</td></tr>
+      <tr><th scope="row">Satu permintaan paket</th><td>1.024 token: panggilan 1.025 sampai 2.048 token dihitung dua</td></tr>
+    </tbody>
+  </table></div>
+<p>Panggilan lebih dari 2.048 token ditolak dengan <code>422</code> sebelum ada yang terpakai. Pecah state-nya, atau ajukan pertanyaan panjang di panggilan tersendiri.</p>
+
+<h2 id="errors">Error</h2>
+<p>Body error di sini punya dua tambahan: <code>param</code> menyebut field yang salah, dan <code>detail</code> mengulang pesannya.</p>
+<div class="code">
+  <div class="code-bar"><span>Error</span><button class="copy" type="button" data-copy="#code-3" aria-label="Salin contoh error">Salin</button></div>
+  <pre id="code-3"><code>{
+  "error": {
+    "message": "question \"mood\": a choice needs at least two options",
+    "type": "invalid_request_error",
+    "code": "invalid_request",
+    "param": "questions.mood.criteria"
+  },
+  "detail": "question \"mood\": a choice needs at least two options"
+}</code></pre>
+</div>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Status</th><th scope="col">Kode</th><th scope="col">Kapan</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>400</code></th><td data-label="Code"><code>wrong_endpoint</code></td><td data-label="When">Kamu mengirim model roleplay. Kirim ke <code>/v1/chat/completions</code>.</td></tr>
+      <tr><th scope="row"><code>401</code></th><td data-label="Code"><code>invalid_api_key</code></td><td data-label="When">Kunci tidak ada atau tidak dikenal.</td></tr>
+      <tr><th scope="row"><code>402</code></th><td data-label="Code"><code>insufficient_balance</code></td><td data-label="When">Tidak ada paket yang menanggung panggilan ini, dan biayanya lebih dari saldomu.</td></tr>
+      <tr><th scope="row"><code>403</code></th><td data-label="Code"><code>invalid_api_key</code></td><td data-label="When">Kunci dimatikan.</td></tr>
+      <tr><th scope="row"><code>403</code></th><td data-label="Code"><code>no_plan</code></td><td data-label="When">Kunci ini sedang tidak punya apa pun untuk memanggil. Beli paket atau isi saldo.</td></tr>
+      <tr><th scope="row"><code>403</code></th><td data-label="Code"><code>plan_expired</code></td><td data-label="When">Paketmu sudah berakhir, dan saldomu tidak cukup untuk panggilan ini.</td></tr>
+      <tr><th scope="row"><code>403</code></th><td data-label="Code"><code>model_forbidden</code></td><td data-label="When">Kunci ini tidak boleh memanggil model itu.</td></tr>
+      <tr><th scope="row"><code>404</code></th><td data-label="Code"><code>model_not_found</code></td><td data-label="When">Tidak ada model dengan ID itu. ID ditulis huruf kecil.</td></tr>
+      <tr><th scope="row"><code>422</code></th><td data-label="Code"><code>invalid_request</code></td><td data-label="When">Body-nya tidak benar, atau panggilannya terlalu panjang. <code>param</code> menyebut field-nya.</td></tr>
+      <tr><th scope="row"><code>429</code></th><td data-label="Code"><code>plan_limit_reached</code></td><td data-label="When">Permintaan paket periode ini sudah habis, dan saldomu tidak cukup untuk panggilan ini.</td></tr>
+      <tr><th scope="row"><code>429</code></th><td data-label="Code"><code>rate_limit_exceeded</code></td><td data-label="When">Batas per detik, per menit, atau harian kuncimu.</td></tr>
+      <tr><th scope="row"><code>429</code></th><td data-label="Code"><code>model_busy</code></td><td data-label="When">Terlalu banyak panggilan sekaligus. Tunggu, lalu kirim lagi.</td></tr>
+      <tr><th scope="row"><code>502</code></th><td data-label="Code"><code>model_unavailable</code></td><td data-label="When">Model tidak bisa menjawab. Coba lagi dengan jeda bertahap.</td></tr>
+    </tbody>
+  </table></div>
+<p>Setiap <code>429</code> membawa <code>Retry-After</code> (detik) dan <code>retry-after-ms</code> (milidetik). Perlakukan kode <code>429</code> lain dengan cara yang sama.</p>
+
+<h2 id="examples">Contoh</h2>
+<h3 id="python">Python</h3>
+<div class="code">
+  <div class="code-bar"><span>Python</span><button class="copy" type="button" data-copy="#code-4" aria-label="Salin contoh Python">Salin</button></div>
+  <pre id="code-4"><code>import os
+import requests
+
+API = "https://ai.zeiko.biz.id/v1"
+KEY = os.environ["ZEIKO_API_KEY"]
+
+def decide(state, questions):
+    r = requests.post(
+        API + "/decisions",
+        headers={"Authorization": "Bearer " + KEY},
+        json={"model": "pranata-v1", "state": state, "questions": questions},
+        timeout=30,
+    )
+    if r.status_code == 429:
+        raise RuntimeError("busy, retry in %s s" % r.headers.get("Retry-After"))
+    r.raise_for_status()
+    return r.json()["answers"]
+
+answers = decide(
+    "Can someone call me back today? The heating is off and it is freezing.",
+    {
+        "urgency": {
+            "type": "score",
+            "instructions": "How urgent is this message?",
+            "criteria": ["Not urgent", "Low", "Medium", "High", "Drop everything"],
+        },
+        "team": {
+            "type": "choice",
+            "instructions": "Which team should take this message?",
+            "criteria": {
+                "repairs": "Something is broken",
+                "accounts": "Questions about money",
+                "other": None,
+            },
+        },
+    },
+)
+print(answers["urgency"]["score"], answers["team"]["choice"])</code></pre>
+</div>
+
+<h3 id="javascript">JavaScript (Node 18 atau lebih baru)</h3>
+<div class="code">
+  <div class="code-bar"><span>JavaScript</span><button class="copy" type="button" data-copy="#code-5" aria-label="Salin contoh JavaScript">Salin</button></div>
+  <pre id="code-5"><code>const res = await fetch("https://ai.zeiko.biz.id/v1/decisions", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer " + process.env.ZEIKO_API_KEY,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    model: "pranata-v1",
+    state: "Can someone call me back today? The heating is off and it is freezing.",
+    questions: {
+      needs_reply: { type: "noul", instructions: "Does this message need a reply today?" },
+    },
+  }),
+});
+if (!res.ok) {
+  const err = await res.json().catch(() =&gt; null);
+  throw new Error(res.status + " " + (err?.error?.code ?? "") + ": " + (err?.error?.message ?? ""));
+}
+const { answers, usage } = await res.json();
+console.log(answers.needs_reply.noul, usage.input_tokens);</code></pre>
+</div>
+
+<h3 id="json-state">State JSON, beberapa pertanyaan</h3>
+<p>Kalau hal yang dinilai punya beberapa bagian, kirim sebagai objek dan sebut field-nya di pertanyaanmu:</p>
+<div class="code">
+  <div class="code-bar"><span>Body permintaan</span><button class="copy" type="button" data-copy="#code-6" aria-label="Salin contoh body permintaan">Salin</button></div>
+  <pre id="code-6"><code>{
+  "model": "pranata-v1",
+  "state": {
+    "title": "Handmade ceramic mug, 350 ml",
+    "description": "Glazed by hand. Dishwasher safe. Ships in 2 days.",
+    "photos": 3
+  },
+  "questions": {
+    "complete": {
+      "type": "noul",
+      "instructions": "Does the description say what the item is made of, its size and when it ships?"
+    },
+    "category": {
+      "type": "choice",
+      "instructions": "Which category does the listing belong in?",
+      "criteria": { "kitchen": null, "home_decor": null, "gifts": null, "other": "None of the others fit" }
+    },
+    "quality": {
+      "type": "score",
+      "instructions": "How useful is the description to a buyer?",
+      "criteria": ["Useless", "Poor", "Fine", "Good", "Excellent"]
+    }
+  }
+}</code></pre>
+</div>
+
+      <nav class="docs-pager" aria-label="Halaman sebelum dan sesudah">
+        <a class="prev" href="/id/docs/api"><small>Sebelumnya</small>Dasar API</a>
+        <a class="next" href="/id/docs/api-chat"><small>Berikutnya</small>API Chat</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> Zeiko</p>
+    <nav aria-label="Tautan bawah">
+      <a href="/id/">Beranda</a>
+      <a href="/id/models">Model</a>
+      <a href="/id/#pricing">Harga</a>
+      <a href="/id/drive">Drive</a>
+      <a href="/id/docs/">Dokumentasi</a>
+      <a href="/id/#contact">Kontak</a>
+      <a href="/account">Akun</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
+</body>
+</html>

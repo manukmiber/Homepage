@@ -7,6 +7,25 @@
 
   var root = document.documentElement;
 
+  /* The few words this file writes, in the page's own language — read when
+     they are written, since the account pages set theirs after this file
+     runs. Prices stay in US dollars, written the same way on both. */
+  var WORDS_ID = {
+    locale: 'id-ID',
+    copied: 'Tersalin',
+    selected: 'Terpilih',
+    perDollar: function (n) { return n + ' permintaan per dolar'; },
+    forRequests: function (n) { return 'Untuk ' + n + ' permintaan'; }
+  };
+  var WORDS_EN = {
+    locale: 'en-US',
+    copied: 'Copied',
+    selected: 'Selected',
+    perDollar: function (n) { return n + ' requests per dollar'; },
+    forRequests: function (n) { return 'For ' + n + ' requests'; }
+  };
+  function words() { return root.lang === 'id' ? WORDS_ID : WORDS_EN; }
+
   /* --------------------------------------------------------- theme */
   /* localStorage can throw (private window, blocked site data), so every
      access is wrapped — the page follows the system theme instead. */
@@ -92,13 +111,13 @@
     btn.setAttribute('data-label', label);
     var say = function (word) {
       out.textContent = word;
-      btn.classList.toggle('is-copied', word === 'Copied');
+      btn.classList.toggle('is-copied', word === words().copied);
       clearTimeout(btn._copyTimer);
       btn._copyTimer = setTimeout(function () { out.textContent = label; btn.classList.remove('is-copied'); }, 1600);
     };
-    var done = function () { say('Copied'); };
+    var done = function () { say(words().copied); };
     // Nothing worked: select the text so it can be copied by hand.
-    var fail = function () { selectText(target); say('Selected'); };
+    var fail = function () { selectText(target); say(words().selected); };
 
     if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
       navigator.clipboard.writeText(text).then(done, function () { copyViaTextarea(text, done, fail); });
@@ -189,7 +208,7 @@
       var value = plan.querySelector('.plan-value');
       if (!v || !value) return;
       value.querySelector('.plan-per').textContent =
-        Math.round(v).toLocaleString('en-US') + ' requests per dollar';
+        words().perDollar(Math.round(v).toLocaleString(words().locale));
       value.querySelector('.plan-meter > span').style.setProperty('--w', Math.max(6, Math.round(v / bestValue * 100)) + '%');
       value.hidden = false;
       if (v === bestValue && plans.length > 1) {
@@ -243,7 +262,7 @@
       var one = ((input - cached) * r.input + cached * r.cache + output * r[f.effort.value]) / 1e6;
       outOne.textContent = money(one);
       outAll.textContent = money(one * n);
-      if (allLabel) allLabel.textContent = 'For ' + n.toLocaleString('en-US') + ' requests';
+      if (allLabel) allLabel.textContent = words().forRequests(n.toLocaleString(words().locale));
     };
 
     calc.addEventListener('input', update);

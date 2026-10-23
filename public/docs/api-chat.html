@@ -284,11 +284,7 @@ data: [DONE]</code></pre>
   </table></div>
 <ul>
   <li><code>id</code>, <code>created</code> and <code>model</code> are the same on every chunk of one reply.</li>
-  <li>One chunk can arrive split across several reads. Buffer until a blank line (<code>
-
-</code> or <code>
-
-</code>) before parsing.</li>
+  <li>One chunk can arrive split across several reads. Buffer until a blank line (<code>\n\n</code> or <code>\r\n\r\n</code>) before parsing.</li>
   <li>Turn off response buffering in your HTTP client; with curl, use <code>-N</code>.</li>
   <li>Disconnecting in the middle stops the reply. What was produced until then still counts.</li>
 </ul>

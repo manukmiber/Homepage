@@ -104,6 +104,7 @@ there too, and the AI products' copy keeps the rule whole.
 public/
   index.html      landing: Pranata V1 hero and #decision first, then Zeiko Drive
                   (#drive), the roleplay models, pricing + cost estimator, FAQ, contact
+  id/             every page above and below in Indonesian (see "Two languages")
   drive.html      /drive: Zeiko Drive's features, plans (drawn from Drive's catalog), FAQ
   id/drive.html   /id/drive: the same page in Indonesian
   models.html     /models: at-a-glance table, then each model's specs and rate card
@@ -118,8 +119,10 @@ public/
   docs/           /docs: one plain page per topic (index.html is /docs/)
   account/index.html  /account and every page under it: one plain page
   js/account/     Zeiko Accounts: app.js asks the account door, views.js draws,
-                  payguide.js is the buying guide's text, me.js names the person
-                  for the top bar, session.js (on every page) asks who is signed in
+                  lang.js picks English or Indonesian, payguide.js (and
+                  payguide.id.js) is the buying guide's text, me.js names the
+                  person for the top bar, session.js (on every page) asks who is
+                  signed in
 src/
   worker.js       fills /models from the snapshot and /drive from Drive's catalog,
                   sends /dashboard… to Drive's address, answers 404.html for the rest
@@ -193,15 +196,58 @@ things:
   `/id/drive` (`.drv`) is an illustration and says so ("Illustration" /
   "Ilustrasi"): fixed, made-up files and sizes, never a real figure and
   never animated, like the hero's example answers card.
-- **EN | ID**: the `lang-switch` link beside the theme button goes to the
-  same page in the other language, and `main.js` keeps the choice in the
-  `zk_lang` cookie for the whole site — Drive reads it too. Only the Drive
-  pages have an Indonesian copy so far.
+- **EN | ID**: see "Two languages" below.
+
+## Two languages (EN | ID)
+
+Every page is in English and in Indonesian (the operator's, October 2026):
+`public/<page>.html` and its twin `public/id/<page>.html` — `/` and `/id/`,
+`/models` and `/id/models`, `/drive` and `/id/drive`, `/docs/…` and
+`/id/docs/…`, `404.html` and `id/404.html`.
+
+- **The switch**: every page with the top bar has
+  `<a class="lang-switch" href="<its twin>" hreflang="…" data-lang="…">`
+  beside the theme button, and `<link rel="alternate" hreflang>` for both.
+  `main.js` keeps the choice in the `zk_lang` cookie for the whole domain
+  (Zeiko Drive reads it too); an Indonesian page sets it once if nothing is
+  kept. `npm run check` fails a page without the switch, a switch to a page
+  that does not exist, or a twin that does not switch back.
+- **Links stay in the language**: an Indonesian page links to `/id/…` for
+  every page that has a twin; the account pages (`/account…`) are one page
+  for both languages.
+- **Indonesian copy says the same as the English**, never more. Numbers are
+  written the Indonesian way (2.048, 99,95%); prices stay in US dollars
+  written as on the English pages (`$0.35`), so every `data-price` key reads
+  the same everywhere. Product and plan names are not translated.
+- **The rule holds in Indonesian too**: `scripts/check-site.mjs` has the
+  banned words in Indonesian as well (penyedia, antrean, tagihan, bayar,
+  langganan, kripto, dompet, basis data, dasbor, deteksi, klasifikasi,
+  disimpan, penyimpanan, analitik, pelacakan…), with Drive's words
+  (penyimpanan, bayar, pembayaran…) allowed in Drive blocks only, like
+  storage and pay in English.
+- **What scripts write**: `main.js` and `try.js` pick their words from the
+  page's `<html lang>`; `src/render.js` renders `/models` with
+  `render(view, 'en')` and `/id/models` with `render(view, 'id')` (labels,
+  dates and number format, all in its `TEXT`); the worker answers
+  `id/404.html` under `/id/` or for a `zk_lang=id` visitor.
+- **The account pages** are drawn in the visitor's language
+  (`public/js/account/lang.js`: the `zk_lang` cookie; `L(en, id)`). Every
+  sentence in `views.js` and `app.js` is an `L('…', '…')`; the static shell
+  (`account/index.html`) marks its words with `data-id`, `data-id-label` and
+  `data-id-href`, which `app.js` swaps in. The buying guide is
+  `payguide.js` and, in Indonesian, `payguide.id.js` (the same headings and
+  anchors). The check renders every account page in both languages.
+  Messages the account door writes come back in its own words (English).
+- **A new page, or a change to one**, is made in both languages in the same
+  commit. Every docs page has the same frame (top bar, both docs lists,
+  pager, footer): a change to it goes into all 26 pages, and the two
+  languages' docs lists and pagers stay the same.
 
 ## Zeiko Accounts (`public/account/`, `public/js/account/`)
 
-One account for ZeikoAI and Zeiko Chat: the same login (email and password,
-Google, GitHub) and **one balance** for both. `/account` is one plain page;
+One account for ZeikoAI, Zeiko Chat and Zeiko Drive: the same login (email
+and password, Google, GitHub), and **one balance** for ZeikoAI and Zeiko Chat
+(Drive keeps a balance of its own, in the Drive app). `/account` is one plain page;
 its script (`app.js`) asks the **account door** —
 `https://auth.zeiko.biz.id`, the page's `<meta name="zeiko-accounts">` — for
 everything, with the visitor's own cookie for the door
@@ -423,12 +469,16 @@ copy, and the snapshot's figures are keyed on it. The display name
   (the rates table), `docs/api.html` (Model IDs), `docs/api-chat.html`
   (`model`), and "three" in their copy.
 
-## The docs (`public/docs/`)
+## The docs (`public/docs/`, `public/id/docs/`)
 
-`/docs` is ten plain pages, one per topic, grouped Get started (`index`,
-`account`, `playground`), Models (`pranata-v1`, `roleplay`, `pricing`) and
-API (`api`, `api-decisions`, `api-chat`, `faq`). `/docs/<name>` serves
-`docs/<name>.html`; `/docs` itself goes to `/docs/`. They read fine with
+`/docs` is thirteen plain pages, one per topic, grouped Get started
+(`index`, `account`, `playground`), Models (`pranata-v1`, `roleplay`,
+`pricing`), API (`api`, `api-decisions`, `api-chat`, `faq`) and Zeiko Drive
+(`drive`, `drive-plans`, `drive-sharing`), each with its Indonesian twin
+under `/id/docs/`. `/docs/<name>` serves `docs/<name>.html`; `/docs` itself
+goes to `/docs/`. The Zeiko Drive pages are written from the Drive app
+itself (its own words and button names) and sit in Drive blocks; they never
+type a Drive price: plans and prices are on `/drive`. They read fine with
 JavaScript off and load `main.js` only (theme, menu, the copy buttons on
 code, which hide without it).
 
@@ -472,7 +522,8 @@ response"). Read your own copy with the rule above in mind.
 
 ## Conventions
 
-- Site copy is English, short and concrete.
+- Site copy is English and Indonesian, short and concrete; "kamu", not
+  "Anda", in Indonesian.
 - Colours are tokens on `:root`, redefined for dark mode in both the
   `prefers-color-scheme` block and `[data-theme="dark"]`. Add a new colour
   to all three.

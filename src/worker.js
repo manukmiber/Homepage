@@ -1,9 +1,10 @@
 // The only code that runs on the server side of the site.
 //
 // `run_worker_first` in wrangler.jsonc sends /models, /drive and /account
-// here; every other path that is a plain file never reaches this code. A
-// path that is no file at all does, and is either the way back to Zeiko
-// Drive (/dashboard…) or the site's 404 page.
+// (and /id/models, /id/drive) here; every other path that is a plain file
+// never reaches this code. A path that is no file at all does, and is either
+// the way back to Zeiko Drive (/dashboard…) or the site's 404 page, in
+// Indonesian under /id/ or for a visitor who chose it (the zk_lang cookie).
 //
 // Zeiko Drive is its own Worker at its own address, drive.zeiko.biz.id.
 // /dashboard/… (its old address here) sends the visitor there, the same path
@@ -17,8 +18,9 @@
 // this code holds no secret. It only hands every account address the same
 // page, so a link to /account/plans or /account/reset?token=… opens.
 //
-// For /models, the static page is fetched as usual and the latest hourly
-// snapshot in R2 is rendered into its placeholders (see src/render.js). The
+// For /models (and /id/models), the static page is fetched as usual and the
+// latest hourly snapshot in R2 is rendered into its placeholders, in the
+// page's language (see src/render.js). The
 // visitor's browser only ever receives finished HTML: no data file, no script
 // fetching one. If the snapshot is missing or unreadable, the static page
 // goes out as is, with its "not available right now" notes.
@@ -43,10 +45,20 @@ async function accountShell(request, env) {
 
 const OBJECT = 'models.json';
 
+/** The language a visitor reads: /id/… is Indonesian, elsewhere their zk_lang choice. */
+function langOf(request, url) {
+  if (url.pathname === '/id' || url.pathname.startsWith('/id/')) return 'id';
+  return /(?:^|;\s*)zk_lang=id(?:;|$)/.test(request.headers.get('cookie') || '') ? 'id' : 'en';
+}
+
 /** The site's own 404 page, for a path that is neither a file nor Drive's. */
 async function notFound(request, env) {
-  const page = await env.ASSETS.fetch(new Request(new URL('/404.html', request.url)));
-  return new Response(page.body, { status: 404, headers: page.headers });
+  const url = new URL(request.url);
+  const path = langOf(request, url) === 'id' ? '/id/404.html' : '/404.html';
+  const page = await env.ASSETS.fetch(new Request(new URL(path, url)));
+  const headers = new Headers(page.headers);
+  headers.append('vary', 'cookie');
+  return new Response(page.body, { status: 404, headers });
 }
 
 /** /drive and /id/drive, with the plan cards from Drive's catalog. */
@@ -110,7 +122,8 @@ export default {
     }
     if (url.pathname === '/drive') return drivePage(request, env, 'en');
     if (url.pathname === '/id/drive') return drivePage(request, env, 'id');
-    if (url.pathname !== '/models') {
+    const lang = url.pathname === '/id/models' ? 'id' : 'en';
+    if (url.pathname !== '/models' && url.pathname !== '/id/models') {
       const res = await env.ASSETS.fetch(request);
       return res.status === 404 ? notFound(request, env) : res;
     }
@@ -123,7 +136,7 @@ export default {
     const page = await env.ASSETS.fetch(plain);
     if (!page.ok || !(page.headers.get('content-type') || '').includes('text/html')) return page;
 
-    const view = await load(env);
+    const view = await load(env, lang);
     if (!view) return page;
 
     const out = new HTMLRewriter()
@@ -156,12 +169,12 @@ export default {
   },
 };
 
-async function load(env) {
+async function load(env, lang) {
   try {
     if (!env.MODELS) return null;
     const object = await env.MODELS.get(OBJECT);
     if (!object) return null;
-    return render(sanitize(await object.json()));
+    return render(sanitize(await object.json()), lang);
   } catch {
     return null;
   }

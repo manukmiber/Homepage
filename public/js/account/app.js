@@ -9,6 +9,7 @@
 
 import * as view from './views.js';
 import { remember } from './me.js';
+import { L, getLang } from './lang.js';
 
 const DOOR = (document.querySelector('meta[name="zeiko-accounts"]') || {}).content?.replace(/\/+$/, '') || '';
 const root = document.getElementById('acct');
@@ -53,7 +54,7 @@ function problem(r) {
   if (r.status >= 400 && r.status < 500 && r.data && r.data.error && typeof r.data.error.message === 'string') {
     return r.data.error.message;
   }
-  return 'Not available right now. Try again in a minute.';
+  return L('Not available right now. Try again in a minute.', 'Sedang tidak tersedia. Coba lagi semenit lagi.');
 }
 
 /* --------------------------------------------------------------- helpers */
@@ -126,25 +127,25 @@ function savedRef() {
 // the visitor's text, and putting it on the page would let anyone make the
 // site say anything.
 const FLASH = {
-  welcome: ['ok', 'Your account is ready, here and in Zeiko Chat. Buy a plan or add balance to start calling Pranata V1.'],
-  'signed-in': ['ok', 'You are signed in.'],
-  'verify-sent': ['ok', 'We sent a new code. Type it above, or open the link in the email.'],
-  verified: ['ok', 'Your email is confirmed.'],
-  password: ['ok', 'Your password is saved.'],
-  email: ['ok', 'Your new email is saved. Type the code we sent there to confirm it.'],
-  rotated: ['ok', 'Your new key is below. The old one no longer works.'],
-  cancelled: ['warn', 'Nothing was charged. Pick a plan or an amount whenever you are ready.'],
-  linked: ['ok', 'That sign-in method is connected.'],
-  'link-taken': ['err', 'That account is already connected to another Zeiko Account.'],
+  welcome: ['ok', L('Your account is ready, here, in Zeiko Chat and in Zeiko Drive. Buy a plan or add balance to start calling Pranata V1.', 'Akunmu sudah siap, di sini, di Zeiko Chat, dan di Zeiko Drive. Beli paket atau isi saldo untuk mulai memanggil Pranata V1.')],
+  'signed-in': ['ok', L('You are signed in.', 'Kamu sudah masuk.')],
+  'verify-sent': ['ok', L('We sent a new code. Type it above, or open the link in the email.', 'Kami mengirim kode baru. Ketik di atas, atau buka link di email itu.')],
+  verified: ['ok', L('Your email is confirmed.', 'Email-mu sudah dikonfirmasi.')],
+  password: ['ok', L('Your password is saved.', 'Kata sandimu sudah diganti.')],
+  email: ['ok', L('Your new email is saved. Type the code we sent there to confirm it.', 'Email barumu sudah dicatat. Ketik kode yang kami kirim ke sana untuk mengonfirmasinya.')],
+  rotated: ['ok', L('Your new key is below. The old one no longer works.', 'Kunci barumu ada di bawah. Kunci lama sudah tidak berlaku.')],
+  cancelled: ['warn', L('Nothing was charged. Pick a plan or an amount whenever you are ready.', 'Tidak ada yang ditagih. Pilih paket atau jumlah kapan pun kamu siap.')],
+  linked: ['ok', L('That sign-in method is connected.', 'Cara masuk itu sudah tersambung.')],
+  'link-taken': ['err', L('That account is already connected to another Zeiko Account.', 'Akun itu sudah tersambung ke Akun Zeiko lain.')],
   // Where the subscription plans send a subscriber back:
   // /account?m=subscription-paid, -failed or -partial.
-  'subscription-paid': ['ok', 'Payment received — thank you. Your plan is renewed; the next link arrives by email before it runs out.'],
-  'subscription-failed': ['err', 'That payment did not go through. Nothing was charged; the link in the email still works.'],
-  'subscription-partial': ['warn', 'Only part of the amount arrived. Finish it from the same payment page, or contact us.'],
+  'subscription-paid': ['ok', L('Payment received — thank you. Your plan is renewed; the next link arrives by email before it runs out.', 'Pembayaran diterima — terima kasih. Paketmu diperpanjang; link berikutnya datang lewat email sebelum paket habis.')],
+  'subscription-failed': ['err', L('That payment did not go through. Nothing was charged; the link in the email still works.', 'Pembayaran itu tidak berhasil. Tidak ada yang ditagih; link di email masih berlaku.')],
+  'subscription-partial': ['warn', L('Only part of the amount arrived. Finish it from the same payment page, or contact us.', 'Baru sebagian jumlahnya yang masuk. Selesaikan dari halaman pembayaran yang sama, atau hubungi kami.')],
 };
 const SIGNIN_NOTE = {
-  oauth: 'That sign-in did not go through. Try again.',
-  taken: 'That email already has an account. Sign in with its password, then connect this method in Settings.',
+  oauth: L('That sign-in did not go through. Try again.', 'Masuk tadi tidak berhasil. Coba lagi.'),
+  taken: L('That email already has an account. Sign in with its password, then connect this method in Settings.', 'Email itu sudah punya akun. Masuk dengan kata sandinya, lalu sambungkan cara ini di Pengaturan.'),
 };
 
 function flashFromAddress() {
@@ -171,7 +172,14 @@ function setNav(account) {
   if (navEl) navEl.innerHTML = view.nav(account);
 }
 
-const TITLES = { '/account': 'Account', '/account/plans': 'Plans & balance', '/account/key': 'API key', '/account/settings': 'Settings', '/account/how-to-buy': 'How to pay', '/account/pay': 'Pay by QRIS' };
+const TITLES = {
+  '/account': L('Account', 'Akun'),
+  '/account/plans': L('Plans & balance', 'Paket & saldo'),
+  '/account/key': L('API key', 'Kunci API'),
+  '/account/settings': L('Settings', 'Pengaturan'),
+  '/account/how-to-buy': L('How to pay', 'Cara membayar'),
+  '/account/pay': L('Pay by QRIS', 'Bayar dengan QRIS'),
+};
 const TABS = { '/account': 'overview', '/account/plans': 'plans', '/account/key': 'key', '/account/settings': 'settings', '/account/how-to-buy': 'howtobuy', '/account/pay': 'pay' };
 
 // A QRIS payment's page asks again every few seconds while it can still move.
@@ -197,16 +205,16 @@ function publicPage(extra = {}) {
   const next = safeNext(params.get('next') || '');
   const opts = session.signInWith || {};
   if (path === '/account/signup') {
-    document.title = 'Create account — Zeiko';
+    document.title = `${L('Create account', 'Buat akun')} — Zeiko`;
     draw(view.signUp({ error: extra.error || '', email: extra.email || '', username: extra.username || '', next, app: appOf(next), ref: extra.ref ?? (rememberRef() || savedRef()), opts, door: DOOR }));
   } else if (path === '/account/forgot') {
-    document.title = 'Forgot password — Zeiko';
+    document.title = `${L('Forgot password', 'Lupa kata sandi')} — Zeiko`;
     draw(view.forgot({ error: extra.error || '', sent: Boolean(extra.sent) }));
   } else if (path === '/account/reset') {
-    document.title = 'New password — Zeiko';
+    document.title = `${L('New password', 'Kata sandi baru')} — Zeiko`;
     draw(view.reset({ error: extra.error || '', token: params.get('token') || '' }));
   } else {
-    document.title = 'Sign in — Zeiko';
+    document.title = `${L('Sign in', 'Masuk')} — Zeiko`;
     const note = SIGNIN_NOTE[params.get('m')] || '';
     draw(view.signIn({ error: extra.error || note, notice: extra.notice || '', email: extra.email || '', next, app: appOf(next), opts, door: DOOR }));
   }
@@ -219,7 +227,7 @@ async function accountPage(extra = {}) {
     return;
   }
   if (r.status !== 200 || !r.data) {
-    draw(view.message({ heading: 'Not available right now', text: problem(r), link: path, label: 'Try again' }));
+    draw(view.message({ heading: L('Not available right now', 'Sedang tidak tersedia'), text: problem(r), link: path, label: L('Try again', 'Coba lagi') }));
     return;
   }
   o = r.data;
@@ -230,15 +238,15 @@ async function accountPage(extra = {}) {
   if (!flash && paid && /^[A-Za-z0-9_-]{1,64}$/.test(paid)) {
     const p = await ask('POST', `/payments/${encodeURIComponent(paid)}/recheck`);
     if (p.status === 200 && p.data && p.data.paid) {
-      flash = view.flash('ok', 'Payment received — thank you. Your plan or balance is updated.');
+      flash = view.flash('ok', L('Payment received — thank you. Your plan or balance is updated.', 'Pembayaran diterima — terima kasih. Paket atau saldomu sudah diperbarui.'));
       const fresh = await ask('GET', '/account');
       if (fresh.status === 200 && fresh.data) o = fresh.data;
     } else if (p.status === 200) {
-      flash = view.flash('warn', 'Thanks! Your payment is on its way. It shows up here once the network confirms it — usually within a few minutes.');
+      flash = view.flash('warn', L('Thanks! Your payment is on its way. It shows up here once the network confirms it — usually within a few minutes.', 'Terima kasih! Pembayaranmu sedang dalam perjalanan. Akan tampil di sini setelah jaringan mengonfirmasinya — biasanya dalam beberapa menit.'));
     }
   }
   const tab = TABS[path] || 'overview';
-  document.title = `${TITLES[path] || 'Account'} — Zeiko`;
+  document.title = `${TITLES[path] || TITLES['/account']} — Zeiko`;
   if (tab === 'pay') return payPage(flash);
   if (tab === 'plans') draw(view.plans(o, { flash, pick: extra.pick || params.get('plan') || '' }));
   else if (tab === 'key') draw(view.key(o, { flash, shown: extra.shown, apiBase: o.apiBase || '' }));
@@ -260,7 +268,7 @@ async function payPage(flash) {
   // A poll that was on its way when "I've paid" went through: the thanks stays.
   if (thanked) return;
   if (r.status !== 200 || !r.data) {
-    draw(view.message({ heading: 'Not available right now', text: problem(r), link: '/account/plans', label: 'Plans & balance' }));
+    draw(view.message({ heading: L('Not available right now', 'Sedang tidak tersedia'), text: problem(r), link: '/account/plans', label: L('Plans & balance', 'Paket & saldo') }));
     return;
   }
   draw(view.qrisPay(o, { ...r.data, driveBack: driveBack(r.data) }, flash || ''));
@@ -347,13 +355,13 @@ async function act(name, f, submitter) {
     case 'topup': {
       const raw = submitter && submitter.value === 'custom' ? f.custom : submitter ? submitter.value : f.custom;
       const amountUsd = Math.floor(Number(raw));
-      if (!Number.isFinite(amountUsd) || amountUsd <= 0) return back('Pick an amount, or type one in whole dollars.');
+      if (!Number.isFinite(amountUsd) || amountUsd <= 0) return back(L('Pick an amount, or type one in whole dollars.', 'Pilih jumlah, atau ketik jumlah dalam dolar bulat.'));
       const method = f.method === 'qris' ? 'qris' : 'crypto';
       const r = await ask('POST', '/checkout', { product: 'chat', kind: 'credit', amountUsd, method });
       return paying(r, back);
     }
     case 'qris-sent': {
-      if (!PAY_ID.test(f.id || '')) return back('That payment was not found.');
+      if (!PAY_ID.test(f.id || '')) return back(L('That payment was not found.', 'Pembayaran itu tidak ditemukan.'));
       const r = await ask('POST', `/payments/${encodeURIComponent(f.id)}/sent`, {});
       if (r.status === 200 && r.data) return thanks(r.data);
       return payPage(view.flash('err', problem(r)));
@@ -361,7 +369,7 @@ async function act(name, f, submitter) {
     case 'subscribe': {
       const product = f.product === 'chat' ? 'chat' : 'pranata';
       const r = await ask('POST', '/subscribe', { product, plan: f.plan || '' });
-      if (r.status === 200) return back('We emailed you a link for this plan. A new one arrives before every renewal.', 'ok');
+      if (r.status === 200) return back(L('We emailed you a link for this plan. A new one arrives before every renewal.', 'Kami mengirim link untuk paket ini lewat email. Link baru datang sebelum setiap perpanjangan.'), 'ok');
       return back(problem(r));
     }
     case 'key-reveal': {
@@ -370,7 +378,7 @@ async function act(name, f, submitter) {
       return back(problem(r));
     }
     case 'key-rotate': {
-      if (f.sure !== '1') return back('Tick the box to confirm.');
+      if (f.sure !== '1') return back(L('Tick the box to confirm.', 'Centang kotaknya untuk mengonfirmasi.'));
       const r = await ask('POST', '/key/rotate', {});
       if (r.status === 200 && r.data && r.data.key) return accountPage({ shown: r.data.key, flash: view.flash(...FLASH.rotated) });
       return back(problem(r));
@@ -420,7 +428,7 @@ document.addEventListener('click', (e) => {
   const show = box.type === 'password';
   box.type = show ? 'text' : 'password';
   btn.setAttribute('aria-pressed', String(show));
-  btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+  btn.setAttribute('aria-label', show ? L('Hide password', 'Sembunyikan kata sandi') : L('Show password', 'Tampilkan kata sandi'));
   box.focus();
 });
 
@@ -436,10 +444,41 @@ document.addEventListener('keyup', capsNote);
 
 /* ----------------------------------------------------------------- start */
 
+/** The page around the account pages, in the visitor's language. The file
+ * is written in English; for Indonesian, each marked part takes its
+ * `data-id` text, `data-id-label` label and `data-id-href` link (the site's
+ * /id/ pages). The EN | ID switch leads to this same page in the other
+ * language: main.js keeps the choice when it is pressed. */
+function shellLang() {
+  const id = getLang() === 'id';
+  document.documentElement.lang = getLang();
+  if (id) {
+    for (const el of document.querySelectorAll('[data-id]')) el.textContent = el.dataset.id;
+    for (const el of document.querySelectorAll('[data-id-label]')) el.setAttribute('aria-label', el.dataset.idLabel);
+    for (const el of document.querySelectorAll('[data-id-href]')) el.setAttribute('href', el.dataset.idHref);
+  }
+  const sw = document.getElementById('langSwitch');
+  if (sw) {
+    const other = id ? 'en' : 'id';
+    sw.textContent = other.toUpperCase();
+    sw.setAttribute('href', location.pathname + location.search + location.hash);
+    sw.setAttribute('hreflang', other);
+    sw.setAttribute('lang', other);
+    sw.dataset.lang = other;
+    // The link is this very page, which a browser may only scroll to: draw it
+    // again. main.js's own click handler, added first, has kept the choice.
+    sw.addEventListener('click', (e) => {
+      e.preventDefault();
+      location.reload();
+    });
+  }
+}
+
 async function start() {
+  shellLang();
   rememberRef();
   if (!DOOR) {
-    draw(view.message({ heading: 'Accounts open soon', text: 'Signing in is not available yet. Check back shortly.', link: '/', label: 'Back to the site' }));
+    draw(view.message({ heading: L('Accounts open soon', 'Akun segera dibuka'), text: L('Signing in is not available yet. Check back shortly.', 'Masuk belum tersedia. Kembali lagi sebentar lagi.'), link: '/', label: L('Back to the site', 'Kembali ke situs') }));
     return;
   }
   // A confirmation link works without being signed in.
@@ -450,15 +489,15 @@ async function start() {
     else if (navEl) navEl.innerHTML = view.nav(null);
     if (r.status === 200) {
       if (session.account) return location.replace('/account?m=verified');
-      return draw(view.message({ heading: 'Email confirmed', text: 'Thanks — your email is confirmed. Sign in to carry on.', link: '/account/signin', label: 'Sign in' }));
+      return draw(view.message({ heading: L('Email confirmed', 'Email dikonfirmasi'), text: L('Thanks — your email is confirmed. Sign in to carry on.', 'Terima kasih — email-mu sudah dikonfirmasi. Masuk untuk melanjutkan.'), link: '/account/signin', label: L('Sign in', 'Masuk') }));
     }
-    return draw(view.message({ heading: status ? 'That link did not work' : 'Not available right now', text: problem(r), link: '/account', label: 'Go to your account' }));
+    return draw(view.message({ heading: status ? L('That link did not work', 'Link itu tidak berhasil') : L('Not available right now', 'Sedang tidak tersedia'), text: problem(r), link: '/account', label: L('Go to your account', 'Buka akunmu') }));
   }
   const status = await loadSession();
   if (status !== 200) {
     // The door did not answer: who this is stays unknown, not signed out.
     if (navEl) navEl.innerHTML = view.nav(null);
-    draw(view.message({ heading: 'Not available right now', text: 'Signing in is not available right now. Try again in a minute.', link: path, label: 'Try again' }));
+    draw(view.message({ heading: L('Not available right now', 'Sedang tidak tersedia'), text: L('Signing in is not available right now. Try again in a minute.', 'Masuk sedang tidak tersedia. Coba lagi semenit lagi.'), link: path, label: L('Try again', 'Coba lagi') }));
     return;
   }
   const signedIn = Boolean(session.account);

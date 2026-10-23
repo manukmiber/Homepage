@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>API Chat — Dokumentasi Zeiko</title>
+<meta name="description" content="Referensi POST /v1/chat/completions: parameter, balasan, usage, streaming, penolakan, error, dan contoh.">
+<meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
+<meta property="og:title" content="API Chat — Dokumentasi Zeiko">
+<meta property="og:description" content="Referensi POST /v1/chat/completions: parameter, balasan, usage, streaming, penolakan, error, dan contoh.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Langsung ke isi</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/id/">
+      <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
+      <span class="brand-name">Zeiko</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Navigasi utama">
+      <a href="/id/#decision">Pranata V1</a>
+      <a href="/id/drive">Drive</a>
+      <a href="/id/#models">Roleplay</a>
+      <a href="/id/#pricing">Harga</a>
+      <a href="/id/models">Model</a>
+      <a href="/id/docs/" aria-current="page">Dokumentasi</a>
+      <a class="nav-account" href="/account">Masuk</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Buat akun</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <a class="lang-switch" href="/docs/api-chat" hreflang="en" lang="en" data-lang="en">EN</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Ganti tema terang dan gelap">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Dokumentasi">
+      <details class="docs-menu">
+        <summary>Menu dokumentasi <span>API Chat</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Mulai</p>
+          <ul>
+            <li><a href="/id/docs/">Pengantar</a></li>
+            <li><a href="/id/docs/account">Akunmu</a></li>
+            <li><a href="/id/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Model AI</p>
+          <ul>
+            <li><a href="/id/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
+            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/id/docs/api">Dasar API</a></li>
+            <li><a href="/id/docs/api-decisions">API Keputusan</a></li>
+            <li><a href="/id/docs/api-chat" aria-current="page">API Chat</a></li>
+            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive">Dasar Drive</a></li>
+            <li><a href="/id/docs/drive-plans">Paket &amp; Saldo Drive</a></li>
+            <li><a href="/id/docs/drive-sharing">Berbagi &amp; unduhan</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Mulai</p>
+          <ul>
+            <li><a href="/id/docs/">Pengantar</a></li>
+            <li><a href="/id/docs/account">Akunmu</a></li>
+            <li><a href="/id/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Model AI</p>
+          <ul>
+            <li><a href="/id/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
+            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/id/docs/api">Dasar API</a></li>
+            <li><a href="/id/docs/api-decisions">API Keputusan</a></li>
+            <li><a href="/id/docs/api-chat" aria-current="page">API Chat</a></li>
+            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive">Dasar Drive</a></li>
+            <li><a href="/id/docs/drive-plans">Paket &amp; Saldo Drive</a></li>
+            <li><a href="/id/docs/drive-sharing">Berbagi &amp; unduhan</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/id/docs/">Dokumentasi</a> <span aria-hidden="true">/</span> API</p>
+      <h1>API Chat</h1>
+      <p class="lede">Model roleplay memakai format chat completions yang dipakai SDK OpenAI: pesan masuk, balasan keluar, di-stream atau sekaligus.</p>
+      <nav class="docs-toc" aria-label="Di halaman ini">
+        <p>Di halaman ini</p>
+        <ul>
+          <li><a href="#example">Contoh lengkap</a></li>
+          <li><a href="#parameters">Parameter permintaan</a></li>
+          <li><a href="#response">Balasan</a></li>
+          <li><a href="#streaming">Streaming</a></li>
+          <li><a href="#refusals">Penolakan</a></li>
+          <li><a href="#errors">Error</a></li>
+          <li><a href="#examples">Contoh</a></li>
+        </ul>
+      </nav>
+
+<p class="endpoint"><span class="verb verb-post">POST</span><code>https://ai.zeiko.biz.id/v1/chat/completions</code></p>
+
+<h2 id="example">Contoh lengkap</h2>
+<div class="code">
+  <div class="code-bar"><span>curl</span><button class="copy" type="button" data-copy="#code-1" aria-label="Salin contoh curl">Salin</button></div>
+  <pre id="code-1"><code>curl https://ai.zeiko.biz.id/v1/chat/completions \
+  -H "Authorization: Bearer $ZEIKO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "jagad-512b-v1",
+    "messages": [
+      {"role": "system", "content": "You are Aria, a cheerful barista in a rainy harbour town."},
+      {"role": "user", "content": "*shakes off my umbrella* One hot chocolate, please."}
+    ],
+    "stream": false,
+    "max_tokens": 1024,
+    "temperature": 0.9,
+    "reasoning_effort": "low",
+    "user": "user-9f3c1ab7"
+  }'</code></pre>
+</div>
+<p>Balasannya:</p>
+<div class="code">
+  <div class="code-bar"><span>Balasan</span><button class="copy" type="button" data-copy="#code-2" aria-label="Salin contoh balasan">Salin</button></div>
+  <pre id="code-2"><code>{
+  "id": "32dadfde-f3dd-4ad8-acc5-387b72415f46",
+  "object": "chat.completion",
+  "created": 1789936200,
+  "model": "jagad-512b-v1",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "*slides a steaming mug across the counter* Extra marshmallows, on the house.",
+        "reasoning_content": "The customer just came in from the rain..."
+      },
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 42,
+    "completion_tokens": 310,
+    "total_tokens": 352,
+    "prompt_tokens_details": { "cached_tokens": 32 },
+    "completion_tokens_details": { "reasoning_tokens": 250 },
+    "cost": 0.0004717
+  }
+}</code></pre>
+</div>
+
+<h2 id="parameters">Parameter permintaan</h2>
+<div class="doc-table-wrap"><table class="doc-table">
+    <thead><tr><th scope="col">Parameter</th><th scope="col">Catatan</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>model</code></th><td>Wajib. <code>jagad-512b-v1</code>, <code>asmarandana-512b-v1</code>, atau <code>wisanggeni-512b-v1</code>.</td></tr>
+      <tr><th scope="row"><code>messages</code></th><td>Wajib. Percakapannya, dari yang paling lama. Setiap item berupa <code>{"role", "content"}</code>: <code>role</code> adalah <code>system</code>, <code>user</code>, atau <code>assistant</code>, dan <code>content</code> berupa string.</td></tr>
+      <tr><th scope="row"><code>stream</code></th><td><code>true</code> untuk aliran event (<a href="#streaming">di bawah</a>), <code>false</code> untuk satu balasan JSON. Bawaannya <code>false</code>.</td></tr>
+      <tr><th scope="row"><code>max_tokens</code><br><code>max_completion_tokens</code></th><td>Balasan terpanjang yang kamu mau, dalam token, sampai 32.000.</td></tr>
+      <tr><th scope="row"><code>temperature</code><br><code>top_p</code></th><td>Sampling, seperti di API OpenAI. Setiap model punya nilai bawaan sendiri kalau tidak kamu isi.</td></tr>
+      <tr><th scope="row"><code>stop</code></th><td>String, atau array string: balasan berhenti sebelum salah satunya. Hanya empat pertama yang dipakai.</td></tr>
+      <tr><th scope="row"><code>reasoning_effort</code></th><td><code>none</code>, <code>minimal</code>, <code>low</code>, <code>medium</code>, <code>high</code>, atau <code>max</code>: seberapa banyak model berpikir sebelum menjawab, sehingga menentukan <a href="/id/docs/pricing#bands">tarif output</a> yang berlaku. <code>high</code> kalau tidak kamu kirim. <code>reasoning: {"effort": "…"}</code> juga bisa.</td></tr>
+      <tr><th scope="row"><code>include_reasoning</code></th><td><code>false</code> tidak menyertakan teks penalaran di balasan; <code>reasoning: {"exclude": true}</code> sama saja. Penalarannya tetap dibuat, dan dihitung di <code>usage</code>.</td></tr>
+      <tr><th scope="row"><code>user</code></th><td>Disarankan. Id yang tetap dan anonim untuk orang yang dilayani permintaan ini. <code>user_id</code> juga bisa. <a href="#user">Selengkapnya di bawah.</a></td></tr>
+    </tbody>
+  </table></div>
+
+<h3 id="user">Field <code>user</code></h3>
+<p>Kalau satu kunci melayani banyak orang, kirim id tiap orang sebagai <code>user</code>. Ini membantu input yang berulang dibaca dari cache, dengan tarif cache read (lihat <code>usage.prompt_tokens_details.cached_tokens</code>). Buat id itu:</p>
+<ul>
+  <li><strong>Tetap</strong>: orang yang sama selalu mendapat id yang sama.</li>
+  <li><strong>Unik</strong>: dua orang tidak pernah memakai id yang sama.</li>
+  <li><strong>Anonim</strong>: hash atau nomor akun; jangan pernah alamat email, nomor telepon, atau nama. Maksimal 120 karakter.</li>
+</ul>
+<p>Boleh juga tidak diisi; semua permintaan dengan kunci itu lalu dianggap datang dari satu orang.</p>
+
+<h2 id="response">Balasan</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Field</th><th scope="col">Tipe</th><th scope="col">Catatan</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>id</code></th><td data-label="Tipe">string</td><td data-label="Catatan">Id permintaan, juga dikirim sebagai header <code>X-Request-Id</code>. Simpan kalau kamu mungkin menghubungi kami soal permintaan ini.</td></tr>
+      <tr><th scope="row"><code>object</code></th><td data-label="Tipe">string</td><td data-label="Catatan"><code>"chat.completion"</code></td></tr>
+      <tr><th scope="row"><code>created</code></th><td data-label="Tipe">integer</td><td data-label="Catatan">Waktu Unix, dalam detik.</td></tr>
+      <tr><th scope="row"><code>model</code></th><td data-label="Tipe">string</td><td data-label="Catatan">ID model yang kamu kirim.</td></tr>
+      <tr><th scope="row"><code>choices[0].message.content</code></th><td data-label="Tipe">string</td><td data-label="Catatan">Balasannya.</td></tr>
+      <tr><th scope="row"><code>choices[0].message.reasoning_content</code></th><td data-label="Tipe">string</td><td data-label="Catatan">Penalaran model, kalau ada dan tidak kamu kecualikan. Sebagian balasan menamai field ini <code>reasoning</code>: baca yang mana pun yang ada.</td></tr>
+      <tr><th scope="row"><code>choices[0].finish_reason</code></th><td data-label="Tipe">string</td><td data-label="Catatan"><code>stop</code> kalau balasan selesai, <code>length</code> kalau mencapai <code>max_tokens</code>.</td></tr>
+    </tbody>
+  </table></div>
+
+<h3 id="usage">Pemakaian</h3>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Field</th><th scope="col">Tipe</th><th scope="col">Catatan</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>usage.prompt_tokens</code></th><td data-label="Tipe">integer</td><td data-label="Catatan">Token input: pesan yang kamu kirim.</td></tr>
+      <tr><th scope="row"><code>usage.completion_tokens</code></th><td data-label="Tipe">integer</td><td data-label="Catatan">Token output, termasuk penalaran.</td></tr>
+      <tr><th scope="row"><code>usage.total_tokens</code></th><td data-label="Tipe">integer</td><td data-label="Catatan">Jumlah keduanya.</td></tr>
+      <tr><th scope="row"><code>usage.prompt_tokens_details.cached_tokens</code></th><td data-label="Tipe">integer</td><td data-label="Catatan">Berapa banyak input yang dibaca dari cache. Tidak muncul kalau nol.</td></tr>
+      <tr><th scope="row"><code>usage.completion_tokens_details.reasoning_tokens</code></th><td data-label="Tipe">integer</td><td data-label="Catatan">Berapa banyak output yang berupa penalaran. Tidak muncul kalau nol.</td></tr>
+      <tr><th scope="row"><code>usage.cost</code></th><td data-label="Tipe">number</td><td data-label="Catatan">Biaya permintaan ini, dalam USD, sampai sembilan angka desimal.</td></tr>
+    </tbody>
+  </table></div>
+
+<h3 id="headers">Headers</h3>
+<div class="doc-table-wrap"><table class="doc-table">
+    <thead><tr><th scope="col">Header</th><th scope="col">Nilai</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>Content-Type</code></th><td><code>application/json</code>, atau <code>text/event-stream; charset=utf-8</code> saat streaming.</td></tr>
+      <tr><th scope="row"><code>X-Request-Id</code></th><td>Nilainya sama dengan <code>id</code>.</td></tr>
+      <tr><th scope="row"><code>Retry-After</code></th><td>Detik yang harus ditunggu sebelum mencoba lagi, di sebagian balasan <code>429</code>.</td></tr>
+    </tbody>
+  </table></div>
+<p>Balasan bisa membawa field yang tidak tercantum di sini. Abaikan yang tidak kamu kenal.</p>
+
+<h2 id="streaming">Streaming</h2>
+<p>Dengan <code>"stream": true</code> balasannya berupa <code>text/event-stream</code>: satu baris <code>data:</code> per potongan, lalu potongan berisi <code>usage</code>, lalu <code>data: [DONE]</code>.</p>
+<div class="code">
+  <div class="code-bar"><span>Stream</span><button class="copy" type="button" data-copy="#code-3" aria-label="Salin contoh stream">Salin</button></div>
+  <pre id="code-3"><code>data: {"id":"32dadfde…","object":"chat.completion.chunk","created":1789936200,"model":"jagad-512b-v1","choices":[{"index":0,"delta":{"role":"assistant","content":""},"finish_reason":null}]}
+
+data: {"id":"32dadfde…","object":"chat.completion.chunk","created":1789936200,"model":"jagad-512b-v1","choices":[{"index":0,"delta":{"content":"*slides a steaming"},"finish_reason":null}]}
+
+: keep-alive
+
+data: {"id":"32dadfde…","object":"chat.completion.chunk","created":1789936200,"model":"jagad-512b-v1","choices":[{"index":0,"delta":{"content":" mug across the counter*"},"finish_reason":"stop"}]}
+
+data: {"id":"32dadfde…","object":"chat.completion.chunk","created":1789936200,"model":"jagad-512b-v1","choices":[],"usage":{"prompt_tokens":42,"completion_tokens":310,"total_tokens":352,"cost":0.0004717}}
+
+data: [DONE]</code></pre>
+</div>
+<div class="doc-table-wrap"><table class="doc-table">
+    <thead><tr><th scope="col">Baris</th><th scope="col">Yang harus dilakukan</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Potongan isi</th><td>Sambung setiap <code>choices[0].delta.content</code>, berurutan. Potongan pertama membawa <code>role</code> dan biasanya tanpa teks. Penalaran, kalau disertakan, datang sebagai <code>delta.reasoning_content</code> (atau <code>delta.reasoning</code>).</td></tr>
+      <tr><th scope="row">Baris yang diawali <code>:</code></th><td>Komentar yang menjaga koneksi tetap terbuka selama model bekerja. <strong>Abaikan</strong>; jangan pernah di-parse sebagai JSON.</td></tr>
+      <tr><th scope="row">Potongan usage</th><td>Potongan berisi <code>usage</code>. <code>choices</code>-nya biasanya kosong, tapi bisa membawa potongan teks terakhir: pastikan <code>choices[0]</code> ada sebelum membacanya.</td></tr>
+      <tr><th scope="row">Potongan error</th><td>Kalau ada yang gagal setelah stream dimulai, potongan <code>{"error": {"message", "type", "code"}}</code> datang sebelum <code>[DONE]</code>. Statusnya tetap <code>200</code>: status itu terkirim sebelum error terjadi.</td></tr>
+      <tr><th scope="row"><code>data: [DONE]</code></th><td>Akhir stream. Ini bukan JSON.</td></tr>
+    </tbody>
+  </table></div>
+<ul>
+  <li><code>id</code>, <code>created</code>, dan <code>model</code> sama di setiap potongan satu balasan.</li>
+  <li>Satu potongan bisa datang terbelah di beberapa pembacaan. Tampung sampai ada baris kosong (<code>\n\n</code> atau <code>\r\n\r\n</code>) sebelum di-parse.</li>
+  <li>Matikan buffering respons di HTTP client-mu; dengan curl, pakai <code>-N</code>.</li>
+  <li>Memutus koneksi di tengah jalan menghentikan balasan. Yang sudah dibuat sampai saat itu tetap dihitung.</li>
+</ul>
+
+<h2 id="refusals">Penolakan</h2>
+<p>Model roleplay dibuat untuk roleplay dan penulisan di sekitarnya. Permintaan lain, seperti kode, PR sekolah, atau pertanyaan umum, mendapat penolakan singkat: balasan biasa (HTTP <code>200</code>, <code>finish_reason: "stop"</code>) yang harganya tetap <span data-price="refusal">$0.05</span>, menggantikan harga tokennya, dan tampil di <code>usage.cost</code>. Mengulang permintaan yang sama menghasilkan jawaban yang sama.</p>
+
+<h2 id="errors">Error</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Status</th><th scope="col">Kode</th><th scope="col">Kapan</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>400</code></th><td data-label="Kode">(tidak ada)</td><td data-label="Kapan">Permintaan tidak berisi <code>model</code>.</td></tr>
+      <tr><th scope="row"><code>400</code></th><td data-label="Kode"><code>invalid_request</code></td><td data-label="Kapan">Model tidak menerima permintaan itu, misalnya nilai parameter yang tidak didukungnya.</td></tr>
+      <tr><th scope="row"><code>400</code></th><td data-label="Kode"><code>wrong_endpoint</code></td><td data-label="Kapan">Kamu mengirim Pranata V1. Kirim ke <code>/v1/decisions</code>.</td></tr>
+      <tr><th scope="row"><code>401</code></th><td data-label="Kode"><code>invalid_api_key</code></td><td data-label="Kapan">Kunci tidak ada atau tidak dikenal.</td></tr>
+      <tr><th scope="row"><code>403</code></th><td data-label="Kode"><code>invalid_api_key</code></td><td data-label="Kapan">Kunci dimatikan.</td></tr>
+      <tr><th scope="row"><code>403</code></th><td data-label="Kode"><code>model_forbidden</code></td><td data-label="Kapan">Kuncimu tidak boleh memanggil model itu.</td></tr>
+      <tr><th scope="row"><code>404</code></th><td data-label="Kode"><code>model_not_found</code></td><td data-label="Kapan">Tidak ada model dengan ID itu. ID ditulis huruf kecil.</td></tr>
+      <tr><th scope="row"><code>404</code></th><td data-label="Kode">(tidak ada)</td><td data-label="Kapan">Path itu tidak ada; <code>type</code>-nya <code>not_found</code>.</td></tr>
+      <tr><th scope="row"><code>413</code></th><td data-label="Kode"><code>context_length_exceeded</code></td><td data-label="Kapan">Input lebih panjang dari konteks model. Input tidak pernah dipotong supaya muat: permintaannya ditolak.</td></tr>
+      <tr><th scope="row"><code>413</code></th><td data-label="Kode"><code>too_large</code></td><td data-label="Kapan">Permintaan terlalu besar untuk model ini.</td></tr>
+      <tr><th scope="row"><code>429</code></th><td data-label="Kode"><code>rate_limit_exceeded</code></td><td data-label="Kapan">Batas per menit atau kuota harian kuncimu, atau model sedang sibuk. Kasus per menit membawa <code>Retry-After</code>.</td></tr>
+      <tr><th scope="row"><code>429</code></th><td data-label="Kode"><code>overloaded</code></td><td data-label="Kapan">Sedang penuh. Membawa <code>Retry-After</code>.</td></tr>
+      <tr><th scope="row"><code>500</code></th><td data-label="Kode"><code>internal_error</code></td><td data-label="Kapan">Error yang tidak terduga.</td></tr>
+      <tr><th scope="row"><code>502</code></th><td data-label="Kode"><code>model_unavailable</code></td><td data-label="Kapan">Model tidak bisa menjawab.</td></tr>
+      <tr><th scope="row"><code>504</code></th><td data-label="Kode"><code>timeout</code></td><td data-label="Kapan">Model terlalu lama menjawab.</td></tr>
+    </tbody>
+  </table></div>
+<p>Tiga error berupa teks biasa, bukan JSON: body yang bukan JSON valid (<code>400</code>), header <code>Content-Type: application/json</code> yang tidak ada (<code>415</code>), dan body yang melebihi batas ukuran (<code>413</code>). Cek <code>Content-Type</code> sebuah error sebelum mem-parse-nya. Kapan mencoba lagi: <a href="/id/docs/api#retries">Dasar API</a>.</p>
+
+<h2 id="examples">Contoh</h2>
+<h3 id="curl-stream">curl, streaming</h3>
+<div class="code">
+  <div class="code-bar"><span>curl</span><button class="copy" type="button" data-copy="#code-4" aria-label="Salin contoh curl">Salin</button></div>
+  <pre id="code-4"><code>curl -N https://ai.zeiko.biz.id/v1/chat/completions \
+  -H "Authorization: Bearer $ZEIKO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "jagad-512b-v1",
+    "messages": [{"role": "user", "content": "*waves* Hi there!"}],
+    "user": "user-9f3c1ab7",
+    "stream": true
+  }'</code></pre>
+</div>
+
+<h3 id="python">Python (SDK OpenAI), satu balasan</h3>
+<div class="code">
+  <div class="code-bar"><span>Python</span><button class="copy" type="button" data-copy="#code-5" aria-label="Salin contoh Python">Salin</button></div>
+  <pre id="code-5"><code>import os
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://ai.zeiko.biz.id/v1",
+    api_key=os.environ["ZEIKO_API_KEY"],
+)
+
+reply = client.chat.completions.create(
+    model="jagad-512b-v1",
+    messages=[{"role": "user", "content": "*waves* Hi there!"}],
+    reasoning_effort="low",
+    user="user-9f3c1ab7",
+)
+print(reply.id)
+print(reply.choices[0].message.content)
+print(reply.usage.prompt_tokens, reply.usage.completion_tokens)
+print(reply.usage.model_extra.get("cost"))</code></pre>
+</div>
+
+<h3 id="python-stream">Python (SDK OpenAI), streaming</h3>
+<div class="code">
+  <div class="code-bar"><span>Python</span><button class="copy" type="button" data-copy="#code-6" aria-label="Salin contoh Python">Salin</button></div>
+  <pre id="code-6"><code>stream = client.chat.completions.create(
+    model="jagad-512b-v1",
+    messages=[{"role": "user", "content": "*waves* Hi there!"}],
+    user="user-9f3c1ab7",
+    stream=True,
+)
+usage = None
+for chunk in stream:
+    if chunk.usage is not None:  # the usage chunk
+        usage = chunk.usage
+    if chunk.choices:  # never assume choices[0] is there
+        piece = chunk.choices[0].delta.content
+        if piece:
+            print(piece, end="", flush=True)
+print("\n", usage)</code></pre>
+</div>
+
+<h3 id="node">JavaScript (SDK OpenAI), streaming</h3>
+<div class="code">
+  <div class="code-bar"><span>JavaScript</span><button class="copy" type="button" data-copy="#code-7" aria-label="Salin contoh JavaScript">Salin</button></div>
+  <pre id="code-7"><code>import OpenAI from "openai";
+
+const client = new OpenAI({
+  baseURL: "https://ai.zeiko.biz.id/v1",
+  apiKey: process.env.ZEIKO_API_KEY,
+});
+
+const stream = await client.chat.completions.create({
+  model: "jagad-512b-v1",
+  messages: [{ role: "user", content: "*waves* Hi there!" }],
+  user: "user-9f3c1ab7",
+  stream: true,
+});
+for await (const chunk of stream) {
+  const piece = chunk.choices[0]?.delta?.content;
+  if (piece) process.stdout.write(piece);
+  if (chunk.usage) console.log("\ntokens:", chunk.usage.total_tokens);
+}</code></pre>
+</div>
+
+<h3 id="fetch">JavaScript (fetch), streaming</h3>
+<div class="code">
+  <div class="code-bar"><span>JavaScript</span><button class="copy" type="button" data-copy="#code-8" aria-label="Salin contoh JavaScript">Salin</button></div>
+  <pre id="code-8"><code>const res = await fetch("https://ai.zeiko.biz.id/v1/chat/completions", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer " + process.env.ZEIKO_API_KEY,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    model: "jagad-512b-v1",
+    messages: [{ role: "user", content: "*waves* Hi there!" }],
+    user: "user-9f3c1ab7",
+    stream: true,
+  }),
+});
+const reader = res.body.getReader();
+const decoder = new TextDecoder();
+let buf = "";
+while (true) {
+  const { done, value } = await reader.read();
+  if (done) break;
+  buf += decoder.decode(value, { stream: true });
+  // An event ends with a blank line; take CRLF too.
+  let m;
+  while ((m = /\r?\n\r?\n/.exec(buf)) !== null) {
+    const event = buf.slice(0, m.index);
+    buf = buf.slice(m.index + m[0].length);
+    for (const line of event.split(/\r?\n/)) {
+      if (!line.startsWith("data:")) continue; // ": keep-alive" too
+      const data = line.slice(5).trim();
+      if (data === "[DONE]") continue; // the end, not JSON
+      const json = JSON.parse(data);
+      if (json.error) { console.error(json.error.message); continue; }
+      const piece = json.choices?.[0]?.delta?.content;
+      if (piece) process.stdout.write(piece);
+      if (json.usage) console.log("\ncost:", json.usage.cost);
+    }
+  }
+}</code></pre>
+</div>
+
+      <nav class="docs-pager" aria-label="Halaman sebelum dan sesudah">
+        <a class="prev" href="/id/docs/api-decisions"><small>Sebelumnya</small>API Keputusan</a>
+        <a class="next" href="/id/docs/faq"><small>Berikutnya</small>Pemecahan masalah</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> Zeiko</p>
+    <nav aria-label="Tautan bawah">
+      <a href="/id/">Beranda</a>
+      <a href="/id/models">Model</a>
+      <a href="/id/#pricing">Harga</a>
+      <a href="/id/drive">Drive</a>
+      <a href="/id/docs/">Dokumentasi</a>
+      <a href="/id/#contact">Kontak</a>
+      <a href="/account">Akun</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
+</body>
+</html>

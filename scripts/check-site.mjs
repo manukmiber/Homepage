@@ -19,9 +19,12 @@
 //      except billing words and the details a customer gets with their key
 //      (the account area is where both belong), and escapes everything the
 //      account holds.
-//   7. The docs (public/docs/) pass the same rules except the details a
-//      caller needs to connect, and every link to a docs page, and to a
-//      heading on one, lands.
+//   7. The docs (public/docs/, and public/id/docs/ in Indonesian) pass the
+//      same rules except the details a caller needs to connect, and every
+//      link to a docs page, and to a heading on one, lands.
+//   8. Every page is in English and Indonesian: the EN | ID switch on each
+//      lands on its twin, and the Indonesian pages pass an Indonesian list
+//      of the same banned words.
 //
 // Exits 1 with one line per problem. Reword the page; never trim the lists
 // below to make a check pass.
@@ -33,6 +36,7 @@ import { render, sanitize } from '../src/render.js';
 import { sampleSnapshot } from '../dev/sample-stats.mjs';
 import * as accountViews from '../public/js/account/views.js';
 import * as accountMe from '../public/js/account/me.js';
+import * as accountLang from '../public/js/account/lang.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const PUBLIC = join(ROOT, 'public');
@@ -104,6 +108,14 @@ const BANNED = [
   ['connection detail', /\bai\.zeiko/i],
   // notes to ourselves
   ['internal note', /\b(TODO|FIXME|HACK|XXX)\b/],
+  // the same, in Indonesian (public/id/ and the account area's ID text)
+  ['architecture', /\b(penyedia|antrean|antrian|perantara)\b/i],
+  ['billing', /\b(tagihan|ditagih|menagih|faktur|pajak|langganan|berlangganan|kripto|dompet)\b/i],
+  ['billing', /\b(bayar|membayar|dibayar|dibayarkan|pembayaran|bayaran)\b/i],
+  ['infrastructure', /\b(basis data|pangkalan data|dasbor|klaster|pusat data)\b/i],
+  ['decision logic', /\b(deteksi|mendeteksi|terdeteksi|klasifikasi|mengklasifikasi|dikenali)\b/i],
+  ['data handling', /\b(disimpan|tersimpan|penyimpanan|retensi)\b/i],
+  ['network', /\b(analitik|pelacakan)\b/i],
 ];
 
 // No request may leave the page.
@@ -170,7 +182,9 @@ const SESSION_SCRIPT = '<script type="module" src="/js/account/session.js">';
 // are text in <pre> blocks, so a fetch( there is not a request; the pages
 // run main.js and nothing else. Every other rule, billing included, holds.
 const DOCS = join(PUBLIC, 'docs');
-const inDocs = (f) => f.startsWith(DOCS + '/') || f.startsWith(DOCS + '\\');
+const DOCS_ID = join(PUBLIC, 'id', 'docs');
+const under = (d, f) => f.startsWith(d + '/') || f.startsWith(d + '\\');
+const inDocs = (f) => under(DOCS, f) || under(DOCS_ID, f);
 const API_ADDR = 'https://ai.zeiko.biz.id';
 const SDK_KEY = /^api_?key$/i;
 const blankPre = (src) => src.replace(/<pre\b[\s\S]*?<\/pre>/gi, (m) => m.replace(/[^\n]/g, ' '));
@@ -184,7 +198,7 @@ const blankPre = (src) => src.replace(/<pre\b[\s\S]*?<\/pre>/gi, (m) => m.replac
 // "dashboard" only as that path; every other rule holds there too, and the
 // AI products' copy keeps the rule whole.
 const DRIVE_PAGES = new Set([join(PUBLIC, 'drive.html'), join(PUBLIC, 'id', 'drive.html')]);
-const DRIVE_WORDS = /^(storage|rupiah|pay|paid|pays)$/i;
+const DRIVE_WORDS = /^(storage|rupiah|pay|paid|pays|penyimpanan|disimpan|tersimpan|bayar|membayar|dibayar|pembayaran)$/i;
 function driveRanges(file, src) {
   if (DRIVE_PAGES.has(file)) return [[0, src.length]];
   const out = [];
@@ -299,8 +313,8 @@ if (!models) {
   problems.push('public/models.html is missing — /models must exist');
 } else {
   for (const { file, src } of html) {
-    for (const m of src.matchAll(/href="\/models#([^"]+)"|href="#([^"]+)"/g)) {
-      const id = m[1] ?? (file === models.file ? m[2] : null);
+    for (const m of src.matchAll(/href="(?:\/id)?\/models#([^"]+)"|href="#([^"]+)"/g)) {
+      const id = m[1] ?? (file === models.file || file === join(PUBLIC, 'id', 'models.html') ? m[2] : null);
       if (!id) continue;
       if (!models.src.includes(`id="${id}"`)) report(file, m.index, src, `link to /models#${id}, but models.html has no id="${id}"`);
     }
@@ -313,11 +327,13 @@ if (!models) {
 // (or on the same docs page) names an id that page has.
 const docsPages = new Map(html.filter((h) => inDocs(h.file)).map((h) => [h.file, h.src]));
 for (const { file, src } of [...html, ...accountFiles]) {
-  for (const m of src.matchAll(/href="\/docs\/([a-z0-9-]*)(?:#([^"]+))?"/g)) {
-    const name = m[1] || 'index';
-    const page = docsPages.get(join(DOCS, `${name}.html`));
-    if (!page) report(file, m.index, src, `link to /docs/${m[1]}, but there is no public/docs/${name}.html`);
-    else if (m[2] && !page.includes(`id="${m[2]}"`)) report(file, m.index, src, `link to /docs/${m[1]}#${m[2]}, but that page has no id="${m[2]}"`);
+  for (const m of src.matchAll(/href="\/(id\/)?docs\/([a-z0-9-]*)(?:#([^"]+))?"/g)) {
+    const [, id, slug, hash] = m;
+    const name = slug || 'index';
+    const dir = id ? 'id/docs' : 'docs';
+    const page = docsPages.get(join(PUBLIC, dir, `${name}.html`));
+    if (!page) report(file, m.index, src, `link to /${dir}/${slug}, but there is no public/${dir}/${name}.html`);
+    else if (hash && !page.includes(`id="${hash}"`)) report(file, m.index, src, `link to /${dir}/${slug}#${hash}, but that page has no id="${hash}"`);
   }
   if (!inDocs(file)) continue;
   for (const m of src.matchAll(/href="#([^"]+)"/g)) {
@@ -327,26 +343,61 @@ for (const { file, src } of [...html, ...accountFiles]) {
 
 // The docs list is written into every docs page twice (beside the page, and
 // the phone's "Docs menu"): every copy lists every docs page, in the same
-// order, and marks the page it is on.
+// order, and marks the page it is on. The Indonesian docs list the same
+// pages, in the same order, under /id/docs/.
 const sideOf = (src, cls) => {
   const at = src.indexOf(`class="${cls}"`);
   if (at < 0) return null;
   const end = src.indexOf(cls === 'docs-menu' ? '</details>' : '</nav>', at);
   return src.slice(at, end);
 };
-const hrefs = (part) => [...part.matchAll(/<a href="(\/docs\/[a-z0-9-]*)"/g)].map((m) => m[1]);
+const hrefs = (part) => [...part.matchAll(/<a href="((?:\/id)?\/docs\/[a-z0-9-]*)"/g)].map((m) => m[1]);
 const docsIndex = docsPages.get(join(DOCS, 'index.html'));
 const order = docsIndex && sideOf(docsIndex, 'docs-list') ? hrefs(sideOf(docsIndex, 'docs-list')) : [];
 for (const [file, src] of docsPages) {
-  const name = relative(DOCS, file).replace(/\.html$/, '');
-  const self = name === 'index' ? '/docs/' : `/docs/${name}`;
-  if (!order.includes(self)) problems.push(`public/docs/${name}.html is not in the docs list (public/docs/index.html)`);
+  const id = under(DOCS_ID, file);
+  const base = id ? '/id/docs/' : '/docs/';
+  const want = id ? order.map((h) => '/id' + h) : order;
+  const name = relative(id ? DOCS_ID : DOCS, file).replace(/\.html$/, '');
+  const self = name === 'index' ? base : `${base}${name}`;
+  if (!want.includes(self)) problems.push(`${relative(ROOT, file)} is not in the docs list (public/docs/index.html)`);
   for (const cls of ['docs-list', 'docs-menu']) {
     const part = sideOf(src, cls);
     if (!part) { problems.push(`${relative(ROOT, file)}: no .${cls}`); continue; }
-    if (hrefs(part).join(' ') !== order.join(' ')) problems.push(`${relative(ROOT, file)}: its .${cls} does not list the docs pages as public/docs/index.html does`);
+    if (hrefs(part).join(' ') !== want.join(' ')) problems.push(`${relative(ROOT, file)}: its .${cls} does not list the docs pages as public/docs/index.html does`);
     if (!part.includes(`<a href="${self}" aria-current="page">`)) problems.push(`${relative(ROOT, file)}: its .${cls} does not mark this page (aria-current)`);
   }
+}
+for (const name of order.map((h) => h.slice('/docs/'.length) || 'index')) {
+  if (!docsPages.has(join(DOCS_ID, `${name}.html`))) problems.push(`public/docs/${name}.html has no Indonesian twin (public/id/docs/${name}.html)`);
+}
+
+// ------------------------------------------------------------ EN | ID
+
+// Every page with the top bar carries the EN | ID switch, and it lands on
+// the same page in the other language: a file that exists, whose own switch
+// points back here.
+const pageOf = (href) => {
+  const path = href.split('#')[0];
+  return join(PUBLIC, path.endsWith('/') ? `${path}index.html` : `${path}.html`);
+};
+const urlOf = (file) => {
+  const rel = '/' + relative(PUBLIC, file).split('\\').join('/').replace(/\.html$/, '');
+  return rel.endsWith('/index') ? rel.slice(0, -'index'.length) : rel;
+};
+const pages = new Map(html.map((h) => [h.file, h.src]));
+const SWITCH = /<a class="lang-switch" href="([^"]+)" hreflang="(en|id)"/;
+for (const [file, src] of pages) {
+  if (!/class="nav-account"/.test(src) && !/class="lang-switch"/.test(src)) continue;
+  const m = src.match(SWITCH);
+  if (!m) { report(file, 0, src, 'no EN | ID switch (<a class="lang-switch" href="…" hreflang="…">)'); continue; }
+  const twin = pageOf(m[1]);
+  const lang = under(join(PUBLIC, 'id'), file) ? 'id' : 'en';
+  if (m[2] === lang) report(file, m.index, src, `the EN | ID switch goes to ${m[2]}, the language this page is already in`);
+  if (!src.includes(`<html lang="${lang}">`)) report(file, 0, src, `this page is in ${lang}, but its <html lang> says otherwise`);
+  if (!pages.has(twin)) { report(file, m.index, src, `the EN | ID switch goes to ${m[1]}, but there is no ${relative(ROOT, twin)}`); continue; }
+  const back = pages.get(twin).match(SWITCH);
+  if (!back || pageOf(back[1]) !== file) report(file, m.index, src, `${m[1]} does not switch back to ${urlOf(file)}`);
 }
 
 // ------------------------------------------------------ rendered /models
@@ -360,22 +411,27 @@ snap.models[0].page = { notes: ['CANARY note'] };
 snap.models[0].endpoints = ['CANARY endpoint'];
 snap.models[1].stats['7d'].current.requests = 'CANARY count';
 snap.models.push({ id: '<b>CANARY</b>', stats: {} });
-const view = render(sanitize(snap));
-
-if (!view) {
-  problems.push(`${RENDERED}: src/render.js rendered nothing`);
-} else {
+// Both languages: /models in English, /id/models in Indonesian.
+for (const [lang, page] of [['en', models], ['id', html.find((h) => h.file === join(PUBLIC, 'id', 'models.html'))]]) {
+  const where = `${RENDERED}, ${lang}`;
+  const view = render(sanitize(snap), lang);
+  if (!view) {
+    problems.push(`${where}: src/render.js rendered nothing`);
+    continue;
+  }
   const out = [view.bar, ...Object.values(view.models), ...Object.values(view.glance).flatMap(Object.values)].join('\n');
-  scan(RENDERED, out);
-  for (const m of out.matchAll(/CANARY/g)) report(RENDERED, m.index, out, 'text from the snapshot reached the page; only numbers may');
-  for (const m of out.matchAll(/\$\s?\d/g)) report(RENDERED, m.index, out, 'a price in the performance figures; prices live in the static HTML');
-  if (models) {
-    for (const m of models.src.matchAll(/data-perf="([^"]+)"/g)) {
-      if (!view.models[m[1]]) report(models.file, m.index, models.src, `data-perf="${m[1]}" has no model in the sample`);
-    }
-    for (const m of models.src.matchAll(/data-stat="([^":]+):([^"]+)"/g)) {
-      if (!(view.glance[m[1]] && view.glance[m[1]][m[2]])) report(models.file, m.index, models.src, `data-stat="${m[1]}:${m[2]}" is never filled`);
-    }
+  scan(where, out);
+  for (const m of out.matchAll(/CANARY/g)) report(where, m.index, out, 'text from the snapshot reached the page; only numbers may');
+  for (const m of out.matchAll(/\$\s?\d/g)) report(where, m.index, out, 'a price in the performance figures; prices live in the static HTML');
+  if (!page) {
+    problems.push(`${where}: no page to fill (public/${lang === 'id' ? 'id/' : ''}models.html)`);
+    continue;
+  }
+  for (const m of page.src.matchAll(/data-perf="([^"]+)"/g)) {
+    if (!view.models[m[1]]) report(page.file, m.index, page.src, `data-perf="${m[1]}" has no model in the sample`);
+  }
+  for (const m of page.src.matchAll(/data-stat="([^":]+):([^"]+)"/g)) {
+    if (!(view.glance[m[1]] && view.glance[m[1]][m[2]])) report(page.file, m.index, page.src, `data-stat="${m[1]}:${m[2]}" is never filled`);
   }
 }
 
@@ -464,7 +520,8 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
   o.signInWith = opts;
   o.referral = { code: evil, discountPct: 20 };
   const door = DOOR;
-  const pages = [
+  // Both languages: the account pages are drawn in English or Indonesian.
+  const pages = ['en', 'id'].flatMap((lang) => (accountLang.setLang(lang), [
     accountViews.nav(o.account),
     accountViews.nav(null),
     accountMe.meLink(accountMe.displayName(o.account), { title: evil }),
@@ -484,7 +541,8 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
     accountViews.signUp({ error: '', email: '', username: evil, next: '', ref: evil, opts, door }),
     accountViews.forgot({ error: '', sent: false }),
     accountViews.reset({ error: evil, token: evil }),
-  ].join('\n');
+  ])).join('\n');
+  accountLang.setLang('en');
   scanAccount(ACCOUNT, pages);
   for (const m of pages.matchAll(/<script>CANARY/g)) report(ACCOUNT, m.index, pages, 'an account value reached the page unescaped');
   for (const re of NETWORK) {

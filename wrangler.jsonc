@@ -15,7 +15,7 @@
     // Plain files that the worker fills in first: /models (the hourly
     // figures), /drive (Drive's plans) and /account (one page for every
     // account address).
-    "run_worker_first": ["/models", "/drive", "/id/drive", "/account", "/account/*"]
+    "run_worker_first": ["/models", "/id/models", "/drive", "/id/drive", "/account", "/account/*"]
   },
   // /account is one plain page (public/account/index.html) whose script signs
   // in with the account door itself: no secret is set for it here.

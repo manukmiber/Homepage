@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zeiko — Pranata V1, model roleplay, dan Zeiko Drive</title>
+<meta name="description" content="Pranata V1: keputusan cepat dan konsisten dengan peluang untuk setiap pilihan, dijual per paket 30 hari. Plus tiga model roleplay, dari aman untuk umum sampai tanpa batasan.">
+<meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in, and the playground (#try) asks it its questions; nothing else on the page asks anything. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
+<meta property="og:title" content="Zeiko — Pranata V1, model roleplay, dan Zeiko Drive">
+<meta property="og:description" content="Pranata V1 untuk keputusan, dengan paket sendiri. Tiga model roleplay dengan konteks 256K dan tiga kelompok harga.">
+<meta property="og:type" content="website">
+<link rel="alternate" hreflang="en" href="/">
+<link rel="alternate" hreflang="id" href="/id/">
+<link rel="icon" href="/img/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<!-- Icons, drawn once and reused with <use>. -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-yesno" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.5 12.2l2.4 2.4 4.6-4.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-pick" viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="4.5" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="3.5" y="9.75" width="17" height="4.5" rx="1.6" fill="currentColor" opacity=".25" stroke="currentColor" stroke-width="1.6"/><rect x="3.5" y="15.5" width="17" height="4.5" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+  <symbol id="i-score" viewBox="0 0 24 24"><path d="M4 20V14M9.33 20V9M14.67 20V5M20 20v-8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="10" cy="8" r="3.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 20a6.5 6.5 0 0 1 13 0M19 8.5v6M16 11.5h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.8 7.2 12 13l8.2-5.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h0A2.5 2.5 0 0 1 4 13.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 8.5h7M8.5 11.5h4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M18.5 16v4M16.5 18h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+</svg>
+
+<a class="skip" href="#main">Langsung ke isi</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/id/">
+      <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
+      <span class="brand-name">Zeiko</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Navigasi utama">
+      <a href="#decision">Pranata V1</a>
+      <a href="/id/drive">Drive</a>
+      <a href="#models">Roleplay</a>
+      <a href="#pricing">Harga</a>
+      <a href="/id/models">Model</a>
+      <a href="/id/docs/">Dokumentasi</a>
+      <a href="#faq">FAQ</a>
+      <a class="nav-account" href="/account">Masuk</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Buat akun</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <a class="lang-switch" href="/" hreflang="en" lang="en" data-lang="en">EN</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Ganti tema terang dan gelap">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============================================================ hero -->
+  <!-- Pranata V1 leads the page. The roleplay models follow further down. -->
+  <section class="hero" id="top" aria-labelledby="heroTitle">
+    <div class="wrap hero-in">
+      <div class="hero-copy">
+        <p class="eyebrow eyebrow-dec"><span class="eyebrow-dot" aria-hidden="true"></span>Model keputusan · dibangun sendiri</p>
+        <h1 id="heroTitle">
+          <span class="h1-name">Pranata V1</span>
+          <span class="h1-line">Keputusan cepat dan konsisten, dengan harga yang nyaris tak terasa.</span>
+        </h1>
+        <p class="lede">
+          Ya atau tidak, pilih satu, beri skor — dengan peluang untuk setiap pilihan.
+          Paket mulai <strong data-price="decision:welcome">$1</strong> untuk 30 hari.
+        </p>
+        <div class="cta">
+          <a class="btn btn-dec btn-lg" href="/account/signup" data-signed-out>Buat akun <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-dec btn-lg" href="/account/plans" data-signed-in hidden>Pilih paket <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-ghost btn-lg" href="#try">Coba gratis</a>
+        </div>
+        <p class="hero-signin" data-signed-out>Tidak perlu minta kunci. Sudah punya akun? <a href="/account">Masuk</a></p>
+
+        <dl class="hero-facts">
+          <div>
+            <dt>Permintaan per paket</dt>
+            <dd>10K–2M <small>/ 30 hari</small></dd>
+          </div>
+          <div>
+            <dt>Paket mulai</dt>
+            <dd><span data-price="decision:welcome">$1</span> <small>/ 30 hari</small></dd>
+          </div>
+          <div>
+            <dt>Panggilan terpanjang</dt>
+            <dd>2.048 <small>token</small></dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- Illustrative only: what an answer looks like, not measured figures. -->
+      <figure class="demo" aria-labelledby="demoCap">
+        <figcaption class="demo-head" id="demoCap">
+          <span class="demo-id"><span class="demo-dot" aria-hidden="true"></span><code>pranata-v1</code></span>
+          <span class="demo-note">Contoh jawaban</span>
+        </figcaption>
+
+        <div class="ask">
+          <p class="ask-kind"><svg class="ico" aria-hidden="true"><use href="#i-yesno"/></svg>Ya atau tidak</p>
+          <p class="ask-q">Apakah balasan ini tetap sesuai karakter?</p>
+          <ul class="odds">
+            <li class="is-top"><span class="odds-label"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Ya</span><span class="odds-bar" aria-hidden="true"><span style="--p:91%"></span></span><span class="odds-val">91%</span></li>
+            <li><span class="odds-label">Tidak</span><span class="odds-bar" aria-hidden="true"><span style="--p:9%"></span></span><span class="odds-val">9%</span></li>
+          </ul>
+        </div>
+
+        <div class="ask">
+          <p class="ask-kind"><svg class="ico" aria-hidden="true"><use href="#i-pick"/></svg>Pilih satu</p>
+          <p class="ask-q">Suasana apa yang cocok untuk adegan berikutnya?</p>
+          <ul class="odds">
+            <li><span class="odds-label">Tenang</span><span class="odds-bar" aria-hidden="true"><span style="--p:18%"></span></span><span class="odds-val">18%</span></li>
+            <li class="is-top"><span class="odds-label"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Tegang</span><span class="odds-bar" aria-hidden="true"><span style="--p:64%"></span></span><span class="odds-val">64%</span></li>
+            <li><span class="odds-label">Jenaka</span><span class="odds-bar" aria-hidden="true"><span style="--p:18%"></span></span><span class="odds-val">18%</span></li>
+          </ul>
+        </div>
+
+        <div class="ask">
+          <p class="ask-kind"><svg class="ico" aria-hidden="true"><use href="#i-score"/></svg>Beri skor</p>
+          <p class="ask-q">Seberapa mendesak pesan ini, dari 1 sampai 5?</p>
+          <ol class="hist">
+            <li><span class="hist-val">3%</span><span class="hist-col" aria-hidden="true" style="--p:3%"></span><span class="hist-x">1</span></li>
+            <li><span class="hist-val">7%</span><span class="hist-col" aria-hidden="true" style="--p:7%"></span><span class="hist-x">2</span></li>
+            <li><span class="hist-val">22%</span><span class="hist-col" aria-hidden="true" style="--p:22%"></span><span class="hist-x">3</span></li>
+            <li class="is-top"><span class="hist-val">48%</span><span class="hist-col" aria-hidden="true" style="--p:48%"></span><span class="hist-x">4</span></li>
+            <li><span class="hist-val">20%</span><span class="hist-col" aria-hidden="true" style="--p:20%"></span><span class="hist-x">5</span></li>
+          </ol>
+        </div>
+
+        <a class="demo-try" href="#try">Ajukan pertanyaanmu sendiri, langsung <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </figure>
+    </div>
+
+    <div class="wrap">
+      <div class="notice notice-hero" role="note">
+        <span class="notice-dot" aria-hidden="true"></span>
+        <p><strong>Permintaan sedang sangat tinggi.</strong> Mohon maaf atas latensi yang lebih tinggi, dan hasil yang mungkin kurang stabil dari biasanya, selama banyak panggilan masuk. Kami sedang menyiapkan perluasan yang jauh lebih besar.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== playground -->
+  <!-- A real question to Pranata V1, answered live by js/try.js. Without
+       JavaScript the section says so and nothing else. -->
+  <section class="section section-try" id="try" aria-labelledby="tryTitle">
+    <div class="wrap">
+      <div class="sec-head sec-head-split">
+        <div>
+          <p class="kicker kicker-dec">Playground</p>
+          <h2 class="sec-title" id="tryTitle">Tanya Pranata V1 sendiri.</h2>
+          <p class="sec-lede">Pilih jenis pertanyaan, ubah contohnya atau tulis sendiri, dan lihat jawabannya dengan peluang untuk setiap pilihan. 5 percobaan gratis setiap 30 menit, tanpa akun.</p>
+        </div>
+      </div>
+
+      <noscript><p class="card try-off">Playground butuh JavaScript. Nyalakan untuk situs ini supaya bisa mencoba Pranata V1 di sini.</p></noscript>
+
+      <div class="try" id="tryBox" hidden>
+        <form class="try-form card" id="tryForm" novalidate>
+          <div class="try-tabs" role="tablist" aria-label="Jenis pertanyaan">
+            <button class="try-tab" type="button" role="tab" id="tab-noul" data-kind="noul" aria-selected="true" aria-controls="tryForm"><svg class="ico" aria-hidden="true"><use href="#i-yesno"/></svg>Ya atau tidak</button>
+            <button class="try-tab" type="button" role="tab" id="tab-choice" data-kind="choice" aria-selected="false" aria-controls="tryForm" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-pick"/></svg>Pilih satu</button>
+            <button class="try-tab" type="button" role="tab" id="tab-score" data-kind="score" aria-selected="false" aria-controls="tryForm" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-score"/></svg>Beri skor</button>
+          </div>
+
+          <label class="try-field">Teks yang dinilai
+            <textarea name="state" rows="4" maxlength="4000" required></textarea>
+          </label>
+          <label class="try-field">Pertanyaan
+            <input type="text" name="instructions" maxlength="500" required autocomplete="off">
+          </label>
+
+          <details class="try-field try-sides" data-for="noul">
+            <summary>Jelaskan arti ya dan tidak <small>opsional</small></summary>
+            <div class="try-pair">
+              <label>Ya berarti<input type="text" name="yes" maxlength="120" autocomplete="off"></label>
+              <label>Tidak berarti<input type="text" name="no" maxlength="120" autocomplete="off"></label>
+            </div>
+          </details>
+          <label class="try-field" data-for="choice" hidden>Pilihan <small>satu per baris, 2 sampai 8</small>
+            <textarea name="options" rows="4"></textarea>
+          </label>
+          <label class="try-field" data-for="score" hidden>Tingkat <small>satu per baris, dari yang terendah, 2 sampai 10</small>
+            <textarea name="levels" rows="5"></textarea>
+          </label>
+
+          <div class="try-go">
+            <button class="btn btn-dec" type="submit" id="tryAsk">Tanya Pranata V1</button>
+            <p class="try-left" id="tryLeft" aria-live="polite"></p>
+          </div>
+        </form>
+
+        <section class="try-out card" id="tryOut" aria-live="polite" aria-labelledby="tryOutTitle">
+          <div class="demo-head">
+            <span class="demo-id"><span class="demo-dot" aria-hidden="true"></span><code>pranata-v1</code></span>
+            <span class="demo-note" id="tryOutTitle">Jawaban</span>
+          </div>
+          <div class="try-result" id="tryResult">
+            <p class="try-wait">Ajukan pertanyaan dan jawabannya tampil di sini.</p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================= decision -->
+  <!-- Pranata V1 stands apart from the roleplay models: its own price,
+       its own plans, and not in the table or the estimator below. -->
+  <section class="section section-dec" id="decision" aria-labelledby="decTitle">
+    <div class="wrap">
+      <div class="sec-head sec-head-split">
+        <div>
+          <p class="kicker kicker-dec">Pranata V1</p>
+          <h2 class="sec-title" id="decTitle">Tiga jenis keputusan. Paket yang sederhana.</h2>
+          <p class="sec-lede">Ajukan pertanyaan dan beri pilihannya; Pranata menjawab dengan peluang untuk masing-masing. Pranata punya harga dan paket sendiri, terpisah dari model roleplay.</p>
+        </div>
+        <a class="btn btn-ghost" href="/id/models#pranata-v1">Spesifikasi &amp; performa <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      </div>
+
+      <div class="kinds">
+        <article class="kind">
+          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-yesno"/></svg></span>
+          <h3>Ya atau tidak</h3>
+          <p>Jawaban lugas untuk pertanyaan lugas, beserta seberapa yakin.</p>
+        </article>
+        <article class="kind">
+          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-pick"/></svg></span>
+          <h3>Pilih satu</h3>
+          <p>Tuliskan pilihannya; dapatkan yang paling cocok, dengan peluang untuk setiap pilihan.</p>
+        </article>
+        <article class="kind">
+          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-score"/></svg></span>
+          <h3>Beri skor</h3>
+          <p>Skor pada skalamu sendiri, beserta bobot di balik setiap tingkatnya.</p>
+        </article>
+      </div>
+
+      <dl class="facts">
+        <div>
+          <dt>Paket mulai</dt>
+          <dd><span data-price="decision:welcome">$1</span> <small>/ 30 hari</small></dd>
+          <p>10.000 permintaan untuk mulai.</p>
+        </div>
+        <div>
+          <dt>Pertanyaan per panggilan</dt>
+          <dd>Sampai 256</dd>
+          <p>Dalam batas 2.048 token.</p>
+        </div>
+        <div>
+          <dt>Panggilan terpanjang</dt>
+          <dd>2.048 <small>token</small></dd>
+          <p>State dan pertanyaan bersama-sama.</p>
+        </div>
+        <div>
+          <dt>Satu permintaan paket</dt>
+          <dd>1.024 <small>token</small></dd>
+          <p>Panggilan 1.025 sampai 2.048 token dihitung dua.</p>
+        </div>
+      </dl>
+
+      <div class="plans-head" id="plans">
+        <h3 class="sub-title">Paket <small>30 hari · hanya Pranata V1</small></h3>
+        <p>Permintaan dari paket dipakai lebih dulu; setelah habis, panggilan memakai saldomu.</p>
+      </div>
+      <div class="plans">
+        <article class="plan" id="plan-welcome" data-requests="10000">
+          <div class="plan-top"><h4>Welcome</h4><span class="plan-best" hidden>Paling hemat</span></div>
+          <p class="plan-price" data-price="decision:welcome">$1</p>
+          <p class="plan-reqs"><strong>10.000</strong> permintaan</p>
+          <p class="plan-value" hidden><span class="plan-meter" aria-hidden="true"><span></span></span><span class="plan-per"></span></p>
+          <a class="btn btn-ghost btn-sm" href="/account/plans?plan=welcome">Beli</a>
+        </article>
+        <article class="plan" id="plan-expand" data-requests="150000">
+          <div class="plan-top"><h4>Expand</h4><span class="plan-best" hidden>Paling hemat</span></div>
+          <p class="plan-price" data-price="decision:expand">$5</p>
+          <p class="plan-reqs"><strong>150.000</strong> permintaan</p>
+          <p class="plan-offer"><strong>Penawaran pembuka:</strong> 90 hari dengan harga 30 hari, untuk 1.000 orang pertama.</p>
+          <p class="plan-value" hidden><span class="plan-meter" aria-hidden="true"><span></span></span><span class="plan-per"></span></p>
+          <a class="btn btn-ghost btn-sm" href="/account/plans?plan=expand">Beli</a>
+        </article>
+        <article class="plan" id="plan-huh" data-requests="250000">
+          <div class="plan-top"><h4>Huh?</h4><span class="plan-best" hidden>Paling hemat</span></div>
+          <p class="plan-price" data-price="decision:huh">$10</p>
+          <p class="plan-reqs"><strong>250.000</strong> permintaan</p>
+          <p class="plan-value" hidden><span class="plan-meter" aria-hidden="true"><span></span></span><span class="plan-per"></span></p>
+          <a class="btn btn-ghost btn-sm" href="/account/plans?plan=huh">Beli</a>
+        </article>
+        <article class="plan" id="plan-question" data-requests="750000">
+          <div class="plan-top"><h4>Question about decision?</h4><span class="plan-best" hidden>Paling hemat</span></div>
+          <p class="plan-price" data-price="decision:question">$25</p>
+          <p class="plan-reqs"><strong>750.000</strong> permintaan</p>
+          <p class="plan-offer" data-offer-until="2026-11-01T00:00:00+07:00"><strong>Penawaran pembuka:</strong> 90 hari dengan harga 30 hari, sampai 31 Oktober.</p>
+          <p class="plan-value" hidden><span class="plan-meter" aria-hidden="true"><span></span></span><span class="plan-per"></span></p>
+          <a class="btn btn-ghost btn-sm" href="/account/plans?plan=question">Beli</a>
+        </article>
+        <article class="plan" id="plan-enough" data-requests="2000000">
+          <div class="plan-top"><h4>Is this even enough for you?</h4><span class="plan-best" hidden>Paling hemat</span></div>
+          <p class="plan-price" data-price="decision:enough">$50</p>
+          <p class="plan-reqs"><strong>2.000.000</strong> permintaan</p>
+          <p class="plan-value" hidden><span class="plan-meter" aria-hidden="true"><span></span></span><span class="plan-per"></span></p>
+          <a class="btn btn-ghost btn-sm" href="/account/plans?plan=enough">Beli</a>
+        </article>
+      </div>
+
+      <div class="dec-foot">
+        <p class="fineprint">Paket hanya untuk Pranata V1 — model roleplay dihargai per token.</p>
+        <div class="cta">
+          <a class="btn btn-dec" href="/account/signup" data-signed-out><svg class="ico" aria-hidden="true"><use href="#i-user"/></svg>Buat akun</a>
+          <a class="btn btn-ghost" href="/account" data-signed-out>Masuk</a>
+          <a class="btn btn-dec" href="/account/plans" data-signed-in hidden><svg class="ico" aria-hidden="true"><use href="#i-user"/></svg>Pilih paket</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================= models -->
+  <!-- drive:start -->
+  <!-- ============================================================ drive -->
+  <!-- Zeiko Drive, the file storage on the same account: its own page is /drive. -->
+  <section class="section" id="drive" aria-labelledby="driveTitle">
+    <div class="wrap drive-split">
+      <div class="drive-copy">
+        <p class="kicker">Zeiko Drive</p>
+        <h2 class="sec-title" id="driveTitle">File-mu, murah, cepat, dan pribadi.</h2>
+        <p class="sec-lede">Upload dan download dengan kecepatan penuh dan berbagi lewat link, di Akun Zeiko yang sama. Paket bulanan dalam rupiah.</p>
+        <ul class="ticks">
+          <li>Tanpa batas kecepatan upload maupun download</li>
+          <li>Bagikan dengan link, password, atau tanggal berakhir</li>
+          <li>Hanya kamu yang melihat file-mu</li>
+        </ul>
+        <div class="cta">
+          <a class="btn btn-primary" href="https://drive.zeiko.biz.id">Buka Drive <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn-ghost" href="/id/drive">Paket &amp; fitur</a>
+        </div>
+        <p class="hero-signin" data-signed-out>Baru di sini? <a href="/account/signup?next=/dashboard">Buat akun</a></p>
+      </div>
+      <figure class="drv" aria-label="Zeiko Drive, digambar sebagai contoh">
+        <div class="drv-bar">
+          <span class="drv-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span class="drv-path">Drive Saya <b aria-hidden="true">/</b> <strong>Liburan ke Bali</strong></span>
+          <span class="demo-note">Ilustrasi</span>
+        </div>
+        <ul class="drv-list">
+          <li class="drv-row drv-folder"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h3.6l2 2.2h7.4A2.5 2.5 0 0 1 21 9.7v7.8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5Z"/></svg></span><span class="drv-name">Rencana perjalanan</span><span class="drv-size">12 file</span></li>
+          <li class="drv-row drv-image"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="m4.5 18 5-5 3.5 3.5 2.5-2.5 4 4"/></svg></span><span class="drv-name">sunset-kuta.jpg</span><span class="drv-tag"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.2 1.2"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.2-1.2"/></svg>Dibagikan</span><span class="drv-size">4,2 MB</span></li>
+          <li class="drv-row drv-film"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="2.5"/><path d="m10.2 9.4 4.6 2.6-4.6 2.6Z"/></svg></span><span class="drv-name">drone-uluwatu.mp4</span><span class="drv-size">1,3 GB</span></li>
+          <li class="drv-row drv-doc"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h6.5L18.5 8.5v10.5A1.5 1.5 0 0 1 17 20.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5Z"/><path d="M13.5 3.5v5h5M8.5 13h7M8.5 16.5h5"/></svg></span><span class="drv-name">tiket.pdf</span><span class="drv-size">380 KB</span></li>
+        </ul>
+        <div class="drv-up">
+          <span class="drv-ico drv-ico-up"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V5M7.5 9.5 12 5l4.5 4.5M5 19h14"/></svg></span>
+          <span class="drv-up-text"><span>Mengunggah klip.zip</span><span class="drv-up-bar" aria-hidden="true"><i></i></span></span>
+          <strong>68%</strong>
+        </div>
+        <div class="drv-meter">
+          <span class="drv-ico drv-ico-cloud"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 18.5h9.8a3.7 3.7 0 0 0 .5-7.4 5.6 5.6 0 0 0-10.9-1.3A4.4 4.4 0 0 0 7.5 18.5Z"/></svg></span>
+          <span class="drv-meter-text"><small>Penyimpanan</small><span>38,4 GB dari 200 GB</span></span>
+          <span class="drv-meter-bar" aria-hidden="true"><i></i></span>
+        </div>
+        <p class="drv-toast" aria-hidden="true"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.2 1.2"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.2-1.2"/></svg></span><span><strong>Tautan disalin</strong><small>Berlaku 7 hari</small></span></p>
+      </figure>
+    </div>
+  </section>
+  <!-- drive:end -->
+
+  <section class="section section-tint" id="models" aria-labelledby="modelsTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Model roleplay</p>
+        <h2 class="sec-title" id="modelsTitle">Tiga model roleplay, dihargai per token.</h2>
+        <p class="sec-lede">Dari aman untuk umum sampai tanpa batasan. Ketiganya: konteks 256K, sampai 32.000 token output, streaming. Pilih menurut seberapa banyak model boleh berkata.</p>
+      </div>
+
+      <dl class="stats">
+        <div><dt>Model</dt><dd>3</dd></div>
+        <div><dt>Konteks</dt><dd>256K</dd></div>
+        <div><dt>Output maks.</dt><dd>32K</dd></div>
+        <div><dt>Kelompok harga</dt><dd>3</dd></div>
+      </dl>
+
+      <div class="grid models">
+        <article class="card model">
+          <div class="model-top">
+            <span class="badge badge-ok">SFW</span>
+            <span class="heat heat-1" role="img" aria-label="Tingkat konten 1 dari 3"><i></i><i></i><i></i></span>
+          </div>
+          <h3><a href="/id/models#jagad-512b-v1">Jagad 512B V1</a></h3>
+          <p class="model-id"><code>jagad-512b-v1</code></p>
+          <p class="model-desc">Roleplay yang aman untuk umum. Pilihan awal kalau kamu belum yakin mulai dari mana.</p>
+          <dl class="model-rates">
+            <div><dt>Input</dt><dd data-price="jagad-512b-v1:input">$0.35</dd></div>
+            <div><dt>Output</dt><dd data-price="jagad-512b-v1:out">$1.50</dd></div>
+          </dl>
+          <p class="model-unit">USD per 1 juta token · kelompok standar</p>
+          <a class="model-more" href="/id/models#jagad-512b-v1">Spesifikasi, tarif &amp; performa <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </article>
+        <article class="card model">
+          <div class="model-top">
+            <span class="badge badge-warn">Dewasa</span>
+            <span class="heat heat-2" role="img" aria-label="Tingkat konten 2 dari 3"><i></i><i></i><i></i></span>
+          </div>
+          <h3><a href="/id/models#asmarandana-512b-v1">Asmarandana 512B V1</a></h3>
+          <p class="model-id"><code>asmarandana-512b-v1</code></p>
+          <p class="model-desc">Roleplay dewasa, untuk pemanggil yang membatasi pengguna mereka sendiri.</p>
+          <dl class="model-rates">
+            <div><dt>Input</dt><dd data-price="asmarandana-512b-v1:input">$0.50</dd></div>
+            <div><dt>Output</dt><dd data-price="asmarandana-512b-v1:out">$2.00</dd></div>
+          </dl>
+          <p class="model-unit">USD per 1 juta token · kelompok standar</p>
+          <a class="model-more" href="/id/models#asmarandana-512b-v1">Spesifikasi, tarif &amp; performa <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </article>
+        <article class="card model">
+          <div class="model-top">
+            <span class="badge badge-err">Tanpa batasan</span>
+            <span class="heat heat-3" role="img" aria-label="Tingkat konten 3 dari 3"><i></i><i></i><i></i></span>
+          </div>
+          <h3><a href="/id/models#wisanggeni-512b-v1">Wisanggeni 512B V1</a></h3>
+          <p class="model-id"><code>wisanggeni-512b-v1</code></p>
+          <p class="model-desc">Roleplay tanpa batasan. Tarif tertinggi di antara ketiganya, karena model inilah yang paling jarang menolak.</p>
+          <dl class="model-rates">
+            <div><dt>Input</dt><dd data-price="wisanggeni-512b-v1:input">$0.80</dd></div>
+            <div><dt>Output</dt><dd data-price="wisanggeni-512b-v1:out">$4.00</dd></div>
+          </dl>
+          <p class="model-unit">USD per 1 juta token · kelompok standar</p>
+          <a class="model-more" href="/id/models#wisanggeni-512b-v1">Spesifikasi, tarif &amp; performa <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </article>
+      </div>
+
+      <div class="split">
+        <div class="split-copy">
+          <h3>Tarif output mengikuti tingkat berpikir</h3>
+          <p>Pilih seberapa keras model berpikir di setiap permintaan, dan tarif output mengikutinya: lebih murah tanpa berpikir, lebih tinggi hanya di <code>max</code>. Input dan cache read tetap sama di setiap tingkat.</p>
+          <ul class="ticks">
+            <li>Bekerja dengan SDK resmi OpenAI</li>
+            <li>Konteks 256K, sampai 32.000 token output</li>
+            <li>Aman untuk umum, dewasa, dan tanpa batasan</li>
+          </ul>
+          <div class="cta">
+            <a class="btn btn-primary" href="#contact">Minta kunci</a>
+            <a class="btn btn-ghost" href="/id/models">Bandingkan semua model</a>
+          </div>
+        </div>
+
+        <figure class="card rate-card" aria-labelledby="rateCap">
+          <figcaption id="rateCap">
+            <span class="rate-kicker">Tarif output per tingkat berpikir</span>
+            <span class="rate-sub"><code>jagad-512b-v1</code> · USD per 1 juta token</span>
+          </figcaption>
+          <ul class="bars">
+            <li>
+              <span class="bar-label"><code>none</code> · <code>minimal</code></span>
+              <span class="bar"><span style="width:60%"></span></span>
+              <strong data-price="jagad-512b-v1:out-none">$1.20</strong>
+            </li>
+            <li>
+              <span class="bar-label"><code>low</code> · <code>medium</code> · <code>high</code></span>
+              <span class="bar"><span style="width:75%"></span></span>
+              <strong data-price="jagad-512b-v1:out">$1.50</strong>
+            </li>
+            <li>
+              <span class="bar-label"><code>max</code></span>
+              <span class="bar"><span style="width:100%"></span></span>
+              <strong data-price="jagad-512b-v1:out-max">$2.00</strong>
+            </li>
+          </ul>
+          <p class="rate-foot">
+            Input <strong data-price="jagad-512b-v1:input">$0.35</strong> dan cache read
+            <strong data-price="jagad-512b-v1:cache">$0.10</strong> tetap sama di setiap tingkat.
+          </p>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================== pricing -->
+  <section class="section" id="pricing" aria-labelledby="pricingTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="kicker">Harga</p>
+        <h2 class="sec-title" id="pricingTitle">Harga roleplay</h2>
+        <p class="sec-lede">USD per satu juta token. Tiga kolom terakhir adalah kelompok output — mana yang berlaku ditentukan tingkat berpikir di permintaanmu.</p>
+      </div>
+
+      <div class="table-scroll">
+        <table class="table table-rates" id="rateTable">
+          <thead>
+            <tr>
+              <th scope="col">Model</th>
+              <th scope="col">Input</th>
+              <th scope="col">Cache read</th>
+              <th scope="col">Output</th>
+              <th scope="col">Berpikir maksimal</th>
+              <th scope="col">Tanpa berpikir</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr data-model="jagad-512b-v1">
+              <th scope="row"><i class="dot dot-ok" aria-hidden="true"></i>jagad-512b-v1</th>
+              <td data-price="jagad-512b-v1:input">$0.35</td>
+              <td data-price="jagad-512b-v1:cache">$0.10</td>
+              <td data-price="jagad-512b-v1:out">$1.50</td>
+              <td data-price="jagad-512b-v1:out-max">$2.00</td>
+              <td data-price="jagad-512b-v1:out-none">$1.20</td>
+            </tr>
+            <tr data-model="asmarandana-512b-v1">
+              <th scope="row"><i class="dot dot-warn" aria-hidden="true"></i>asmarandana-512b-v1</th>
+              <td data-price="asmarandana-512b-v1:input">$0.50</td>
+              <td data-price="asmarandana-512b-v1:cache">$0.10</td>
+              <td data-price="asmarandana-512b-v1:out">$2.00</td>
+              <td data-price="asmarandana-512b-v1:out-max">$2.65</td>
+              <td data-price="asmarandana-512b-v1:out-none">$1.60</td>
+            </tr>
+            <tr data-model="wisanggeni-512b-v1">
+              <th scope="row"><i class="dot dot-err" aria-hidden="true"></i>wisanggeni-512b-v1</th>
+              <td data-price="wisanggeni-512b-v1:input">$0.80</td>
+              <td data-price="wisanggeni-512b-v1:cache">$0.20</td>
+              <td data-price="wisanggeni-512b-v1:out">$4.00</td>
+              <td data-price="wisanggeni-512b-v1:out-max">$6.00</td>
+              <td data-price="wisanggeni-512b-v1:out-none">$3.50</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="price-notes">
+        <div class="bands-wrap">
+          <h3>Kelompok mana yang berlaku?</h3>
+          <ol class="bands">
+            <li>
+              <span class="band-name">Tanpa berpikir</span>
+              <span class="band-efforts"><code>none</code> <code>minimal</code></span>
+            </li>
+            <li>
+              <span class="band-name">Standar <small>“Output”</small></span>
+              <span class="band-efforts"><code>low</code> <code>medium</code> <code>high</code></span>
+            </li>
+            <li>
+              <span class="band-name">Berpikir maksimal</span>
+              <span class="band-efforts"><code>max</code></span>
+            </li>
+          </ol>
+          <p class="fineprint">Token penalaran dihitung sebagai token output dengan tarif output kelompoknya.</p>
+        </div>
+        <div class="card refusal">
+          <h3>Penolakan</h3>
+          <p class="refusal-price"><strong data-price="refusal">$0.05</strong> <small>tetap</small></p>
+          <p>Permintaan yang ditolak dikenai biaya tetap, menggantikan harga tokennya.</p>
+        </div>
+      </div>
+
+      <!-- Needs JavaScript to add up; without it, the table above says everything. -->
+      <form class="card calc" id="calc" hidden aria-labelledby="calcTitle">
+        <div class="calc-head">
+          <h3 id="calcTitle">Perkirakan biayanya</h3>
+          <p>Tarifnya diambil langsung dari tabel di atas.</p>
+        </div>
+        <div class="calc-grid">
+          <label>Model
+            <select name="model"></select>
+          </label>
+          <label>Tingkat berpikir
+            <select name="effort">
+              <option value="out-none">none</option>
+              <option value="out-none">minimal</option>
+              <option value="out">low</option>
+              <option value="out" selected>medium</option>
+              <option value="out">high</option>
+              <option value="out-max">max</option>
+            </select>
+          </label>
+          <label>Token input per permintaan
+            <input type="number" name="input" min="0" step="1" value="3000" inputmode="numeric">
+          </label>
+          <label>…yang berupa cache read
+            <input type="number" name="cached" min="0" step="1" value="0" inputmode="numeric">
+          </label>
+          <label>Token output per permintaan
+            <input type="number" name="output" min="0" step="1" value="400" inputmode="numeric">
+          </label>
+          <label>Jumlah permintaan
+            <input type="number" name="requests" min="0" step="1" value="10000" inputmode="numeric">
+          </label>
+        </div>
+        <output class="calc-out" name="result" aria-live="polite">
+          <span><small>Per permintaan</small><strong data-out="one">–</strong></span>
+          <span><small>Total</small><strong data-out="all">–</strong></span>
+        </output>
+        <p class="calc-note">Perkiraan dengan tarif resmi. Output termasuk token penalaran.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============================================================ faq -->
+  <section class="section section-tint" id="faq" aria-labelledby="faqTitle">
+    <div class="wrap faq-layout">
+      <div class="faq-intro">
+        <p class="kicker">FAQ</p>
+        <h2 class="sec-title" id="faqTitle">Pertanyaan, terjawab</h2>
+        <p class="sec-lede">Ada yang lain? Tulis ke <a href="mailto:admin@zeiko.biz.id">admin@zeiko.biz.id</a>.</p>
+      </div>
+
+      <div class="faq-list">
+        <details class="faq" open>
+          <summary>Bagaimana cara mendapatkan Pranata V1?</summary>
+          <p><a href="/account/signup">Buat akun</a> dengan email atau masuk sekali klik, lalu beli paket atau isi saldo. Kuncimu sudah menunggu di halaman akunmu.</p>
+        </details>
+
+        <details class="faq">
+          <summary>Apa yang dihitung sebagai satu permintaan di paket Pranata?</summary>
+          <p>Panggilan sampai 1.024 token dihitung satu permintaan; panggilan 1.025 sampai 2.048 token dihitung dua. Tidak ada panggilan yang boleh lebih dari 2.048 token.</p>
+        </details>
+
+        <details class="faq">
+          <summary>Apakah paket Pranata juga untuk model roleplay?</summary>
+          <p>Tidak. Paket hanya untuk <a href="#decision">Pranata V1</a>; Jagad, Asmarandana, dan Wisanggeni dihargai per token.</p>
+        </details>
+
+        <details class="faq">
+          <summary>Model roleplay mana yang harus kupilih?</summary>
+          <p><strong>Jagad</strong> untuk roleplay yang aman untuk umum, dan kalau kamu belum yakin. <strong>Asmarandana</strong> untuk roleplay dewasa, kalau kamu membatasi penggunamu sendiri. <strong>Wisanggeni</strong> kalau kamu butuh model yang jarang menolak — tarifnya paling tinggi. <a href="/id/models">Bandingkan di satu halaman.</a></p>
+        </details>
+
+        <details class="faq">
+          <summary>Bagaimana biaya satu permintaan roleplay dihitung?</summary>
+          <p>Per token, dengan tarif di tabel harga. Token input, cache read, dan output dihargai terpisah, dan tarif output berasal dari kelompok tempat <code>reasoning_effort</code>-mu jatuh. Jumlahkan lalu bagi satu juta.</p>
+        </details>
+
+        <details class="faq">
+          <summary>Apakah token penalaran dihitung?</summary>
+          <p>Ya, sebagai token output, dengan tarif output kelompok tempat permintaan itu jatuh. Meminta lebih sedikit berpikir menurunkan tarif sekaligus jumlah tokennya.</p>
+        </details>
+
+        <details class="faq">
+          <summary>Berapa biaya permintaan yang ditolak?</summary>
+          <p><span data-price="refusal">$0.05</span> tetap untuk permintaan itu, bukan harga jawaban penuh.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================== contact -->
+  <section class="section" id="contact" aria-labelledby="contactTitle">
+    <div class="wrap">
+      <div class="sec-head center">
+        <p class="kicker">Mulai</p>
+        <h2 class="sec-title" id="contactTitle">Dua jalan masuk</h2>
+        <p class="sec-lede">Pranata V1 langsung bisa kamu pakai begitu punya akun. Untuk model roleplay, minta kunci.</p>
+      </div>
+
+      <div class="paths">
+        <article class="path path-dec">
+          <span class="path-icon" aria-hidden="true"><svg class="ico"><use href="#i-spark"/></svg></span>
+          <h3>Pranata V1</h3>
+          <p>Tidak perlu minta kunci. Buat akun dengan email atau masuk sekali klik, beli paket atau isi saldo, dan kuncimu sudah menunggu di halaman akunmu.</p>
+          <div class="cta">
+            <a class="btn btn-dec" href="/account/signup" data-signed-out>Buat akun</a>
+            <a class="btn btn-ghost" href="/account" data-signed-out>Masuk</a>
+            <a class="btn btn-dec" href="/account/plans" data-signed-in hidden>Pilih paket</a>
+          </div>
+        </article>
+        <article class="path">
+          <span class="path-icon" aria-hidden="true"><svg class="ico"><use href="#i-chat"/></svg></span>
+          <h3>Model roleplay</h3>
+          <p>Beri tahu kami model yang kamu mau dan perkiraan volume pemakaianmu. Kuncimu datang bersama semua yang kamu perlukan untuk tersambung.</p>
+          <p class="path-foot"><svg class="ico" aria-hidden="true"><use href="#i-mail"/></svg>admin@zeiko.biz.id</p>
+          <div class="cta">
+            <a class="btn btn-primary" href="mailto:admin@zeiko.biz.id?subject=Permintaan%20kunci%20API%20ZeikoAI">Minta kunci</a>
+            <a class="btn btn-ghost" href="/id/models">Lihat modelnya</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="/id/">
+        <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
+        <span class="brand-name">Zeiko</span>
+      </a>
+      <p>Pranata V1 untuk keputusan, tiga model roleplay yang dihargai per juta token, dan Zeiko Drive untuk file-mu.</p>
+    </div>
+    <nav class="footer-cols" aria-label="Tautan bawah">
+      <div>
+        <h2>Model AI</h2>
+        <a href="#decision">Pranata V1</a>
+        <a href="#models">Model roleplay</a>
+        <a href="/id/models">Spesifikasi &amp; performa</a>
+      </div>
+      <!-- drive:start --><div>
+        <h2>Drive</h2>
+        <a href="/id/drive">Zeiko Drive</a>
+        <a href="/id/drive#plans">Paket Drive</a>
+        <a href="https://drive.zeiko.biz.id">Buka Drive</a>
+      </div><!-- drive:end -->
+      <div>
+        <h2>Harga</h2>
+        <a href="#plans">Paket Pranata</a>
+        <a href="#pricing">Harga roleplay</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div>
+        <h2>Dokumentasi</h2>
+        <a href="/id/docs/">Mulai</a>
+        <a href="/id/docs/api">Dasar API</a>
+        <a href="/id/docs/faq">Pemecahan masalah</a>
+      </div>
+      <div>
+        <h2>Akun</h2>
+        <a href="/account" data-signed-out>Masuk</a>
+        <a href="/account/signup" data-signed-out>Buat akun</a>
+        <a href="/account" data-signed-in hidden>Akunmu</a>
+        <a href="#contact">Kontak</a>
+      </div>
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <p>© <span id="year">2026</span> Zeiko</p>
+    <p>Harga dalam USD.</p>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
+<script src="/js/try.js"></script>
+</body>
+</html>

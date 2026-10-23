@@ -8,13 +8,126 @@
 //
 // Pure functions only (no Workers APIs), so scripts/check-site.mjs can run
 // the same code in Node and scan what it would put on the page.
+//
+// Every word is in TEXT, once in English (/models) and once in Indonesian
+// (/id/models); render(view, lang) picks one for the whole page.
 
-export const WINDOWS = [
-  { id: '24h', label: 'Last 24 hours', short: '24 hours', prev: 'previous 24 hours', unit: 'per hour', avg: 'hourly average' },
-  { id: '7d', label: 'Last 7 days', short: '7 days', prev: 'previous 7 days', unit: 'per 6 hours', avg: '6-hour average' },
-  { id: '30d', label: 'Last 30 days', short: '30 days', prev: 'previous 30 days', unit: 'per day', avg: 'daily average' },
-];
+const WINDOW_IDS = ['24h', '7d', '30d'];
 export const DEFAULT_WINDOW = '7d';
+
+const TEXT = {
+  en: {
+    windows: {
+      '24h': { label: 'Last 24 hours', short: '24 hours', prev: 'previous 24 hours', unit: 'per hour', avg: 'hourly average' },
+      '7d': { label: 'Last 7 days', short: '7 days', prev: 'previous 7 days', unit: 'per 6 hours', avg: '6-hour average' },
+      '30d': { label: 'Last 30 days', short: '30 days', prev: 'previous 30 days', unit: 'per day', avg: 'daily average' },
+    },
+    months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    days: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+    group: ',',
+    point: '.',
+    requests: 'Requests',
+    ttft: 'Time to first token',
+    speed: 'Output speed',
+    latency: 'Latency',
+    input: 'Input tokens',
+    fresh: 'New input',
+    cached: 'Cache reads',
+    output: 'Output tokens',
+    calls: 'Calls',
+    perSecondSub: 'tokens per second',
+    fullReply: 'full reply',
+    fullAnswer: 'full answer',
+    noTraffic: 'No traffic in this window yet.',
+    noTrafficCell: 'no traffic',
+    vs: 'vs',
+    median: 'median',
+    average: 'average',
+    medianReply: 'median full reply',
+    medianAnswer: 'median full answer',
+    availability: 'Availability',
+    serverErrors: (n) => `${n} server errors`,
+    answered: (n) => `${n} answered`,
+    perRequest: (n) => `${n} per request`,
+    tokensEach: (n) => `${n} tokens each`,
+    cacheRate: 'Cache rate',
+    fromCache: (n) => `${n} tokens from cache`,
+    callsPerSecond: 'Calls per second',
+    answeredAvg: (w) => `answered, ${w} average`,
+    traffic: 'Traffic',
+    busiest: 'Busiest minute',
+    lastHour: 'last full hour, average',
+    last24: 'last 24 hours, per second',
+    performance: 'Performance',
+    period: 'Period',
+    errors: 'Errors',
+    firstToken: 'First token',
+    speedCol: 'Speed',
+    inputCol: 'Input',
+    outputCol: 'Output',
+    asTable: 'Show these figures as a table',
+    windowLegend: 'Performance window',
+    asOf: (time) => `As of ${time}, updated every hour.`,
+  },
+  id: {
+    windows: {
+      '24h': { label: '24 jam terakhir', short: '24 jam', prev: '24 jam sebelumnya', unit: 'per jam', avg: 'rata-rata per jam' },
+      '7d': { label: '7 hari terakhir', short: '7 hari', prev: '7 hari sebelumnya', unit: 'per 6 jam', avg: 'rata-rata per 6 jam' },
+      '30d': { label: '30 hari terakhir', short: '30 hari', prev: '30 hari sebelumnya', unit: 'per hari', avg: 'rata-rata harian' },
+    },
+    months: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
+    days: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
+    group: '.',
+    point: ',',
+    requests: 'Permintaan',
+    ttft: 'Waktu ke token pertama',
+    speed: 'Kecepatan output',
+    latency: 'Latensi',
+    input: 'Token input',
+    fresh: 'Input baru',
+    cached: 'Cache read',
+    output: 'Token output',
+    calls: 'Panggilan',
+    perSecondSub: 'token per detik',
+    fullReply: 'balasan penuh',
+    fullAnswer: 'jawaban penuh',
+    noTraffic: 'Belum ada trafik di rentang ini.',
+    noTrafficCell: 'tidak ada trafik',
+    vs: 'vs',
+    median: 'median',
+    average: 'rata-rata',
+    medianReply: 'median balasan penuh',
+    medianAnswer: 'median jawaban penuh',
+    availability: 'Ketersediaan',
+    serverErrors: (n) => `${n} error server`,
+    answered: (n) => `${n} dijawab`,
+    perRequest: (n) => `${n} per permintaan`,
+    tokensEach: (n) => `${n} token masing-masing`,
+    cacheRate: 'Rasio cache',
+    fromCache: (n) => `${n} token dari cache`,
+    callsPerSecond: 'Panggilan per detik',
+    answeredAvg: (w) => `dijawab, rata-rata ${w}`,
+    traffic: 'Trafik',
+    busiest: 'Menit tersibuk',
+    lastHour: 'jam penuh terakhir, rata-rata',
+    last24: '24 jam terakhir, per detik',
+    performance: 'Performa',
+    period: 'Periode',
+    errors: 'Error',
+    firstToken: 'Token pertama',
+    speedCol: 'Kecepatan',
+    inputCol: 'Input',
+    outputCol: 'Output',
+    asTable: 'Tampilkan angka ini sebagai tabel',
+    windowLegend: 'Rentang performa',
+    asOf: (time) => `Per ${time}, diperbarui setiap jam.`,
+  },
+};
+
+// The language of the page being rendered. render() sets it and runs to the
+// end without waiting on anything, so one page never sees another's words.
+let T = TEXT.en;
+const win = (id) => ({ id, ...T.windows[id] });
 
 const ID = /^[A-Za-z0-9][A-Za-z0-9._/-]{0,63}$/;
 const FIGURES = ['requests', 'served', 'errors', 'availability', 'input_tokens', 'output_tokens',
@@ -60,9 +173,9 @@ export function sanitize(doc) {
   for (const m of doc.models) {
     if (!m || typeof m.id !== 'string' || !ID.test(m.id)) continue;
     const stats = {};
-    for (const w of WINDOWS) {
-      const s = m.stats && m.stats[w.id];
-      stats[w.id] = { cur: figures(s && s.current), prev: figures(s && s.previous) };
+    for (const id of WINDOW_IDS) {
+      const s = m.stats && m.stats[id];
+      stats[id] = { cur: figures(s && s.current), prev: figures(s && s.previous) };
     }
     // The decision model carries its own counters; a boolean and numbers are
     // all that is taken from them.
@@ -82,17 +195,15 @@ export function sanitize(doc) {
 
 // ------------------------------------------------------------ formatting
 
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const pad = (n) => String(n).padStart(2, '0');
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 function trim(v, d) {
-  return v.toFixed(d).replace(/\.0+$/, '').replace(/(\.\d*?)0+$/, '$1');
+  return v.toFixed(d).replace(/\.0+$/, '').replace(/(\.\d*?)0+$/, '$1').replace('.', T.point);
 }
 function grouped(v) {
-  return Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g, T.group);
 }
 
 const fmt = {
@@ -117,7 +228,7 @@ const fmt = {
 
 function stamp(t) {
   const d = new Date(t);
-  return `${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}, ${pad(d.getUTCHours())}:00 UTC`;
+  return `${d.getUTCDate()} ${T.months[d.getUTCMonth()]} ${d.getUTCFullYear()}, ${pad(d.getUTCHours())}:00 UTC`;
 }
 
 // --------------------------------------------------------------- buckets
@@ -170,7 +281,7 @@ function points(model, win) {
 
 function bucketLabel(p, win) {
   const d = new Date(p.t);
-  const day = `${DAYS[d.getUTCDay()]} ${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]}`;
+  const day = `${T.days[d.getUTCDay()]} ${d.getUTCDate()} ${T.months[d.getUTCMonth()]}`;
   if (win === '30d') return day;
   const end = new Date(p.t + p.span);
   return `${day}, ${pad(d.getUTCHours())}:00–${pad(end.getUTCHours())}:00 UTC`;
@@ -179,8 +290,8 @@ function bucketLabel(p, win) {
 function tickLabel(p, win) {
   const d = new Date(p.t);
   if (win === '24h') return `${pad(d.getUTCHours())}:00`;
-  if (win === '7d') return `${DAYS[d.getUTCDay()]} ${d.getUTCDate()}`;
-  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}`;
+  if (win === '7d') return `${T.days[d.getUTCDay()]} ${d.getUTCDate()}`;
+  return `${T.months[d.getUTCMonth()]} ${d.getUTCDate()}`;
 }
 
 // ---------------------------------------------------------------- charts
@@ -294,7 +405,7 @@ function chart(spec, pts, win) {
   const legend = spec.names.length > 1
     ? `<ul class="chart-legend">${spec.names.map((n, j) => `<li><i class="key s${j + 1}" aria-hidden="true"></i>${esc(n)}</li>`).join('')}</ul>`
     : '';
-  if (!has) return `<figure class="chart">${head}<p class="chart-empty">No traffic in this window yet.</p></figure>`;
+  if (!has) return `<figure class="chart">${head}<p class="chart-empty">${esc(T.noTraffic)}</p></figure>`;
   const r = spec.kind === 'line'
     ? line(pts, spec.keys[0], win, { axis: AXIS[spec.fmt] })
     : columns(pts, spec.keys, win, { axis: AXIS[spec.fmt] });
@@ -302,7 +413,7 @@ function chart(spec, pts, win) {
   const data = [
     `data-x="${esc(pts.map((p) => bucketLabel(p, win)).join('|'))}"`,
     `data-names="${esc(spec.names.join('|'))}"`,
-    ...spec.keys.map((k, j) => `data-v${j + 1}="${esc(pts.map((p) => (p[k] == null ? 'no traffic' : f(p[k]))).join('|'))}"`),
+    ...spec.keys.map((k, j) => `data-v${j + 1}="${esc(pts.map((p) => (p[k] == null ? T.noTrafficCell : f(p[k]))).join('|'))}"`),
     `data-geom="${G.l} ${G.pw} ${G.w} ${G.t} ${G.ph}"`,
   ].join(' ');
   const label = `${spec.title}, ${spec.sub(win)}`;
@@ -311,22 +422,22 @@ function chart(spec, pts, win) {
     `</div></figure>`;
 }
 
-const CHARTS = [
-  { title: 'Requests', kind: 'columns', keys: ['requests'], names: ['Requests'], fmt: 'count', sub: (w) => WIN[w].unit },
-  { title: 'Time to first token', kind: 'line', keys: ['ttft'], names: ['Time to first token'], fmt: 'ms', sub: (w) => WIN[w].avg },
-  { title: 'Output speed', kind: 'line', keys: ['tps'], names: ['Output speed'], fmt: 'tps', sub: (w) => `${WIN[w].avg}, tokens per second` },
-  { title: 'Latency', kind: 'line', keys: ['latency'], names: ['Latency'], fmt: 'ms', sub: (w) => `${WIN[w].avg}, full reply` },
-  { title: 'Input tokens', kind: 'columns', keys: ['fresh', 'cached'], names: ['New input', 'Cache reads'], fmt: 'count', sub: (w) => WIN[w].unit },
-  { title: 'Output tokens', kind: 'columns', keys: ['output'], names: ['Output tokens'], fmt: 'count', sub: (w) => WIN[w].unit },
+// Built per page, in the page's language.
+const CHARTS = () => [
+  { title: T.requests, kind: 'columns', keys: ['requests'], names: [T.requests], fmt: 'count', sub: (w) => win(w).unit },
+  { title: T.ttft, kind: 'line', keys: ['ttft'], names: [T.ttft], fmt: 'ms', sub: (w) => win(w).avg },
+  { title: T.speed, kind: 'line', keys: ['tps'], names: [T.speed], fmt: 'tps', sub: (w) => `${win(w).avg}, ${T.perSecondSub}` },
+  { title: T.latency, kind: 'line', keys: ['latency'], names: [T.latency], fmt: 'ms', sub: (w) => `${win(w).avg}, ${T.fullReply}` },
+  { title: T.input, kind: 'columns', keys: ['fresh', 'cached'], names: [T.fresh, T.cached], fmt: 'count', sub: (w) => win(w).unit },
+  { title: T.output, kind: 'columns', keys: ['output'], names: [T.output], fmt: 'count', sub: (w) => win(w).unit },
 ];
-const WIN = Object.fromEntries(WINDOWS.map((w) => [w.id, w]));
 
 // The decision model answers in one step: no first token, no output speed,
 // no output tokens.
-const DECISION_CHARTS = [
-  { title: 'Calls', kind: 'columns', keys: ['requests'], names: ['Calls'], fmt: 'count', sub: (w) => WIN[w].unit },
-  { title: 'Latency', kind: 'line', keys: ['latency'], names: ['Latency'], fmt: 'ms', sub: (w) => `${WIN[w].avg}, full answer` },
-  { title: 'Input tokens', kind: 'columns', keys: ['input'], names: ['Input tokens'], fmt: 'count', sub: (w) => WIN[w].unit },
+const DECISION_CHARTS = () => [
+  { title: T.calls, kind: 'columns', keys: ['requests'], names: [T.calls], fmt: 'count', sub: (w) => win(w).unit },
+  { title: T.latency, kind: 'line', keys: ['latency'], names: [T.latency], fmt: 'ms', sub: (w) => `${win(w).avg}, ${T.fullAnswer}` },
+  { title: T.input, kind: 'columns', keys: ['input'], names: [T.input], fmt: 'count', sub: (w) => win(w).unit },
 ];
 
 // ----------------------------------------------------------------- tiles
@@ -334,11 +445,11 @@ const DECISION_CHARTS = [
 function delta(cur, prev, upIsGood, label) {
   if (cur == null || prev == null || !(prev > 0)) return '';
   const change = (cur - prev) / prev;
-  if (Math.abs(change) < 0.005) return `<span class="delta flat">±0% vs ${esc(label)}</span>`;
+  if (Math.abs(change) < 0.005) return `<span class="delta flat">±0% ${T.vs} ${esc(label)}</span>`;
   const up = change > 0;
   const tone = upIsGood == null ? 'flat' : up === upIsGood ? 'good' : 'bad';
   const size = trim(Math.abs(change) * 100, Math.abs(change) < 0.1 ? 1 : 0);
-  return `<span class="delta ${tone}"><span aria-hidden="true">${up ? '▲' : '▼'}</span> ${up ? '+' : '−'}${size}% vs ${esc(label)}</span>`;
+  return `<span class="delta ${tone}"><span aria-hidden="true">${up ? '▲' : '▼'}</span> ${up ? '+' : '−'}${size}% ${T.vs} ${esc(label)}</span>`;
 }
 
 function tile(label, value, sub, d) {
@@ -352,14 +463,14 @@ function tiles(s, w) {
   const p = s.prev || figures({});
   const pr = w.prev;
   return '<div class="tiles">' + [
-    tile('Time to first token', fmt.ms(c.ttft_ms.p50), `median · p95 ${fmt.ms(c.ttft_ms.p95)}`, delta(c.ttft_ms.p50, p.ttft_ms.p50, false, pr)),
-    tile('Output speed', fmt.tps(c.tps.p50), `median · average ${fmt.tps(c.tps.avg)}`, delta(c.tps.p50, p.tps.p50, true, pr)),
-    tile('Latency', fmt.ms(c.latency_ms.p50), `median full reply · p95 ${fmt.ms(c.latency_ms.p95)}`, delta(c.latency_ms.p50, p.latency_ms.p50, false, pr)),
-    tile('Availability', fmt.pct(c.availability, 2), `${fmt.count(c.errors ?? 0)} server errors`, delta(c.availability, p.availability, true, pr)),
-    tile('Requests', fmt.compact(c.requests), c.served != null ? `${fmt.count(c.served)} answered` : '', delta(c.requests, p.requests, null, pr)),
-    tile('Input tokens', fmt.compact(c.input_tokens), c.avg_input_tokens != null ? `${fmt.count(c.avg_input_tokens)} per request` : '', delta(c.input_tokens, p.input_tokens, null, pr)),
-    tile('Output tokens', fmt.compact(c.output_tokens), c.avg_output_tokens != null ? `${fmt.count(c.avg_output_tokens)} per request` : '', delta(c.output_tokens, p.output_tokens, null, pr)),
-    tile('Cache rate', fmt.pct(c.cache_rate), c.cached_tokens != null ? `${fmt.compact(c.cached_tokens)} tokens from cache` : '', delta(c.cache_rate, p.cache_rate, true, pr)),
+    tile(T.ttft, fmt.ms(c.ttft_ms.p50), `${T.median} · p95 ${fmt.ms(c.ttft_ms.p95)}`, delta(c.ttft_ms.p50, p.ttft_ms.p50, false, pr)),
+    tile(T.speed, fmt.tps(c.tps.p50), `${T.median} · ${T.average} ${fmt.tps(c.tps.avg)}`, delta(c.tps.p50, p.tps.p50, true, pr)),
+    tile(T.latency, fmt.ms(c.latency_ms.p50), `${T.medianReply} · p95 ${fmt.ms(c.latency_ms.p95)}`, delta(c.latency_ms.p50, p.latency_ms.p50, false, pr)),
+    tile(T.availability, fmt.pct(c.availability, 2), T.serverErrors(fmt.count(c.errors ?? 0)), delta(c.availability, p.availability, true, pr)),
+    tile(T.requests, fmt.compact(c.requests), c.served != null ? T.answered(fmt.count(c.served)) : '', delta(c.requests, p.requests, null, pr)),
+    tile(T.input, fmt.compact(c.input_tokens), c.avg_input_tokens != null ? T.perRequest(fmt.count(c.avg_input_tokens)) : '', delta(c.input_tokens, p.input_tokens, null, pr)),
+    tile(T.output, fmt.compact(c.output_tokens), c.avg_output_tokens != null ? T.perRequest(fmt.count(c.avg_output_tokens)) : '', delta(c.output_tokens, p.output_tokens, null, pr)),
+    tile(T.cacheRate, fmt.pct(c.cache_rate), c.cached_tokens != null ? T.fromCache(fmt.compact(c.cached_tokens)) : '', delta(c.cache_rate, p.cache_rate, true, pr)),
   ].join('') + '</div>';
 }
 
@@ -368,44 +479,44 @@ function decisionTiles(s, w) {
   const p = s.prev || figures({});
   const pr = w.prev;
   return '<div class="tiles">' + [
-    tile('Calls per second', fmt.rate(c.per_second), `answered, ${w.short} average`, delta(c.per_second, p.per_second, null, pr)),
-    tile('Latency', fmt.ms(c.latency_ms && c.latency_ms.p50), `median full answer · p95 ${fmt.ms(c.latency_ms && c.latency_ms.p95)}`, delta(c.latency_ms && c.latency_ms.p50, p.latency_ms && p.latency_ms.p50, false, pr)),
-    tile('Availability', fmt.pct(c.availability, 2), `${fmt.count(c.errors ?? 0)} server errors`, delta(c.availability, p.availability, true, pr)),
-    tile('Calls', fmt.compact(c.requests),
-      c.served != null ? `${fmt.count(c.served)} answered` + (c.avg_input_tokens != null ? ` · ${fmt.count(c.avg_input_tokens)} tokens each` : '') : '',
+    tile(T.callsPerSecond, fmt.rate(c.per_second), T.answeredAvg(w.short), delta(c.per_second, p.per_second, null, pr)),
+    tile(T.latency, fmt.ms(c.latency_ms && c.latency_ms.p50), `${T.medianAnswer} · p95 ${fmt.ms(c.latency_ms && c.latency_ms.p95)}`, delta(c.latency_ms && c.latency_ms.p50, p.latency_ms && p.latency_ms.p50, false, pr)),
+    tile(T.availability, fmt.pct(c.availability, 2), T.serverErrors(fmt.count(c.errors ?? 0)), delta(c.availability, p.availability, true, pr)),
+    tile(T.calls, fmt.compact(c.requests),
+      c.served != null ? T.answered(fmt.count(c.served)) + (c.avg_input_tokens != null ? ` · ${T.tokensEach(fmt.count(c.avg_input_tokens))}` : '') : '',
       delta(c.requests, p.requests, null, pr)),
   ].join('') + '</div>';
 }
 
 function decisionTable(pts, win) {
-  const head = ['Period', 'Calls', 'Errors', 'Latency', 'Input'];
+  const head = [T.period, T.calls, T.errors, T.latency, T.inputCol];
   const body = pts.map((p) => '<tr>' + [
     `<th scope="row">${esc(bucketLabel(p, win))}</th>`,
     fmt.count(p.requests), fmt.count(p.errors), fmt.ms(p.latency), fmt.count(p.input),
   ].map((c, i) => (i ? `<td>${esc(c)}</td>` : c)).join('') + '</tr>').join('');
-  return `<details class="perf-table"><summary>Show these figures as a table</summary>` +
-    `<div class="table-scroll"><table class="table"><thead><tr>${head.map((h) => `<th scope="col">${h}</th>`).join('')}</tr></thead>` +
+  return `<details class="perf-table"><summary>${esc(T.asTable)}</summary>` +
+    `<div class="table-scroll"><table class="table"><thead><tr>${head.map((h) => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead>` +
     `<tbody>${body}</tbody></table></div></details>`;
 }
 
 /** The decision model: how fast calls arrive now, then each window. */
 function decisionSection(m) {
   const t = m.totals || {};
-  let html = '<h3 class="perf-title">Traffic</h3><div class="tiles tiles-2">' + [
-    tile('Calls per second', fmt.rate(t.lastHour), 'last full hour, average', ''),
-    tile('Busiest minute', fmt.rate(t.busiest), 'last 24 hours, per second', ''),
+  let html = `<h3 class="perf-title">${esc(T.traffic)}</h3><div class="tiles tiles-2">` + [
+    tile(T.callsPerSecond, fmt.rate(t.lastHour), T.lastHour, ''),
+    tile(T.busiest, fmt.rate(t.busiest), T.last24, ''),
   ].join('') + '</div>';
-  html += '<h3 class="perf-title perf-title-gap">Performance ' +
-    WINDOWS.map((w) => `<span data-w="${w.id}">· ${esc(w.short)}</span>`).join('') + '</h3>';
-  for (const w of WINDOWS) {
+  html += `<h3 class="perf-title perf-title-gap">${esc(T.performance)} ` +
+    WINDOW_IDS.map(win).map((w) => `<span data-w="${w.id}">· ${esc(w.short)}</span>`).join('') + '</h3>';
+  for (const w of WINDOW_IDS.map(win)) {
     const s = m.stats[w.id];
     const pts = points(m, w.id);
     html += `<div data-w="${w.id}">`;
     html += s.cur && s.cur.requests != null
       ? decisionTiles(s, w)
-      : '<p class="perf-empty">No traffic in this window yet.</p>';
+      : `<p class="perf-empty">${esc(T.noTraffic)}</p>`;
     if (pts.length) {
-      html += '<div class="charts">' + DECISION_CHARTS.map((c) => chart(c, pts, w.id)).join('') + '</div>';
+      html += '<div class="charts">' + DECISION_CHARTS().map((c) => chart(c, pts, w.id)).join('') + '</div>';
       html += decisionTable(pts, w.id);
     }
     html += '</div>';
@@ -414,31 +525,31 @@ function decisionSection(m) {
 }
 
 function table(pts, win) {
-  const head = ['Period', 'Requests', 'Errors', 'First token', 'Latency', 'Speed', 'Input', 'Cache reads', 'Output'];
+  const head = [T.period, T.requests, T.errors, T.firstToken, T.latency, T.speedCol, T.inputCol, T.cached, T.outputCol];
   const body = pts.map((p) => '<tr>' + [
     `<th scope="row">${esc(bucketLabel(p, win))}</th>`,
     fmt.count(p.requests), fmt.count(p.errors), fmt.ms(p.ttft), fmt.ms(p.latency), fmt.tps(p.tps),
     fmt.count(p.input), fmt.count(p.cached), fmt.count(p.output),
   ].map((c, i) => (i ? `<td>${esc(c)}</td>` : c)).join('') + '</tr>').join('');
-  return `<details class="perf-table"><summary>Show these figures as a table</summary>` +
-    `<div class="table-scroll"><table class="table"><thead><tr>${head.map((h) => `<th scope="col">${h}</th>`).join('')}</tr></thead>` +
+  return `<details class="perf-table"><summary>${esc(T.asTable)}</summary>` +
+    `<div class="table-scroll"><table class="table"><thead><tr>${head.map((h) => `<th scope="col">${esc(h)}</th>`).join('')}</tr></thead>` +
     `<tbody>${body}</tbody></table></div></details>`;
 }
 
 // ---------------------------------------------------------------- render
 
 function modelSection(m) {
-  let html = '<h3 class="perf-title">Performance ' +
-    WINDOWS.map((w) => `<span data-w="${w.id}">· ${esc(w.short)}</span>`).join('') + '</h3>';
-  for (const w of WINDOWS) {
+  let html = `<h3 class="perf-title">${esc(T.performance)} ` +
+    WINDOW_IDS.map(win).map((w) => `<span data-w="${w.id}">· ${esc(w.short)}</span>`).join('') + '</h3>';
+  for (const w of WINDOW_IDS.map(win)) {
     const s = m.stats[w.id];
     const pts = points(m, w.id).map((p) => ({ ...p, fresh: p.input == null ? null : Math.max(0, p.input - (p.cached || 0)) }));
     html += `<div data-w="${w.id}">`;
     html += s.cur && s.cur.requests != null
       ? tiles(s, w)
-      : '<p class="perf-empty">No traffic in this window yet.</p>';
+      : `<p class="perf-empty">${esc(T.noTraffic)}</p>`;
     if (pts.length) {
-      html += '<div class="charts">' + CHARTS.map((c) => chart(c, pts, w.id)).join('') + '</div>';
+      html += '<div class="charts">' + CHARTS().map((c) => chart(c, pts, w.id)).join('') + '</div>';
       html += table(pts, w.id);
     }
     html += '</div>';
@@ -447,9 +558,9 @@ function modelSection(m) {
 }
 
 function glance(m) {
-  const cell = (pick) => WINDOWS.map((w) => {
-    const c = m.stats[w.id].cur;
-    return `<span data-w="${w.id}">${esc(c ? pick(c) : '—')}</span>`;
+  const cell = (pick) => WINDOW_IDS.map((id) => {
+    const c = m.stats[id].cur;
+    return `<span data-w="${id}">${esc(c ? pick(c) : '—')}</span>`;
   }).join('');
   return {
     ttft: cell((c) => fmt.ms(c.ttft_ms.p50)),
@@ -459,21 +570,23 @@ function glance(m) {
 }
 
 function bar(asOf) {
-  const radios = WINDOWS.map((w) =>
+  const radios = WINDOW_IDS.map(win).map((w) =>
     `<label class="seg-item"><input type="radio" name="win" id="win-${w.id}" value="${w.id}"${w.id === DEFAULT_WINDOW ? ' checked' : ''}><span>${esc(w.label)}</span></label>`,
   ).join('');
-  const when = asOf == null ? '' : `As of <time datetime="${new Date(asOf).toISOString()}">${esc(stamp(asOf))}</time>, updated every hour.`;
-  return `<fieldset class="seg"><legend class="seg-legend">Performance window</legend>${radios}</fieldset>` +
+  const when = asOf == null ? '' : T.asOf(`<time datetime="${new Date(asOf).toISOString()}">${esc(stamp(asOf))}</time>`);
+  return `<fieldset class="seg"><legend class="seg-legend">${esc(T.windowLegend)}</legend>${radios}</fieldset>` +
     `<p class="perf-asof">${when}</p>`;
 }
 
 /**
- * The HTML for each placeholder on /models, from a sanitized snapshot:
+ * The HTML for each placeholder on /models (lang 'en') or /id/models ('id'),
+ * from a sanitized snapshot:
  *   bar       the window picker and the as-of time
  *   models    one performance section per model id
  *   glance    the three live cells per model in the at-a-glance table
  */
-export function render(view) {
+export function render(view, lang = 'en') {
+  T = TEXT[lang] || TEXT.en;
   if (!view || !view.models) return null;
   const models = {};
   const cells = {};

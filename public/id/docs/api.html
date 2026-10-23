@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Dasar API — Dokumentasi Zeiko</title>
+<meta name="description" content="Base URL, kunci, endpoint, ID model, SDK OpenAI, error, dan percobaan ulang API ZeikoAI.">
+<meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
+<meta property="og:title" content="Dasar API — Dokumentasi Zeiko">
+<meta property="og:description" content="Base URL, kunci, endpoint, ID model, SDK OpenAI, error, dan percobaan ulang API ZeikoAI.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/logo.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Langsung ke isi</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/id/">
+      <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
+      <span class="brand-name">Zeiko</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Navigasi utama">
+      <a href="/id/#decision">Pranata V1</a>
+      <a href="/id/drive">Drive</a>
+      <a href="/id/#models">Roleplay</a>
+      <a href="/id/#pricing">Harga</a>
+      <a href="/id/models">Model</a>
+      <a href="/id/docs/" aria-current="page">Dokumentasi</a>
+      <a class="nav-account" href="/account">Masuk</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Buat akun</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <a class="lang-switch" href="/docs/api" hreflang="en" lang="en" data-lang="en">EN</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Ganti tema terang dan gelap">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Dokumentasi">
+      <details class="docs-menu">
+        <summary>Menu dokumentasi <span>Dasar API</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Mulai</p>
+          <ul>
+            <li><a href="/id/docs/">Pengantar</a></li>
+            <li><a href="/id/docs/account">Akunmu</a></li>
+            <li><a href="/id/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Model AI</p>
+          <ul>
+            <li><a href="/id/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
+            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/id/docs/api" aria-current="page">Dasar API</a></li>
+            <li><a href="/id/docs/api-decisions">API Keputusan</a></li>
+            <li><a href="/id/docs/api-chat">API Chat</a></li>
+            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive">Dasar Drive</a></li>
+            <li><a href="/id/docs/drive-plans">Paket &amp; Saldo Drive</a></li>
+            <li><a href="/id/docs/drive-sharing">Berbagi &amp; unduhan</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Mulai</p>
+          <ul>
+            <li><a href="/id/docs/">Pengantar</a></li>
+            <li><a href="/id/docs/account">Akunmu</a></li>
+            <li><a href="/id/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Model AI</p>
+          <ul>
+            <li><a href="/id/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
+            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/id/docs/api" aria-current="page">Dasar API</a></li>
+            <li><a href="/id/docs/api-decisions">API Keputusan</a></li>
+            <li><a href="/id/docs/api-chat">API Chat</a></li>
+            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive">Dasar Drive</a></li>
+            <li><a href="/id/docs/drive-plans">Paket &amp; Saldo Drive</a></li>
+            <li><a href="/id/docs/drive-sharing">Berbagi &amp; unduhan</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/id/docs/">Dokumentasi</a> <span aria-hidden="true">/</span> API</p>
+      <h1>Dasar API</h1>
+      <p class="lede">Satu alamat, satu header kunci, JSON masuk dan keluar. Pranata V1 menjawab di endpoint-nya sendiri; model roleplay memakai format chat yang sudah dipakai SDK OpenAI.</p>
+      <nav class="docs-toc" aria-label="Di halaman ini">
+        <p>Di halaman ini</p>
+        <ul>
+          <li><a href="#base-url">Base URL</a></li>
+          <li><a href="#keys">Kuncimu</a></li>
+          <li><a href="#endpoints">Endpoint</a></li>
+          <li><a href="#models">ID model</a></li>
+          <li><a href="#sdks">Dengan SDK OpenAI</a></li>
+          <li><a href="#request-id">ID permintaan</a></li>
+          <li><a href="#errors">Error</a></li>
+          <li><a href="#retries">Percobaan ulang dan batas</a></li>
+        </ul>
+      </nav>
+
+<h2 id="base-url">Base URL</h2>
+<div class="code">
+  <div class="code-bar"><span>Base URL</span><button class="copy" type="button" data-copy="#code-1" aria-label="Salin contoh Base URL">Salin</button></div>
+  <pre id="code-1"><code>https://ai.zeiko.biz.id/v1</code></pre>
+</div>
+<p>Setiap path di bawah dimulai dari alamat ini. Halaman <a href="/account/key">Kunci API</a> di akunmu menampilkan alamat yang sama di samping kuncimu.</p>
+
+<h2 id="keys">Kuncimu</h2>
+<p>Kirim kuncimu di setiap permintaan, di header <code>Authorization</code>:</p>
+<div class="code">
+  <div class="code-bar"><span>Header</span><button class="copy" type="button" data-copy="#code-2" aria-label="Salin contoh header">Salin</button></div>
+  <pre id="code-2"><code>Authorization: Bearer YOUR_API_KEY</code></pre>
+</div>
+<ul>
+  <li>Kunci Pranata V1 didapat dari <a href="/id/docs/account#key">akunmu</a>. Kunci model roleplay <a href="/id/docs/roleplay#access">diminta lewat email</a>.</li>
+  <li>Simpan kunci di servermu, di variabel lingkungan seperti <code>ZEIKO_API_KEY</code>, jangan pernah di kode, halaman web, atau aplikasi ponsel.</li>
+  <li>Kalau kunci mungkin bocor, ganti: <em>Buat kunci baru</em> di akunmu, atau kirim email ke kami untuk kunci roleplay. Kunci lama langsung tidak berlaku.</li>
+</ul>
+
+<h2 id="endpoints">Endpoint</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Metode</th><th scope="col">Path</th><th scope="col">Kunci</th><th scope="col">Fungsinya</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><span class="verb verb-get">GET</span></th><td data-label="Path"><code>/v1/models</code></td><td data-label="Kunci">Tidak perlu</td><td data-label="Fungsinya">Daftar model.</td></tr>
+      <tr><th scope="row"><span class="verb verb-get">GET</span></th><td data-label="Path"><code>/v1/models/{id}</code></td><td data-label="Kunci">Tidak perlu</td><td data-label="Fungsinya">Satu model, atau <code>404</code>.</td></tr>
+      <tr><th scope="row"><span class="verb verb-post">POST</span></th><td data-label="Path"><code>/v1/decisions</code></td><td data-label="Kunci">Perlu</td><td data-label="Fungsinya">Bertanya ke Pranata V1. Lihat <a href="/id/docs/api-decisions">API Keputusan</a>.</td></tr>
+      <tr><th scope="row"><span class="verb verb-post">POST</span></th><td data-label="Path"><code>/v1/chat/completions</code></td><td data-label="Kunci">Perlu</td><td data-label="Fungsinya">Chat dengan model roleplay, di-stream atau tidak. Lihat <a href="/id/docs/api-chat">API Chat</a>.</td></tr>
+    </tbody>
+  </table></div>
+<p>Setiap model menjawab di endpoint-nya sendiri: model roleplay yang dikirim ke <code>/v1/decisions</code>, atau Pranata V1 yang dikirim ke <code>/v1/chat/completions</code>, ditolak dengan <code>400 wrong_endpoint</code> sebelum ada yang terpakai.</p>
+
+<h2 id="models">ID model</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">ID</th><th scope="col">Model</th><th scope="col">Endpoint</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>pranata-v1</code></th><td data-label="Model">Pranata V1</td><td data-label="Endpoint"><code>/v1/decisions</code></td></tr>
+      <tr><th scope="row"><code>jagad-512b-v1</code></th><td data-label="Model">Jagad 512B V1</td><td data-label="Endpoint"><code>/v1/chat/completions</code></td></tr>
+      <tr><th scope="row"><code>asmarandana-512b-v1</code></th><td data-label="Model">Asmarandana 512B V1</td><td data-label="Endpoint"><code>/v1/chat/completions</code></td></tr>
+      <tr><th scope="row"><code>wisanggeni-512b-v1</code></th><td data-label="Model">Wisanggeni 512B V1</td><td data-label="Endpoint"><code>/v1/chat/completions</code></td></tr>
+    </tbody>
+  </table></div>
+<p>ID ditulis huruf kecil dan harus dikirim persis seperti tertulis. <code>GET /v1/models</code> selalu berisi daftar terbaru, dan tidak butuh kunci:</p>
+<div class="code">
+  <div class="code-bar"><span>curl</span><button class="copy" type="button" data-copy="#code-3" aria-label="Salin contoh curl">Salin</button></div>
+  <pre id="code-3"><code>curl https://ai.zeiko.biz.id/v1/models</code></pre>
+</div>
+<p>Setiap entri berisi <code>id</code> model, <code>context_length</code>-nya, dan harganya per token, sebagai string desimal (baca sebagai desimal, bukan float). Pakai field yang kamu perlukan dan abaikan sisanya.</p>
+
+<h2 id="sdks">Dengan SDK OpenAI</h2>
+<p>Untuk model roleplay, arahkan SDK resmi OpenAI mana pun ke base URL dan beri kuncimu:</p>
+<div class="code">
+  <div class="code-bar"><span>Python</span><button class="copy" type="button" data-copy="#code-4" aria-label="Salin contoh Python">Salin</button></div>
+  <pre id="code-4"><code>import os
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://ai.zeiko.biz.id/v1",
+    api_key=os.environ["ZEIKO_API_KEY"],
+)</code></pre>
+</div>
+<div class="code">
+  <div class="code-bar"><span>JavaScript</span><button class="copy" type="button" data-copy="#code-5" aria-label="Salin contoh JavaScript">Salin</button></div>
+  <pre id="code-5"><code>import OpenAI from "openai";
+
+const client = new OpenAI({
+  baseURL: "https://ai.zeiko.biz.id/v1",
+  apiKey: process.env.ZEIKO_API_KEY,
+});</code></pre>
+</div>
+<p>Keputusan Pranata V1 berupa JSON biasa lewat HTTPS: panggil dengan HTTP client apa pun. Contohnya ada di <a href="/id/docs/api-decisions#examples">API Keputusan</a>.</p>
+
+<h2 id="request-id">ID permintaan</h2>
+<p>Setiap permintaan yang dijawab membawa header <code>X-Request-Id</code>; balasan chat juga membawanya sebagai <code>id</code>. Simpan: kalau kamu menghubungi kami soal sebuah permintaan, sertakan ID itu. Untuk error, yang tidak punya ID, sertakan waktu, model, dan kode status.</p>
+
+<h2 id="errors">Error</h2>
+<p>Error datang dengan status HTTP yang sesuai dan body JSON:</p>
+<div class="code">
+  <div class="code-bar"><span>Error</span><button class="copy" type="button" data-copy="#code-6" aria-label="Salin contoh error">Salin</button></div>
+  <pre id="code-6"><code>{
+  "error": {
+    "message": "model \"jagad-512b-v2\" is not available",
+    "type": "invalid_request_error",
+    "code": "model_not_found"
+  }
+}</code></pre>
+</div>
+<p><code>message</code> ditulis untuk manusia; <code>code</code> yang dicek di kodemu. Setiap endpoint mencantumkan kodenya sendiri: <a href="/id/docs/api-decisions#errors">API Keputusan</a>, <a href="/id/docs/api-chat#errors">API Chat</a>.</p>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Status</th><th scope="col">Artinya</th><th scope="col">Coba lagi?</th></tr></thead>
+    <tbody>
+      <tr><th scope="row"><code>400</code> <code>404</code> <code>413</code> <code>422</code></th><td data-label="Artinya">Ada yang salah di permintaan. Perbaiki dulu.</td><td data-label="Coba lagi?">Tidak</td></tr>
+      <tr><th scope="row"><code>401</code> <code>403</code></th><td data-label="Artinya">Soal kunci: tidak ada, tidak dikenal, dimatikan, atau tidak boleh memanggil model itu.</td><td data-label="Coba lagi?">Tidak</td></tr>
+      <tr><th scope="row"><code>402</code></th><td data-label="Artinya">Saldo tidak cukup untuk panggilan Pranata V1.</td><td data-label="Coba lagi?">Setelah isi saldo</td></tr>
+      <tr><th scope="row"><code>429</code></th><td data-label="Artinya">Terlalu banyak permintaan, batas tercapai, atau model sedang sibuk.</td><td data-label="Coba lagi?">Ya, setelah <code>Retry-After</code></td></tr>
+      <tr><th scope="row"><code>500</code> <code>502</code> <code>504</code></th><td data-label="Artinya">Ada masalah di pihak kami.</td><td data-label="Coba lagi?">Ya, dua atau tiga kali</td></tr>
+    </tbody>
+  </table></div>
+
+<h2 id="retries">Percobaan ulang dan batas</h2>
+<ul>
+  <li><strong><code>429</code></strong>: tunggu sebanyak detik yang disebut header <code>Retry-After</code>. Tanpa header itu, mundur bertahap: mulai sekitar satu detik dan gandakan setiap kali.</li>
+  <li><strong><code>500</code>, <code>502</code>, <code>504</code></strong>: coba lagi dua atau tiga kali, dengan jeda bertahap yang sama.</li>
+  <li><strong><code>4xx</code> lainnya</strong>: jangan coba lagi. Perbaiki permintaan atau kuncinya dulu.</li>
+</ul>
+<p>Sebuah kunci bisa punya batas per menit dan kuota harian; mencapai salah satunya menghasilkan <code>429 rate_limit_exceeded</code>. Kalau butuh lebih, tulis ke <a href="mailto:admin@zeiko.biz.id">admin@zeiko.biz.id</a>.</p>
+
+      <nav class="docs-pager" aria-label="Halaman sebelum dan sesudah">
+        <a class="prev" href="/id/docs/pricing"><small>Sebelumnya</small>Harga &amp; paket</a>
+        <a class="next" href="/id/docs/api-decisions"><small>Berikutnya</small>API Keputusan</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> Zeiko</p>
+    <nav aria-label="Tautan bawah">
+      <a href="/id/">Beranda</a>
+      <a href="/id/models">Model</a>
+      <a href="/id/#pricing">Harga</a>
+      <a href="/id/drive">Drive</a>
+      <a href="/id/docs/">Dokumentasi</a>
+      <a href="/id/#contact">Kontak</a>
+      <a href="/account">Akun</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
+</body>
+</html>
