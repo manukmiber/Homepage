@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Docs — ZeikoAI</title>
-<meta name="description" content="How Pranata V1 and the ZeikoAI roleplay models work, what they cost, your Zeiko Account, and the API.">
+<title>Docs — Zeiko</title>
+<meta name="description" content="How Pranata V1, the ZeikoAI roleplay models and Zeiko Drive work, what they cost, your Zeiko Account, and the API.">
 <meta name="color-scheme" content="light dark">
 <!-- The top bar asks this address who is signed in. -->
 <meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
-<meta property="og:title" content="ZeikoAI docs">
-<meta property="og:description" content="How Pranata V1 and the ZeikoAI roleplay models work, what they cost, your Zeiko Account, and the API.">
+<meta property="og:title" content="Docs — Zeiko">
+<meta property="og:description" content="How Pranata V1, the ZeikoAI roleplay models and Zeiko Drive work, what they cost, your Zeiko Account, and the API.">
 <meta property="og:type" content="article">
 <link rel="icon" href="/img/logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/css/style.css">
@@ -22,7 +22,7 @@
   <div class="wrap topbar-in">
     <a class="brand" href="/">
       <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
-      <span class="brand-name">ZeikoAI</span>
+      <span class="brand-name">Zeiko</span>
     </a>
 
     <nav class="nav" id="nav" aria-label="Main navigation">
@@ -37,6 +37,7 @@
     </nav>
 
     <div class="topbar-tools">
+      <a class="lang-switch" href="/id/docs/" hreflang="id" lang="id" data-lang="id">ID</a>
       <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
         <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
         <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
@@ -78,6 +79,14 @@
             <li><a href="/docs/faq">Troubleshooting</a></li>
           </ul>
         </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/docs/drive">Drive basics</a></li>
+            <li><a href="/docs/drive-plans">Drive plans &amp; balance</a></li>
+            <li><a href="/docs/drive-sharing">Sharing &amp; downloads</a></li>
+          </ul>
+        </div>
       </details>
       <div class="docs-list">
         <div class="docs-group">
@@ -105,13 +114,21 @@
             <li><a href="/docs/faq">Troubleshooting</a></li>
           </ul>
         </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/docs/drive">Drive basics</a></li>
+            <li><a href="/docs/drive-plans">Drive plans &amp; balance</a></li>
+            <li><a href="/docs/drive-sharing">Sharing &amp; downloads</a></li>
+          </ul>
+        </div>
       </div>
     </nav>
 
     <article class="docs-main prose" id="doc">
       <p class="crumbs"><a href="/docs/">Docs</a> <span aria-hidden="true">/</span> Get started</p>
-      <h1>ZeikoAI docs</h1>
-      <p class="lede">How Pranata V1 and the roleplay models work, what they cost, how your Zeiko Account works, and how to call the API.</p>
+      <h1>Zeiko docs</h1>
+      <p class="lede">How Pranata V1 and the roleplay models work, what they cost, how your Zeiko Account works, how to call the API, and how to use Zeiko Drive.</p>
       <nav class="docs-toc" aria-label="On this page">
         <p>On this page</p>
         <ul>
@@ -119,6 +136,7 @@
           <li><a href="#quickstart-pranata">Quickstart: Pranata V1</a></li>
           <li><a href="#quickstart-roleplay">Quickstart: roleplay models</a></li>
           <li><a href="#at-a-glance">The API at a glance</a></li>
+          <li><a href="#drive">Zeiko Drive</a></li>
           <li><a href="#next">Where to next</a></li>
         </ul>
       </nav>
@@ -201,6 +219,13 @@
     </tbody>
   </table></div>
 
+<h2 id="drive">Zeiko Drive</h2>
+<p>Zeiko Drive keeps your files on the same Zeiko Account: upload at full speed, share with a link, download many files at once. It has no API of its own; you use it in the app at <a href="https://drive.zeiko.biz.id">drive.zeiko.biz.id</a>.</p>
+<div class="doc-cards">
+  <a class="doc-card" href="/docs/drive"><strong>Drive basics</strong><span>Opening Drive, your first plan, uploading, Trash and your data.</span></a>
+  <a class="doc-card" href="/docs/drive-sharing"><strong>Sharing &amp; downloads</strong><span>Share links, sending them, archives, compressing, family plans.</span></a>
+</div>
+
 <h2 id="next">Where to next</h2>
 <div class="doc-cards">
   <a class="doc-card" href="/docs/account"><strong>Your account</strong><span>Sign-up, plans and balance, your key, settings.</span></a>
@@ -219,11 +244,12 @@
 
 <footer class="footer">
   <div class="wrap footer-in">
-    <p>© <span id="year">2026</span> ZeikoAI</p>
+    <p>© <span id="year">2026</span> Zeiko</p>
     <nav aria-label="Footer links">
       <a href="/">Home</a>
       <a href="/models">Models</a>
       <a href="/#pricing">Pricing</a>
+      <a href="/drive">Drive</a>
       <a href="/docs/">Docs</a>
       <a href="/#contact">Contact</a>
       <a href="/account">Account</a>

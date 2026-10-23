@@ -197,16 +197,16 @@ function publicPage(extra = {}) {
   const next = safeNext(params.get('next') || '');
   const opts = session.signInWith || {};
   if (path === '/account/signup') {
-    document.title = 'Create account — ZeikoAI';
+    document.title = 'Create account — Zeiko';
     draw(view.signUp({ error: extra.error || '', email: extra.email || '', username: extra.username || '', next, app: appOf(next), ref: extra.ref ?? (rememberRef() || savedRef()), opts, door: DOOR }));
   } else if (path === '/account/forgot') {
-    document.title = 'Forgot password — ZeikoAI';
+    document.title = 'Forgot password — Zeiko';
     draw(view.forgot({ error: extra.error || '', sent: Boolean(extra.sent) }));
   } else if (path === '/account/reset') {
-    document.title = 'New password — ZeikoAI';
+    document.title = 'New password — Zeiko';
     draw(view.reset({ error: extra.error || '', token: params.get('token') || '' }));
   } else {
-    document.title = 'Sign in — ZeikoAI';
+    document.title = 'Sign in — Zeiko';
     const note = SIGNIN_NOTE[params.get('m')] || '';
     draw(view.signIn({ error: extra.error || note, notice: extra.notice || '', email: extra.email || '', next, app: appOf(next), opts, door: DOOR }));
   }
@@ -238,7 +238,7 @@ async function accountPage(extra = {}) {
     }
   }
   const tab = TABS[path] || 'overview';
-  document.title = `${TITLES[path] || 'Account'} — ZeikoAI`;
+  document.title = `${TITLES[path] || 'Account'} — Zeiko`;
   if (tab === 'pay') return payPage(flash);
   if (tab === 'plans') draw(view.plans(o, { flash, pick: extra.pick || params.get('plan') || '' }));
   else if (tab === 'key') draw(view.key(o, { flash, shown: extra.shown, apiBase: o.apiBase || '' }));

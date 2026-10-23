@@ -1,4 +1,4 @@
-/* ZeikoAI site — only what the pages need: theme, menu, topbar, copy, plan
+/* Zeiko site — only what the pages need: theme, menu, topbar, copy, plan
  * value, cost estimator, chart hover.
  * Every page still reads fine if this file never loads. */
 

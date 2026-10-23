@@ -1,4 +1,4 @@
-/* ZeikoAI site — one stylesheet for every page, no build step, no CDN.
+/* Zeiko site — one stylesheet for every page, no build step, no CDN.
  *
  * Every colour is a token defined on bare `:root` first, so the dark blocks
  * below only ever *redefine*. A colour whose only definition lives inside a

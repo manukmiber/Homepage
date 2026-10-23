@@ -1,4 +1,4 @@
-/* ZeikoAI homepage — the playground (#try): one real question to Pranata V1.
+/* Zeiko homepage — the playground (#try): one real question to Pranata V1.
  *
  * The one script outside the account area allowed to ask anything, and it
  * asks one place only: the address in <meta name="zeiko-accounts">. Every
