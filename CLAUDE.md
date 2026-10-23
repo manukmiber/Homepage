@@ -8,8 +8,8 @@ balance are bought and the key is handed over.
 `/models` stays: it is where visitors look the models up, with each model's
 live performance figures. `/docs` is the documentation: the products, the
 account, pricing, and the API (below). `/drive` (and `/id/drive`) is **Zeiko
-Drive**, the file storage on the same account, whose app is served at
-`/dashboard` (below).
+Drive**, the file storage on the same account, whose app is at its own
+address, `https://drive.zeiko.biz.id` (below).
 
 ## The rule: never leak anything about how the API works
 
@@ -70,8 +70,9 @@ site* is built and deployed is fine.
 2026: the rule above is for the AI products). Its own pages (`drive.html`,
 `id/drive.html`) and blocks marked `<!-- drive:start -->` … `<!-- drive:end -->`
 may say what a storage product has to say — storage, prices in rupiah,
-paying for a plan — and every page may link to the app at `/dashboard` (the
-path only; the word on its own stays banned). Everything else above holds
+paying for a plan — and every page may link to the app at
+`https://drive.zeiko.biz.id`, or at `/dashboard` (the path only; the word on
+its own stays banned). Everything else above holds
 there too, and the AI products' copy keeps the rule whole.
 
 ## What the site may show
@@ -119,10 +120,10 @@ public/
                   payguide.js is the buying guide's text
 src/
   worker.js       fills /models from the snapshot and /drive from Drive's catalog,
-                  hands Zeiko Drive's paths to Drive, answers 404.html for the rest
+                  sends /dashboard… to Drive's address, answers 404.html for the rest
   render.js       snapshot → HTML for those placeholders; numbers only
-  drive.js        which paths are Drive's; Drive's catalog → plan cards (numbers
-                  and escaped plan names only)
+  drive.js        Drive's address (DRIVE_URL, driveAddress); Drive's catalog → plan
+                  cards (numbers and escaped plan names only)
 dev/
   sample-stats.mjs  made-up figures for local development and the check
 scripts/
@@ -138,7 +139,7 @@ whose script talks to the account door and nowhere else:
 
 - **One piece of server code.** `src/worker.js` runs first for `/models`,
   `/drive`, `/id/drive` and `/account` (`run_worker_first`), and for any path
-  that is no file (Zeiko Drive's, below, or a 404); for `/account…` it only hands back
+  that is no file (`/dashboard…`, below, or a 404); for `/account…` it only hands back
   `public/account/index.html`, so deep links open. It reads the hourly snapshot from the `MODELS` R2
   binding and fills the page's placeholders (`data-perf-bar`, `data-perf`,
   `data-stat`) before the page leaves. Every other path never reaches it.
@@ -161,9 +162,12 @@ whose script talks to the account door and nowhere else:
 - If the snapshot is missing or unreadable, `/models` goes out as the static
   file, with "not available right now" where the figures would be.
 
-## Zeiko Drive (`/drive`, `/dashboard`)
+## Zeiko Drive (`/drive`, `drive.zeiko.biz.id`)
 
-Zeiko Drive is its own Worker. Here it is two things:
+Zeiko Drive is its own Worker at its own address, `https://drive.zeiko.biz.id`
+(the operator's, October 2026; it was `/dashboard` on this site before). It
+is paid by QRIS only — that is Drive's rule, set in Drive. Here it is two
+things:
 
 - **The product page**, `/drive` and `/id/drive`: plain files whose plan
   cards (`[data-drive-plans]`), lowest price (`[data-drive-from]`) and family
@@ -171,15 +175,18 @@ Zeiko Drive is its own Worker. Here it is two things:
   filled by `src/worker.js` from Drive's public catalog, through
   `src/drive.js`. Prices are set where Drive's plans are run, so the page
   never carries a typed price; without Drive it says the plans show soon.
-- **The app's address**: `/dashboard`, Drive's `/api/*`, `/d/*`, `/z/*`,
-  `/ad/*`, `/share-target` and its shared links (`/<64>/<32>/…`) are handed to
-  Drive as they are (`isDrivePath`), through the `DRIVE` service binding.
-  Without the binding, `/dashboard` sends the visitor to `/drive`. Because
-  every unmatched path must reach the worker for this, `not_found_handling`
-  is `none` and the worker answers `404.html` itself.
+- **The way back to the app**: "Open Drive" links go straight to
+  `https://drive.zeiko.biz.id` (`DRIVE_URL` in `src/drive.js`; the check lets
+  that one address through). `/dashboard…` — the app's old address here — is
+  sent there with the same path (`driveAddress`, 302), and it stays: the
+  account pages and the door's Google and GitHub sign-in only ever send a
+  visitor to a page of this site, so Drive's sign-in asks for
+  `next=/dashboard/masuk?…` and comes back through it. Because that path must
+  reach the worker, `not_found_handling` is `none` and the worker answers
+  `404.html` itself. The `DRIVE` service binding is only for the catalog.
 - Sign-in from Drive comes back through the account pages: `safeNext` lets
   `/dashboard…` through, and a Drive QRIS payment's page goes back to Drive
-  (`driveBack`: this site or one of its subdomains, under `/dashboard`).
+  (`driveBack`: one of this site's subdomains, or `/dashboard…` here).
 - **The Drive window** beside the copy on `/` (`#drive`), `/drive` and
   `/id/drive` (`.drv`) is an illustration and says so ("Illustration" /
   "Ilustrasi"): fixed, made-up files and sizes, never a real figure and

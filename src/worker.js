@@ -2,15 +2,14 @@
 //
 // `run_worker_first` in wrangler.jsonc sends /models, /drive and /account
 // here; every other path that is a plain file never reaches this code. A
-// path that is no file at all does, and is either Zeiko Drive's or the
-// site's 404 page.
+// path that is no file at all does, and is either the way back to Zeiko
+// Drive (/dashboard…) or the site's 404 page.
 //
-// Zeiko Drive (/dashboard, its /api, downloads and shared links) is its own
-// Worker, reached through the DRIVE service binding: this code only hands
-// the request over. Without the binding, /dashboard says Drive is not open
-// yet. /drive (and /id/drive) is a plain page whose plan cards are drawn
-// here from Drive's own catalog (src/drive.js), so a price changed there
-// shows here without touching the page.
+// Zeiko Drive is its own Worker at its own address, drive.zeiko.biz.id.
+// /dashboard/… (its old address here) sends the visitor there, the same path
+// after it. /drive (and /id/drive) is a plain page whose plan cards are drawn
+// here from Drive's own catalog (src/drive.js, through the DRIVE service
+// binding), so a price changed there shows here without touching the page.
 //
 // /account and every page under it is one plain file,
 // public/account/index.html: the visitor's browser signs in with the account
@@ -25,7 +24,7 @@
 // goes out as is, with its "not available right now" notes.
 
 import { render, sanitize } from './render.js';
-import { cheapest, hasFamily, isDrivePath, renderPlans } from './drive.js';
+import { cheapest, driveAddress, hasFamily, renderPlans } from './drive.js';
 
 /** The account page, whatever account address was asked for. */
 async function accountShell(request, env) {
@@ -48,12 +47,6 @@ const OBJECT = 'models.json';
 async function notFound(request, env) {
   const page = await env.ASSETS.fetch(new Request(new URL('/404.html', request.url)));
   return new Response(page.body, { status: 404, headers: page.headers });
-}
-
-/** /dashboard before Drive is connected: the product page says what it is. */
-function driveClosed(request) {
-  const id = (request.headers.get('cookie') || '').includes('zk_lang=id');
-  return Response.redirect(new URL(id ? '/id/drive' : '/drive', request.url).toString(), 302);
 }
 
 /** /drive and /id/drive, with the plan cards from Drive's catalog. */
@@ -110,11 +103,8 @@ async function drivePage(request, env, lang) {
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
-    if (isDrivePath(url.pathname)) {
-      if (env.DRIVE) return env.DRIVE.fetch(request);
-      if (url.pathname === '/dashboard' || url.pathname.startsWith('/dashboard/')) return driveClosed(request);
-      return notFound(request, env);
-    }
+    const drive = driveAddress(url);
+    if (drive) return Response.redirect(drive, 302);
     if (url.pathname === '/account' || url.pathname.startsWith('/account/')) {
       return accountShell(request, env);
     }

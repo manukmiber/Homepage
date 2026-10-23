@@ -6,10 +6,11 @@
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
-    // A path that is no file reaches src/worker.js, which hands Zeiko Drive's
-    // own paths (shared links among them) to Drive and answers the rest with
-    // 404.html. With "404-page" here, a link opened in a browser would get
-    // the 404 page before the worker could see it.
+    // A path that is no file reaches src/worker.js, which sends /dashboard…
+    // (Zeiko Drive's old address, still the way back to it) to
+    // drive.zeiko.biz.id and answers the rest with 404.html. With "404-page"
+    // here, a link opened in a browser would get the 404 page before the
+    // worker could see it.
     "not_found_handling": "none",
     // Plain files that the worker fills in first: /models (the hourly
     // figures), /drive (Drive's plans) and /account (one page for every
@@ -22,11 +23,9 @@
   "r2_buckets": [
     { "binding": "MODELS", "bucket_name": "zeiko-models" }
   ],
-  // Zeiko Drive's Worker serves /dashboard (and its /api, downloads and
-  // shared links) here once it runs in production: add
+  // Zeiko Drive is its own Worker at drive.zeiko.biz.id. /drive asks it for
+  // its plans through a service binding: add
   //   "services": [{ "binding": "DRIVE", "service": "zeiko-production" }]
   // after it is deployed (a binding to a Worker that does not exist yet
-  // fails the deploy). Until then /dashboard sends visitors to /drive.
-  // Drive's staging keeps its own address (staging.zeiko.biz.id), where it
-  // serves /dashboard by itself.
+  // fails the deploy). Until then /drive says the plans show soon.
 }

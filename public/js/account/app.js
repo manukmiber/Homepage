@@ -65,14 +65,16 @@ function safeNext(next) {
   return /^\/dashboard(\/[A-Za-z0-9/_-]*)?(\?[A-Za-z0-9=&_%.-]*)?$/.test(next) ? next : '';
 }
 
-/** Where a Zeiko Drive payment goes back to: Drive on this site, or on one
- * of this site's own subdomains. Anything else, and it is the account. */
+/** Where a Zeiko Drive payment goes back to: Drive at its own address, one
+ * of this site's subdomains (drive.zeiko.biz.id), or its old address on this
+ * site (/dashboard…, which sends the visitor there). Anything else, and it
+ * is the account. */
 function driveBack(q) {
   if (!q || q.product !== 'drive' || typeof q.back !== 'string') return '';
   try {
     const u = new URL(q.back, location.origin);
-    const ours = u.origin === location.origin || (u.protocol === 'https:' && u.hostname.endsWith(`.${location.hostname}`));
-    return ours && /^\/dashboard(\/|$)/.test(u.pathname) ? u.href : '';
+    if (u.origin === location.origin) return /^\/dashboard(\/|$)/.test(u.pathname) ? u.href : '';
+    return u.protocol === 'https:' && u.hostname.endsWith(`.${location.hostname}`) ? u.href : '';
   } catch {
     return '';
   }

@@ -1,23 +1,23 @@
-// Zeiko Drive on the site: its pages are served by its own Worker through the
-// DRIVE service binding, and its plans are drawn into /drive from its catalog.
+// Zeiko Drive on the site: the app is at its own address, drive.zeiko.biz.id,
+// and its plans are drawn into /drive from its catalog (asked through the
+// DRIVE service binding).
 //
 // The catalog is the operator's own (the plans they set), so names come
 // through escaped and every other value is a number formatted here. Nothing
 // else from the answer reaches the page.
 
-/** Paths that belong to Zeiko Drive, not to this site. */
-export function isDrivePath(path) {
-  return (
-    path === '/dashboard' ||
-    path.startsWith('/dashboard/') ||
-    path.startsWith('/api/') ||
-    path.startsWith('/d/') ||
-    path.startsWith('/z/') ||
-    path.startsWith('/ad/') ||
-    path === '/share-target' ||
-    // A shared link: 64 letters and digits, then 32 (the signature).
-    /^\/[0-9A-Za-z]{64}\/[0-9A-Za-z]{32}(\/|$)/.test(path)
-  );
+/** Where the app is. */
+export const DRIVE_URL = 'https://drive.zeiko.biz.id';
+
+/**
+ * /dashboard/… was the app's address on this site, and it is still the way
+ * back to it: the account pages (and Google and GitHub sign-in) only ever send
+ * a visitor to a page of this site, so Drive's sign-in comes back through
+ * /dashboard/masuk. The same path on Drive's own address, or null.
+ */
+export function driveAddress(url) {
+  if (url.pathname !== '/dashboard' && !url.pathname.startsWith('/dashboard/')) return null;
+  return `${DRIVE_URL}${url.pathname.slice('/dashboard'.length) || '/'}${url.search}`;
 }
 
 const GIB = 2 ** 30;
@@ -76,7 +76,7 @@ export function renderPlans(catalog, lang = 'en') {
   if (!plans.length) return null;
   const perGb = (p) => num(p.price_idr) / (num(p.storage_bytes) / GIB);
   const best = plans.reduce((a, b) => (perGb(b) < perGb(a) ? b : a));
-  const back = '/dashboard/paket';
+  const back = `${DRIVE_URL}/paket`;
   return plans
     .map((p) => {
       const facts = [

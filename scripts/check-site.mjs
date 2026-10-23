@@ -187,9 +187,12 @@ function driveRanges(file, src) {
   return out;
 }
 const inRanges = (ranges, i) => ranges.some(([a, b]) => i >= a && i < b);
-// "/dashboard" is Zeiko Drive's address on this site, so as a path it is
-// allowed on every page and in the account area (sign-in may come back to
-// it); the word on its own is still banned everywhere.
+// Zeiko Drive's app is at its own address, which every page may link to, and
+// "/dashboard" (its old address here) is still the way back to it, so as a
+// path it is allowed on every page and in the account area (sign-in comes
+// back through it); the word on its own is still banned everywhere.
+const DRIVE_ADDR = 'https://drive.zeiko.biz.id';
+const driveLink = (url) => url === DRIVE_ADDR || url.startsWith(DRIVE_ADDR + '/');
 const drivePath = (src, m) => /^dashboard$/i.test(m[0]) && src[m.index - 1] === '/';
 function driveAllows(src, ranges, m) {
   if (drivePath(src, m)) return true;
@@ -220,6 +223,7 @@ function scan(file, src) {
 
   for (const m of src.matchAll(URL_RE)) {
     if (URL_OK.some((ok) => ok.test(m[0]))) continue;
+    if (driveLink(m[0])) continue;
     if (file === HOME && m[0] === DOOR && src.slice(m.index - DOOR_META.indexOf(DOOR)).startsWith(DOOR_META)) continue;
     if (inDocs(file) && (m[0] === API_ADDR || m[0].startsWith(API_ADDR + '/'))) continue;
     report(file, m.index, src, `external URL: "${m[0]}"`);

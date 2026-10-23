@@ -341,9 +341,14 @@
 
   // EN | ID is a plain link to the same page in the other language. The
   // choice is kept for the whole site in the zk_lang cookie, which Zeiko
-  // Drive reads too; an Indonesian page sets it once if nothing is kept yet.
+  // Drive reads too: it is on a subdomain of this site, so on zeiko.biz.id
+  // the cookie is the whole domain's (anywhere else, a preview, it stays on
+  // the page's own host). An Indonesian page sets it once if nothing is kept
+  // yet.
   function keepLang(lang) {
-    document.cookie = 'zk_lang=' + (lang === 'id' ? 'id' : 'en') + '; Path=/; Max-Age=31536000; SameSite=Lax; Secure';
+    var host = location.hostname;
+    var domain = host === 'zeiko.biz.id' || /\.zeiko\.biz\.id$/.test(host) ? '; Domain=zeiko.biz.id' : '';
+    document.cookie = 'zk_lang=' + (lang === 'id' ? 'id' : 'en') + '; Path=/; Max-Age=31536000; SameSite=Lax; Secure' + domain;
   }
   Array.prototype.forEach.call(document.querySelectorAll('[data-lang]'), function (a) {
     a.addEventListener('click', function () {
