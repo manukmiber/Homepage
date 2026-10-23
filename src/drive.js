@@ -29,7 +29,6 @@ const WORDS = {
     members: (n) => `Share with up to ${n} people`,
     compress: (n) => `${n} photo & video compressions a month`,
     pick: 'Choose',
-    perGb: (rp) => `${rp} per GB`,
     best: 'Best value',
   },
   id: {
@@ -38,7 +37,6 @@ const WORDS = {
     members: (n) => `Berbagi dengan sampai ${n} orang`,
     compress: (n) => `${n} kompres foto & video per bulan`,
     pick: 'Pilih',
-    perGb: (rp) => `${rp} per GB`,
     best: 'Paling hemat',
   },
 };
@@ -89,7 +87,7 @@ export function renderPlans(catalog, lang = 'en') {
       return `<article class="plan" id="drive-${esc(String(p.code || '').replace(/[^a-z0-9_-]/gi, ''))}">
   <div class="plan-top"><h4>${esc(p.name)}</h4>${p === best ? `<span class="plan-best">${w.best}</span>` : ''}</div>
   <p class="plan-price">${rupiah(p.price_idr)}<small>${w.month}</small></p>
-  <p class="plan-reqs"><strong>${size(p.storage_bytes)}</strong> · ${w.perGb(rupiah(perGb(p)))}</p>
+  <p class="plan-reqs"><strong>${size(p.storage_bytes)}</strong></p>
   <ul class="drive-facts">${facts.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
   <a class="btn btn-ghost btn-sm" href="${back}">${w.pick}</a>
 </article>`;

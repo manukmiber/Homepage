@@ -180,6 +180,10 @@ Zeiko Drive is its own Worker. Here it is two things:
 - Sign-in from Drive comes back through the account pages: `safeNext` lets
   `/dashboard…` through, and a Drive QRIS payment's page goes back to Drive
   (`driveBack`: this site or one of its subdomains, under `/dashboard`).
+- **The Drive window** beside the copy on `/` (`#drive`), `/drive` and
+  `/id/drive` (`.drv`) is an illustration and says so ("Illustration" /
+  "Ilustrasi"): fixed, made-up files and sizes, never a real figure and
+  never animated, like the hero's example answers card.
 - **EN | ID**: the `lang-switch` link beside the theme button goes to the
   same page in the other language, and `main.js` keeps the choice in the
   `zk_lang` cookie for the whole site — Drive reads it too. Only the Drive

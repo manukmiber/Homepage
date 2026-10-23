@@ -293,7 +293,7 @@ function balanceCard(o) {
     <p class="stat-value">${esc(o.balance.text)}</p>
     <p class="stat-sub">Pays for Pranata V1 calls past your plan and Zeiko Chat replies past your chat plan.</p>
     <p class="stat-foot">${o.balance.shared ? 'The same balance in Zeiko Chat.' : ''}</p>
-    ${o.owed && o.owed.text ? `<p class="stat-owed">${icon(I.alert)}<span>You owe <strong>${esc(o.owed.text)}</strong> for playground tries past your plan. It comes off the next balance you add.</span></p>` : ''}
+    ${o.owed && Number(o.owed.micro) > 0 && o.owed.text ? `<p class="stat-owed">${icon(I.alert)}<span>You owe <strong>${esc(o.owed.text)}</strong> for playground tries past your plan. It comes off the next balance you add.</span></p>` : ''}
     <a class="btn ${low ? 'btn-primary' : 'btn-ghost'} btn-sm" href="/account/plans#topup">Add balance</a>
   </article>`;
 }
@@ -430,10 +430,18 @@ export function plans(o, { flash, pick }) {
     const which = `<input type="hidden" name="product" value="${product}"><input type="hidden" name="plan" value="${esc(p.id)}">`;
     const label = mine ? `Add ${num(days)} days` : `Buy for ${num(days)} days`;
     const first = picked || mine || offer ? 'btn-primary' : 'btn-ghost';
-    const buttons = [
-      crypto ? `<button class="btn ${first} btn-block" type="submit" name="method" value="crypto" data-busy="Opening…">${label}${qris ? ' · crypto' : ''}</button>` : '',
-      qris ? `<button class="btn ${crypto ? 'btn-ghost' : first} btn-block" type="submit" name="method" value="qris" data-busy="Opening…">${crypto ? 'Or pay by QRIS' : `${label} · QRIS`}</button>` : '',
-    ].join('');
+    // Both ways to pay: one line saying what the press buys, then a button
+    // for each way side by side (each still says it in full to a reader).
+    const buttons = crypto && qris
+      ? `<p class="plan-ways-label">${label} with</p>
+        <div class="plan-ways">
+          <button class="btn ${first} btn-sm" type="submit" name="method" value="crypto" data-busy="Opening…"><span class="sr">${label} with </span>Crypto</button>
+          <button class="btn btn-ghost btn-sm" type="submit" name="method" value="qris" data-busy="Opening…"><span class="sr">${label} with </span>QRIS</button>
+        </div>`
+      : [
+        crypto ? `<button class="btn ${first} btn-block" type="submit" name="method" value="crypto" data-busy="Opening…">${label}</button>` : '',
+        qris ? `<button class="btn ${first} btn-block" type="submit" name="method" value="qris" data-busy="Opening…">${label} · QRIS</button>` : '',
+      ].join('');
     const forms = buying
       ? `<form data-act="buy">${which}${buttons}</form>
         ${crypto && p.subscription && o.subscriptionsActive ? `<form data-act="subscribe">${which}<button class="btn-link" type="submit" data-busy="Sending…">Or renew every ${num(p.days)} days by email</button></form>` : ''}`
