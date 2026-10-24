@@ -1,0 +1,804 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-24T12:05:11+00:00",
+  "title": "Design System: Zeiko",
+  "extensions": {
+    "colorMeta": {
+      "desktop-teal": {
+        "role": "secondary",
+        "displayName": "Desktop Teal",
+        "canonical": "#008080",
+        "cssVar": "--desktop",
+        "night": "#0b3d3d",
+        "tonalRamp": [
+          "#103c3c",
+          "#136c6c",
+          "#10a2a2",
+          "#07dfdf",
+          "#20f8f8",
+          "#6deded",
+          "#b5eded",
+          "#ecf8f8"
+        ]
+      },
+      "face-grey": {
+        "role": "neutral",
+        "displayName": "Face Grey",
+        "canonical": "#c0c0c0",
+        "cssVar": "--face",
+        "night": "#3b3b3b",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#8c8c8c",
+          "#adadad",
+          "#d1d1d1",
+          "#f2f2f2"
+        ]
+      },
+      "bevel-highlight": {
+        "role": "neutral",
+        "displayName": "Bevel Highlight",
+        "canonical": "#ffffff",
+        "cssVar": "--hi",
+        "night": "#6f6f6f",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#8c8c8c",
+          "#adadad",
+          "#d1d1d1",
+          "#f2f2f2"
+        ]
+      },
+      "bevel-light": {
+        "role": "neutral",
+        "displayName": "Bevel Light",
+        "canonical": "#dfdfdf",
+        "cssVar": "--lt",
+        "night": "#505050",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#8c8c8c",
+          "#adadad",
+          "#d1d1d1",
+          "#f2f2f2"
+        ]
+      },
+      "bevel-shadow": {
+        "role": "neutral",
+        "displayName": "Bevel Shadow",
+        "canonical": "#808080",
+        "cssVar": "--sh",
+        "night": "#222222",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#8c8c8c",
+          "#adadad",
+          "#d1d1d1",
+          "#f2f2f2"
+        ]
+      },
+      "bevel-dark": {
+        "role": "neutral",
+        "displayName": "Bevel Dark",
+        "canonical": "#000000",
+        "cssVar": "--dk",
+        "night": "#000000",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#8c8c8c",
+          "#adadad",
+          "#d1d1d1",
+          "#f2f2f2"
+        ]
+      },
+      "well-white": {
+        "role": "neutral",
+        "displayName": "Well White",
+        "canonical": "#ffffff",
+        "cssVar": "--well",
+        "night": "#1d1d1d",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#8c8c8c",
+          "#adadad",
+          "#d1d1d1",
+          "#f2f2f2"
+        ]
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "Text",
+        "canonical": "#000000",
+        "cssVar": "--text",
+        "night": "#ececec",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#8c8c8c",
+          "#adadad",
+          "#d1d1d1",
+          "#f2f2f2"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted",
+        "canonical": "#444444",
+        "cssVar": "--muted",
+        "night": "#bdbdbd",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#8c8c8c",
+          "#adadad",
+          "#d1d1d1",
+          "#f2f2f2"
+        ]
+      },
+      "title-navy": {
+        "role": "primary",
+        "displayName": "Title Navy",
+        "canonical": "#000080",
+        "cssVar": "--title",
+        "night": "#000080",
+        "tonalRamp": [
+          "#10103c",
+          "#13136c",
+          "#1010a2",
+          "#0707df",
+          "#2020f8",
+          "#6d6ded",
+          "#b5b5ed",
+          "#ececf8"
+        ]
+      },
+      "title-text": {
+        "role": "neutral",
+        "displayName": "Title Text",
+        "canonical": "#ffffff",
+        "cssVar": "--title-text",
+        "night": "#ffffff",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#8c8c8c",
+          "#adadad",
+          "#d1d1d1",
+          "#f2f2f2"
+        ]
+      },
+      "title-off-grey": {
+        "role": "neutral",
+        "displayName": "Title Off Grey",
+        "canonical": "#737373",
+        "cssVar": "--title-off",
+        "night": "#2c2c2c",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#8c8c8c",
+          "#adadad",
+          "#d1d1d1",
+          "#f2f2f2"
+        ]
+      },
+      "title-off-text": {
+        "role": "neutral",
+        "displayName": "Title Off Text",
+        "canonical": "#ffffff",
+        "cssVar": "--title-off-text",
+        "night": "#cfcfcf",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#8c8c8c",
+          "#adadad",
+          "#d1d1d1",
+          "#f2f2f2"
+        ]
+      },
+      "selection-navy": {
+        "role": "primary",
+        "displayName": "Selection Navy",
+        "canonical": "#000080",
+        "cssVar": "--sel",
+        "night": "#2a4cc8",
+        "tonalRamp": [
+          "#10103c",
+          "#13136c",
+          "#1010a2",
+          "#0707df",
+          "#2020f8",
+          "#6d6ded",
+          "#b5b5ed",
+          "#ececf8"
+        ]
+      },
+      "selection-text": {
+        "role": "neutral",
+        "displayName": "Selection Text",
+        "canonical": "#ffffff",
+        "cssVar": "--sel-text",
+        "night": "#ffffff",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#8c8c8c",
+          "#adadad",
+          "#d1d1d1",
+          "#f2f2f2"
+        ]
+      },
+      "link-blue": {
+        "role": "neutral",
+        "displayName": "Link Blue",
+        "canonical": "#0000ee",
+        "cssVar": "--link",
+        "night": "#8ab4ff",
+        "tonalRamp": [
+          "#10103c",
+          "#13136c",
+          "#1010a2",
+          "#0707df",
+          "#2020f8",
+          "#6d6ded",
+          "#b5b5ed",
+          "#ececf8"
+        ]
+      },
+      "tooltip-yellow": {
+        "role": "tertiary",
+        "displayName": "Tooltip Yellow",
+        "canonical": "#ffffe1",
+        "cssVar": "--tip",
+        "night": "#ffffe1",
+        "tonalRamp": [
+          "#3c3c10",
+          "#6c6c13",
+          "#a2a210",
+          "#dfdf07",
+          "#f8f820",
+          "#eded6d",
+          "#ededb5",
+          "#f8f8ec"
+        ]
+      },
+      "desktop-text": {
+        "role": "neutral",
+        "displayName": "Desktop Text",
+        "canonical": "#ffffff",
+        "cssVar": "--desk-text",
+        "night": "#ffffff",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#8c8c8c",
+          "#adadad",
+          "#d1d1d1",
+          "#f2f2f2"
+        ]
+      },
+      "block-navy": {
+        "role": "primary",
+        "displayName": "Block Navy",
+        "canonical": "#000080",
+        "cssVar": "--bar",
+        "night": "#5b82ff",
+        "tonalRamp": [
+          "#10103c",
+          "#13136c",
+          "#1010a2",
+          "#0707df",
+          "#2020f8",
+          "#6d6ded",
+          "#b5b5ed",
+          "#ececf8"
+        ]
+      },
+      "block-grey": {
+        "role": "neutral",
+        "displayName": "Block Grey",
+        "canonical": "#808080",
+        "cssVar": "--bar-2",
+        "night": "#727272",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#8c8c8c",
+          "#adadad",
+          "#d1d1d1",
+          "#f2f2f2"
+        ]
+      },
+      "decision-teal": {
+        "role": "secondary",
+        "displayName": "Decision Teal",
+        "canonical": "#008080",
+        "cssVar": "--dec",
+        "night": "#4fd1c5",
+        "tonalRamp": [
+          "#103c3c",
+          "#136c6c",
+          "#10a2a2",
+          "#07dfdf",
+          "#20f8f8",
+          "#6deded",
+          "#b5eded",
+          "#ecf8f8"
+        ]
+      },
+      "ok-green": {
+        "role": "neutral",
+        "displayName": "Ok Green",
+        "canonical": "#008000",
+        "cssVar": "--ok",
+        "night": "#6ee36e",
+        "tonalRamp": [
+          "#103c10",
+          "#136c13",
+          "#10a210",
+          "#07df07",
+          "#20f820",
+          "#6ded6d",
+          "#b5edb5",
+          "#ecf8ec"
+        ]
+      },
+      "warn-ochre": {
+        "role": "neutral",
+        "displayName": "Warn Ochre",
+        "canonical": "#806000",
+        "cssVar": "--warn",
+        "night": "#f0c050",
+        "tonalRamp": [
+          "#3c3110",
+          "#6c5613",
+          "#a27e10",
+          "#dfa907",
+          "#f8c220",
+          "#edcd6d",
+          "#eddfb5",
+          "#f8f5ec"
+        ]
+      },
+      "error-maroon": {
+        "role": "neutral",
+        "displayName": "Error Maroon",
+        "canonical": "#800000",
+        "cssVar": "--err",
+        "night": "#ff8080",
+        "tonalRamp": [
+          "#3c1010",
+          "#6c1313",
+          "#a21010",
+          "#df0707",
+          "#f82020",
+          "#ed6d6d",
+          "#edb5b5",
+          "#f8ecec"
+        ]
+      },
+      "series-1": {
+        "role": "neutral",
+        "displayName": "Series 1",
+        "canonical": "#000080",
+        "cssVar": "--series-1",
+        "night": "#6f9bff",
+        "tonalRamp": [
+          "#10103c",
+          "#13136c",
+          "#1010a2",
+          "#0707df",
+          "#2020f8",
+          "#6d6ded",
+          "#b5b5ed",
+          "#ececf8"
+        ]
+      },
+      "series-2": {
+        "role": "neutral",
+        "displayName": "Series 2",
+        "canonical": "#d00000",
+        "cssVar": "--series-2",
+        "night": "#ff6a6a",
+        "tonalRamp": [
+          "#3c1010",
+          "#6c1313",
+          "#a21010",
+          "#df0707",
+          "#f82020",
+          "#ed6d6d",
+          "#edb5b5",
+          "#f8ecec"
+        ]
+      },
+      "grid-line": {
+        "role": "neutral",
+        "displayName": "Grid Line",
+        "canonical": "#d4d4d4",
+        "cssVar": "--grid-line",
+        "night": "#333333",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#8c8c8c",
+          "#adadad",
+          "#d1d1d1",
+          "#f2f2f2"
+        ]
+      },
+      "prompt-black": {
+        "role": "neutral",
+        "displayName": "Prompt Black",
+        "canonical": "#000000",
+        "cssVar": "--code-bg",
+        "night": "#000000",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#8c8c8c",
+          "#adadad",
+          "#d1d1d1",
+          "#f2f2f2"
+        ]
+      },
+      "prompt-text": {
+        "role": "neutral",
+        "displayName": "Prompt Text",
+        "canonical": "#c0c0c0",
+        "cssVar": "--code-text",
+        "night": "#c0c0c0",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#8c8c8c",
+          "#adadad",
+          "#d1d1d1",
+          "#f2f2f2"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The product name in the homepage's front window; 48px under 760px."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page names; 32px under 760px and in the 404 dialog."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section headings in windows and docs."
+      },
+      "chrome": {
+        "displayName": "Chrome",
+        "purpose": "Title bars, menus, buttons, tabs, column headers, status bars, the taskbar; smoothing off; 16, 32, 48 or 64 px only."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Reading text; prose at 1.7 line height, 74ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Labels over figures, units, captions, tooltips."
+      },
+      "code": {
+        "displayName": "Code",
+        "purpose": "Code blocks, model IDs, jump chips."
+      }
+    },
+    "shadows": [
+      {
+        "name": "raise",
+        "value": "inset -1px -1px var(--dk), inset 1px 1px var(--hi), inset -2px -2px var(--sh), inset 2px 2px var(--lt)",
+        "purpose": "Pressable things: buttons, caption buttons, column headers, chips, Start and task buttons."
+      },
+      {
+        "name": "raise-win",
+        "value": "inset -1px -1px var(--dk), inset 1px 1px var(--lt), inset -2px -2px var(--sh), inset 2px 2px var(--hi)",
+        "purpose": "Windows and dialogs: window frames, cards, plans, notices, the Start menu, the property sheet."
+      },
+      {
+        "name": "sunk",
+        "value": "inset -1px -1px var(--hi), inset 1px 1px var(--sh), inset -2px -2px var(--lt), inset 2px 2px var(--dk)",
+        "purpose": "Wells and fields: documents, inputs, checkboxes, list views, trees, the code screen, figure fields."
+      },
+      {
+        "name": "press",
+        "value": "inset -1px -1px var(--hi), inset 1px 1px var(--dk), inset -2px -2px var(--lt), inset 2px 2px var(--sh)",
+        "purpose": "A button held down, the open Start button, the active task."
+      },
+      {
+        "name": "thin-sunk",
+        "value": "inset -1px -1px var(--hi), inset 1px 1px var(--sh)",
+        "purpose": "Status-bar fields, the tray, block slots and meters, badges, inline code."
+      },
+      {
+        "name": "thin-raise",
+        "value": "inset -1px -1px var(--sh), inset 1px 1px var(--hi)",
+        "purpose": "A one-pixel raised edge; defined, currently unused."
+      },
+      {
+        "name": "default-ring",
+        "value": "0 0 0 1px var(--dk), var(--raise)",
+        "purpose": "The default button's heavier frame."
+      },
+      {
+        "name": "etch",
+        "value": "border-top: 1px solid var(--sh); border-bottom: 1px solid var(--hi)",
+        "purpose": "Dividers and separators."
+      }
+    ],
+    "motion": [
+      {
+        "name": "fill",
+        "value": "fill .9s steps(9, end) both",
+        "purpose": "Probability bars filling block by block; only inside the playground's live answer (.try-result)."
+      },
+      {
+        "name": "rise",
+        "value": "rise .9s steps(8, end) both",
+        "purpose": "Histogram columns rising; only inside .try-result."
+      },
+      {
+        "name": "walk",
+        "value": "walk 1.2s steps(4, end) infinite",
+        "purpose": "The waiting indicator: one block stepping along a slot."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation: none; transition: none",
+        "purpose": "Under prefers-reduced-motion everything is still."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "plans-row",
+        "value": "901px"
+      },
+      {
+        "name": "plans-3",
+        "value": "1100px"
+      },
+      {
+        "name": "hero-stack",
+        "value": "1000px"
+      },
+      {
+        "name": "menu-fold",
+        "value": "960px"
+      },
+      {
+        "name": "tablet",
+        "value": "900px"
+      },
+      {
+        "name": "phone-desktop",
+        "value": "760px"
+      },
+      {
+        "name": "kinds",
+        "value": "720px"
+      },
+      {
+        "name": "ledger-cards",
+        "value": "640px"
+      },
+      {
+        "name": "pager",
+        "value": "560px"
+      },
+      {
+        "name": "small",
+        "value": "520px"
+      }
+    ],
+    "glyphTokens": [
+      "--g-min",
+      "--g-max",
+      "--g-restore",
+      "--g-close",
+      "--g-up",
+      "--g-down",
+      "--g-left",
+      "--g-right",
+      "--g-check",
+      "--g-plus",
+      "--g-minus"
+    ],
+    "iconRules": {
+      "source": "/img/icons/*.svg, 16x16 pixel grid, crispEdges",
+      "sizes": [
+        "16px",
+        "32px"
+      ],
+      "rendering": "image-rendering: pixelated",
+      "mark": [
+        "/img/mark-16.svg",
+        "/img/mark-32.svg"
+      ]
+    }
+  },
+  "components": [
+    {
+      "name": "Button",
+      "kind": "button",
+      "refersTo": "button",
+      "description": "The plain raised push button; pressed while held.",
+      "html": "<button class=\"ds-btn\">Try it free</button>",
+      "css": ".ds-btn { min-height: 38px; padding: 6px 18px; border: 0; border-radius: 0; background: var(--face,#c0c0c0); box-shadow: inset -1px -1px var(--dk,#000), inset 1px 1px var(--hi,#fff), inset -2px -2px var(--sh,#808080), inset 2px 2px var(--lt,#dfdfdf); color: var(--text,#000); font-family: \"DotGothic16\", \"Arimo\", Arial, sans-serif; font-size: 16px; letter-spacing: 0; -webkit-font-smoothing: none; cursor: pointer; } .ds-btn:hover { background: var(--face,#c0c0c0); } .ds-btn:active { box-shadow: inset -1px -1px var(--hi,#fff), inset 1px 1px var(--dk,#000), inset -2px -2px var(--lt,#dfdfdf), inset 2px 2px var(--sh,#808080); padding: 7px 17px 5px 19px; } .ds-btn:focus-visible { outline: 1px dotted var(--text,#000); outline-offset: -5px; }"
+    },
+    {
+      "name": "Default Button",
+      "kind": "button",
+      "refersTo": "button-default",
+      "description": "The default action: a 1px black ring outside the bevel and a bold label. One per group.",
+      "html": "<button class=\"ds-btn-default\">Create an account</button>",
+      "css": ".ds-btn-default { min-height: 38px; padding: 6px 18px; border: 0; border-radius: 0; background: var(--face,#c0c0c0); box-shadow: 0 0 0 1px var(--dk,#000), inset -1px -1px var(--dk,#000), inset 1px 1px var(--hi,#fff), inset -2px -2px var(--sh,#808080), inset 2px 2px var(--lt,#dfdfdf); color: var(--text,#000); font-family: \"DotGothic16\", \"Arimo\", Arial, sans-serif; font-size: 16px; letter-spacing: 0; -webkit-font-smoothing: none; font-weight: 700; cursor: pointer; } .ds-btn-default:active { box-shadow: 0 0 0 1px var(--dk,#000), inset 1px 1px var(--sh,#808080), inset -1px -1px var(--sh,#808080); } .ds-btn-default:focus-visible { outline: 1px dotted var(--text,#000); outline-offset: -5px; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "A white sunken well for typing.",
+      "html": "<input class=\"ds-field\" type=\"text\" placeholder=\"Your email\">",
+      "css": ".ds-field { min-height: 36px; padding: 6px 8px; border: 0; border-radius: 0; background: var(--well,#fff); box-shadow: inset -1px -1px var(--hi,#fff), inset 1px 1px var(--sh,#808080), inset -2px -2px var(--lt,#dfdfdf), inset 2px 2px var(--dk,#000); color: var(--text,#000); font-family: \"Arimo\", Arial, sans-serif; font-size: 16px; } .ds-field::placeholder { color: var(--muted,#444); } .ds-field:focus-visible { outline: 1px dotted var(--text,#000); outline-offset: -5px; }"
+    },
+    {
+      "name": "Window",
+      "kind": "card",
+      "refersTo": "window",
+      "description": "Raised window frame, navy title bar (grey when inactive), menu bar, body, status bar.",
+      "html": "<section class=\"ds-win\"><div class=\"ds-win-title\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" shape-rendering=\"crispEdges\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"12\" height=\"2\" fill=\"#fff\"/><rect x=\"10\" y=\"4\" width=\"2\" height=\"2\" fill=\"#fff\"/><rect x=\"8\" y=\"6\" width=\"2\" height=\"2\" fill=\"#fff\"/><rect x=\"6\" y=\"8\" width=\"2\" height=\"2\" fill=\"#fff\"/><rect x=\"4\" y=\"10\" width=\"2\" height=\"2\" fill=\"#fff\"/><rect x=\"2\" y=\"12\" width=\"12\" height=\"2\" fill=\"#fff\"/></svg><span>Pranata V1</span></div><nav class=\"ds-win-menu\"><a href=\"#\">Try it</a><a href=\"#\">Plans</a><a href=\"#\">Help</a></nav><div class=\"ds-win-body\">A probability for every option.</div><div class=\"ds-status\"><span>Ready</span><span>EN</span></div></section>",
+      "css": ".ds-win { max-width: 360px; padding: 3px; background: var(--face,#c0c0c0); box-shadow: inset -1px -1px var(--dk,#000), inset 1px 1px var(--lt,#dfdfdf), inset -2px -2px var(--sh,#808080), inset 2px 2px var(--hi,#fff); color: var(--text,#000); font-family: \"Arimo\", Arial, sans-serif; } .ds-win-title { display: flex; align-items: center; gap: 6px; min-height: 30px; padding: 3px 3px 3px 5px; background: var(--title,#000080); color: var(--title-text,#fff); font-family: \"DotGothic16\", \"Arimo\", Arial, sans-serif; font-size: 16px; letter-spacing: 0; -webkit-font-smoothing: none; font-weight: 700; } .ds-win-title svg { image-rendering: pixelated; } .ds-win-menu { display: flex; padding: 2px 2px 3px; } .ds-win-menu a { padding: 3px 9px; color: var(--text,#000); text-decoration: none; font-family: \"DotGothic16\", \"Arimo\", Arial, sans-serif; font-size: 16px; letter-spacing: 0; -webkit-font-smoothing: none; } .ds-win-menu a:hover, .ds-win-menu a:focus-visible { background: var(--sel,#000080); color: var(--sel-text,#fff); outline: none; } .ds-win-body { margin: 0 0 3px; padding: 14px; background: var(--well,#fff); box-shadow: inset -1px -1px var(--hi,#fff), inset 1px 1px var(--sh,#808080), inset -2px -2px var(--lt,#dfdfdf), inset 2px 2px var(--dk,#000); } .ds-status { display: flex; gap: 3px; } .ds-status span { flex: 1; padding: 3px 8px; box-shadow: inset -1px -1px var(--hi,#fff), inset 1px 1px var(--sh,#808080); font-family: \"DotGothic16\", \"Arimo\", Arial, sans-serif; font-size: 16px; letter-spacing: 0; -webkit-font-smoothing: none; }"
+    },
+    {
+      "name": "Probability Blocks",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "Navy segmented blocks in a thin sunken slot; top option navy, others grey. Still unless it is a live answer.",
+      "html": "<ul class=\"ds-odds\"><li class=\"ds-top\"><span>Yes</span><span class=\"ds-slot\"><i style=\"width:91%\"></i></span><b>91%</b></li><li><span>No</span><span class=\"ds-slot\"><i style=\"width:9%\"></i></span><b>9%</b></li></ul>",
+      "css": ".ds-odds { display: grid; gap: 6px; max-width: 360px; margin: 0; padding: 0; list-style: none; font-family: \"Arimo\", Arial, sans-serif; font-size: 15px; color: var(--text,#000); } .ds-odds li { display: grid; grid-template-columns: 4em 1fr 3.4em; align-items: center; gap: 10px; } .ds-odds b { font-weight: 400; text-align: right; font-variant-numeric: tabular-nums; } .ds-slot { display: block; height: 20px; padding: 3px; background: var(--well,#fff); box-shadow: inset -1px -1px var(--hi,#fff), inset 1px 1px var(--sh,#808080); } .ds-slot i { display: block; height: 100%; background: repeating-linear-gradient(90deg, var(--bar-2,#808080) 0 8px, transparent 8px 10px); } .ds-top { font-weight: 700; } .ds-top b { font-weight: 700; } .ds-top .ds-slot i { background-image: repeating-linear-gradient(90deg, var(--bar,#000080) 0 8px, transparent 8px 10px); }"
+    },
+    {
+      "name": "Tooltip Note",
+      "kind": "chip",
+      "refersTo": "tooltip",
+      "description": "Pale yellow, black border, black text: notes, offers, balloons, hover tips.",
+      "html": "<span class=\"ds-tip\">Illustration</span>",
+      "css": ".ds-tip { display: inline-block; padding: 1px 6px; background: var(--tip,#ffffe1); border: 1px solid #000; color: #000; font-family: \"DotGothic16\", \"Arimo\", Arial, sans-serif; font-size: 16px; -webkit-font-smoothing: none; }"
+    },
+    {
+      "name": "List View Table",
+      "kind": "custom",
+      "refersTo": "list-header",
+      "description": "A sunken white well with raised column headers and dotted row rules.",
+      "html": "<div class=\"ds-list\"><table><thead><tr><th>Model</th><th>Input</th></tr></thead><tbody><tr><th>jagad-512b-v1</th><td>$0.35</td></tr><tr><th>wisanggeni-512b-v1</th><td>$0.35</td></tr></tbody></table></div>",
+      "css": ".ds-list { max-width: 360px; padding: 2px; background: var(--well,#fff); box-shadow: inset -1px -1px var(--hi,#fff), inset 1px 1px var(--sh,#808080), inset -2px -2px var(--lt,#dfdfdf), inset 2px 2px var(--dk,#000); color: var(--text,#000); } .ds-list table { width: 100%; border-collapse: separate; border-spacing: 0; font-family: \"Arimo\", Arial, sans-serif; font-size: 15px; } .ds-list thead th { padding: 4px 12px; background: var(--face,#c0c0c0); box-shadow: inset -1px -1px var(--dk,#000), inset 1px 1px var(--hi,#fff), inset -2px -2px var(--sh,#808080), inset 2px 2px var(--lt,#dfdfdf); text-align: left; font-weight: 400; font-family: \"DotGothic16\", \"Arimo\", Arial, sans-serif; font-size: 16px; letter-spacing: 0; -webkit-font-smoothing: none; } .ds-list tbody th { padding: 7px 12px; text-align: left; font-family: \"Cousine\", \"Courier New\", monospace; font-size: 14px; } .ds-list td { padding: 7px 12px; text-align: right; font-variant-numeric: tabular-nums; } .ds-list tbody tr + tr > * { border-top: 1px dotted var(--sh,#808080); } .ds-list tbody tr:hover > * { background: color-mix(in srgb, var(--sel,#000080) 10%, var(--well,#fff)); }"
+    },
+    {
+      "name": "Command Prompt",
+      "kind": "custom",
+      "refersTo": "code-window-screen",
+      "description": "Code as a small window: navy bar with label and Copy, black screen.",
+      "html": "<div class=\"ds-code\"><div class=\"ds-code-bar\"><span>Python</span><button class=\"ds-copy\">Copy</button></div><pre>client.chat.completions.create(model=\"jagad-512b-v1\")</pre></div>",
+      "css": ".ds-code { max-width: 420px; padding: 3px; background: var(--face,#c0c0c0); box-shadow: inset -1px -1px var(--dk,#000), inset 1px 1px var(--lt,#dfdfdf), inset -2px -2px var(--sh,#808080), inset 2px 2px var(--hi,#fff); } .ds-code-bar { display: flex; align-items: center; justify-content: space-between; min-height: 30px; padding: 3px 3px 3px 8px; background: var(--title,#000080); color: var(--title-text,#fff); font-family: \"DotGothic16\", \"Arimo\", Arial, sans-serif; font-size: 16px; letter-spacing: 0; -webkit-font-smoothing: none; font-weight: 700; } .ds-copy { min-height: 24px; padding: 1px 10px; border: 0; background: var(--face,#c0c0c0); box-shadow: inset -1px -1px var(--dk,#000), inset 1px 1px var(--hi,#fff), inset -2px -2px var(--sh,#808080), inset 2px 2px var(--lt,#dfdfdf); color: var(--text,#000); font-family: \"DotGothic16\", \"Arimo\", Arial, sans-serif; font-size: 16px; letter-spacing: 0; -webkit-font-smoothing: none; cursor: pointer; } .ds-copy:active { box-shadow: inset -1px -1px var(--hi,#fff), inset 1px 1px var(--dk,#000), inset -2px -2px var(--lt,#dfdfdf), inset 2px 2px var(--sh,#808080); } .ds-copy:focus-visible { outline: 1px dotted var(--text,#000); outline-offset: -4px; } .ds-code pre { margin: 3px 0 0; padding: 12px 14px; overflow-x: auto; background: var(--code-bg,#000); color: var(--code-text,#c0c0c0); box-shadow: inset -1px -1px var(--hi,#fff), inset 1px 1px var(--sh,#808080), inset -2px -2px var(--lt,#dfdfdf), inset 2px 2px var(--dk,#000); font: 14px/1.55 \"Cousine\", \"Courier New\", monospace; }"
+    },
+    {
+      "name": "Taskbar and Start",
+      "kind": "nav",
+      "refersTo": "taskbar",
+      "description": "Fixed taskbar: Start (Zeiko mark) opening the navigation, a pressed button for the active window, the tray.",
+      "html": "<div class=\"ds-taskbar\"><button class=\"ds-start\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" shape-rendering=\"crispEdges\" aria-hidden=\"true\"><rect x=\"2\" y=\"2\" width=\"12\" height=\"2\" fill=\"#000080\"/><rect x=\"10\" y=\"4\" width=\"2\" height=\"2\" fill=\"#000080\"/><rect x=\"8\" y=\"6\" width=\"2\" height=\"2\" fill=\"#000080\"/><rect x=\"6\" y=\"8\" width=\"2\" height=\"2\" fill=\"#000080\"/><rect x=\"4\" y=\"10\" width=\"2\" height=\"2\" fill=\"#000080\"/><rect x=\"2\" y=\"12\" width=\"12\" height=\"2\" fill=\"#000080\"/></svg><span>Start</span></button><a class=\"ds-task ds-on\" href=\"#\">Pranata V1</a><a class=\"ds-task\" href=\"#\">Try it</a><span class=\"ds-tray\">EN 10:42</span></div>",
+      "css": ".ds-taskbar { display: flex; align-items: center; gap: 4px; height: 42px; padding: 4px; background: var(--face,#c0c0c0); box-shadow: inset 0 1px var(--lt,#dfdfdf), inset 0 2px var(--hi,#fff); } .ds-start { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 2px 10px 2px 6px; border: 0; background: var(--face,#c0c0c0); box-shadow: inset -1px -1px var(--dk,#000), inset 1px 1px var(--hi,#fff), inset -2px -2px var(--sh,#808080), inset 2px 2px var(--lt,#dfdfdf); color: var(--text,#000); font-family: \"DotGothic16\", \"Arimo\", Arial, sans-serif; font-size: 16px; letter-spacing: 0; -webkit-font-smoothing: none; font-weight: 700; cursor: pointer; } .ds-start:active { box-shadow: inset -1px -1px var(--hi,#fff), inset 1px 1px var(--dk,#000), inset -2px -2px var(--lt,#dfdfdf), inset 2px 2px var(--sh,#808080); } .ds-start:focus-visible, .ds-task:focus-visible { outline: 1px dotted var(--text,#000); outline-offset: -5px; } .ds-task { display: inline-flex; align-items: center; flex: 0 1 140px; height: 32px; padding: 2px 8px; background: var(--face,#c0c0c0); box-shadow: inset -1px -1px var(--dk,#000), inset 1px 1px var(--hi,#fff), inset -2px -2px var(--sh,#808080), inset 2px 2px var(--lt,#dfdfdf); color: var(--text,#000); text-decoration: none; font-family: \"DotGothic16\", \"Arimo\", Arial, sans-serif; font-size: 16px; letter-spacing: 0; -webkit-font-smoothing: none; } .ds-on { box-shadow: inset -1px -1px var(--hi,#fff), inset 1px 1px var(--dk,#000), inset -2px -2px var(--lt,#dfdfdf), inset 2px 2px var(--sh,#808080); background-image: repeating-conic-gradient(var(--hi,#fff) 0 25%, var(--face,#c0c0c0) 0 50%); background-size: 2px 2px; font-weight: 700; } .ds-tray { margin-left: auto; display: flex; align-items: center; height: 32px; padding: 0 8px; box-shadow: inset -1px -1px var(--hi,#fff), inset 1px 1px var(--sh,#808080); font-family: \"DotGothic16\", \"Arimo\", Arial, sans-serif; font-size: 16px; letter-spacing: 0; -webkit-font-smoothing: none; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Program You Open",
+    "overview": "The site is a desktop of the Windows 95 era, pinned by the owner on 2026-10-24. Zeiko's products are programs: Pranata V1 is a window already running, Drive is a file manager, the docs are a help viewer, code is a command prompt, the account is a property sheet. Everything is built from the era's few materials, which are used literally rather than quoted: grey chrome raised and sunk by two-pixel bevels, solid navy title bars, white wells for anything you read or type into, navy blocks for every quantity, and a pale yellow tooltip for anything that is a note.\n\nThe homepage is the full desktop: a teal field, a column of 32 px icons on the left, overlapping windows that carry caption buttons and minimise to a taskbar, and a Start menu (a `<details>`, so it opens without JavaScript) that is the site's navigation. Every other page is one maximised window in an ordinary scrolling layout: its title bar names the application and the document (\"Zeiko - Models\"), a menu bar sits under it, and the footer closes the window. Density is the era's: compact controls, 15–16 px chrome, figures in sunken fields, no airy marketing spacing.\n\nA night appearance scheme sits beside the standard one: dark teal desktop, charcoal chrome, the same bevel logic with every bevel colour redefined. No Windows or Microsoft name, logo or icon appears anywhere on the site; the Start button carries the Zeiko mark and every icon is drawn for Zeiko.",
+    "keyCharacteristics": [
+      "Six bevel tokens build every surface; depth is never a blurred shadow.",
+      "Navy title bar means active; grey means inactive. One window is active at a time.",
+      "White wells hold documents, fields, lists, tables, figures and charts.",
+      "Every probability, meter and progress is navy segmented blocks in a thin sunken slot.",
+      "A bitmap pixel face for chrome and page names, at 16, 32, 48 or 64 px only; Arimo for reading; Cousine for code and IDs.",
+      "Square corners everywhere; the only round shape is the radio button."
+    ],
+    "rules": [
+      {
+        "name": "The Three Places Rule",
+        "body": "A colour is a token on bare `:root`, then redefined in both `@media (prefers-color-scheme: dark) :root:not([data-theme=\"light\"])` and `:root[data-theme=\"dark\"]`. A new colour goes into all three, or it disappears when someone pins the scheme.",
+        "section": "colors"
+      },
+      {
+        "name": "The Active Window Rule",
+        "body": "Navy title bar means the window in front. On the desktop the window most in view is active and the rest go grey (`.is-off`); in a row of plans the best value is the active one; everything else uses `--title-off`.",
+        "section": "colors"
+      },
+      {
+        "name": "The Yellow Note Rule",
+        "body": "Pale yellow with a black border is the one voice for asides: a note, an offer, a balloon, a hover tip. It is never a button, a heading or a section fill.",
+        "section": "colors"
+      },
+      {
+        "name": "The Grid of Sixteen Rule",
+        "body": "DotGothic16 is set at 16, 32, 48 or 64 px, nowhere else, with `-webkit-font-smoothing: none`, or its dots blur. Reading text never uses it.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Figures Rule",
+        "body": "Every price, count, percentage and clock uses `font-variant-numeric: tabular-nums`, so columns of figures line up.",
+        "section": "typography"
+      },
+      {
+        "name": "The Bevel Grammar Rule",
+        "body": "Raised means you can press it or it is a window; sunken means it holds content or input; thin means it is a field in a bar or a slot for blocks. Choose the token by that meaning, never by looks.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Etch Rule",
+        "body": "Dividers are etched: 1px `--sh` over 1px `--hi` (`.etch`, section seams, the Start menu separator). Rows inside a well are divided by 1px dotted `--sh`.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** pick the bevel by meaning: `--raise` to press, `--raise-win` for a window or dialog, `--sunk` for a well or field, `--press` held down, `--thin-sunk` for bar fields and block slots.",
+      "**Do** put documents, fields, lists, tables, figures and plots in white sunken wells.",
+      "**Do** draw every probability, meter and progress as navy segmented blocks in a thin sunken slot, the top option navy and the rest grey.",
+      "**Do** set every page other than the homepage as one maximised window whose title bar names the document (`.brand-doc`), with the footer as the window's foot and status bar.",
+      "**Do** use the pale yellow tooltip, with its black border, for notes, offers and balloons.",
+      "**Do** set DotGothic16 at 16, 32, 48 or 64 px only, with smoothing off.",
+      "**Do** draw new icons for Zeiko on a 16×16 grid and show them at 16 or 32 px, pixelated.",
+      "**Do** add every new colour to `:root` and both night-scheme blocks."
+    ],
+    "donts": [
+      "**Don't** animate the hero's \"Example answers\", the Drive illustration or any figure on `/models`; only the playground's live answer fills in.",
+      "**Don't** put any Windows or Microsoft name, logo, flag or icon on the site; the era is named only in these notes.",
+      "**Don't** use blurred drop shadows, rounded corners or smooth gradients; title bars are solid colour.",
+      "**Don't** set the pixel face at in-between sizes or use it for reading text.",
+      "**Don't** scale an icon to sizes other than 16 or 32 px.",
+      "**Don't** fill a section, button or heading with tooltip yellow or status colours."
+    ]
+  }
+}
