@@ -13,7 +13,7 @@
 <meta property="og:type" content="website">
 <link rel="alternate" hreflang="en" href="/drive">
 <link rel="alternate" hreflang="id" href="/id/drive">
-<link rel="icon" href="/img/logo.svg" type="image/svg+xml">
+<link rel="icon" href="/img/mark-32.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -34,8 +34,8 @@
 <header class="topbar">
   <div class="wrap topbar-in">
     <a class="brand" href="/">
-      <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
-      <span class="brand-name">Zeiko</span>
+      <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
+      <span class="brand-name">Zeiko</span><span class="brand-doc" aria-hidden="true"> - Drive</span>
     </a>
 
     <nav class="nav" id="nav" aria-label="Main navigation">
@@ -63,10 +63,9 @@
 
 <main id="main">
 
-  <section class="hero" id="top" aria-labelledby="heroTitle">
-    <div class="wrap hero-in hero-drive">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>File storage · same account as ZeikoAI</p>
+  <section class="page-head" id="top" aria-labelledby="heroTitle">
+    <div class="wrap drive-split">
+      <div class="drive-copy">
         <h1 id="heroTitle">
           <span class="h1-name">Zeiko Drive</span>
           <span class="h1-line">Keep your files cheap, fast and private.</span>
@@ -76,34 +75,32 @@
           <span data-drive-from-note hidden>Plans from <strong data-drive-from>–</strong> a month.</span>
         </p>
         <div class="cta">
-          <a class="btn btn-primary btn-lg" href="https://drive.zeiko.biz.id">Open Drive <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-          <a class="btn btn-ghost btn-lg" href="/account/signup?next=/dashboard" data-signed-out><svg class="ico" aria-hidden="true"><use href="#i-user"/></svg>Create an account</a>
+          <a class="btn btn-primary btn-lg" href="https://drive.zeiko.biz.id">Open Drive</a>
+          <a class="btn btn-lg" href="/account/signup?next=/dashboard" data-signed-out>Create an account</a>
         </div>
         <p class="hero-signin" data-signed-out>One Zeiko Account for Drive, Pranata V1 and Zeiko Chat. Already have one? <a href="/account/signin?next=/dashboard">Sign in</a></p>
       </div>
-      <figure class="drv" aria-label="Zeiko Drive, drawn as an example">
+      <figure class="drv win" aria-label="Zeiko Drive, drawn as an example">
         <div class="drv-bar">
-          <span class="drv-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="drv-path">My Drive <b aria-hidden="true">/</b> <strong>Trip to Bali</strong></span>
+          <img src="/img/icons/drive.svg" alt="" width="16" height="16">
+          <span class="drv-path">My Drive <b aria-hidden="true">\</b> <strong>Trip to Bali</strong></span>
           <span class="demo-note">Illustration</span>
         </div>
         <ul class="drv-list">
-          <li class="drv-row drv-folder"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h3.6l2 2.2h7.4A2.5 2.5 0 0 1 21 9.7v7.8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5Z"/></svg></span><span class="drv-name">Itinerary</span><span class="drv-size">12 files</span></li>
-          <li class="drv-row drv-image"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="m4.5 18 5-5 3.5 3.5 2.5-2.5 4 4"/></svg></span><span class="drv-name">sunset-kuta.jpg</span><span class="drv-tag"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.2 1.2"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.2-1.2"/></svg>Shared</span><span class="drv-size">4.2 MB</span></li>
-          <li class="drv-row drv-film"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="2.5"/><path d="m10.2 9.4 4.6 2.6-4.6 2.6Z"/></svg></span><span class="drv-name">drone-uluwatu.mp4</span><span class="drv-size">1.3 GB</span></li>
-          <li class="drv-row drv-doc"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h6.5L18.5 8.5v10.5A1.5 1.5 0 0 1 17 20.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5Z"/><path d="M13.5 3.5v5h5M8.5 13h7M8.5 16.5h5"/></svg></span><span class="drv-name">tickets.pdf</span><span class="drv-size">380 KB</span></li>
+          <li class="drv-row"><img src="/img/icons/drive.svg" alt="" width="16" height="16"><span class="drv-name">Itinerary</span><span class="drv-size">12 files</span></li>
+          <li class="drv-row"><img src="/img/icons/image.svg" alt="" width="16" height="16"><span class="drv-name">sunset-kuta.jpg</span><span class="drv-tag">Shared</span><span class="drv-size">4.2 MB</span></li>
+          <li class="drv-row"><img src="/img/icons/film.svg" alt="" width="16" height="16"><span class="drv-name">drone-uluwatu.mp4</span><span class="drv-size">1.3 GB</span></li>
+          <li class="drv-row"><img src="/img/icons/page.svg" alt="" width="16" height="16"><span class="drv-name">tickets.pdf</span><span class="drv-size">380 KB</span></li>
         </ul>
         <div class="drv-up">
-          <span class="drv-ico drv-ico-up"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V5M7.5 9.5 12 5l4.5 4.5M5 19h14"/></svg></span>
           <span class="drv-up-text"><span>Uploading clips.zip</span><span class="drv-up-bar" aria-hidden="true"><i></i></span></span>
           <strong>68%</strong>
         </div>
         <div class="drv-meter">
-          <span class="drv-ico drv-ico-cloud"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 18.5h9.8a3.7 3.7 0 0 0 .5-7.4 5.6 5.6 0 0 0-10.9-1.3A4.4 4.4 0 0 0 7.5 18.5Z"/></svg></span>
           <span class="drv-meter-text"><small>Storage</small><span>38.4 GB of 200 GB</span></span>
           <span class="drv-meter-bar" aria-hidden="true"><i></i></span>
         </div>
-        <p class="drv-toast" aria-hidden="true"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.2 1.2"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.2-1.2"/></svg></span><span><strong>Link copied</strong><small>Expires in 7 days</small></span></p>
+        <p class="drv-toast" aria-hidden="true"><img src="/img/icons/link.svg" alt="" width="16" height="16"><span><strong>Link copied</strong><small>Expires in 7 days</small></span></p>
       </figure>
     </div>
   </section>
@@ -111,39 +108,38 @@
   <section class="section" id="features" aria-labelledby="featTitle">
     <div class="wrap">
       <div class="sec-head">
-        <p class="kicker">Zeiko Drive</p>
         <h2 class="sec-title" id="featTitle">Everything a drive should do. Nothing in your way.</h2>
         <p class="sec-lede">Folders, search, stars and a trash you can undo — the way you already know, on your phone and your computer.</p>
       </div>
       <div class="kinds">
         <article class="kind">
-          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-bolt"/></svg></span>
+          <img src="/img/icons/bolt.svg" alt="" width="32" height="32">
           <h3>Full speed, both ways</h3>
           <p>No speed caps on uploads or downloads. Big uploads carry on where they stopped if your connection drops.</p>
         </article>
         <article class="kind">
-          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-link"/></svg></span>
+          <img src="/img/icons/link.svg" alt="" width="32" height="32">
           <h3>Share with a link</h3>
           <p>One click to download, no sign-in for the other side. Add a password, an end date or a download limit, and send it by WhatsApp, Telegram, email or QR.</p>
         </article>
         <!-- Shown once a family plan is on sale. -->
         <article class="kind" data-drive-family hidden>
-          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-family"/></svg></span>
+          <img src="/img/icons/family.svg" alt="" width="32" height="32">
           <h3>Family plans</h3>
           <p>One plan for the whole family. Everyone keeps a private My Drive, and a Family Drive holds what you share.</p>
         </article>
         <article class="kind">
-          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-shield"/></svg></span>
+          <img src="/img/icons/shield.svg" alt="" width="32" height="32">
           <h3>Private by default</h3>
           <p>Only you see your files. A family owner sees how much each member uses, never what is in it.</p>
         </article>
         <article class="kind">
-          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-shrink"/></svg></span>
+          <img src="/img/icons/shrink.svg" alt="" width="32" height="32">
           <h3>Make photos and videos smaller</h3>
           <p>Compress a photo or a video in a tap. If it doesn’t get smaller, nothing changes and your credit comes back.</p>
         </article>
         <article class="kind">
-          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-folder"/></svg></span>
+          <img src="/img/icons/drive.svg" alt="" width="32" height="32">
           <h3>Download a whole folder</h3>
           <p>Pick files or a folder and take them as one ZIP, straight away.</p>
         </article>
@@ -151,10 +147,9 @@
     </div>
   </section>
 
-  <section class="section section-tint" id="plans" aria-labelledby="plansTitle">
+  <section class="section" id="plans" aria-labelledby="plansTitle">
     <div class="wrap">
       <div class="sec-head">
-        <p class="kicker">Plans</p>
         <h2 class="sec-title" id="plansTitle">Pay for the space you use</h2>
         <p class="sec-lede">Monthly plans in rupiah. Move up any time and pay only the difference for the days left.</p>
       </div>
@@ -167,7 +162,6 @@
   <section class="section" id="faq" aria-labelledby="faqTitle">
     <div class="wrap faq-layout">
       <div class="faq-intro">
-        <p class="kicker">FAQ</p>
         <h2 class="sec-title" id="faqTitle">Questions, answered</h2>
         <p class="sec-lede">Something else? Write to <a href="mailto:admin@zeiko.biz.id">admin@zeiko.biz.id</a>.</p>
       </div>
@@ -202,7 +196,7 @@
   <div class="wrap footer-grid">
     <div class="footer-brand">
       <a class="brand" href="/">
-        <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
+        <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
         <span class="brand-name">Zeiko</span>
       </a>
       <p>Pranata V1 for decisions, three roleplay models, and Zeiko Drive for your files.</p>

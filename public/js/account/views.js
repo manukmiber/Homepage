@@ -28,28 +28,28 @@ function when(ms) {
 }
 
 /* ----------------------------------------------------------------- icons */
-// Line icons, 24×24, drawn in the text colour. Decorative: always aria-hidden.
+// The site's own 16×16 pixel icons (public/img/icons), shown at 16 or 32 px
+// and never another size. Decorative: the alt text is always empty.
 
-const icon = (body, cls = '') => `<svg class="ico${cls ? ` ${cls}` : ''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
+const icon = (name, cls = '') => `<img class="ico px${cls ? ` ${cls}` : ''}" src="/img/icons/${name}.svg" alt="" width="16" height="16">`;
 const I = {
-  check: '<path d="M20 6 9 17l-5-5"/>',
-  copy: '<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
-  eye: '<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>',
-  eyeOff: '<path d="M9.9 4.2A10 10 0 0 1 12 4c6.5 0 10 8 10 8a17 17 0 0 1-2.2 3.2M6.6 6.6C3.9 8.4 2 12 2 12s3.5 7 10 7c1.9 0 3.6-.6 5-1.5"/><path d="M14.1 14.2a3 3 0 0 1-4.3-4.3M2 2l20 20"/>',
-  mail: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/>',
-  key: '<circle cx="7.5" cy="15.5" r="4.5"/><path d="m10.7 12.3 9.3-9.3M17 6l3 3M14 9l2 2"/>',
-  wallet: '<path d="M19 7V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3"/><path d="M21 11h-5a2 2 0 0 0 0 4h5Z"/>',
-  layers: '<path d="m12 2 10 5-10 5L2 7Z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/>',
-  chat: '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12Z"/>',
-  alert: '<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/>',
-  arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
-  out: '<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
-  gift: '<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/>',
-  clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
-  pin: '<path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+  check: 'ok',
+  copy: 'copy',
+  eye: 'eye',
+  eyeOff: 'eye-off',
+  mail: 'contact',
+  key: 'account',
+  wallet: 'wallet',
+  layers: 'layers',
+  chat: 'roleplay',
+  alert: 'warn',
+  out: 'out',
+  gift: 'gift',
+  clock: 'clock',
+  pin: 'pin',
 };
 
-const LOGO = `<img class="logo-night" src="/img/logo.svg" alt="" width="40" height="40"><img class="logo-day" src="/img/logo-day.svg" alt="" width="40" height="40">`;
+const LOGO = `<img class="px" src="/img/mark-16.svg" alt="" width="16" height="16">`;
 
 /** The top bar's links: signed in (`account`, as the door answers it), the
  * person's name where "Sign in" is on every other page; signed out, as the
@@ -265,7 +265,6 @@ function shell(tab, o, inner, flash) {
   <div class="wrap">
     <header class="acct-head">
       <div class="acct-title">
-        <p class="crumbs">${L('Zeiko Account', 'Akun Zeiko')}</p>
         <h1>${title}</h1>
       </div>
       <div class="acct-who"><span class="avatar" aria-hidden="true">${esc((name[0] || 'Z').toUpperCase())}</span><span class="acct-who-text"><strong>${esc(a.username ? '@' + a.username : name)}</strong><span>${esc(a.email || '')}</span></span></div>
@@ -273,10 +272,12 @@ function shell(tab, o, inner, flash) {
     <nav class="acct-tabs" aria-label="${L('Account sections', 'Bagian akun')}">
       ${tabs().map(([id, href, label]) => `<a href="${href}"${id === tab ? ' aria-current="page"' : ''}>${label}</a>`).join('')}
     </nav>
+    <div class="acct-panel">
     ${flash || ''}
     ${!a.emailVerified && a.email && o.mail ? verifyBanner(a) : ''}
     ${!a.city && tab !== 'settings' ? locationBanner() : ''}
     ${inner}
+    </div>
   </div>
 </section>`;
 }

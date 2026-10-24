@@ -102,19 +102,26 @@ there too, and the AI products' copy keeps the rule whole.
 
 ```
 public/
-  index.html      landing: Pranata V1 hero and #decision first, then Zeiko Drive
-                  (#drive), the roleplay models, pricing + cost estimator, FAQ, contact
+  index.html      landing, drawn as a desktop: icons down the side, one window per
+                  section (Pranata V1 hero and #decision first, then Zeiko Drive
+                  (#drive), the roleplay models, pricing + cost estimator, FAQ,
+                  contact, About), and a taskbar whose Start menu is the navigation
   id/             every page above and below in Indonesian (see "Two languages")
   drive.html      /drive: Zeiko Drive's features, plans (drawn from Drive's catalog), FAQ
   id/drive.html   /id/drive: the same page in Indonesian
   models.html     /models: at-a-glance table, then each model's specs and rate card
   404.html
   _redirects      old /models/<id> links → /models#<id>
-  img/            logo.svg / logo-day.svg: the Zeiko mark, shared with Zeiko Chat,
-                  night and day drawings shown by theme (`.logo-night`, `.logo-day`)
-  css/style.css   the only stylesheet; colour tokens for light and dark
+  img/            logo.svg / logo-day.svg: the Zeiko mark, shared with Zeiko Chat;
+                  mark-16.svg / mark-32.svg: the same mark drawn in pixels (title
+                  bars, the Start button, the favicon); icons/: 16×16 pixel icons
+                  drawn for Zeiko, shown at 16 or 32 px, never another size
+  fonts/          Arimo and Cousine (woff2, Latin subset), the site's own font
+                  files; their licences are in fonts/ at the repository's root
+  css/style.css   the only stylesheet; colour and bevel tokens for light and dark
   js/main.js      theme, mobile menu, topbar, copy buttons, effort bars, plan
-                  value, estimator, chart hover
+                  value, estimator, chart hover, and the homepage desktop (caption
+                  buttons, taskbar buttons, the Start menu, the clock)
   js/try.js       the homepage playground (#try): asks the account door's /v1/try
   docs/           /docs: one plain page per topic (index.html is /docs/)
   account/index.html  /account and every page under it: one plain page
@@ -155,8 +162,9 @@ whose script talks to the account door and nowhere else:
   check renders a sample laced with junk text and fails if any gets through.
 - **Never serve the snapshot to the browser**, whole or in part: no data
   file, no JSON endpoint, no inline JSON. Only finished HTML goes out.
-- **No runtime requests.** No `fetch`, XHR, WebSocket, analytics, web fonts or
-  CDN scripts. The network tab shows only this site's own files. Three
+- **No runtime requests.** No `fetch`, XHR, WebSocket, analytics, third-party
+  web fonts or CDN scripts (the fonts are the site's own files, in
+  `public/fonts`). The network tab shows only this site's own files. Three
   exceptions, all to the account door only: `public/js/account/app.js`, the
   top bar's `public/js/account/session.js` (see "Who is signed in"), and the
   homepage playground `public/js/try.js` (see "The playground").
@@ -207,7 +215,8 @@ Every page is in English and in Indonesian (the operator's, October 2026):
 
 - **The switch**: every page with the top bar has
   `<a class="lang-switch" href="<its twin>" hreflang="…" data-lang="…">`
-  beside the theme button, and `<link rel="alternate" hreflang>` for both.
+  beside the theme button (on the homepage, in the taskbar's tray), and
+  `<link rel="alternate" hreflang>` for both.
   `main.js` keeps the choice in the `zk_lang` cookie for the whole domain
   (Zeiko Drive reads it too); an Indonesian page sets it once if nothing is
   kept. `npm run check` fails a page without the switch, a switch to a page
@@ -323,7 +332,8 @@ GitHub keys. Google and GitHub sign-in start and finish at the door
 
 The account door's session (its cookie on its own host) is the only sign-in
 there is: the site, Zeiko Drive and the account pages all ask it, and none
-keeps one of its own. So every page with the top bar shows who that is:
+keeps one of its own. So every page with the top bar (on the homepage, the
+Start menu, which keeps `id="nav"`) shows who that is:
 
 - **Every page with the top bar** names the door in
   `<meta name="zeiko-accounts">` and loads
@@ -450,11 +460,10 @@ The model's id is `pranata-v1` (display name Pranata V1).
 
 Pranata V1 leads the landing page, on the operator's request: the hero is
 its own (name, price, "Create an account", the example answers card), then
-`#decision`, and only then the roleplay models. It has its own accent,
-`--dec` (teal), beside the site's `--brand` (indigo) used for the roleplay
-models. The example answers card in the hero is illustrative and labelled
-so ("Example answers"): fixed, made-up percentages showing what an answer
-looks like, never a measured figure and never animated.
+`#decision`, and only then the roleplay models. The example answers window
+beside the hero is illustrative and labelled so ("Example answers"): fixed,
+made-up percentages showing what an answer looks like, never a measured
+figure and never animated (only the playground's live answer fills in).
 
 ## Adding, renaming or removing a model
 
@@ -534,6 +543,14 @@ response"). Read your own copy with the rule above in mind.
   `prefers-color-scheme` block and `[data-theme="dark"]`. Add a new colour
   to all three.
 - Layouts must work at 375px wide with no horizontal scroll.
+- **The look is Windows 95** (the operator's, October 2026; `PRODUCT.md`,
+  `DESIGN.md`): grey chrome with two-pixel bevels (the `--raise`, `--sunk`…
+  tokens), navy title bars, white wells for documents and fields, navy blocks
+  for every probability and meter, a teal desktop, and a night appearance
+  scheme beside the standard one. The homepage is the desktop; every other
+  page is one maximised window (title bar, menu bar, the page, a status bar).
+  No Windows or Microsoft name, logo or icon: the Start button carries the
+  Zeiko mark and every icon is drawn for Zeiko.
 - Preview locally with `npm run seed:local` once (made-up figures into the
   local bucket), then `npx wrangler dev` (http://localhost:8787).
 - Charts: thin marks, hairline grid, one colour per series from the

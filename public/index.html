@@ -6,88 +6,64 @@
 <title>Zeiko — Pranata V1, roleplay models and Zeiko Drive</title>
 <meta name="description" content="Pranata V1: fast, consistent decisions with a probability for every option, sold by 30-day plan. Plus three roleplay models, from safe-for-work to unrestricted.">
 <meta name="color-scheme" content="light dark">
-<!-- The top bar asks this address who is signed in, and the playground (#try) asks it its questions; nothing else on the page asks anything. -->
+<!-- The Start menu asks this address who is signed in, and the playground (#try) asks it its questions; nothing else on the page asks anything. -->
 <meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
 <meta property="og:title" content="Zeiko — Pranata V1, roleplay models and Zeiko Drive">
 <meta property="og:description" content="Pranata V1 for decisions, with plans of its own. Three roleplay models with 256K context and three pricing bands.">
 <meta property="og:type" content="website">
 <link rel="alternate" hreflang="en" href="/">
 <link rel="alternate" hreflang="id" href="/id/">
-<link rel="icon" href="/img/logo.svg" type="image/svg+xml">
+<link rel="icon" href="/img/mark-32.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body>
-
-<!-- Icons, drawn once and reused with <use>. -->
-<svg class="sprite" aria-hidden="true" focusable="false">
-  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-  <symbol id="i-yesno" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8.5 12.2l2.4 2.4 4.6-4.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-  <symbol id="i-pick" viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="4.5" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="3.5" y="9.75" width="17" height="4.5" rx="1.6" fill="currentColor" opacity=".25" stroke="currentColor" stroke-width="1.6"/><rect x="3.5" y="15.5" width="17" height="4.5" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
-  <symbol id="i-score" viewBox="0 0 24 24"><path d="M4 20V14M9.33 20V9M14.67 20V5M20 20v-8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
-  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="10" cy="8" r="3.8" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 20a6.5 6.5 0 0 1 13 0M19 8.5v6M16 11.5h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
-  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.8 7.2 12 13l8.2-5.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
-  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h0A2.5 2.5 0 0 1 4 13.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 8.5h7M8.5 11.5h4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
-  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M18.5 16v4M16.5 18h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
-</svg>
+<body class="desk">
 
 <a class="skip" href="#main">Skip to content</a>
 
-<header class="topbar">
-  <div class="wrap topbar-in">
-    <a class="brand" href="/">
-      <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
-      <span class="brand-name">Zeiko</span>
-    </a>
+<div class="desk-in">
 
-    <nav class="nav" id="nav" aria-label="Main navigation">
-      <a href="#decision">Pranata V1</a>
-      <a href="/drive">Drive</a>
-      <a href="#models">Roleplay</a>
-      <a href="#pricing">Pricing</a>
-      <a href="/models">Models</a>
-      <a href="/docs/">Docs</a>
-      <a href="#faq">FAQ</a>
-      <a class="nav-account" href="/account">Sign in</a>
-      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Create account</a>
-    </nav>
+  <!-- The desktop's icons: the same places the Start menu opens. -->
+  <nav class="desk-icons" aria-label="Desktop">
+    <a class="desk-icon" href="#top"><img src="/img/icons/decision.svg" alt="" width="32" height="32"><span>Pranata V1</span></a>
+    <a class="desk-icon" href="#try"><img src="/img/icons/try.svg" alt="" width="32" height="32"><span>Try it</span></a>
+    <a class="desk-icon" href="#drive"><img src="/img/icons/drive.svg" alt="" width="32" height="32"><span>Zeiko Drive</span></a>
+    <a class="desk-icon" href="#models"><img src="/img/icons/roleplay.svg" alt="" width="32" height="32"><span>Roleplay</span></a>
+    <a class="desk-icon" href="#pricing"><img src="/img/icons/pricing.svg" alt="" width="32" height="32"><span>Pricing</span></a>
+    <a class="desk-icon" href="/models"><img src="/img/icons/models.svg" alt="" width="32" height="32"><span>Models</span></a>
+    <a class="desk-icon" href="/docs/"><img src="/img/icons/docs.svg" alt="" width="32" height="32"><span>Docs</span></a>
+    <a class="desk-icon" href="/account"><img src="/img/icons/account.svg" alt="" width="32" height="32"><span>Account</span></a>
+  </nav>
 
-    <div class="topbar-tools">
-      <a class="lang-switch" href="/id/" hreflang="id" lang="id" data-lang="id">ID</a>
-      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
-        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-      </button>
-      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      </button>
-    </div>
-  </div>
-</header>
+  <main id="main" class="desk-main">
 
-<main id="main">
-
-  <!-- ============================================================ hero -->
-  <!-- Pranata V1 leads the page. The roleplay models follow further down. -->
-  <section class="hero" id="top" aria-labelledby="heroTitle">
-    <div class="wrap hero-in">
-      <div class="hero-copy">
-        <p class="eyebrow eyebrow-dec"><span class="eyebrow-dot" aria-hidden="true"></span>Decision model · built in-house</p>
-        <h1 id="heroTitle">
-          <span class="h1-name">Pranata V1</span>
-          <span class="h1-line">Fast, consistent decisions at a price that barely registers.</span>
-        </h1>
-        <p class="lede">
-          Yes or no, pick one, score it — with a probability for every option.
-          Plans from <strong data-price="decision:welcome">$1</strong> for 30 days.
-        </p>
-        <div class="cta">
-          <a class="btn btn-dec btn-lg" href="/account/signup" data-signed-out>Create an account <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-          <a class="btn btn-dec btn-lg" href="/account/plans" data-signed-in hidden>Choose a plan <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-          <a class="btn btn-ghost btn-lg" href="#try">Try it free</a>
+    <!-- ============================================================ hero -->
+    <!-- Pranata V1 leads the page, in the window in front. The roleplay
+         models follow further down. -->
+    <div class="desk-hero">
+      <section class="win win-hero" id="top" aria-labelledby="heroTitle" data-win="Pranata V1">
+        <div class="win-title"><img src="/img/icons/decision.svg" alt="" width="16" height="16"><span class="win-name">Pranata V1</span></div>
+        <nav class="win-menu" aria-label="Pranata V1">
+          <a href="#try">Try it</a>
+          <a href="#plans">Plans</a>
+          <a href="/models#pranata-v1">Specs</a>
+          <a href="/docs/pranata-v1">Help</a>
+        </nav>
+        <div class="win-body hero-body">
+          <h1 id="heroTitle">
+            <span class="h1-name">Pranata V1</span>
+            <span class="h1-line">Fast, consistent decisions at a price that barely registers.</span>
+          </h1>
+          <p class="lede">
+            A decision model built in-house. Yes or no, pick one, score it — with a probability for every option.
+            Plans from <strong data-price="decision:welcome">$1</strong> for 30 days.
+          </p>
+          <div class="cta">
+            <a class="btn btn-primary btn-lg" href="/account/signup" data-signed-out>Create an account</a>
+            <a class="btn btn-primary btn-lg" href="/account/plans" data-signed-in hidden>Choose a plan</a>
+            <a class="btn btn-lg" href="#try">Try it free</a>
+          </div>
+          <p class="hero-signin" data-signed-out>No key request needed. Already have an account? <a href="/account">Sign in</a></p>
         </div>
-        <p class="hero-signin" data-signed-out>No key request needed. Already have an account? <a href="/account">Sign in</a></p>
-
         <dl class="hero-facts">
           <div>
             <dt>Requests per plan</dt>
@@ -102,639 +78,663 @@
             <dd>2,048 <small>tokens</small></dd>
           </div>
         </dl>
-      </div>
+      </section>
 
       <!-- Illustrative only: what an answer looks like, not measured figures. -->
-      <figure class="demo" aria-labelledby="demoCap">
-        <figcaption class="demo-head" id="demoCap">
-          <span class="demo-id"><span class="demo-dot" aria-hidden="true"></span><code>pranata-v1</code></span>
-          <span class="demo-note">Example answers</span>
-        </figcaption>
+      <figure class="win win-demo is-off" aria-labelledby="demoCap">
+        <div class="win-title"><img src="/img/icons/decision.svg" alt="" width="16" height="16"><span class="win-name" id="demoCap">Example answers</span></div>
+        <div class="win-body demo">
+          <div class="ask">
+            <p class="ask-kind">Yes or no</p>
+            <p class="ask-q">Does this reply stay in character?</p>
+            <ul class="odds">
+              <li class="is-top"><span class="odds-label">Yes</span><span class="odds-bar" aria-hidden="true"><span style="--p:91%"></span></span><span class="odds-val">91%</span></li>
+              <li><span class="odds-label">No</span><span class="odds-bar" aria-hidden="true"><span style="--p:9%"></span></span><span class="odds-val">9%</span></li>
+            </ul>
+          </div>
 
-        <div class="ask">
-          <p class="ask-kind"><svg class="ico" aria-hidden="true"><use href="#i-yesno"/></svg>Yes or no</p>
-          <p class="ask-q">Does this reply stay in character?</p>
-          <ul class="odds">
-            <li class="is-top"><span class="odds-label"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Yes</span><span class="odds-bar" aria-hidden="true"><span style="--p:91%"></span></span><span class="odds-val">91%</span></li>
-            <li><span class="odds-label">No</span><span class="odds-bar" aria-hidden="true"><span style="--p:9%"></span></span><span class="odds-val">9%</span></li>
-          </ul>
+          <div class="ask">
+            <p class="ask-kind">Pick one</p>
+            <p class="ask-q">Which mood fits the next scene?</p>
+            <ul class="odds">
+              <li><span class="odds-label">Calm</span><span class="odds-bar" aria-hidden="true"><span style="--p:18%"></span></span><span class="odds-val">18%</span></li>
+              <li class="is-top"><span class="odds-label">Tense</span><span class="odds-bar" aria-hidden="true"><span style="--p:64%"></span></span><span class="odds-val">64%</span></li>
+              <li><span class="odds-label">Playful</span><span class="odds-bar" aria-hidden="true"><span style="--p:18%"></span></span><span class="odds-val">18%</span></li>
+            </ul>
+          </div>
+
+          <div class="ask">
+            <p class="ask-kind">Score it</p>
+            <p class="ask-q">How urgent is this message, from 1 to 5?</p>
+            <ol class="hist">
+              <li><span class="hist-val">3%</span><span class="hist-col" aria-hidden="true" style="--p:3%"></span><span class="hist-x">1</span></li>
+              <li><span class="hist-val">7%</span><span class="hist-col" aria-hidden="true" style="--p:7%"></span><span class="hist-x">2</span></li>
+              <li><span class="hist-val">22%</span><span class="hist-col" aria-hidden="true" style="--p:22%"></span><span class="hist-x">3</span></li>
+              <li class="is-top"><span class="hist-val">48%</span><span class="hist-col" aria-hidden="true" style="--p:48%"></span><span class="hist-x">4</span></li>
+              <li><span class="hist-val">20%</span><span class="hist-col" aria-hidden="true" style="--p:20%"></span><span class="hist-x">5</span></li>
+            </ol>
+          </div>
+
+          <a class="btn demo-try" href="#try">Ask your own question, live</a>
         </div>
-
-        <div class="ask">
-          <p class="ask-kind"><svg class="ico" aria-hidden="true"><use href="#i-pick"/></svg>Pick one</p>
-          <p class="ask-q">Which mood fits the next scene?</p>
-          <ul class="odds">
-            <li><span class="odds-label">Calm</span><span class="odds-bar" aria-hidden="true"><span style="--p:18%"></span></span><span class="odds-val">18%</span></li>
-            <li class="is-top"><span class="odds-label"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg>Tense</span><span class="odds-bar" aria-hidden="true"><span style="--p:64%"></span></span><span class="odds-val">64%</span></li>
-            <li><span class="odds-label">Playful</span><span class="odds-bar" aria-hidden="true"><span style="--p:18%"></span></span><span class="odds-val">18%</span></li>
-          </ul>
-        </div>
-
-        <div class="ask">
-          <p class="ask-kind"><svg class="ico" aria-hidden="true"><use href="#i-score"/></svg>Score it</p>
-          <p class="ask-q">How urgent is this message, from 1 to 5?</p>
-          <ol class="hist">
-            <li><span class="hist-val">3%</span><span class="hist-col" aria-hidden="true" style="--p:3%"></span><span class="hist-x">1</span></li>
-            <li><span class="hist-val">7%</span><span class="hist-col" aria-hidden="true" style="--p:7%"></span><span class="hist-x">2</span></li>
-            <li><span class="hist-val">22%</span><span class="hist-col" aria-hidden="true" style="--p:22%"></span><span class="hist-x">3</span></li>
-            <li class="is-top"><span class="hist-val">48%</span><span class="hist-col" aria-hidden="true" style="--p:48%"></span><span class="hist-x">4</span></li>
-            <li><span class="hist-val">20%</span><span class="hist-col" aria-hidden="true" style="--p:20%"></span><span class="hist-x">5</span></li>
-          </ol>
-        </div>
-
-        <a class="demo-try" href="#try">Ask your own question, live <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       </figure>
     </div>
 
-    <div class="wrap">
-      <div class="notice notice-hero" role="note">
-        <span class="notice-dot" aria-hidden="true"></span>
-        <p><strong>Very high demand right now.</strong> We're sorry for the higher latency, and for results that may be less steady than usual, while so many calls come in. We're working on a much larger expansion.</p>
-      </div>
+    <div class="notice" role="note">
+      <span class="notice-dot" aria-hidden="true"></span>
+      <p><strong>Very high demand right now.</strong> We're sorry for the higher latency, and for results that may be less steady than usual, while so many calls come in. We're working on a much larger expansion.</p>
     </div>
-  </section>
 
-  <!-- ===================================================== playground -->
-  <!-- A real question to Pranata V1, answered live by js/try.js. Without
-       JavaScript the section says so and nothing else. -->
-  <section class="section section-try" id="try" aria-labelledby="tryTitle">
-    <div class="wrap">
-      <div class="sec-head sec-head-split">
-        <div>
-          <p class="kicker kicker-dec">Playground</p>
+    <!-- ===================================================== playground -->
+    <!-- A real question to Pranata V1, answered live by js/try.js. Without
+         JavaScript the window says so and nothing else. -->
+    <section class="win" id="try" aria-labelledby="tryTitle" data-win="Try it">
+      <div class="win-title"><img src="/img/icons/try.svg" alt="" width="16" height="16"><span class="win-name">Ask Pranata V1</span></div>
+      <div class="win-body">
+        <div class="sec-head">
           <h2 class="sec-title" id="tryTitle">Ask Pranata V1 yourself.</h2>
           <p class="sec-lede">Pick a kind of question, change the example or write your own, and see the answer with a probability for every option. 5 free tries every 30 minutes, no account needed.</p>
         </div>
-      </div>
 
-      <noscript><p class="card try-off">The playground needs JavaScript. Turn it on for this site to try Pranata V1 here.</p></noscript>
+        <noscript><p class="try-off notice"><span class="notice-dot" aria-hidden="true"></span>The playground needs JavaScript. Turn it on for this site to try Pranata V1 here.</p></noscript>
 
-      <div class="try" id="tryBox" hidden>
-        <form class="try-form card" id="tryForm" novalidate>
-          <div class="try-tabs" role="tablist" aria-label="Kind of question">
-            <button class="try-tab" type="button" role="tab" id="tab-noul" data-kind="noul" aria-selected="true" aria-controls="tryForm"><svg class="ico" aria-hidden="true"><use href="#i-yesno"/></svg>Yes or no</button>
-            <button class="try-tab" type="button" role="tab" id="tab-choice" data-kind="choice" aria-selected="false" aria-controls="tryForm" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-pick"/></svg>Pick one</button>
-            <button class="try-tab" type="button" role="tab" id="tab-score" data-kind="score" aria-selected="false" aria-controls="tryForm" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-score"/></svg>Score it</button>
-          </div>
-
-          <label class="try-field">Text to judge
-            <textarea name="state" rows="4" maxlength="4000" required></textarea>
-          </label>
-          <label class="try-field">Question
-            <input type="text" name="instructions" maxlength="500" required autocomplete="off">
-          </label>
-
-          <details class="try-field try-sides" data-for="noul">
-            <summary>Say what yes and no mean <small>optional</small></summary>
-            <div class="try-pair">
-              <label>Yes means<input type="text" name="yes" maxlength="120" autocomplete="off"></label>
-              <label>No means<input type="text" name="no" maxlength="120" autocomplete="off"></label>
+        <div class="try" id="tryBox" hidden>
+          <form class="try-form" id="tryForm" novalidate>
+            <div class="try-tabs" role="tablist" aria-label="Kind of question">
+              <button class="try-tab" type="button" role="tab" id="tab-noul" data-kind="noul" aria-selected="true" aria-controls="tryForm">Yes or no</button>
+              <button class="try-tab" type="button" role="tab" id="tab-choice" data-kind="choice" aria-selected="false" aria-controls="tryForm" tabindex="-1">Pick one</button>
+              <button class="try-tab" type="button" role="tab" id="tab-score" data-kind="score" aria-selected="false" aria-controls="tryForm" tabindex="-1">Score it</button>
             </div>
-          </details>
-          <label class="try-field" data-for="choice" hidden>Options <small>one per line, 2 to 8</small>
-            <textarea name="options" rows="4"></textarea>
-          </label>
-          <label class="try-field" data-for="score" hidden>Levels <small>one per line, lowest first, 2 to 10</small>
-            <textarea name="levels" rows="5"></textarea>
-          </label>
 
-          <div class="try-go">
-            <button class="btn btn-dec" type="submit" id="tryAsk">Ask Pranata V1</button>
-            <p class="try-left" id="tryLeft" aria-live="polite"></p>
+            <div class="try-panel">
+              <label class="try-field">Text to judge
+                <textarea name="state" rows="4" maxlength="4000" required></textarea>
+              </label>
+              <label class="try-field">Question
+                <input type="text" name="instructions" maxlength="500" required autocomplete="off">
+              </label>
+
+              <details class="try-field try-sides" data-for="noul">
+                <summary>Say what yes and no mean <small>optional</small></summary>
+                <div class="try-pair">
+                  <label>Yes means<input type="text" name="yes" maxlength="120" autocomplete="off"></label>
+                  <label>No means<input type="text" name="no" maxlength="120" autocomplete="off"></label>
+                </div>
+              </details>
+              <label class="try-field" data-for="choice" hidden>Options <small>one per line, 2 to 8</small>
+                <textarea name="options" rows="4"></textarea>
+              </label>
+              <label class="try-field" data-for="score" hidden>Levels <small>one per line, lowest first, 2 to 10</small>
+                <textarea name="levels" rows="5"></textarea>
+              </label>
+
+              <div class="try-go">
+                <button class="btn btn-primary" type="submit" id="tryAsk">Ask Pranata V1</button>
+                <p class="try-left" id="tryLeft" aria-live="polite"></p>
+              </div>
+            </div>
+          </form>
+
+          <section class="try-out" id="tryOut" aria-live="polite" aria-labelledby="tryOutTitle">
+            <div class="demo-head">
+              <span class="demo-id"><code>pranata-v1</code></span>
+              <span class="try-out-title" id="tryOutTitle">Answer</span>
+            </div>
+            <div class="try-result" id="tryResult">
+              <p class="try-wait">Ask a question and the answer shows here.</p>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================= decision -->
+    <!-- Pranata V1 stands apart from the roleplay models: its own price,
+         its own plans, and not in the table or the estimator below. -->
+    <section class="win" id="decision" aria-labelledby="decTitle" data-win="Plans">
+      <div class="win-title"><img src="/img/icons/decision.svg" alt="" width="16" height="16"><span class="win-name">Pranata V1 plans</span></div>
+      <div class="win-body">
+        <div class="sec-head sec-head-split">
+          <div>
+            <h2 class="sec-title" id="decTitle">Three kinds of decision. Simple plans.</h2>
+            <p class="sec-lede">Ask a question and give the options; Pranata answers with a probability for each one. It has a price and plans of its own, apart from the roleplay models.</p>
           </div>
-        </form>
+          <a class="btn" href="/models#pranata-v1">Specs &amp; performance</a>
+        </div>
 
-        <section class="try-out card" id="tryOut" aria-live="polite" aria-labelledby="tryOutTitle">
-          <div class="demo-head">
-            <span class="demo-id"><span class="demo-dot" aria-hidden="true"></span><code>pranata-v1</code></span>
-            <span class="demo-note" id="tryOutTitle">Answer</span>
+        <div class="kinds">
+          <article class="kind">
+            <img src="/img/icons/ok.svg" alt="" width="32" height="32">
+            <h3>Yes or no</h3>
+            <p>A straight answer to a straight question, and how sure it is.</p>
+          </article>
+          <article class="kind">
+            <img src="/img/icons/decision.svg" alt="" width="32" height="32">
+            <h3>Pick one</h3>
+            <p>List the options; get the one that fits, with a probability for every option.</p>
+          </article>
+          <article class="kind">
+            <img src="/img/icons/models.svg" alt="" width="32" height="32">
+            <h3>Score it</h3>
+            <p>A score on your own scale, and the weight behind each step of it.</p>
+          </article>
+        </div>
+
+        <dl class="facts">
+          <div>
+            <dt>Plans from</dt>
+            <dd><span data-price="decision:welcome">$1</span> <small>/ 30 days</small></dd>
+            <p>10,000 requests to start.</p>
           </div>
-          <div class="try-result" id="tryResult">
-            <p class="try-wait">Ask a question and the answer shows here.</p>
+          <div>
+            <dt>Questions per call</dt>
+            <dd>Up to 256</dd>
+            <p>Within the 2,048 tokens.</p>
           </div>
-        </section>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================================================= decision -->
-  <!-- Pranata V1 stands apart from the roleplay models: its own price,
-       its own plans, and not in the table or the estimator below. -->
-  <section class="section section-dec" id="decision" aria-labelledby="decTitle">
-    <div class="wrap">
-      <div class="sec-head sec-head-split">
-        <div>
-          <p class="kicker kicker-dec">Pranata V1</p>
-          <h2 class="sec-title" id="decTitle">Three kinds of decision. Simple plans.</h2>
-          <p class="sec-lede">Ask a question and give the options; Pranata answers with a probability for each one. It has a price and plans of its own, apart from the roleplay models.</p>
-        </div>
-        <a class="btn btn-ghost" href="/models#pranata-v1">Specs &amp; performance <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-      </div>
-
-      <div class="kinds">
-        <article class="kind">
-          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-yesno"/></svg></span>
-          <h3>Yes or no</h3>
-          <p>A straight answer to a straight question, and how sure it is.</p>
-        </article>
-        <article class="kind">
-          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-pick"/></svg></span>
-          <h3>Pick one</h3>
-          <p>List the options; get the one that fits, with a probability for every option.</p>
-        </article>
-        <article class="kind">
-          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-score"/></svg></span>
-          <h3>Score it</h3>
-          <p>A score on your own scale, and the weight behind each step of it.</p>
-        </article>
-      </div>
-
-      <dl class="facts">
-        <div>
-          <dt>Plans from</dt>
-          <dd><span data-price="decision:welcome">$1</span> <small>/ 30 days</small></dd>
-          <p>10,000 requests to start.</p>
-        </div>
-        <div>
-          <dt>Questions per call</dt>
-          <dd>Up to 256</dd>
-          <p>Within the 2,048 tokens.</p>
-        </div>
-        <div>
-          <dt>Longest call</dt>
-          <dd>2,048 <small>tokens</small></dd>
-          <p>State and questions together.</p>
-        </div>
-        <div>
-          <dt>One plan request</dt>
-          <dd>1,024 <small>tokens</small></dd>
-          <p>A call of 1,025 to 2,048 tokens counts as two.</p>
-        </div>
-      </dl>
-
-      <div class="plans-head" id="plans">
-        <h3 class="sub-title">Plans <small>30 days · Pranata V1 only</small></h3>
-        <p>A plan's requests are used first; after that, calls come out of your balance.</p>
-      </div>
-      <div class="plans">
-        <article class="plan" id="plan-welcome" data-requests="10000">
-          <div class="plan-top"><h4>Welcome</h4><span class="plan-best" hidden>Best value</span></div>
-          <p class="plan-price" data-price="decision:welcome">$1</p>
-          <p class="plan-reqs"><strong>10,000</strong> requests</p>
-          <p class="plan-value" hidden><span class="plan-meter" aria-hidden="true"><span></span></span><span class="plan-per"></span></p>
-          <a class="btn btn-ghost btn-sm" href="/account/plans?plan=welcome">Buy</a>
-        </article>
-        <article class="plan" id="plan-expand" data-requests="150000">
-          <div class="plan-top"><h4>Expand</h4><span class="plan-best" hidden>Best value</span></div>
-          <p class="plan-price" data-price="decision:expand">$5</p>
-          <p class="plan-reqs"><strong>150,000</strong> requests</p>
-          <p class="plan-offer"><strong>Opening offer:</strong> 90 days for the price of 30, for the first 1,000 people.</p>
-          <p class="plan-value" hidden><span class="plan-meter" aria-hidden="true"><span></span></span><span class="plan-per"></span></p>
-          <a class="btn btn-ghost btn-sm" href="/account/plans?plan=expand">Buy</a>
-        </article>
-        <article class="plan" id="plan-huh" data-requests="250000">
-          <div class="plan-top"><h4>Huh?</h4><span class="plan-best" hidden>Best value</span></div>
-          <p class="plan-price" data-price="decision:huh">$10</p>
-          <p class="plan-reqs"><strong>250,000</strong> requests</p>
-          <p class="plan-value" hidden><span class="plan-meter" aria-hidden="true"><span></span></span><span class="plan-per"></span></p>
-          <a class="btn btn-ghost btn-sm" href="/account/plans?plan=huh">Buy</a>
-        </article>
-        <article class="plan" id="plan-question" data-requests="750000">
-          <div class="plan-top"><h4>Question about decision?</h4><span class="plan-best" hidden>Best value</span></div>
-          <p class="plan-price" data-price="decision:question">$25</p>
-          <p class="plan-reqs"><strong>750,000</strong> requests</p>
-          <p class="plan-offer" data-offer-until="2026-11-01T00:00:00+07:00"><strong>Opening offer:</strong> 90 days for the price of 30, until 31 October.</p>
-          <p class="plan-value" hidden><span class="plan-meter" aria-hidden="true"><span></span></span><span class="plan-per"></span></p>
-          <a class="btn btn-ghost btn-sm" href="/account/plans?plan=question">Buy</a>
-        </article>
-        <article class="plan" id="plan-enough" data-requests="2000000">
-          <div class="plan-top"><h4>Is this even enough for you?</h4><span class="plan-best" hidden>Best value</span></div>
-          <p class="plan-price" data-price="decision:enough">$50</p>
-          <p class="plan-reqs"><strong>2,000,000</strong> requests</p>
-          <p class="plan-value" hidden><span class="plan-meter" aria-hidden="true"><span></span></span><span class="plan-per"></span></p>
-          <a class="btn btn-ghost btn-sm" href="/account/plans?plan=enough">Buy</a>
-        </article>
-      </div>
-
-      <div class="dec-foot">
-        <p class="fineprint">Plans cover Pranata V1 only — the roleplay models are priced per token.</p>
-        <div class="cta">
-          <a class="btn btn-dec" href="/account/signup" data-signed-out><svg class="ico" aria-hidden="true"><use href="#i-user"/></svg>Create an account</a>
-          <a class="btn btn-ghost" href="/account" data-signed-out>Sign in</a>
-          <a class="btn btn-dec" href="/account/plans" data-signed-in hidden><svg class="ico" aria-hidden="true"><use href="#i-user"/></svg>Choose a plan</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========================================================= models -->
-  <!-- drive:start -->
-  <!-- ============================================================ drive -->
-  <!-- Zeiko Drive, the file storage on the same account: its own page is /drive. -->
-  <section class="section" id="drive" aria-labelledby="driveTitle">
-    <div class="wrap drive-split">
-      <div class="drive-copy">
-        <p class="kicker">Zeiko Drive</p>
-        <h2 class="sec-title" id="driveTitle">Your files, cheap, fast and private.</h2>
-        <p class="sec-lede">Full-speed uploads and downloads and sharing by link, on the same Zeiko Account. Monthly plans in rupiah.</p>
-        <ul class="ticks">
-          <li>No speed caps on uploads or downloads</li>
-          <li>Share with a link, a password or an end date</li>
-          <li>Only you see your files</li>
-        </ul>
-        <div class="cta">
-          <a class="btn btn-primary" href="https://drive.zeiko.biz.id">Open Drive <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-          <a class="btn btn-ghost" href="/drive">Plans &amp; features</a>
-        </div>
-        <p class="hero-signin" data-signed-out>New here? <a href="/account/signup?next=/dashboard">Create an account</a></p>
-      </div>
-      <figure class="drv" aria-label="Zeiko Drive, drawn as an example">
-        <div class="drv-bar">
-          <span class="drv-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="drv-path">My Drive <b aria-hidden="true">/</b> <strong>Trip to Bali</strong></span>
-          <span class="demo-note">Illustration</span>
-        </div>
-        <ul class="drv-list">
-          <li class="drv-row drv-folder"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h3.6l2 2.2h7.4A2.5 2.5 0 0 1 21 9.7v7.8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5Z"/></svg></span><span class="drv-name">Itinerary</span><span class="drv-size">12 files</span></li>
-          <li class="drv-row drv-image"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="m4.5 18 5-5 3.5 3.5 2.5-2.5 4 4"/></svg></span><span class="drv-name">sunset-kuta.jpg</span><span class="drv-tag"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.2 1.2"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.2-1.2"/></svg>Shared</span><span class="drv-size">4.2 MB</span></li>
-          <li class="drv-row drv-film"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="2.5"/><path d="m10.2 9.4 4.6 2.6-4.6 2.6Z"/></svg></span><span class="drv-name">drone-uluwatu.mp4</span><span class="drv-size">1.3 GB</span></li>
-          <li class="drv-row drv-doc"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h6.5L18.5 8.5v10.5A1.5 1.5 0 0 1 17 20.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5Z"/><path d="M13.5 3.5v5h5M8.5 13h7M8.5 16.5h5"/></svg></span><span class="drv-name">tickets.pdf</span><span class="drv-size">380 KB</span></li>
-        </ul>
-        <div class="drv-up">
-          <span class="drv-ico drv-ico-up"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V5M7.5 9.5 12 5l4.5 4.5M5 19h14"/></svg></span>
-          <span class="drv-up-text"><span>Uploading clips.zip</span><span class="drv-up-bar" aria-hidden="true"><i></i></span></span>
-          <strong>68%</strong>
-        </div>
-        <div class="drv-meter">
-          <span class="drv-ico drv-ico-cloud"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 18.5h9.8a3.7 3.7 0 0 0 .5-7.4 5.6 5.6 0 0 0-10.9-1.3A4.4 4.4 0 0 0 7.5 18.5Z"/></svg></span>
-          <span class="drv-meter-text"><small>Storage</small><span>38.4 GB of 200 GB</span></span>
-          <span class="drv-meter-bar" aria-hidden="true"><i></i></span>
-        </div>
-        <p class="drv-toast" aria-hidden="true"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.2 1.2"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.2-1.2"/></svg></span><span><strong>Link copied</strong><small>Expires in 7 days</small></span></p>
-      </figure>
-    </div>
-  </section>
-  <!-- drive:end -->
-
-  <section class="section section-tint" id="models" aria-labelledby="modelsTitle">
-    <div class="wrap">
-      <div class="sec-head">
-        <p class="kicker">Roleplay models</p>
-        <h2 class="sec-title" id="modelsTitle">Three roleplay models, priced by the token.</h2>
-        <p class="sec-lede">From safe-for-work to unrestricted. All three: 256K context, up to 32,000 output tokens, streaming. Pick by how much the model is allowed to say.</p>
-      </div>
-
-      <dl class="stats">
-        <div><dt>Models</dt><dd>3</dd></div>
-        <div><dt>Context</dt><dd>256K</dd></div>
-        <div><dt>Max output</dt><dd>32K</dd></div>
-        <div><dt>Pricing bands</dt><dd>3</dd></div>
-      </dl>
-
-      <div class="grid models">
-        <article class="card model">
-          <div class="model-top">
-            <span class="badge badge-ok">SFW</span>
-            <span class="heat heat-1" role="img" aria-label="Content level 1 of 3"><i></i><i></i><i></i></span>
+          <div>
+            <dt>Longest call</dt>
+            <dd>2,048 <small>tokens</small></dd>
+            <p>State and questions together.</p>
           </div>
-          <h3><a href="/models#jagad-512b-v1">Jagad 512B V1</a></h3>
-          <p class="model-id"><code>jagad-512b-v1</code></p>
-          <p class="model-desc">Safe-for-work roleplay. The default pick when you are not sure where to start.</p>
-          <dl class="model-rates">
-            <div><dt>Input</dt><dd data-price="jagad-512b-v1:input">$0.35</dd></div>
-            <div><dt>Output</dt><dd data-price="jagad-512b-v1:out">$1.50</dd></div>
-          </dl>
-          <p class="model-unit">USD per 1M tokens · standard band</p>
-          <a class="model-more" href="/models#jagad-512b-v1">Specs, rates &amp; performance <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-        </article>
-        <article class="card model">
-          <div class="model-top">
-            <span class="badge badge-warn">Adult</span>
-            <span class="heat heat-2" role="img" aria-label="Content level 2 of 3"><i></i><i></i><i></i></span>
+          <div>
+            <dt>One plan request</dt>
+            <dd>1,024 <small>tokens</small></dd>
+            <p>A call of 1,025 to 2,048 tokens counts as two.</p>
           </div>
-          <h3><a href="/models#asmarandana-512b-v1">Asmarandana 512B V1</a></h3>
-          <p class="model-id"><code>asmarandana-512b-v1</code></p>
-          <p class="model-desc">Adult roleplay, for callers who gate their own users.</p>
-          <dl class="model-rates">
-            <div><dt>Input</dt><dd data-price="asmarandana-512b-v1:input">$0.50</dd></div>
-            <div><dt>Output</dt><dd data-price="asmarandana-512b-v1:out">$2.00</dd></div>
-          </dl>
-          <p class="model-unit">USD per 1M tokens · standard band</p>
-          <a class="model-more" href="/models#asmarandana-512b-v1">Specs, rates &amp; performance <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-        </article>
-        <article class="card model">
-          <div class="model-top">
-            <span class="badge badge-err">Unrestricted</span>
-            <span class="heat heat-3" role="img" aria-label="Content level 3 of 3"><i></i><i></i><i></i></span>
-          </div>
-          <h3><a href="/models#wisanggeni-512b-v1">Wisanggeni 512B V1</a></h3>
-          <p class="model-id"><code>wisanggeni-512b-v1</code></p>
-          <p class="model-desc">Unrestricted roleplay. The highest rate of the three, because it is the one that rarely says no.</p>
-          <dl class="model-rates">
-            <div><dt>Input</dt><dd data-price="wisanggeni-512b-v1:input">$0.80</dd></div>
-            <div><dt>Output</dt><dd data-price="wisanggeni-512b-v1:out">$4.00</dd></div>
-          </dl>
-          <p class="model-unit">USD per 1M tokens · standard band</p>
-          <a class="model-more" href="/models#wisanggeni-512b-v1">Specs, rates &amp; performance <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-        </article>
-      </div>
+        </dl>
 
-      <div class="split">
-        <div class="split-copy">
-          <h3>The output rate follows thinking effort</h3>
-          <p>Choose how hard the model thinks on each request, and the output rate follows: cheaper with no thinking, higher only at <code>max</code>. Input and cache read stay the same at every effort.</p>
+        <div class="plans-head" id="plans">
+          <h3 class="sub-title">Plans <small>30 days, Pranata V1 only</small></h3>
+          <p>A plan's requests are used first; after that, calls come out of your balance.</p>
+        </div>
+        <div class="plans">
+          <article class="plan" id="plan-welcome" data-requests="10000">
+            <div class="plan-top"><h4>Welcome</h4><span class="plan-best" hidden>Best value</span></div>
+            <p class="plan-price" data-price="decision:welcome">$1</p>
+            <p class="plan-reqs"><strong>10,000</strong> requests</p>
+            <p class="plan-value" hidden><span class="plan-meter" aria-hidden="true"><span></span></span><span class="plan-per"></span></p>
+            <a class="btn btn-sm" href="/account/plans?plan=welcome">Buy</a>
+          </article>
+          <article class="plan" id="plan-expand" data-requests="150000">
+            <div class="plan-top"><h4>Expand</h4><span class="plan-best" hidden>Best value</span></div>
+            <p class="plan-price" data-price="decision:expand">$5</p>
+            <p class="plan-reqs"><strong>150,000</strong> requests</p>
+            <p class="plan-offer"><strong>Opening offer:</strong> 90 days for the price of 30, for the first 1,000 people.</p>
+            <p class="plan-value" hidden><span class="plan-meter" aria-hidden="true"><span></span></span><span class="plan-per"></span></p>
+            <a class="btn btn-sm" href="/account/plans?plan=expand">Buy</a>
+          </article>
+          <article class="plan" id="plan-huh" data-requests="250000">
+            <div class="plan-top"><h4>Huh?</h4><span class="plan-best" hidden>Best value</span></div>
+            <p class="plan-price" data-price="decision:huh">$10</p>
+            <p class="plan-reqs"><strong>250,000</strong> requests</p>
+            <p class="plan-value" hidden><span class="plan-meter" aria-hidden="true"><span></span></span><span class="plan-per"></span></p>
+            <a class="btn btn-sm" href="/account/plans?plan=huh">Buy</a>
+          </article>
+          <article class="plan" id="plan-question" data-requests="750000">
+            <div class="plan-top"><h4>Question about decision?</h4><span class="plan-best" hidden>Best value</span></div>
+            <p class="plan-price" data-price="decision:question">$25</p>
+            <p class="plan-reqs"><strong>750,000</strong> requests</p>
+            <p class="plan-offer" data-offer-until="2026-11-01T00:00:00+07:00"><strong>Opening offer:</strong> 90 days for the price of 30, until 31 October.</p>
+            <p class="plan-value" hidden><span class="plan-meter" aria-hidden="true"><span></span></span><span class="plan-per"></span></p>
+            <a class="btn btn-sm" href="/account/plans?plan=question">Buy</a>
+          </article>
+          <article class="plan" id="plan-enough" data-requests="2000000">
+            <div class="plan-top"><h4>Is this even enough for you?</h4><span class="plan-best" hidden>Best value</span></div>
+            <p class="plan-price" data-price="decision:enough">$50</p>
+            <p class="plan-reqs"><strong>2,000,000</strong> requests</p>
+            <p class="plan-value" hidden><span class="plan-meter" aria-hidden="true"><span></span></span><span class="plan-per"></span></p>
+            <a class="btn btn-sm" href="/account/plans?plan=enough">Buy</a>
+          </article>
+        </div>
+
+        <div class="dec-foot">
+          <p class="fineprint">Plans cover Pranata V1 only — the roleplay models are priced per token.</p>
+          <div class="cta">
+            <a class="btn btn-primary" href="/account/signup" data-signed-out>Create an account</a>
+            <a class="btn" href="/account" data-signed-out>Sign in</a>
+            <a class="btn btn-primary" href="/account/plans" data-signed-in hidden>Choose a plan</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- drive:start -->
+    <!-- ============================================================ drive -->
+    <!-- Zeiko Drive, the file storage on the same account: its own page is /drive. -->
+    <section class="win" id="drive" aria-labelledby="driveTitle" data-win="Zeiko Drive">
+      <div class="win-title"><img src="/img/icons/drive.svg" alt="" width="16" height="16"><span class="win-name">Zeiko Drive</span></div>
+      <div class="win-body drive-split">
+        <div class="drive-copy">
+          <h2 class="sec-title" id="driveTitle">Your files, cheap, fast and private.</h2>
+          <p class="sec-lede">Full-speed uploads and downloads and sharing by link, on the same Zeiko Account. Monthly plans in rupiah.</p>
           <ul class="ticks">
-            <li>Works with the official OpenAI SDKs</li>
-            <li>256K context, up to 32,000 output tokens</li>
-            <li>Safe-for-work, adult and unrestricted</li>
+            <li>No speed caps on uploads or downloads</li>
+            <li>Share with a link, a password or an end date</li>
+            <li>Only you see your files</li>
           </ul>
           <div class="cta">
-            <a class="btn btn-primary" href="#contact">Request a key</a>
-            <a class="btn btn-ghost" href="/models">Compare every model</a>
+            <a class="btn btn-primary" href="https://drive.zeiko.biz.id">Open Drive</a>
+            <a class="btn" href="/drive">Plans &amp; features</a>
           </div>
+          <p class="hero-signin" data-signed-out>New here? <a href="/account/signup?next=/dashboard">Create an account</a></p>
         </div>
-
-        <figure class="card rate-card" aria-labelledby="rateCap">
-          <figcaption id="rateCap">
-            <span class="rate-kicker">Output rate by thinking effort</span>
-            <span class="rate-sub"><code>jagad-512b-v1</code> · USD per 1M tokens</span>
-          </figcaption>
-          <ul class="bars">
-            <li>
-              <span class="bar-label"><code>none</code> · <code>minimal</code></span>
-              <span class="bar"><span style="width:60%"></span></span>
-              <strong data-price="jagad-512b-v1:out-none">$1.20</strong>
-            </li>
-            <li>
-              <span class="bar-label"><code>low</code> · <code>medium</code> · <code>high</code></span>
-              <span class="bar"><span style="width:75%"></span></span>
-              <strong data-price="jagad-512b-v1:out">$1.50</strong>
-            </li>
-            <li>
-              <span class="bar-label"><code>max</code></span>
-              <span class="bar"><span style="width:100%"></span></span>
-              <strong data-price="jagad-512b-v1:out-max">$2.00</strong>
-            </li>
+        <figure class="drv win" aria-label="Zeiko Drive, drawn as an example">
+          <div class="drv-bar">
+            <img src="/img/icons/drive.svg" alt="" width="16" height="16">
+            <span class="drv-path">My Drive <b aria-hidden="true">\</b> <strong>Trip to Bali</strong></span>
+            <span class="demo-note">Illustration</span>
+          </div>
+          <ul class="drv-list">
+            <li class="drv-row"><img src="/img/icons/drive.svg" alt="" width="16" height="16"><span class="drv-name">Itinerary</span><span class="drv-size">12 files</span></li>
+            <li class="drv-row"><img src="/img/icons/image.svg" alt="" width="16" height="16"><span class="drv-name">sunset-kuta.jpg</span><span class="drv-tag">Shared</span><span class="drv-size">4.2 MB</span></li>
+            <li class="drv-row"><img src="/img/icons/film.svg" alt="" width="16" height="16"><span class="drv-name">drone-uluwatu.mp4</span><span class="drv-size">1.3 GB</span></li>
+            <li class="drv-row"><img src="/img/icons/page.svg" alt="" width="16" height="16"><span class="drv-name">tickets.pdf</span><span class="drv-size">380 KB</span></li>
           </ul>
-          <p class="rate-foot">
-            Input <strong data-price="jagad-512b-v1:input">$0.35</strong> and cache read
-            <strong data-price="jagad-512b-v1:cache">$0.10</strong> stay the same at every effort.
-          </p>
+          <div class="drv-up">
+            <span class="drv-up-text"><span>Uploading clips.zip</span><span class="drv-up-bar" aria-hidden="true"><i></i></span></span>
+            <strong>68%</strong>
+          </div>
+          <div class="drv-meter">
+            <span class="drv-meter-text"><small>Storage</small><span>38.4 GB of 200 GB</span></span>
+            <span class="drv-meter-bar" aria-hidden="true"><i></i></span>
+          </div>
+          <p class="drv-toast" aria-hidden="true"><img src="/img/icons/link.svg" alt="" width="16" height="16"><span><strong>Link copied</strong><small>Expires in 7 days</small></span></p>
         </figure>
       </div>
-    </div>
-  </section>
+    </section>
+    <!-- drive:end -->
 
-  <!-- ======================================================== pricing -->
-  <section class="section" id="pricing" aria-labelledby="pricingTitle">
-    <div class="wrap">
-      <div class="sec-head">
-        <p class="kicker">Pricing</p>
-        <h2 class="sec-title" id="pricingTitle">Roleplay pricing</h2>
-        <p class="sec-lede">USD per million tokens. The last three columns are the output bands — which one applies is decided by the thinking effort on your request.</p>
-      </div>
-
-      <div class="table-scroll">
-        <table class="table table-rates" id="rateTable">
-          <thead>
-            <tr>
-              <th scope="col">Model</th>
-              <th scope="col">Input</th>
-              <th scope="col">Cache read</th>
-              <th scope="col">Output</th>
-              <th scope="col">Max thinking</th>
-              <th scope="col">No thinking</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr data-model="jagad-512b-v1">
-              <th scope="row"><i class="dot dot-ok" aria-hidden="true"></i>jagad-512b-v1</th>
-              <td data-price="jagad-512b-v1:input">$0.35</td>
-              <td data-price="jagad-512b-v1:cache">$0.10</td>
-              <td data-price="jagad-512b-v1:out">$1.50</td>
-              <td data-price="jagad-512b-v1:out-max">$2.00</td>
-              <td data-price="jagad-512b-v1:out-none">$1.20</td>
-            </tr>
-            <tr data-model="asmarandana-512b-v1">
-              <th scope="row"><i class="dot dot-warn" aria-hidden="true"></i>asmarandana-512b-v1</th>
-              <td data-price="asmarandana-512b-v1:input">$0.50</td>
-              <td data-price="asmarandana-512b-v1:cache">$0.10</td>
-              <td data-price="asmarandana-512b-v1:out">$2.00</td>
-              <td data-price="asmarandana-512b-v1:out-max">$2.65</td>
-              <td data-price="asmarandana-512b-v1:out-none">$1.60</td>
-            </tr>
-            <tr data-model="wisanggeni-512b-v1">
-              <th scope="row"><i class="dot dot-err" aria-hidden="true"></i>wisanggeni-512b-v1</th>
-              <td data-price="wisanggeni-512b-v1:input">$0.80</td>
-              <td data-price="wisanggeni-512b-v1:cache">$0.20</td>
-              <td data-price="wisanggeni-512b-v1:out">$4.00</td>
-              <td data-price="wisanggeni-512b-v1:out-max">$6.00</td>
-              <td data-price="wisanggeni-512b-v1:out-none">$3.50</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="price-notes">
-        <div class="bands-wrap">
-          <h3>Which band applies?</h3>
-          <ol class="bands">
-            <li>
-              <span class="band-name">No thinking</span>
-              <span class="band-efforts"><code>none</code> <code>minimal</code></span>
-            </li>
-            <li>
-              <span class="band-name">Standard <small>“Output”</small></span>
-              <span class="band-efforts"><code>low</code> <code>medium</code> <code>high</code></span>
-            </li>
-            <li>
-              <span class="band-name">Max thinking</span>
-              <span class="band-efforts"><code>max</code></span>
-            </li>
-          </ol>
-          <p class="fineprint">Reasoning tokens count as output tokens at the band's output rate.</p>
+    <!-- ========================================================= models -->
+    <section class="win" id="models" aria-labelledby="modelsTitle" data-win="Roleplay">
+      <div class="win-title"><img src="/img/icons/roleplay.svg" alt="" width="16" height="16"><span class="win-name">Roleplay models</span></div>
+      <div class="win-body">
+        <div class="sec-head">
+          <h2 class="sec-title" id="modelsTitle">Three roleplay models, priced by the token.</h2>
+          <p class="sec-lede">From safe-for-work to unrestricted. All three: 256K context, up to 32,000 output tokens, streaming. Pick by how much the model is allowed to say.</p>
         </div>
-        <div class="card refusal">
-          <h3>Refusals</h3>
-          <p class="refusal-price"><strong data-price="refusal">$0.05</strong> <small>flat</small></p>
-          <p>A refused request costs a flat fee, in place of its token price.</p>
+
+        <dl class="stats">
+          <div><dt>Models</dt><dd>3</dd></div>
+          <div><dt>Context</dt><dd>256K</dd></div>
+          <div><dt>Max output</dt><dd>32K</dd></div>
+          <div><dt>Pricing bands</dt><dd>3</dd></div>
+        </dl>
+
+        <div class="grid models">
+          <article class="card model">
+            <div class="model-top">
+              <span class="badge badge-ok">SFW</span>
+              <span class="heat heat-1" role="img" aria-label="Content level 1 of 3"><i></i><i></i><i></i></span>
+            </div>
+            <h3><a href="/models#jagad-512b-v1">Jagad 512B V1</a></h3>
+            <p class="model-id"><code>jagad-512b-v1</code></p>
+            <p class="model-desc">Safe-for-work roleplay. The default pick when you are not sure where to start.</p>
+            <dl class="model-rates">
+              <div><dt>Input</dt><dd data-price="jagad-512b-v1:input">$0.35</dd></div>
+              <div><dt>Output</dt><dd data-price="jagad-512b-v1:out">$1.50</dd></div>
+            </dl>
+            <p class="model-unit">USD per 1M tokens, standard band</p>
+            <a class="model-more" href="/models#jagad-512b-v1">Specs, rates &amp; performance</a>
+          </article>
+          <article class="card model">
+            <div class="model-top">
+              <span class="badge badge-warn">Adult</span>
+              <span class="heat heat-2" role="img" aria-label="Content level 2 of 3"><i></i><i></i><i></i></span>
+            </div>
+            <h3><a href="/models#asmarandana-512b-v1">Asmarandana 512B V1</a></h3>
+            <p class="model-id"><code>asmarandana-512b-v1</code></p>
+            <p class="model-desc">Adult roleplay, for callers who gate their own users.</p>
+            <dl class="model-rates">
+              <div><dt>Input</dt><dd data-price="asmarandana-512b-v1:input">$0.50</dd></div>
+              <div><dt>Output</dt><dd data-price="asmarandana-512b-v1:out">$2.00</dd></div>
+            </dl>
+            <p class="model-unit">USD per 1M tokens, standard band</p>
+            <a class="model-more" href="/models#asmarandana-512b-v1">Specs, rates &amp; performance</a>
+          </article>
+          <article class="card model">
+            <div class="model-top">
+              <span class="badge badge-err">Unrestricted</span>
+              <span class="heat heat-3" role="img" aria-label="Content level 3 of 3"><i></i><i></i><i></i></span>
+            </div>
+            <h3><a href="/models#wisanggeni-512b-v1">Wisanggeni 512B V1</a></h3>
+            <p class="model-id"><code>wisanggeni-512b-v1</code></p>
+            <p class="model-desc">Unrestricted roleplay. The highest rate of the three, because it is the one that rarely says no.</p>
+            <dl class="model-rates">
+              <div><dt>Input</dt><dd data-price="wisanggeni-512b-v1:input">$0.80</dd></div>
+              <div><dt>Output</dt><dd data-price="wisanggeni-512b-v1:out">$4.00</dd></div>
+            </dl>
+            <p class="model-unit">USD per 1M tokens, standard band</p>
+            <a class="model-more" href="/models#wisanggeni-512b-v1">Specs, rates &amp; performance</a>
+          </article>
         </div>
-      </div>
 
-      <!-- Needs JavaScript to add up; without it, the table above says everything. -->
-      <form class="card calc" id="calc" hidden aria-labelledby="calcTitle">
-        <div class="calc-head">
-          <h3 id="calcTitle">Estimate the cost</h3>
-          <p>Rates come straight from the table above.</p>
-        </div>
-        <div class="calc-grid">
-          <label>Model
-            <select name="model"></select>
-          </label>
-          <label>Thinking effort
-            <select name="effort">
-              <option value="out-none">none</option>
-              <option value="out-none">minimal</option>
-              <option value="out">low</option>
-              <option value="out" selected>medium</option>
-              <option value="out">high</option>
-              <option value="out-max">max</option>
-            </select>
-          </label>
-          <label>Input tokens per request
-            <input type="number" name="input" min="0" step="1" value="3000" inputmode="numeric">
-          </label>
-          <label>…of which cache reads
-            <input type="number" name="cached" min="0" step="1" value="0" inputmode="numeric">
-          </label>
-          <label>Output tokens per request
-            <input type="number" name="output" min="0" step="1" value="400" inputmode="numeric">
-          </label>
-          <label>Requests
-            <input type="number" name="requests" min="0" step="1" value="10000" inputmode="numeric">
-          </label>
-        </div>
-        <output class="calc-out" name="result" aria-live="polite">
-          <span><small>Per request</small><strong data-out="one">–</strong></span>
-          <span><small>Total</small><strong data-out="all">–</strong></span>
-        </output>
-        <p class="calc-note">An estimate at list rates. Output includes reasoning tokens.</p>
-      </form>
-    </div>
-  </section>
-
-  <!-- ============================================================ faq -->
-  <section class="section section-tint" id="faq" aria-labelledby="faqTitle">
-    <div class="wrap faq-layout">
-      <div class="faq-intro">
-        <p class="kicker">FAQ</p>
-        <h2 class="sec-title" id="faqTitle">Questions, answered</h2>
-        <p class="sec-lede">Something else? Write to <a href="mailto:admin@zeiko.biz.id">admin@zeiko.biz.id</a>.</p>
-      </div>
-
-      <div class="faq-list">
-        <details class="faq" open>
-          <summary>How do I get Pranata V1?</summary>
-          <p><a href="/account/signup">Create an account</a> with your email or a one-click sign-in, then buy a plan or add a balance. Your key is waiting on your account page.</p>
-        </details>
-
-        <details class="faq">
-          <summary>What counts as one request on a Decision plan?</summary>
-          <p>A call of up to 1,024 tokens is one request; a call of 1,025 to 2,048 tokens is two. No call can be longer than 2,048 tokens.</p>
-        </details>
-
-        <details class="faq">
-          <summary>Does a Decision plan cover the roleplay models?</summary>
-          <p>No. Plans are for <a href="#decision">Pranata V1</a> only; Jagad, Asmarandana and Wisanggeni are priced per token.</p>
-        </details>
-
-        <details class="faq">
-          <summary>Which roleplay model should I pick?</summary>
-          <p><strong>Jagad</strong> for safe-for-work roleplay, and when you are not sure. <strong>Asmarandana</strong> for adult roleplay, if you gate your own users. <strong>Wisanggeni</strong> when you need a model that rarely says no — it carries the highest rate. <a href="/models">Compare them on one page.</a></p>
-        </details>
-
-        <details class="faq">
-          <summary>How is the cost of a roleplay request worked out?</summary>
-          <p>Per token, at the rates in the pricing table. Input, cache-read and output tokens are priced separately, and the output rate comes from the band your <code>reasoning_effort</code> lands in. Add them up and divide by a million.</p>
-        </details>
-
-        <details class="faq">
-          <summary>Do reasoning tokens count?</summary>
-          <p>Yes, as output tokens, at the output rate of the band the request landed in. Asking for less thinking lowers both the rate and the token count.</p>
-        </details>
-
-        <details class="faq">
-          <summary>What does a refused request cost?</summary>
-          <p><span data-price="refusal">$0.05</span> flat for that request, not the price of a full answer.</p>
-        </details>
-      </div>
-    </div>
-  </section>
-
-  <!-- ======================================================== contact -->
-  <section class="section" id="contact" aria-labelledby="contactTitle">
-    <div class="wrap">
-      <div class="sec-head center">
-        <p class="kicker">Get started</p>
-        <h2 class="sec-title" id="contactTitle">Two ways in</h2>
-        <p class="sec-lede">Pranata V1 is yours as soon as you have an account. For the roleplay models, ask for a key.</p>
-      </div>
-
-      <div class="paths">
-        <article class="path path-dec">
-          <span class="path-icon" aria-hidden="true"><svg class="ico"><use href="#i-spark"/></svg></span>
-          <h3>Pranata V1</h3>
-          <p>No key request needed. Create an account with your email or a one-click sign-in, buy a plan or add a balance, and your key is waiting on your account page.</p>
-          <div class="cta">
-            <a class="btn btn-dec" href="/account/signup" data-signed-out>Create an account</a>
-            <a class="btn btn-ghost" href="/account" data-signed-out>Sign in</a>
-            <a class="btn btn-dec" href="/account/plans" data-signed-in hidden>Choose a plan</a>
+        <div class="split">
+          <div class="split-copy">
+            <h3>The output rate follows thinking effort</h3>
+            <p>Choose how hard the model thinks on each request, and the output rate follows: cheaper with no thinking, higher only at <code>max</code>. Input and cache read stay the same at every effort.</p>
+            <ul class="ticks">
+              <li>Works with the official OpenAI SDKs</li>
+              <li>256K context, up to 32,000 output tokens</li>
+              <li>Safe-for-work, adult and unrestricted</li>
+            </ul>
+            <div class="cta">
+              <a class="btn btn-primary" href="#contact">Request a key</a>
+              <a class="btn" href="/models">Compare every model</a>
+            </div>
           </div>
-        </article>
-        <article class="path">
-          <span class="path-icon" aria-hidden="true"><svg class="ico"><use href="#i-chat"/></svg></span>
-          <h3>Roleplay models</h3>
-          <p>Tell us which models you want and roughly what volume you expect. Your key arrives with everything you need to connect.</p>
-          <p class="path-foot"><svg class="ico" aria-hidden="true"><use href="#i-mail"/></svg>admin@zeiko.biz.id</p>
-          <div class="cta">
-            <a class="btn btn-primary" href="mailto:admin@zeiko.biz.id?subject=ZeikoAI%20API%20key%20request">Request a key</a>
-            <a class="btn btn-ghost" href="/models">Review the models</a>
+
+          <figure class="card rate-card" aria-labelledby="rateCap">
+            <figcaption id="rateCap">
+              <span class="rate-kicker">Output rate by thinking effort</span>
+              <span class="rate-sub"><code>jagad-512b-v1</code>, USD per 1M tokens</span>
+            </figcaption>
+            <ul class="bars">
+              <li>
+                <span class="bar-label"><code>none</code> <code>minimal</code></span>
+                <span class="bar"><span style="width:60%"></span></span>
+                <strong data-price="jagad-512b-v1:out-none">$1.20</strong>
+              </li>
+              <li>
+                <span class="bar-label"><code>low</code> <code>medium</code> <code>high</code></span>
+                <span class="bar"><span style="width:75%"></span></span>
+                <strong data-price="jagad-512b-v1:out">$1.50</strong>
+              </li>
+              <li>
+                <span class="bar-label"><code>max</code></span>
+                <span class="bar"><span style="width:100%"></span></span>
+                <strong data-price="jagad-512b-v1:out-max">$2.00</strong>
+              </li>
+            </ul>
+            <p class="rate-foot">
+              Input <strong data-price="jagad-512b-v1:input">$0.35</strong> and cache read
+              <strong data-price="jagad-512b-v1:cache">$0.10</strong> stay the same at every effort.
+            </p>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================== pricing -->
+    <section class="win" id="pricing" aria-labelledby="pricingTitle" data-win="Pricing">
+      <div class="win-title"><img src="/img/icons/pricing.svg" alt="" width="16" height="16"><span class="win-name">Roleplay pricing</span></div>
+      <div class="win-body">
+        <div class="sec-head">
+          <h2 class="sec-title" id="pricingTitle">Roleplay pricing</h2>
+          <p class="sec-lede">USD per million tokens. The last three columns are the output bands — which one applies is decided by the thinking effort on your request.</p>
+        </div>
+
+        <div class="table-scroll">
+          <table class="table table-rates" id="rateTable">
+            <thead>
+              <tr>
+                <th scope="col">Model</th>
+                <th scope="col">Input</th>
+                <th scope="col">Cache read</th>
+                <th scope="col">Output</th>
+                <th scope="col">Max thinking</th>
+                <th scope="col">No thinking</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-model="jagad-512b-v1">
+                <th scope="row"><i class="dot dot-ok" aria-hidden="true"></i>jagad-512b-v1</th>
+                <td data-price="jagad-512b-v1:input">$0.35</td>
+                <td data-price="jagad-512b-v1:cache">$0.10</td>
+                <td data-price="jagad-512b-v1:out">$1.50</td>
+                <td data-price="jagad-512b-v1:out-max">$2.00</td>
+                <td data-price="jagad-512b-v1:out-none">$1.20</td>
+              </tr>
+              <tr data-model="asmarandana-512b-v1">
+                <th scope="row"><i class="dot dot-warn" aria-hidden="true"></i>asmarandana-512b-v1</th>
+                <td data-price="asmarandana-512b-v1:input">$0.50</td>
+                <td data-price="asmarandana-512b-v1:cache">$0.10</td>
+                <td data-price="asmarandana-512b-v1:out">$2.00</td>
+                <td data-price="asmarandana-512b-v1:out-max">$2.65</td>
+                <td data-price="asmarandana-512b-v1:out-none">$1.60</td>
+              </tr>
+              <tr data-model="wisanggeni-512b-v1">
+                <th scope="row"><i class="dot dot-err" aria-hidden="true"></i>wisanggeni-512b-v1</th>
+                <td data-price="wisanggeni-512b-v1:input">$0.80</td>
+                <td data-price="wisanggeni-512b-v1:cache">$0.20</td>
+                <td data-price="wisanggeni-512b-v1:out">$4.00</td>
+                <td data-price="wisanggeni-512b-v1:out-max">$6.00</td>
+                <td data-price="wisanggeni-512b-v1:out-none">$3.50</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="price-notes">
+          <div class="bands-wrap">
+            <h3>Which band applies?</h3>
+            <ol class="bands">
+              <li>
+                <span class="band-name">No thinking</span>
+                <span class="band-efforts"><code>none</code> <code>minimal</code></span>
+              </li>
+              <li>
+                <span class="band-name">Standard <small>“Output”</small></span>
+                <span class="band-efforts"><code>low</code> <code>medium</code> <code>high</code></span>
+              </li>
+              <li>
+                <span class="band-name">Max thinking</span>
+                <span class="band-efforts"><code>max</code></span>
+              </li>
+            </ol>
+            <p class="fineprint">Reasoning tokens count as output tokens at the band's output rate.</p>
           </div>
-        </article>
-      </div>
-    </div>
-  </section>
+          <div class="card refusal">
+            <h3>Refusals</h3>
+            <p class="refusal-price"><strong data-price="refusal">$0.05</strong> <small>flat</small></p>
+            <p>A refused request costs a flat fee, in place of its token price.</p>
+          </div>
+        </div>
 
-</main>
+        <!-- Needs JavaScript to add up; without it, the table above says everything. -->
+        <form class="card calc" id="calc" hidden aria-labelledby="calcTitle">
+          <div class="calc-head">
+            <h3 id="calcTitle">Estimate the cost</h3>
+            <p>Rates come straight from the table above.</p>
+          </div>
+          <div class="calc-grid">
+            <label>Model
+              <select name="model"></select>
+            </label>
+            <label>Thinking effort
+              <select name="effort">
+                <option value="out-none">none</option>
+                <option value="out-none">minimal</option>
+                <option value="out">low</option>
+                <option value="out" selected>medium</option>
+                <option value="out">high</option>
+                <option value="out-max">max</option>
+              </select>
+            </label>
+            <label>Input tokens per request
+              <input type="number" name="input" min="0" step="1" value="3000" inputmode="numeric">
+            </label>
+            <label>…of which cache reads
+              <input type="number" name="cached" min="0" step="1" value="0" inputmode="numeric">
+            </label>
+            <label>Output tokens per request
+              <input type="number" name="output" min="0" step="1" value="400" inputmode="numeric">
+            </label>
+            <label>Requests
+              <input type="number" name="requests" min="0" step="1" value="10000" inputmode="numeric">
+            </label>
+          </div>
+          <output class="calc-out" name="result" aria-live="polite">
+            <span><small>Per request</small><strong data-out="one">–</strong></span>
+            <span><small>Total</small><strong data-out="all">–</strong></span>
+          </output>
+          <p class="calc-note">An estimate at list rates. Output includes reasoning tokens.</p>
+        </form>
+      </div>
+    </section>
 
-<footer class="footer">
-  <div class="wrap footer-grid">
-    <div class="footer-brand">
-      <a class="brand" href="/">
-        <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
-        <span class="brand-name">Zeiko</span>
-      </a>
-      <p>Pranata V1 for decisions, three roleplay models priced per million tokens, and Zeiko Drive for your files.</p>
-    </div>
-    <nav class="footer-cols" aria-label="Footer links">
-      <div>
-        <h2>AI models</h2>
-        <a href="#decision">Pranata V1</a>
-        <a href="#models">Roleplay models</a>
-        <a href="/models">Specs &amp; performance</a>
+    <!-- ============================================================ faq -->
+    <section class="win" id="faq" aria-labelledby="faqTitle" data-win="FAQ">
+      <div class="win-title"><img src="/img/icons/docs.svg" alt="" width="16" height="16"><span class="win-name">Help: questions</span></div>
+      <div class="win-body faq-layout">
+        <div class="faq-intro">
+          <h2 class="sec-title" id="faqTitle">Questions, answered</h2>
+          <p class="sec-lede">Something else? Write to <a href="mailto:admin@zeiko.biz.id">admin@zeiko.biz.id</a>.</p>
+        </div>
+
+        <div class="faq-list">
+          <details class="faq" open>
+            <summary>How do I get Pranata V1?</summary>
+            <p><a href="/account/signup">Create an account</a> with your email or a one-click sign-in, then buy a plan or add a balance. Your key is waiting on your account page.</p>
+          </details>
+
+          <details class="faq">
+            <summary>What counts as one request on a Decision plan?</summary>
+            <p>A call of up to 1,024 tokens is one request; a call of 1,025 to 2,048 tokens is two. No call can be longer than 2,048 tokens.</p>
+          </details>
+
+          <details class="faq">
+            <summary>Does a Decision plan cover the roleplay models?</summary>
+            <p>No. Plans are for <a href="#decision">Pranata V1</a> only; Jagad, Asmarandana and Wisanggeni are priced per token.</p>
+          </details>
+
+          <details class="faq">
+            <summary>Which roleplay model should I pick?</summary>
+            <p><strong>Jagad</strong> for safe-for-work roleplay, and when you are not sure. <strong>Asmarandana</strong> for adult roleplay, if you gate your own users. <strong>Wisanggeni</strong> when you need a model that rarely says no — it carries the highest rate. <a href="/models">Compare them on one page.</a></p>
+          </details>
+
+          <details class="faq">
+            <summary>How is the cost of a roleplay request worked out?</summary>
+            <p>Per token, at the rates in the pricing table. Input, cache-read and output tokens are priced separately, and the output rate comes from the band your <code>reasoning_effort</code> lands in. Add them up and divide by a million.</p>
+          </details>
+
+          <details class="faq">
+            <summary>Do reasoning tokens count?</summary>
+            <p>Yes, as output tokens, at the output rate of the band the request landed in. Asking for less thinking lowers both the rate and the token count.</p>
+          </details>
+
+          <details class="faq">
+            <summary>What does a refused request cost?</summary>
+            <p><span data-price="refusal">$0.05</span> flat for that request, not the price of a full answer.</p>
+          </details>
+        </div>
       </div>
-      <!-- drive:start --><div>
-        <h2>Drive</h2>
-        <a href="/drive">Zeiko Drive</a>
-        <a href="/drive#plans">Drive plans</a>
-        <a href="https://drive.zeiko.biz.id">Open Drive</a>
-      </div><!-- drive:end -->
-      <div>
-        <h2>Pricing</h2>
-        <a href="#plans">Pranata plans</a>
-        <a href="#pricing">Roleplay pricing</a>
-        <a href="#faq">FAQ</a>
+    </section>
+
+    <!-- ======================================================== contact -->
+    <section class="win" id="contact" aria-labelledby="contactTitle" data-win="Contact">
+      <div class="win-title"><img src="/img/icons/contact.svg" alt="" width="16" height="16"><span class="win-name">Contact</span></div>
+      <div class="win-body">
+        <div class="sec-head">
+          <h2 class="sec-title" id="contactTitle">Two ways in</h2>
+          <p class="sec-lede">Pranata V1 is yours as soon as you have an account. For the roleplay models, ask for a key.</p>
+        </div>
+
+        <div class="paths">
+          <article class="card path">
+            <h3>Pranata V1</h3>
+            <p>No key request needed. Create an account with your email or a one-click sign-in, buy a plan or add a balance, and your key is waiting on your account page.</p>
+            <div class="cta">
+              <a class="btn btn-primary" href="/account/signup" data-signed-out>Create an account</a>
+              <a class="btn" href="/account" data-signed-out>Sign in</a>
+              <a class="btn btn-primary" href="/account/plans" data-signed-in hidden>Choose a plan</a>
+            </div>
+          </article>
+          <article class="card path">
+            <h3>Roleplay models</h3>
+            <p>Tell us which models you want and roughly what volume you expect. Your key arrives with everything you need to connect.</p>
+            <p class="path-foot"><img src="/img/icons/contact.svg" alt="" width="16" height="16">admin@zeiko.biz.id</p>
+            <div class="cta">
+              <a class="btn btn-primary" href="mailto:admin@zeiko.biz.id?subject=ZeikoAI%20API%20key%20request">Request a key</a>
+              <a class="btn" href="/models">Review the models</a>
+            </div>
+          </article>
+        </div>
       </div>
-      <div>
-        <h2>Docs</h2>
-        <a href="/docs/">Getting started</a>
-        <a href="/docs/api">API basics</a>
-        <a href="/docs/faq">Troubleshooting</a>
+    </section>
+
+    <!-- ===================================================== about -->
+    <section class="win" id="about" aria-labelledby="aboutTitle">
+      <div class="win-title"><img src="/img/mark-16.svg" alt="" width="16" height="16"><span class="win-name" id="aboutTitle">About Zeiko</span></div>
+      <div class="win-body footer-grid">
+        <div class="footer-brand">
+          <p>Pranata V1 for decisions, three roleplay models priced per million tokens, and Zeiko Drive for your files.</p>
+        </div>
+        <nav class="footer-cols" aria-label="Footer links">
+          <div>
+            <h2>AI models</h2>
+            <a href="#decision">Pranata V1</a>
+            <a href="#models">Roleplay models</a>
+            <a href="/models">Specs &amp; performance</a>
+          </div>
+          <!-- drive:start --><div>
+            <h2>Drive</h2>
+            <a href="/drive">Zeiko Drive</a>
+            <a href="/drive#plans">Drive plans</a>
+            <a href="https://drive.zeiko.biz.id">Open Drive</a>
+          </div><!-- drive:end -->
+          <div>
+            <h2>Pricing</h2>
+            <a href="#plans">Pranata plans</a>
+            <a href="#pricing">Roleplay pricing</a>
+            <a href="#faq">FAQ</a>
+          </div>
+          <div>
+            <h2>Docs</h2>
+            <a href="/docs/">Getting started</a>
+            <a href="/docs/api">API basics</a>
+            <a href="/docs/faq">Troubleshooting</a>
+          </div>
+          <div>
+            <h2>Account</h2>
+            <a href="/account" data-signed-out>Sign in</a>
+            <a href="/account/signup" data-signed-out>Create account</a>
+            <a href="/account" data-signed-in hidden>Your account</a>
+            <a href="#contact">Contact</a>
+          </div>
+        </nav>
       </div>
-      <div>
-        <h2>Account</h2>
-        <a href="/account" data-signed-out>Sign in</a>
-        <a href="/account/signup" data-signed-out>Create account</a>
-        <a href="/account" data-signed-in hidden>Your account</a>
-        <a href="#contact">Contact</a>
+      <div class="statusbar">
+        <p>© <span id="year">2026</span> Zeiko</p>
+        <p>Prices in USD.</p>
       </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ======================================================= taskbar -->
+<!-- The Start menu is the site's navigation: a <details>, so it opens
+     without JavaScript too. js/main.js adds a button per window and the clock. -->
+<header class="taskbar">
+  <details class="start" id="start">
+    <summary class="start-btn"><img src="/img/mark-16.svg" alt="" width="16" height="16"><span>Start</span></summary>
+    <nav class="start-menu" id="nav" aria-label="Main navigation">
+      <span class="start-band" aria-hidden="true">Zeiko</span>
+      <ul class="start-list">
+        <li><a href="#top"><img src="/img/icons/decision.svg" alt="" width="32" height="32">Pranata V1</a></li>
+        <li><a href="/drive"><img src="/img/icons/drive.svg" alt="" width="32" height="32">Zeiko Drive</a></li>
+        <li><a href="#models"><img src="/img/icons/roleplay.svg" alt="" width="32" height="32">Roleplay models</a></li>
+        <li><a href="#pricing"><img src="/img/icons/pricing.svg" alt="" width="32" height="32">Pricing</a></li>
+        <li><a href="/models"><img src="/img/icons/models.svg" alt="" width="32" height="32">Models</a></li>
+        <li><a href="/docs/"><img src="/img/icons/docs.svg" alt="" width="32" height="32">Docs</a></li>
+        <li><a href="#faq"><img src="/img/icons/faq.svg" alt="" width="32" height="32">FAQ</a></li>
+        <li class="start-sep" role="separator"></li>
+        <li><a class="nav-account" href="/account"><img src="/img/icons/account.svg" alt="" width="32" height="32">Sign in</a></li>
+        <li data-signed-out><a href="/account/signup"><img src="/img/icons/account.svg" alt="" width="32" height="32">Create account</a></li>
+        <li><a href="#contact"><img src="/img/icons/contact.svg" alt="" width="32" height="32">Contact</a></li>
+      </ul>
     </nav>
+  </details>
+  <nav class="tasks" id="tasks" aria-label="Open windows"></nav>
+  <div class="tray">
+    <a class="lang-switch" href="/id/" hreflang="id" lang="id" data-lang="id">ID</a>
+    <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
+      <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="2"/></svg>
+      <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="miter"/></svg>
+    </button>
+    <span class="clock" id="clock" hidden></span>
   </div>
-  <div class="wrap footer-base">
-    <p>© <span id="year">2026</span> Zeiko</p>
-    <p>Prices in USD.</p>
-  </div>
-</footer>
+</header>
 
 <script src="js/main.js"></script>
 <script type="module" src="/js/account/session.js"></script>

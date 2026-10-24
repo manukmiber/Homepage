@@ -380,4 +380,138 @@
 
   var year = document.getElementById('year');
   if (year) year.textContent = String(new Date().getFullYear());
+
+  /* ------------------------------------------------------------ desktop */
+  /* The homepage is a desktop. Each window marked data-win gets its
+     caption buttons and a button on the taskbar; the one in view is the
+     active one. Without this file every window simply stays open. */
+
+  if (!document.body.classList.contains('desk')) return;
+
+  var DESK_ID = {
+    minimize: function (n) { return 'Perkecil ' + n; },
+    maximize: function (n) { return 'Perbesar ' + n; },
+    restore: function (n) { return 'Kembalikan ukuran ' + n; },
+    close: function (n) { return 'Tutup ' + n; }
+  };
+  var DESK_EN = {
+    minimize: function (n) { return 'Minimize ' + n; },
+    maximize: function (n) { return 'Maximize ' + n; },
+    restore: function (n) { return 'Restore ' + n; },
+    close: function (n) { return 'Close ' + n; }
+  };
+  var dw = root.lang === 'id' ? DESK_ID : DESK_EN;
+  var tasks = document.getElementById('tasks');
+  var wins = [].slice.call(document.querySelectorAll('.win[data-win]'));
+
+  function capButton(cls, label) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'cap ' + cls;
+    b.setAttribute('aria-label', label);
+    return b;
+  }
+
+  wins.forEach(function (win) {
+    var name = win.getAttribute('data-win');
+    var bar = win.querySelector('.win-title');
+    var icon = bar && bar.querySelector('img');
+    var caps = document.createElement('span');
+    caps.className = 'caps';
+    var min = capButton('cap-min', dw.minimize(name));
+    var max = capButton('cap-max', dw.maximize(name));
+    var close = capButton('cap-close', dw.close(name));
+    caps.appendChild(min); caps.appendChild(max); caps.appendChild(close);
+    bar.appendChild(caps);
+
+    var task = null;
+    if (tasks) {
+      task = document.createElement('a');
+      task.className = 'task';
+      task.href = '#' + win.id;
+      if (icon) {
+        var img = document.createElement('img');
+        img.src = icon.getAttribute('src');
+        img.alt = '';
+        img.width = 16; img.height = 16;
+        task.appendChild(img);
+      }
+      var label = document.createElement('span');
+      label.textContent = name;
+      task.appendChild(label);
+      tasks.appendChild(task);
+    }
+    win._task = task;
+
+    min.addEventListener('click', function () { setMax(win, false); win.hidden = true; });
+    close.addEventListener('click', function () { setMax(win, false); win.hidden = true; if (task) task.hidden = true; });
+    max.addEventListener('click', function () { setMax(win, !win.classList.contains('is-max')); });
+
+    function setMax(w, on) {
+      w.classList.toggle('is-max', on);
+      max.classList.toggle('cap-restore', on);
+      max.setAttribute('aria-label', on ? dw.restore(name) : dw.maximize(name));
+      document.body.classList.toggle('has-max', Boolean(document.querySelector('.win.is-max')));
+    }
+  });
+
+  // A link to a window that was minimised or closed opens it again.
+  function reopen(id) {
+    var win = id && document.getElementById(id);
+    if (!win || !win.classList.contains('win')) return;
+    win.hidden = false;
+    if (win._task) win._task.hidden = false;
+  }
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (a) reopen(a.getAttribute('href').slice(1));
+  });
+  window.addEventListener('hashchange', function () { reopen(location.hash.slice(1)); });
+
+  // The window in view is the active one: navy title, pressed task button.
+  if ('IntersectionObserver' in window) {
+    var seen = new Map();
+    var activate = function () {
+      var best = null, most = 0;
+      seen.forEach(function (ratio, w) { if (ratio > most) { most = ratio; best = w; } });
+      wins.forEach(function (w) {
+        var on = w === best;
+        w.classList.toggle('is-off', !on && Boolean(best));
+        if (w._task) w._task.classList.toggle('is-on', on);
+      });
+    };
+    var watch = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { seen.set(en.target, en.intersectionRatio); });
+      activate();
+    }, { threshold: [0, .15, .3, .5, .7, .9] });
+    wins.forEach(function (w) { watch.observe(w); });
+  }
+
+  // The Start menu closes on a choice, on Escape and on a click elsewhere.
+  var start = document.getElementById('start');
+  if (start) {
+    start.addEventListener('click', function (e) {
+      if (e.target.closest('a')) start.open = false;
+    });
+    document.addEventListener('click', function (e) {
+      if (start.open && !start.contains(e.target)) start.open = false;
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && start.open) {
+        start.open = false;
+        start.querySelector('summary').focus();
+      }
+    });
+  }
+
+  // The clock in the tray, in the page's language.
+  var clock = document.getElementById('clock');
+  if (clock) {
+    var tick = function () {
+      clock.textContent = new Date().toLocaleTimeString(words().locale, { hour: 'numeric', minute: '2-digit' });
+    };
+    clock.hidden = false;
+    tick();
+    setInterval(tick, 20000);
+  }
 })();

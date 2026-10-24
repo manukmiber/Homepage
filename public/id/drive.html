@@ -13,7 +13,7 @@
 <meta property="og:type" content="website">
 <link rel="alternate" hreflang="en" href="/drive">
 <link rel="alternate" hreflang="id" href="/id/drive">
-<link rel="icon" href="/img/logo.svg" type="image/svg+xml">
+<link rel="icon" href="/img/mark-32.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
@@ -34,8 +34,8 @@
 <header class="topbar">
   <div class="wrap topbar-in">
     <a class="brand" href="/id/">
-      <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
-      <span class="brand-name">Zeiko</span>
+      <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
+      <span class="brand-name">Zeiko</span><span class="brand-doc" aria-hidden="true"> - Drive</span>
     </a>
 
     <nav class="nav" id="nav" aria-label="Navigasi utama">
@@ -63,10 +63,9 @@
 
 <main id="main">
 
-  <section class="hero" id="top" aria-labelledby="heroTitle">
-    <div class="wrap hero-in hero-drive">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span>Penyimpanan file · akun yang sama dengan ZeikoAI</p>
+  <section class="page-head" id="top" aria-labelledby="heroTitle">
+    <div class="wrap drive-split">
+      <div class="drive-copy">
         <h1 id="heroTitle">
           <span class="h1-name">Zeiko Drive</span>
           <span class="h1-line">Simpan file dengan murah, cepat, dan pribadi.</span>
@@ -76,34 +75,32 @@
           <span data-drive-from-note hidden>Paket mulai <strong data-drive-from>–</strong> per bulan.</span>
         </p>
         <div class="cta">
-          <a class="btn btn-primary btn-lg" href="https://drive.zeiko.biz.id">Buka Drive <svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-          <a class="btn btn-ghost btn-lg" href="/account/signup?next=/dashboard" data-signed-out><svg class="ico" aria-hidden="true"><use href="#i-user"/></svg>Buat akun</a>
+          <a class="btn btn-primary btn-lg" href="https://drive.zeiko.biz.id">Buka Drive</a>
+          <a class="btn btn-lg" href="/account/signup?next=/dashboard" data-signed-out>Buat akun</a>
         </div>
         <p class="hero-signin" data-signed-out>Satu Akun Zeiko untuk Drive, Pranata V1, dan Zeiko Chat. Sudah punya? <a href="/account/signin?next=/dashboard">Masuk</a></p>
       </div>
-      <figure class="drv" aria-label="Zeiko Drive, digambar sebagai contoh">
+      <figure class="drv win" aria-label="Zeiko Drive, digambar sebagai contoh">
         <div class="drv-bar">
-          <span class="drv-dots" aria-hidden="true"><i></i><i></i><i></i></span>
-          <span class="drv-path">Drive Saya <b aria-hidden="true">/</b> <strong>Liburan ke Bali</strong></span>
+          <img src="/img/icons/drive.svg" alt="" width="16" height="16">
+          <span class="drv-path">Drive Saya <b aria-hidden="true">\</b> <strong>Liburan ke Bali</strong></span>
           <span class="demo-note">Ilustrasi</span>
         </div>
         <ul class="drv-list">
-          <li class="drv-row drv-folder"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h3.6l2 2.2h7.4A2.5 2.5 0 0 1 21 9.7v7.8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5Z"/></svg></span><span class="drv-name">Rencana perjalanan</span><span class="drv-size">12 file</span></li>
-          <li class="drv-row drv-image"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="m4.5 18 5-5 3.5 3.5 2.5-2.5 4 4"/></svg></span><span class="drv-name">sunset-kuta.jpg</span><span class="drv-tag"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.2 1.2"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.2-1.2"/></svg>Dibagikan</span><span class="drv-size">4,2 MB</span></li>
-          <li class="drv-row drv-film"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="2.5"/><path d="m10.2 9.4 4.6 2.6-4.6 2.6Z"/></svg></span><span class="drv-name">drone-uluwatu.mp4</span><span class="drv-size">1,3 GB</span></li>
-          <li class="drv-row drv-doc"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h6.5L18.5 8.5v10.5A1.5 1.5 0 0 1 17 20.5H7A1.5 1.5 0 0 1 5.5 19V5A1.5 1.5 0 0 1 7 3.5Z"/><path d="M13.5 3.5v5h5M8.5 13h7M8.5 16.5h5"/></svg></span><span class="drv-name">tiket.pdf</span><span class="drv-size">380 KB</span></li>
+          <li class="drv-row"><img src="/img/icons/drive.svg" alt="" width="16" height="16"><span class="drv-name">Rencana perjalanan</span><span class="drv-size">12 file</span></li>
+          <li class="drv-row"><img src="/img/icons/image.svg" alt="" width="16" height="16"><span class="drv-name">sunset-kuta.jpg</span><span class="drv-tag">Dibagikan</span><span class="drv-size">4,2 MB</span></li>
+          <li class="drv-row"><img src="/img/icons/film.svg" alt="" width="16" height="16"><span class="drv-name">drone-uluwatu.mp4</span><span class="drv-size">1,3 GB</span></li>
+          <li class="drv-row"><img src="/img/icons/page.svg" alt="" width="16" height="16"><span class="drv-name">tiket.pdf</span><span class="drv-size">380 KB</span></li>
         </ul>
         <div class="drv-up">
-          <span class="drv-ico drv-ico-up"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V5M7.5 9.5 12 5l4.5 4.5M5 19h14"/></svg></span>
           <span class="drv-up-text"><span>Mengunggah klip.zip</span><span class="drv-up-bar" aria-hidden="true"><i></i></span></span>
           <strong>68%</strong>
         </div>
         <div class="drv-meter">
-          <span class="drv-ico drv-ico-cloud"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.5 18.5h9.8a3.7 3.7 0 0 0 .5-7.4 5.6 5.6 0 0 0-10.9-1.3A4.4 4.4 0 0 0 7.5 18.5Z"/></svg></span>
           <span class="drv-meter-text"><small>Penyimpanan</small><span>38,4 GB dari 200 GB</span></span>
           <span class="drv-meter-bar" aria-hidden="true"><i></i></span>
         </div>
-        <p class="drv-toast" aria-hidden="true"><span class="drv-ico"><svg class="drv-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.2 1.2"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.2-1.2"/></svg></span><span><strong>Tautan disalin</strong><small>Berlaku 7 hari</small></span></p>
+        <p class="drv-toast" aria-hidden="true"><img src="/img/icons/link.svg" alt="" width="16" height="16"><span><strong>Tautan disalin</strong><small>Berlaku 7 hari</small></span></p>
       </figure>
     </div>
   </section>
@@ -111,39 +108,38 @@
   <section class="section" id="features" aria-labelledby="featTitle">
     <div class="wrap">
       <div class="sec-head">
-        <p class="kicker">Zeiko Drive</p>
         <h2 class="sec-title" id="featTitle">Semua yang kamu butuhkan dari sebuah drive. Tanpa ribet.</h2>
         <p class="sec-lede">Folder, pencarian, bintang, dan sampah yang bisa dipulihkan — seperti yang sudah kamu kenal, di HP maupun komputer.</p>
       </div>
       <div class="kinds">
         <article class="kind">
-          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-bolt"/></svg></span>
+          <img src="/img/icons/bolt.svg" alt="" width="32" height="32">
           <h3>Cepat, naik maupun turun</h3>
           <p>Upload dan download tanpa batas kecepatan. Kalau koneksi putus, upload besar lanjut dari bagian terakhir.</p>
         </article>
         <article class="kind">
-          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-link"/></svg></span>
+          <img src="/img/icons/link.svg" alt="" width="32" height="32">
           <h3>Bagikan lewat link</h3>
           <p>Sekali klik langsung unduh, penerima tidak perlu masuk. Tambahkan password, tanggal berakhir, atau batas unduhan, lalu kirim lewat WhatsApp, Telegram, email, atau QR.</p>
         </article>
         <!-- Shown once a family plan is on sale. -->
         <article class="kind" data-drive-family hidden>
-          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-family"/></svg></span>
+          <img src="/img/icons/family.svg" alt="" width="32" height="32">
           <h3>Paket keluarga</h3>
           <p>Satu paket untuk sekeluarga. Tiap orang punya Drive Saya yang pribadi, dan Drive Keluarga untuk yang dibagi bersama.</p>
         </article>
         <article class="kind">
-          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-shield"/></svg></span>
+          <img src="/img/icons/shield.svg" alt="" width="32" height="32">
           <h3>Pribadi sejak awal</h3>
           <p>Hanya kamu yang bisa melihat file-mu. Pemilik keluarga hanya melihat berapa banyak tiap anggota memakai, bukan isinya.</p>
         </article>
         <article class="kind">
-          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-shrink"/></svg></span>
+          <img src="/img/icons/shrink.svg" alt="" width="32" height="32">
           <h3>Perkecil foto dan video</h3>
           <p>Kompres foto atau video dengan sekali ketuk. Kalau hasilnya tidak lebih kecil, file tetap seperti semula dan kreditmu kembali.</p>
         </article>
         <article class="kind">
-          <span class="kind-icon" aria-hidden="true"><svg class="ico"><use href="#i-folder"/></svg></span>
+          <img src="/img/icons/drive.svg" alt="" width="32" height="32">
           <h3>Unduh satu folder sekaligus</h3>
           <p>Pilih beberapa file atau satu folder, lalu unduh jadi satu ZIP, langsung.</p>
         </article>
@@ -151,10 +147,9 @@
     </div>
   </section>
 
-  <section class="section section-tint" id="plans" aria-labelledby="plansTitle">
+  <section class="section" id="plans" aria-labelledby="plansTitle">
     <div class="wrap">
       <div class="sec-head">
-        <p class="kicker">Paket</p>
         <h2 class="sec-title" id="plansTitle">Bayar sesuai ruang yang kamu pakai</h2>
         <p class="sec-lede">Paket bulanan dalam rupiah. Naik paket kapan saja dan bayar selisihnya untuk sisa hari saja.</p>
       </div>
@@ -167,7 +162,6 @@
   <section class="section" id="faq" aria-labelledby="faqTitle">
     <div class="wrap faq-layout">
       <div class="faq-intro">
-        <p class="kicker">FAQ</p>
         <h2 class="sec-title" id="faqTitle">Pertanyaan yang sering muncul</h2>
         <p class="sec-lede">Ada pertanyaan lain? Tulis ke <a href="mailto:admin@zeiko.biz.id">admin@zeiko.biz.id</a>.</p>
       </div>
@@ -202,7 +196,7 @@
   <div class="wrap footer-grid">
     <div class="footer-brand">
       <a class="brand" href="/id/">
-        <img class="brand-mark logo-night" src="/img/logo.svg" alt="" width="32" height="32"><img class="brand-mark logo-day" src="/img/logo-day.svg" alt="" width="32" height="32">
+        <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
         <span class="brand-name">Zeiko</span>
       </a>
       <p>Pranata V1 untuk keputusan, tiga model roleplay, dan Zeiko Drive untuk file-mu.</p>
