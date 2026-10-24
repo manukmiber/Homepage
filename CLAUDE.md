@@ -247,7 +247,7 @@ Every page is in English and in Indonesian (the operator's, October 2026):
 
 One account for ZeikoAI, Zeiko Chat and Zeiko Drive: the same login (email
 and password, Google, GitHub), and **one balance** for ZeikoAI and Zeiko Chat
-(Drive keeps a balance of its own, in the Drive app). `/account` is one plain page;
+(Drive has none: each Drive purchase is paid in the Drive app). `/account` is one plain page;
 its script (`app.js`) asks the **account door** —
 `https://auth.zeiko.biz.id`, the page's `<meta name="zeiko-accounts">` — for
 everything, with the visitor's own cookie for the door
@@ -274,7 +274,13 @@ GitHub keys. Google and GitHub sign-in start and finish at the door
   at its own address, or `/dashboard…` (`safeNext`).
 - **4xx messages from the door are shown as written** (they are written for
   customers); a 5xx or no answer is "not available right now".
-- Sign-up asks for a username and takes an optional **referral code**
+- Sign-up asks for a username and **the city the person lives in** (with
+  an optional postal code; `cities.js` only suggests names): Zeiko Drive's
+  local ads go by it, the operator's rule. The door refuses a sign-up with
+  no city. An account without one (older, or Google/GitHub) gets a banner
+  on every account page but Settings, whose **Where you live** card sets it
+  (`POST /v1/location`).
+- Sign-up also takes an optional **referral code**
   (pre-filled from `?ref=` on any account page, kept 30 days on the
   browser). The door keeps the code and gives its discount at checkout.
 - Zeiko Chat's plans and the balance are bought here beside Pranata V1's

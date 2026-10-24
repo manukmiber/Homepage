@@ -137,6 +137,7 @@ const FLASH = {
   cancelled: ['warn', L('Nothing was charged. Pick a plan or an amount whenever you are ready.', 'Tidak ada yang ditagih. Pilih paket atau jumlah kapan pun kamu siap.')],
   linked: ['ok', L('That sign-in method is connected.', 'Cara masuk itu sudah tersambung.')],
   'link-taken': ['err', L('That account is already connected to another Zeiko Account.', 'Akun itu sudah tersambung ke Akun Zeiko lain.')],
+  location: ['ok', L('Got it. Zeiko Drive uses this city from your next visit there.', 'Beres. Zeiko Drive memakai kota ini mulai kamu membukanya lagi.')],
   // Where the subscription plans send a subscriber back:
   // /account?m=subscription-paid, -failed or -partial.
   'subscription-paid': ['ok', L('Payment received — thank you. Your plan is renewed; the next link arrives by email before it runs out.', 'Pembayaran diterima — terima kasih. Paketmu diperpanjang; link berikutnya datang lewat email sebelum paket habis.')],
@@ -206,7 +207,7 @@ function publicPage(extra = {}) {
   const opts = session.signInWith || {};
   if (path === '/account/signup') {
     document.title = `${L('Create account', 'Buat akun')} — Zeiko`;
-    draw(view.signUp({ error: extra.error || '', email: extra.email || '', username: extra.username || '', next, app: appOf(next), ref: extra.ref ?? (rememberRef() || savedRef()), opts, door: DOOR }));
+    draw(view.signUp({ error: extra.error || '', email: extra.email || '', username: extra.username || '', city: extra.city || '', postalCode: extra.postalCode || '', next, app: appOf(next), ref: extra.ref ?? (rememberRef() || savedRef()), opts, door: DOOR }));
   } else if (path === '/account/forgot') {
     document.title = `${L('Forgot password', 'Lupa kata sandi')} — Zeiko`;
     draw(view.forgot({ error: extra.error || '', sent: Boolean(extra.sent) }));
@@ -320,9 +321,9 @@ async function act(name, f, submitter) {
       return publicPage({ error: problem(r), email: f.email });
     }
     case 'signup': {
-      const r = await ask('POST', '/signup', { email: f.email || '', username: f.username || '', password: f.password || '', referral: f.referral || '' });
+      const r = await ask('POST', '/signup', { email: f.email || '', username: f.username || '', password: f.password || '', city: f.city || '', postalCode: f.postalCode || '', referral: f.referral || '' });
       if (r.status === 200) return location.assign(safeNext(f.next) || '/account?m=welcome');
-      return publicPage({ error: problem(r), email: f.email, username: f.username, ref: f.referral || '' });
+      return publicPage({ error: problem(r), email: f.email, username: f.username, city: f.city, postalCode: f.postalCode, ref: f.referral || '' });
     }
     case 'forgot': {
       const r = await ask('POST', '/forgot', { email: f.email || '' });
@@ -386,6 +387,10 @@ async function act(name, f, submitter) {
     case 'password': {
       const r = await ask('POST', '/password', { current: f.current || '', password: f.password || '' });
       return r.status === 200 ? back(FLASH.password[1], 'ok') : back(problem(r));
+    }
+    case 'location': {
+      const r = await ask('POST', '/location', { city: f.city || '', postalCode: f.postalCode || '' });
+      return r.status === 200 ? back(FLASH.location[1], 'ok') : back(problem(r));
     }
     case 'email': {
       const r = await ask('POST', '/email', { current: f.current || '', email: f.email || '' });

@@ -7,6 +7,7 @@ import { PAY_GUIDE } from './payguide.js';
 import { PAY_GUIDE_ID } from './payguide.id.js';
 import { displayName, esc, meLink } from './me.js';
 import { L, day, getLang, num } from './lang.js';
+import { CITIES } from './cities.js';
 
 export { esc };
 
@@ -45,6 +46,7 @@ const I = {
   out: '<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
   gift: '<rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/>',
   clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  pin: '<path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
 };
 
 const LOGO = `<img class="logo-night" src="/img/logo.svg" alt="" width="40" height="40"><img class="logo-day" src="/img/logo-day.svg" alt="" width="40" height="40">`;
@@ -151,7 +153,29 @@ export function signIn({ error, notice, email = '', next = '', app = '', opts, d
     <p class="auth-foot">${L('New here?', 'Baru di sini?')} <a href="/account/signup${next ? `?next=${encodeURIComponent(next)}` : ''}">${L('Create an account', 'Buat akun')}</a></p>`, { aside: true });
 }
 
-export function signUp({ error, email = '', username = '', next = '', app = '', ref = '', opts, door }) {
+/**
+ * Where the person lives: the city (required at sign-up — Zeiko Drive's local ads go by it) and an
+ * optional postal code. The list only suggests; any city may be typed.
+ */
+function locationFields({ city = '', postalCode = '' } = {}) {
+  return `<label>${L('City <small>where you live: Zeiko Drive shows local ads for it</small>', 'Kota <small>tempat tinggalmu: Zeiko Drive menampilkan iklan lokal untuk kota ini</small>')}<input type="text" name="city" autocomplete="address-level2" required minlength="2" maxlength="60" list="city-list" value="${esc(city)}"></label>
+      <label>${L('Postal code <small>optional</small>', 'Kode pos <small>opsional</small>')}<input type="text" name="postalCode" autocomplete="postal-code" inputmode="numeric" maxlength="10" pattern="[A-Za-z0-9 \-]{3,10}" value="${esc(postalCode)}"></label>
+      <datalist id="city-list">${CITIES.map((c) => `<option value="${esc(c)}">`).join('')}</datalist>`;
+}
+
+/** An account made before the city was asked, or with Google or GitHub, is asked once here. */
+function locationBanner() {
+  return `<div class="verify" role="status">
+      <span class="verify-icon">${icon(I.pin)}</span>
+      <div class="verify-text">
+        <p class="verify-title">${L('Which city do you live in?', 'Kamu tinggal di kota mana?')}</p>
+        <p>${L('Zeiko Drive shows local ads for the city on your account. Add it once in Settings.', 'Zeiko Drive menampilkan iklan lokal untuk kota di akunmu. Isi sekali di Pengaturan.')}</p>
+      </div>
+      <div class="verify-actions"><a class="btn btn-sm btn-primary" href="/account/settings#location">${L('Add my city', 'Isi kotaku')}</a></div>
+    </div>`;
+}
+
+export function signUp({ error, email = '', username = '', city = '', postalCode = '', next = '', app = '', ref = '', opts, door }) {
   const sub = GOING_TO[app]
     ? L(`Free to make. One account for ${GOING_TO[app]}, Pranata V1 and Zeiko Chat.`, `Gratis dibuat. Satu akun untuk ${GOING_TO[app]}, Pranata V1, dan Zeiko Chat.`)
     : L('Free to make. Buy a plan or add balance when you are ready.', 'Gratis dibuat. Beli paket atau isi saldo kapan pun kamu siap.');
@@ -162,6 +186,7 @@ export function signUp({ error, email = '', username = '', next = '', app = '', 
       <input type="hidden" name="next" value="${esc(next)}">
       <label>Email<input type="email" name="email" autocomplete="email" inputmode="email" required maxlength="254" value="${esc(email)}"></label>
       <label>${L('Username <small>3–24 letters, numbers or _</small>', 'Nama pengguna <small>3–24 huruf, angka, atau _</small>')}<input type="text" name="username" autocomplete="username" required minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" autocapitalize="off" spellcheck="false" value="${esc(username)}"></label>
+      ${locationFields({ city, postalCode })}
       ${password({ id: 'signup-password', label: L('Password', 'Kata sandi'), autocomplete: 'new-password', hint: L('8 characters or more', '8 karakter atau lebih'), min: 8 })}
       <details class="ref-field"${ref ? ' open' : ''}>
         <summary>${L('Have a referral code?', 'Punya kode referral?')}</summary>
@@ -250,6 +275,7 @@ function shell(tab, o, inner, flash) {
     </nav>
     ${flash || ''}
     ${!a.emailVerified && a.email && o.mail ? verifyBanner(a) : ''}
+    ${!a.city && tab !== 'settings' ? locationBanner() : ''}
     ${inner}
   </div>
 </section>`;
@@ -644,9 +670,18 @@ export function settings(o, { flash, door }) {
         <div><dt>${L('Username', 'Nama pengguna')}</dt><dd>${esc(a.username ? '@' + a.username : '—')}</dd></div>
         <div><dt>${L('Name', 'Nama')}</dt><dd>${esc(a.name || '—')}</dd></div>
         <div><dt>Email</dt><dd>${esc(a.email || '—')} ${a.email ? `<span class="tag ${a.emailVerified ? 'tag-ok' : 'tag-warn'}">${a.emailVerified ? L('Confirmed', 'Terkonfirmasi') : L('Not confirmed', 'Belum dikonfirmasi')}</span>` : ''}</dd></div>
+        <div><dt>${L('City', 'Kota')}</dt><dd>${esc(a.city || '—')}${a.postalCode ? ` · ${esc(a.postalCode)}` : ''}</dd></div>
         <div><dt>${L('Member since', 'Anggota sejak')}</dt><dd>${esc(day(a.createdAt))}</dd></div>
         ${o.referral && o.referral.code ? `<div><dt>${L('Referral code', 'Kode referral')}</dt><dd><code>${esc(o.referral.code)}</code>${o.referral.discountPct ? L(` · ${esc(o.referral.discountPct)}% off plans`, ` · diskon ${esc(o.referral.discountPct)}% untuk paket`) : ''}</dd></div>` : ''}
       </dl>
+    </section>
+    <section class="card acct-section" id="location">
+      <h2>${L('Where you live', 'Tempat tinggal')}</h2>
+      <p class="muted-note">${L('Zeiko Drive shows local ads for this city, from your next visit there. The postal code is optional.', 'Zeiko Drive menampilkan iklan lokal untuk kota ini, mulai kamu membukanya lagi. Kode pos boleh dikosongkan.')}</p>
+      <form data-act="location" class="form">
+        ${locationFields({ city: a.city || '', postalCode: a.postalCode || '' })}
+        <button class="btn btn-primary" type="submit" data-busy="${L('Saving…', 'Menyimpan…')}">${a.city ? L('Change city', 'Ganti kota') : L('Add my city', 'Isi kotaku')}</button>
+      </form>
     </section>
     <section class="card acct-section">
       <h2>${L('Sign-in methods', 'Cara masuk')}</h2>
