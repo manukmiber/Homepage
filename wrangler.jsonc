@@ -13,9 +13,9 @@
     // worker could see it.
     "not_found_handling": "none",
     // Plain files that the worker fills in first: /models (the hourly
-    // figures), /drive (Drive's plans) and /account (one page for every
-    // account address).
-    "run_worker_first": ["/models", "/id/models", "/drive", "/id/drive", "/account", "/account/*"]
+    // figures), /drive (Drive's plans), the homepage (Zeiko S3, once it is
+    // open) and /account (one page for every account address).
+    "run_worker_first": ["/", "/id", "/id/", "/models", "/id/models", "/drive", "/id/drive", "/account", "/account/*"]
   },
   // /account is one plain page (public/account/index.html) whose script signs
   // in with the account door itself: no secret is set for it here.

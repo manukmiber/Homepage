@@ -402,7 +402,8 @@
   };
   var dw = root.lang === 'id' ? DESK_ID : DESK_EN;
   var tasks = document.getElementById('tasks');
-  var wins = [].slice.call(document.querySelectorAll('.win[data-win]'));
+  // A window still hidden (Zeiko S3 before it opens) gets no caption buttons or taskbar button.
+  var wins = [].slice.call(document.querySelectorAll('.win[data-win]')).filter(function (w) { return !w.hidden; });
 
   function capButton(cls, label) {
     var b = document.createElement('button');

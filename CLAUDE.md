@@ -135,7 +135,7 @@ src/
                   sends /dashboard… to Drive's address, answers 404.html for the rest
   render.js       snapshot → HTML for those placeholders; numbers only
   drive.js        Drive's address (DRIVE_URL, driveAddress); Drive's catalog → plan
-                  cards (numbers and escaped plan names only)
+                  cards (numbers and escaped plan names only) and Zeiko S3's lines
 dev/
   sample-stats.mjs  made-up figures for local development and the check
 scripts/
@@ -150,7 +150,7 @@ for anything but this site's own files — **except the account area** (below),
 whose script talks to the account door and nowhere else:
 
 - **One piece of server code.** `src/worker.js` runs first for `/models`,
-  `/drive`, `/id/drive` and `/account` (`run_worker_first`), and for any path
+  `/drive`, `/id/drive`, the homepage (`/`, `/id/`) and `/account` (`run_worker_first`), and for any path
   that is no file (`/dashboard…`, below, or a 404); for `/account…` it only hands back
   `public/account/index.html`, so deep links open. It reads the hourly snapshot from the `MODELS` R2
   binding and fills the page's placeholders (`data-perf-bar`, `data-perf`,
@@ -189,6 +189,20 @@ things:
   filled by `src/worker.js` from Drive's public catalog, through
   `src/drive.js`. Prices are set where Drive's plans are run, so the page
   never carries a typed price; without Drive it says the plans show soon.
+- **Zeiko S3** (Drive's object storage, the operator's, October 2026): a
+  window on the homepage (`#s3`, with its desktop icon, Start menu line and
+  footer link) and a section on `/drive` (`#s3`), all in Drive blocks and all
+  marked `data-s3 hidden` in the files. **They stay hidden until Drive says
+  Zeiko S3 is open** (the catalog's `capabilities.s3`); then `src/worker.js`
+  removes `hidden` and fills `[data-s3-facts]` with `src/drive.js::renderS3`:
+  the price per GB, three copies, downloads and an address of one's own, each
+  line only while Drive says that part works, numbers only. The homepage goes
+  through the worker for this and leaves untouched while Zeiko S3 is closed;
+  the catalog is asked at most once a minute (`driveCatalog`). `main.js` gives
+  a window still hidden no caption or taskbar button. `npm run check` fails a
+  `data-s3` block that is not hidden and renders `renderS3` from a catalog
+  laced with junk text. No hostname, tool name, `bucket` or `region` on the
+  page: say what it does for the visitor.
 - **The way back to the app**: "Open Drive" links go straight to
   `https://drive.zeiko.biz.id` (`DRIVE_URL` in `src/drive.js`; the check lets
   that one address through, on any page and in the account files).

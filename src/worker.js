@@ -26,7 +26,7 @@
 // goes out as is, with its "not available right now" notes.
 
 import { render, sanitize } from './render.js';
-import { cheapest, driveAddress, hasFamily, renderPlans } from './drive.js';
+import { cheapest, driveAddress, driveCatalog, hasFamily, renderPlans, renderS3 } from './drive.js';
 
 /** The account page, whatever account address was asked for. */
 async function accountShell(request, env) {
@@ -61,29 +61,51 @@ async function notFound(request, env) {
   return new Response(page.body, { status: 404, headers });
 }
 
+/** Zeiko S3's blocks (`[data-s3]`, hidden in the files) shown and filled, once it is open. */
+function s3Shown(rewriter, facts) {
+  if (!facts) return rewriter;
+  return rewriter
+    .on('[data-s3]', {
+      element(el) {
+        el.removeAttribute('hidden');
+      },
+    })
+    .on('[data-s3-facts]', {
+      element(el) {
+        el.setInnerContent(facts, { html: true });
+      },
+    });
+}
+
+/** / and /id/: the homepage as written, with Zeiko S3 shown once it is open. */
+async function homePage(request, env, lang) {
+  const page = await env.ASSETS.fetch(request);
+  if (!page.ok || !(page.headers.get('content-type') || '').includes('text/html')) return page;
+  const catalog = await driveCatalog(env, request.url);
+  const s3 = catalog ? renderS3(catalog, lang) : null;
+  if (!s3) return page;
+  const out = s3Shown(new HTMLRewriter(), s3).transform(page);
+  const headers = new Headers(out.headers);
+  headers.delete('etag');
+  headers.delete('last-modified');
+  headers.set('cache-control', 'public, max-age=60');
+  return new Response(out.body, { status: out.status, headers });
+}
+
 /** /drive and /id/drive, with the plan cards from Drive's catalog. */
 async function drivePage(request, env, lang) {
   const page = await env.ASSETS.fetch(request);
   if (!page.ok || !(page.headers.get('content-type') || '').includes('text/html') || !env.DRIVE) return page;
-  let cards = null;
-  let from = null;
-  let family = false;
-  try {
-    const res = await env.DRIVE.fetch(new Request(new URL('/api/public/catalog', request.url)));
-    if (res.ok) {
-      const catalog = await res.json();
-      cards = renderPlans(catalog, lang);
-      from = cheapest(catalog);
-      family = hasFamily(catalog);
-    }
-  } catch {
-    cards = null;
-  }
-  if (!cards) return page;
-  const out = new HTMLRewriter()
+  const catalog = await driveCatalog(env, request.url);
+  const cards = catalog ? renderPlans(catalog, lang) : null;
+  const from = catalog ? cheapest(catalog) : null;
+  const family = catalog ? hasFamily(catalog) : false;
+  const s3 = catalog ? renderS3(catalog, lang) : null;
+  if (!cards && !s3) return page;
+  const out = s3Shown(new HTMLRewriter(), s3)
     .on('[data-drive-plans]', {
       element(el) {
-        el.setInnerContent(cards, { html: true });
+        if (cards) el.setInnerContent(cards, { html: true });
       },
     })
     .on('[data-drive-from]', {
@@ -120,6 +142,8 @@ export default {
     if (url.pathname === '/account' || url.pathname.startsWith('/account/')) {
       return accountShell(request, env);
     }
+    if (url.pathname === '/') return homePage(request, env, 'en');
+    if (url.pathname === '/id' || url.pathname === '/id/') return homePage(request, env, 'id');
     if (url.pathname === '/drive') return drivePage(request, env, 'en');
     if (url.pathname === '/id/drive') return drivePage(request, env, 'id');
     const lang = url.pathname === '/id/models' ? 'id' : 'en';

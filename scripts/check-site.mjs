@@ -33,6 +33,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join, relative, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { render, sanitize } from '../src/render.js';
+import { renderS3 } from '../src/drive.js';
 import { sampleSnapshot } from '../dev/sample-stats.mjs';
 import * as accountViews from '../public/js/account/views.js';
 import * as accountMe from '../public/js/account/me.js';
@@ -432,6 +433,49 @@ for (const [lang, page] of [['en', models], ['id', html.find((h) => h.file === j
   }
   for (const m of page.src.matchAll(/data-stat="([^":]+):([^"]+)"/g)) {
     if (!(view.glance[m[1]] && view.glance[m[1]][m[2]])) report(page.file, m.index, page.src, `data-stat="${m[1]}:${m[2]}" is never filled`);
+  }
+}
+
+// ------------------------------------------------------ rendered Zeiko S3
+
+// Zeiko S3's lines come from Drive's catalog, and only while Drive says it
+// is open; each extra (three copies, an address of one's own) only while that
+// part is. Every [data-s3] block in the files is hidden until then, and the
+// lines read numbers only: junk text in the catalog must not get through.
+for (const h of html) {
+  for (const m of h.src.matchAll(/<[a-z][^>]*\sdata-s3(?:\s[^>]*)?>/g)) {
+    if (!/\shidden(?:\s|>)/.test(m[0])) report(h.file, m.index, h.src, 'a Zeiko S3 block that is not hidden: it shows only once Zeiko S3 is open');
+  }
+}
+const S3_CONFIG = {
+  s3_price_idr_per_gb_month: 500,
+  s3_price_idr_per_gb_month_3x: 1500,
+  s3_min_gb: 3,
+  s3_egress_free_bytes: 500 * 2 ** 30,
+  s3_egress_block_bytes: 500 * 2 ** 30,
+  s3_egress_block_idr: 7000,
+  s3_url_zeiko_idr: 3000,
+  s3_url_custom_idr: 5000,
+  CANARY: '<b>CANARY</b>',
+};
+const s3Open = { s3: true, s3ThreeCopies: true, s3UrlZeiko: true, s3UrlCustom: true, CANARY: 'CANARY' };
+for (const lang of ['en', 'id']) {
+  const where = `rendered Zeiko S3 (sample), ${lang}`;
+  const full = renderS3({ capabilities: s3Open, config: S3_CONFIG, plans: [{ name: '<b>CANARY</b>' }] }, lang);
+  if (!full) {
+    problems.push(`${where}: src/drive.js rendered nothing for an open Zeiko S3`);
+    continue;
+  }
+  scan(where, `<!-- drive:start -->${full}<!-- drive:end -->`);
+  for (const m of full.matchAll(/CANARY/g)) report(where, m.index, full, 'text from the catalog reached the page; only numbers may');
+  for (const price of ['500', '1.500', '3.000', '5.000', '7.000']) {
+    if (!full.includes(`Rp${price}`)) problems.push(`${where}: Rp${price} is missing`);
+  }
+  const closed = renderS3({ capabilities: { ...s3Open, s3: false }, config: S3_CONFIG }, lang);
+  if (closed !== null) problems.push(`${where}: Zeiko S3 is drawn while it is not open`);
+  const bare = renderS3({ capabilities: { s3: true }, config: S3_CONFIG }, lang) || '';
+  for (const price of ['1.500', '3.000', '5.000']) {
+    if (bare.includes(`Rp${price}`)) problems.push(`${where}: Rp${price} is shown before that part of Zeiko S3 is open`);
   }
 }
 
