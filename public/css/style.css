@@ -1074,6 +1074,14 @@ input[type="checkbox"]:focus-visible, input[type="radio"]:focus-visible { outlin
 .drv-toast strong { display: block; }
 .drv-toast small { display: block; font-size: 12px; }
 
+/* Zeiko Hosting: six plans in two rows of three, and the "My sites" window
+   drawn with the Drive window's parts. */
+.host-plans { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.host-specs strong { color: var(--text); font-variant-numeric: tabular-nums; }
+.host-meter .drv-meter-bar i { width: 36%; }
+.host-ticks { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 24px; }
+.host-order { margin: 16px 0 0; }
+
 /* The taskbar, along the bottom of the desktop. */
 .taskbar {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
@@ -1657,6 +1665,7 @@ body:has(#win-30d:checked) [data-w="30d"] { display: revert; }
   .plan-offer { grid-area: offer; }
   .plan > .btn { grid-area: buy; justify-self: end; margin: 6px 10px 0 0; }
   .plan-value { grid-area: value; }
+  .host-specs { grid-column: 1 / -1; margin-bottom: 4px; }
   .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sheet-body { grid-template-columns: minmax(0, 1fr); }
   .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1695,6 +1704,7 @@ body:has(#win-30d:checked) [data-w="30d"] { display: revert; }
 @media (max-width: 720px) {
   .kind { grid-template-columns: 32px minmax(0, 1fr); align-items: start; }
   .kind img, .kind-icon { grid-row: span 2; }
+  .host-ticks { grid-template-columns: minmax(0, 1fr); }
   .kv > div, .defs > div { grid-template-columns: minmax(0, 1fr); }
   .paths { grid-template-columns: minmax(0, 1fr); }
   .bands { grid-template-columns: minmax(0, 1fr); }

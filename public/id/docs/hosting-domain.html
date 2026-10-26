@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sambungkan domain — Dokumentasi Zeiko</title>
+<meta name="description" content="Arahkan domainmu ke Zeiko Hosting lewat nameserver atau A record, nyalakan SSL, tambah domain lain, dan cek hasilnya.">
+<meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
+<meta property="og:title" content="Sambungkan domain — Dokumentasi Zeiko">
+<meta property="og:description" content="Arahkan domainmu ke Zeiko Hosting lewat nameserver atau A record, nyalakan SSL, tambah domain lain, dan cek hasilnya.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/mark-32.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Langsung ke isi</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/id/">
+      <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
+      <span class="brand-name">Zeiko</span><span class="brand-doc" aria-hidden="true"> - Sambungkan domain</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Navigasi utama">
+      <a href="/id/#decision">Pranata V1</a>
+      <a href="/id/drive">Drive</a>
+      <a href="/id/hosting">Hosting</a>
+      <a href="/id/#models">Roleplay</a>
+      <a href="/id/#pricing">Harga</a>
+      <a href="/id/models">Model</a>
+      <a href="/id/docs/" aria-current="page">Dokumentasi</a>
+      <a class="nav-account" href="/account">Masuk</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Buat akun</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <a class="lang-switch" href="/docs/hosting-domain" hreflang="en" lang="en" data-lang="en">EN</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Ganti tema terang dan gelap">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Dokumentasi">
+      <details class="docs-menu">
+        <summary>Menu dokumentasi <span>Sambungkan domain</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Mulai</p>
+          <ul>
+            <li><a href="/id/docs/">Pengantar</a></li>
+            <li><a href="/id/docs/account">Akunmu</a></li>
+            <li><a href="/id/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Model AI</p>
+          <ul>
+            <li><a href="/id/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
+            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/id/docs/api">Dasar API</a></li>
+            <li><a href="/id/docs/api-decisions">API Keputusan</a></li>
+            <li><a href="/id/docs/api-chat">API Chat</a></li>
+            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive">Dasar Drive</a></li>
+            <li><a href="/id/docs/drive-plans">Paket Drive</a></li>
+            <li><a href="/id/docs/drive-files">File &amp; folder</a></li>
+            <li><a href="/id/docs/drive-sharing">Berbagi &amp; unduhan</a></li>
+            <li><a href="/id/docs/drive-safety">Keamanan &amp; privasi</a></li>
+            <li><a href="/id/docs/drive-faq">Tanya jawab Drive</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Alat Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive-tools">Alat &amp; editor</a></li>
+            <li><a href="/id/docs/drive-photo">Editor foto</a></li>
+            <li><a href="/id/docs/drive-pdf">Alat PDF</a></li>
+            <li><a href="/id/docs/drive-docs">Dokumen, spreadsheet &amp; teks</a></li>
+            <li><a href="/id/docs/drive-video">Editor video</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Hosting</p>
+          <ul>
+            <li><a href="/id/docs/hosting">Dasar hosting</a></li>
+            <li><a href="/id/docs/hosting-domain" aria-current="page">Sambungkan domain</a></li>
+            <li><a href="/id/docs/hosting-sites">Online-kan situsmu</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Mulai</p>
+          <ul>
+            <li><a href="/id/docs/">Pengantar</a></li>
+            <li><a href="/id/docs/account">Akunmu</a></li>
+            <li><a href="/id/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Model AI</p>
+          <ul>
+            <li><a href="/id/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
+            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/id/docs/api">Dasar API</a></li>
+            <li><a href="/id/docs/api-decisions">API Keputusan</a></li>
+            <li><a href="/id/docs/api-chat">API Chat</a></li>
+            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive">Dasar Drive</a></li>
+            <li><a href="/id/docs/drive-plans">Paket Drive</a></li>
+            <li><a href="/id/docs/drive-files">File &amp; folder</a></li>
+            <li><a href="/id/docs/drive-sharing">Berbagi &amp; unduhan</a></li>
+            <li><a href="/id/docs/drive-safety">Keamanan &amp; privasi</a></li>
+            <li><a href="/id/docs/drive-faq">Tanya jawab Drive</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Alat Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive-tools">Alat &amp; editor</a></li>
+            <li><a href="/id/docs/drive-photo">Editor foto</a></li>
+            <li><a href="/id/docs/drive-pdf">Alat PDF</a></li>
+            <li><a href="/id/docs/drive-docs">Dokumen, spreadsheet &amp; teks</a></li>
+            <li><a href="/id/docs/drive-video">Editor video</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Hosting</p>
+          <ul>
+            <li><a href="/id/docs/hosting">Dasar hosting</a></li>
+            <li><a href="/id/docs/hosting-domain" aria-current="page">Sambungkan domain</a></li>
+            <li><a href="/id/docs/hosting-sites">Online-kan situsmu</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/id/docs/">Dokumentasi</a> <span aria-hidden="true">/</span> Zeiko Hosting</p>
+<!-- hosting:start -->
+      <h1>Sambungkan domain</h1>
+      <p class="lede">Situsmu tampil di domainmu begitu domain itu mengarah ke hosting-mu. Ada dua cara; cukup pakai salah satu. Keduanya memakai data dari <a href="/id/docs/hosting#welcome">email sambutanmu</a>.</p>
+      <nav class="docs-toc" aria-label="Di halaman ini">
+        <p>Di halaman ini</p>
+        <ul>
+          <li><a href="#nameservers">Cara 1: ganti nameserver</a></li>
+          <li><a href="#a-record">Cara 2: pasang A record</a></li>
+          <li><a href="#ssl">SSL</a></li>
+          <li><a href="#cloudflare">Cloudflare CDN</a></li>
+          <li><a href="#more-domains">Domain dan subdomain lain</a></li>
+          <li><a href="#check">Cek hasilnya</a></li>
+        </ul>
+      </nav>
+
+<h2 id="nameservers">Cara 1: ganti nameserver</h2>
+<p>Cara paling mudah. DNS domainmu ikut pindah ke sini dan sejak itu diatur di cPanel, dan email di domainmu langsung jalan.</p>
+<ol class="steps">
+  <li><strong>Masuk ke tempat kamu membeli domain</strong>Registrar: tempat kamu memperpanjang domain tiap tahun.</li>
+  <li><strong>Cari nameserver</strong>Biasanya di menu <em>Nameservers</em>, <em>DNS</em> atau <em>Kelola domain</em>.</li>
+  <li><strong>Pakai nameserver sendiri</strong>Pilih opsi custom, ganti isinya dengan dua nameserver dari email sambutanmu, lalu simpan.</li>
+  <li><strong>Tunggu</strong>Biasanya beberapa jam, paling lama 24 sampai 48 jam, selama perubahannya menyebar ke seluruh internet.</li>
+</ol>
+
+<h2 id="a-record">Cara 2: pasang A record</h2>
+<p>Biarkan DNS-mu di tempatnya, misalnya kalau email-mu sudah jalan di sana, lalu tambahkan record ini di sana:</p>
+<div class="doc-table-wrap"><table class="doc-table">
+  <thead><tr><th scope="col">Tipe</th><th scope="col">Nama</th><th scope="col">Nilai</th></tr></thead>
+  <tbody>
+    <tr><td>A</td><td><code>@</code></td><td>Alamat IP di email sambutanmu</td></tr>
+    <tr><td>A</td><td><code>www</code></td><td>Alamat IP yang sama</td></tr>
+  </tbody>
+</table></div>
+<p>Hapus dulu A record lama untuk <code>@</code> atau <code>www</code>, supaya hanya ini yang tersisa. Email di domainmu tetap di tempatnya; untuk memakai email dari paketmu, pakai cara 1.</p>
+
+<h2 id="ssl">SSL</h2>
+<p>Begitu domainmu mengarah ke sini, nyalakan SSL-nya di cPanel:</p>
+<ol class="steps">
+  <li><strong>Buka Let’s Encrypt</strong>Di cPanel, di bagian <em>Security</em>.</li>
+  <li><strong>Terbitkan sertifikat</strong>Tekan <em>Issue</em> di samping domainmu, lalu <em>Issue</em> lagi di halaman berikutnya.</li>
+  <li><strong>Tunggu 5 sampai 10 menit</strong>Sertifikatnya terpasang sendiri.</li>
+</ol>
+<p>Lalu arahkan semua pengunjung ke <code>https://</code>. Di File Manager, nyalakan <em>Show Hidden Files</em> di <em>Settings</em>, buka <code>.htaccess</code> di folder situsmu (atau buat baru), lalu tambahkan di baris paling atas:</p>
+<div class="code">
+  <div class="code-bar"><span>.htaccess</span><button class="copy" type="button" data-copy="#code-1" aria-label="Salin baris .htaccess">Salin</button></div>
+  <pre id="code-1"><code>RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]</code></pre>
+</div>
+<p>Situs WordPress bisa melewati langkah ini: di WordPress, ubah kedua alamat di <em>Settings → General</em> supaya diawali <code>https://</code>.</p>
+
+<h2 id="cloudflare">Cloudflare CDN</h2>
+<p>Cloudflare CDN menyajikan halamanmu dari lokasi yang dekat dengan pengunjung dan melindungi situsmu dari serangan. Sudah termasuk di setiap paket: tulis ke <a href="mailto:admin@zeiko.biz.id">admin@zeiko.biz.id</a> dengan domain yang mau dipasangi, dan kami siapkan bersamamu.</p>
+
+<h2 id="more-domains">Domain dan subdomain lain</h2>
+<p>Paketmu memuat sebanyak situs yang tertulis di paketnya. Untuk menambah, buka <em>Domains</em> di cPanel, tekan <em>Create A New Domain</em>, ketik domainnya, dan hilangkan centang <em>Share document root</em> supaya domain itu punya folder sendiri. Lalu arahkan domain itu ke sini dengan cara yang sama.</p>
+<p>Subdomain, seperti <code>toko.domainmu.com</code>, ditambahkan dengan cara yang sama. Dengan cara 1 tidak perlu apa-apa lagi; dengan cara 2, tambahkan juga A record untuknya.</p>
+
+<h2 id="check">Cek hasilnya</h2>
+<p>Buka domainmu di browser. Sebelum kamu mengunggah apa pun, yang muncul adalah halaman kosong atau halaman sementara, bukan pesan error: artinya domain sudah mengarah ke sini. Setelah 48 jam masih muncul yang lain? Tulis ke <a href="mailto:admin@zeiko.biz.id">admin@zeiko.biz.id</a> dengan nama domainnya.</p>
+<!-- hosting:end -->
+
+      <nav class="docs-pager" aria-label="Halaman sebelum dan sesudah">
+        <a class="prev" href="/id/docs/hosting"><small>Sebelumnya</small>Dasar hosting</a>
+        <a class="next" href="/id/docs/hosting-sites"><small>Berikutnya</small>Online-kan situsmu</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> Zeiko</p>
+    <nav aria-label="Tautan bawah">
+      <a href="/id/">Beranda</a>
+      <a href="/id/models">Model</a>
+      <a href="/id/#pricing">Harga</a>
+      <a href="/id/drive">Drive</a>
+      <a href="/id/docs/">Dokumentasi</a>
+      <a href="/id/#contact">Kontak</a>
+      <a href="/account">Akun</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
+</body>
+</html>

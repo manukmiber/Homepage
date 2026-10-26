@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Connect your domain — Zeiko Docs</title>
+<meta name="description" content="Point your domain at Zeiko Hosting with nameservers or A records, turn on SSL, add more domains, and check that it worked.">
+<meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
+<meta property="og:title" content="Connect your domain — Zeiko Docs">
+<meta property="og:description" content="Point your domain at Zeiko Hosting with nameservers or A records, turn on SSL, add more domains, and check that it worked.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/mark-32.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/">
+      <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
+      <span class="brand-name">Zeiko</span><span class="brand-doc" aria-hidden="true"> - Connect your domain</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Main navigation">
+      <a href="/#decision">Pranata V1</a>
+      <a href="/drive">Drive</a>
+      <a href="/hosting">Hosting</a>
+      <a href="/#models">Roleplay</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/models">Models</a>
+      <a href="/docs/" aria-current="page">Docs</a>
+      <a class="nav-account" href="/account">Sign in</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Create account</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <a class="lang-switch" href="/id/docs/hosting-domain" hreflang="id" lang="id" data-lang="id">ID</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Docs">
+      <details class="docs-menu">
+        <summary>Docs menu <span>Connect your domain</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/docs/drive">Drive basics</a></li>
+            <li><a href="/docs/drive-plans">Drive plans</a></li>
+            <li><a href="/docs/drive-files">Files &amp; folders</a></li>
+            <li><a href="/docs/drive-sharing">Sharing &amp; downloads</a></li>
+            <li><a href="/docs/drive-safety">Safety &amp; privacy</a></li>
+            <li><a href="/docs/drive-faq">Drive questions</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Drive tools</p>
+          <ul>
+            <li><a href="/docs/drive-tools">Tools &amp; editors</a></li>
+            <li><a href="/docs/drive-photo">Photo editor</a></li>
+            <li><a href="/docs/drive-pdf">PDF tools</a></li>
+            <li><a href="/docs/drive-docs">Documents, sheets &amp; text</a></li>
+            <li><a href="/docs/drive-video">Video editor</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Hosting</p>
+          <ul>
+            <li><a href="/docs/hosting">Hosting basics</a></li>
+            <li><a href="/docs/hosting-domain" aria-current="page">Connect your domain</a></li>
+            <li><a href="/docs/hosting-sites">Put your site online</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/docs/drive">Drive basics</a></li>
+            <li><a href="/docs/drive-plans">Drive plans</a></li>
+            <li><a href="/docs/drive-files">Files &amp; folders</a></li>
+            <li><a href="/docs/drive-sharing">Sharing &amp; downloads</a></li>
+            <li><a href="/docs/drive-safety">Safety &amp; privacy</a></li>
+            <li><a href="/docs/drive-faq">Drive questions</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Drive tools</p>
+          <ul>
+            <li><a href="/docs/drive-tools">Tools &amp; editors</a></li>
+            <li><a href="/docs/drive-photo">Photo editor</a></li>
+            <li><a href="/docs/drive-pdf">PDF tools</a></li>
+            <li><a href="/docs/drive-docs">Documents, sheets &amp; text</a></li>
+            <li><a href="/docs/drive-video">Video editor</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Hosting</p>
+          <ul>
+            <li><a href="/docs/hosting">Hosting basics</a></li>
+            <li><a href="/docs/hosting-domain" aria-current="page">Connect your domain</a></li>
+            <li><a href="/docs/hosting-sites">Put your site online</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/docs/">Docs</a> <span aria-hidden="true">/</span> Zeiko Hosting</p>
+<!-- hosting:start -->
+      <h1>Connect your domain</h1>
+      <p class="lede">Your site shows at your domain once the domain points at your hosting. There are two ways; you only need one. Both use details from your <a href="/docs/hosting#welcome">welcome email</a>.</p>
+      <nav class="docs-toc" aria-label="On this page">
+        <p>On this page</p>
+        <ul>
+          <li><a href="#nameservers">Way 1: change the nameservers</a></li>
+          <li><a href="#a-record">Way 2: point A records</a></li>
+          <li><a href="#ssl">SSL</a></li>
+          <li><a href="#cloudflare">Cloudflare CDN</a></li>
+          <li><a href="#more-domains">More domains and subdomains</a></li>
+          <li><a href="#check">Check it worked</a></li>
+        </ul>
+      </nav>
+
+<h2 id="nameservers">Way 1: change the nameservers</h2>
+<p>The easiest way. Your domain’s DNS moves here too and is managed in cPanel from then on, and email on your domain works straight away.</p>
+<ol class="steps">
+  <li><strong>Sign in where you bought your domain</strong>The registrar: the place you renew the domain each year.</li>
+  <li><strong>Find the nameservers</strong>Usually under <em>Nameservers</em>, <em>DNS</em> or <em>Manage domain</em>.</li>
+  <li><strong>Use your own nameservers</strong>Choose the custom option, replace what is there with the two nameservers from your welcome email, and save.</li>
+  <li><strong>Wait</strong>Usually a few hours, at most 24 to 48, while the change spreads across the internet.</li>
+</ol>
+
+<h2 id="a-record">Way 2: point A records</h2>
+<p>Keep your DNS where it is, for example if your email already runs on it, and add these records there instead:</p>
+<div class="doc-table-wrap"><table class="doc-table">
+  <thead><tr><th scope="col">Type</th><th scope="col">Name</th><th scope="col">Value</th></tr></thead>
+  <tbody>
+    <tr><td>A</td><td><code>@</code></td><td>The IP address in your welcome email</td></tr>
+    <tr><td>A</td><td><code>www</code></td><td>The same IP address</td></tr>
+  </tbody>
+</table></div>
+<p>Remove any older A record for <code>@</code> or <code>www</code> first, so only these are left. Email on your domain stays where it is; to use the email that comes with your plan, use way 1.</p>
+
+<h2 id="ssl">SSL</h2>
+<p>Once your domain points here, turn on SSL for it in cPanel:</p>
+<ol class="steps">
+  <li><strong>Open Let’s Encrypt</strong>In cPanel, under <em>Security</em>.</li>
+  <li><strong>Issue a certificate</strong>Press <em>Issue</em> beside your domain, then <em>Issue</em> again on the next page.</li>
+  <li><strong>Wait 5 to 10 minutes</strong>The certificate installs by itself.</li>
+</ol>
+<p>Then send every visitor to <code>https://</code>. In File Manager, turn on <em>Show Hidden Files</em> under <em>Settings</em>, open <code>.htaccess</code> in your site’s folder (or create it), and add at the top:</p>
+<div class="code">
+  <div class="code-bar"><span>.htaccess</span><button class="copy" type="button" data-copy="#code-1" aria-label="Copy the .htaccess lines">Copy</button></div>
+  <pre id="code-1"><code>RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]</code></pre>
+</div>
+<p>A WordPress site can skip this: in WordPress, set both addresses under <em>Settings → General</em> to start with <code>https://</code>.</p>
+
+<h2 id="cloudflare">Cloudflare CDN</h2>
+<p>Cloudflare CDN serves your pages from close to your visitors and shields your site from attacks. It comes with every plan: write to <a href="mailto:admin@zeiko.biz.id">admin@zeiko.biz.id</a> with the domain you want it on, and we set it up with you.</p>
+
+<h2 id="more-domains">More domains and subdomains</h2>
+<p>Your plan holds as many websites as it says. To add one, open <em>Domains</em> in cPanel, press <em>Create A New Domain</em>, type the domain, and untick <em>Share document root</em> so it gets a folder of its own. Then point that domain here the same way.</p>
+<p>A subdomain, like <code>shop.yourdomain.com</code>, is added the same way. With way 1 it needs nothing more; with way 2, add an A record for it too.</p>
+
+<h2 id="check">Check it worked</h2>
+<p>Open your domain in a browser. Before you upload anything you see a blank or placeholder page instead of an error: the domain points here. Still seeing something else after 48 hours? Write to <a href="mailto:admin@zeiko.biz.id">admin@zeiko.biz.id</a> with the domain.</p>
+<!-- hosting:end -->
+
+      <nav class="docs-pager" aria-label="Previous and next page">
+        <a class="prev" href="/docs/hosting"><small>Previous</small>Hosting basics</a>
+        <a class="next" href="/docs/hosting-sites"><small>Next</small>Put your site online</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> Zeiko</p>
+    <nav aria-label="Footer links">
+      <a href="/">Home</a>
+      <a href="/models">Models</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/drive">Drive</a>
+      <a href="/docs/">Docs</a>
+      <a href="/#contact">Contact</a>
+      <a href="/account">Account</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
+</body>
+</html>

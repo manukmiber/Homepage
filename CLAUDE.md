@@ -75,6 +75,15 @@ paying for a plan — and every page may link to the app at
 its own stays banned). Everything else above holds
 there too, and the AI products' copy keeps the rule whole.
 
+**The fourth exception is Zeiko Hosting**, on the operator's request (October
+2026). Its own pages (`hosting.html`, `id/hosting.html`) and blocks marked
+`<!-- hosting:start -->` … `<!-- hosting:end -->` (the homepage's window and
+About column, the hosting docs) may name what a hosting plan comes with —
+web and object storage, MySQL databases, Cloudflare CDN — and its prices in
+rupiah. Everything else above holds there too. **Who runs the hosting is
+never named or hinted at anywhere in this repository** — pages, comments,
+commit messages: say what the customer gets, never where it comes from.
+
 ## What the site may show
 
 - Each model's display name, model ID, one-line description, and content
@@ -109,6 +118,9 @@ public/
   id/             every page above and below in Indonesian (see "Two languages")
   drive.html      /drive: Zeiko Drive's features, plans (drawn from Drive's catalog), FAQ
   id/drive.html   /id/drive: the same page in Indonesian
+  hosting.html    /hosting: Zeiko Hosting's plans (typed here, in rupiah), what runs on
+                  it, static sites, the way from order to online, FAQ (a static file)
+  id/hosting.html /id/hosting: the same page in Indonesian
   models.html     /models: at-a-glance table, then each model's specs and rate card
   404.html
   _redirects      old /models/<id> links → /models#<id>
@@ -220,6 +232,27 @@ things:
   never animated, like the hero's example answers card.
 - **EN | ID**: see "Two languages" below.
 
+## Zeiko Hosting (`/hosting`)
+
+Web hosting for WordPress, PHP, Node.js, Python and Ruby, managed in cPanel,
+sold in rupiah by plan (Mini, Small, Medium, Large, Extra Large, XXL;
+monthly or yearly) and static sites per GB (the operator's, October 2026).
+
+- **Prices are typed in the pages** with `data-price="hosting:<plan>"`,
+  `:year` and `:save` keys, so `/hosting`, `/id/hosting`, the homepage window
+  and the docs must agree (`npm run check`). Rupiah is written `Rp17.000` in
+  both languages.
+- **Ordering is by email for now**: each plan's Order button is a `mailto:`
+  to the contact address with the plan in the subject and body. Nothing on
+  the site creates hosting, and no request leaves the page.
+- **The docs** (`/docs/hosting`, `hosting-domain`, `hosting-sites`, and their
+  Indonesian twins) are the customer's how-to: the welcome email, connecting
+  a domain, SSL, cPanel, apps. They name cPanel's own menus; the details a
+  customer gets with their hosting (panel address, nameservers, IP) are
+  never written on the site — they come in the welcome email.
+- **Never promise what the plan cannot give.** Each feature on the page must
+  be one the hosting really has; ask the operator before adding one.
+
 ## Two languages (EN | ID)
 
 Every page is in English and in Indonesian (the operator's, October 2026):
@@ -263,7 +296,7 @@ Every page is in English and in Indonesian (the operator's, October 2026):
   Messages the account door writes come back in its own words (English).
 - **A new page, or a change to one**, is made in both languages in the same
   commit. Every docs page has the same frame (top bar, both docs lists,
-  pager, footer): a change to it goes into all 42 pages, and the two
+  pager, footer): a change to it goes into all 48 pages, and the two
   languages' docs lists and pagers stay the same.
 
 ## Zeiko Accounts (`public/account/`, `public/js/account/`)

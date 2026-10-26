@@ -60,6 +60,7 @@ export function nav(account) {
   return account
     ? `<a href="${site}/#decision">Pranata V1</a>
       <a href="${site}/drive">Drive</a>
+      <a href="${site}/hosting">Hosting</a>
       <a href="${site}/models">${L('Models', 'Model')}</a>
       <a href="${site}/docs/">${L('Docs', 'Dokumentasi')}</a>
       ${meLink(displayName(account), { current: true, title: L('Your account', 'Akunmu') })}

@@ -38,6 +38,8 @@ understands the offer in one screen and finishes what they came to do without he
   real performance (time to first token, speed, latency, availability) measured and published
   every hour.
 - **Zeiko Drive** is file storage for Indonesia, priced in rupiah, opened at its own address.
+- **Zeiko Hosting** is web hosting for WordPress, PHP, Node.js, Python and Ruby, managed in cPanel,
+  priced in rupiah by plan, plus static sites per GB; ordered by email for now.
 - **One Zeiko Account** signs a person into ZeikoAI, Zeiko Chat and Zeiko Drive.
 
 ## Operating Context
@@ -68,7 +70,7 @@ understands the offer in one screen and finishes what they came to do without he
 ## Brand Commitments
 
 - Names: Zeiko (the site), ZeikoAI, Pranata V1, Jagad 512B V1, Asmarandana 512B V1, Wisanggeni 512B
-  V1, Zeiko Drive, Zeiko Chat, Zeiko Account. Model IDs are lowercase and exact.
+  V1, Zeiko Drive, Zeiko Hosting, Zeiko Chat, Zeiko Account. Model IDs are lowercase and exact.
 - The Zeiko mark (`public/img/logo.svg`, `logo-day.svg`), shared with Zeiko Chat.
 - Pranata V1 stands apart from the roleplay models and leads the homepage.
 - Wording the owner set stays as written: the high-demand notice, the QRIS "Thanks, we're gonna check

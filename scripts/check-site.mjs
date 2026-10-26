@@ -219,15 +219,34 @@ function driveAllows(src, ranges, m) {
   return inRanges(ranges, m.index) && DRIVE_WORDS.test(m[0]);
 }
 
+// Zeiko Hosting, web hosting priced in rupiah, is the fourth exception, on
+// the operator's request (October 2026). Its own page (hosting.html, and
+// id/hosting.html) and the marked hosting blocks elsewhere
+// (<!-- hosting:start --> … <!-- hosting:end -->: the homepage's window and
+// the hosting docs) may name what a hosting plan comes with — web and object
+// storage, MySQL databases, Cloudflare CDN — and its prices in rupiah. Only
+// these words; every other rule holds there too, so nothing says who runs
+// the hosting or how.
+const HOSTING_PAGES = new Set([join(PUBLIC, 'hosting.html'), join(PUBLIC, 'id', 'hosting.html')]);
+const HOSTING_WORDS = /^(storage|database|mysql|cloudflare|rupiah|penyimpanan|basis data)$/i;
+function hostingRanges(file, src) {
+  if (HOSTING_PAGES.has(file)) return [[0, src.length]];
+  const out = [];
+  for (const m of src.matchAll(/<!-- hosting:start -->[\s\S]*?<!-- hosting:end -->/g)) out.push([m.index, m.index + m[0].length]);
+  return out;
+}
+
 function scan(file, src) {
   const words = src.split(CONTACT).join(' '.repeat(CONTACT.length));
   const drive = driveRanges(file, src);
+  const hosting = hostingRanges(file, src);
   for (const [what, re] of BANNED) {
     const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
     for (const m of words.matchAll(g)) {
       if (file === PLAYGROUND && what === 'connection detail' && /^\/v1$/i.test(m[0])) continue;
       if (inDocs(file) && (what === 'connection detail' || (what === 'infrastructure' && SDK_KEY.test(m[0])))) continue;
       if (driveAllows(words, drive, m)) continue;
+      if (inRanges(hosting, m.index) && HOSTING_WORDS.test(m[0])) continue;
       report(file, m.index, src, `${what}: "${m[0]}"`);
     }
   }
