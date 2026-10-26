@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "public/hosting.html"
+        ],
+        "createdAt": "2026-10-26T20:50:31.089Z",
+        "reason": "Claude triage: only finding is the shared full-bleed .page-head hero band (drive.html gets the same, predates this session); its text is inset by the .wrap gutter"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "public/id/hosting.html"
+        ],
+        "createdAt": "2026-10-26T20:50:31.164Z",
+        "reason": "Claude triage: only finding is the shared full-bleed .page-head hero band (drive.html gets the same, predates this session); its text is inset by the .wrap gutter"
+      }
+    ]
+  }
+}
