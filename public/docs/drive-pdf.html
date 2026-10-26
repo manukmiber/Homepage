@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PDF tools — Zeiko Docs</title>
+<meta name="description" content="Zeiko Drive PDF tools: view, arrange pages, fill and sign, fill in forms, watermark, page numbers, compress, and turn pages into pictures or text.">
+<meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
+<meta property="og:title" content="PDF tools — Zeiko Docs">
+<meta property="og:description" content="Zeiko Drive PDF tools: view, arrange pages, fill and sign, fill in forms, watermark, page numbers, compress, and turn pages into pictures or text.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/mark-32.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/">
+      <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
+      <span class="brand-name">Zeiko</span><span class="brand-doc" aria-hidden="true"> - PDF tools</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Main navigation">
+      <a href="/#decision">Pranata V1</a>
+      <a href="/drive">Drive</a>
+      <a href="/#models">Roleplay</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/models">Models</a>
+      <a href="/docs/" aria-current="page">Docs</a>
+      <a class="nav-account" href="/account">Sign in</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Create account</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <a class="lang-switch" href="/id/docs/drive-pdf" hreflang="id" lang="id" data-lang="id">ID</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Docs">
+      <details class="docs-menu">
+        <summary>Docs menu <span>Drive basics</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/docs/drive">Drive basics</a></li>
+            <li><a href="/docs/drive-plans">Drive plans</a></li>
+            <li><a href="/docs/drive-files">Files &amp; folders</a></li>
+            <li><a href="/docs/drive-sharing">Sharing &amp; downloads</a></li>
+            <li><a href="/docs/drive-safety">Safety &amp; privacy</a></li>
+            <li><a href="/docs/drive-faq">Drive questions</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Drive tools</p>
+          <ul>
+            <li><a href="/docs/drive-tools">Tools &amp; editors</a></li>
+            <li><a href="/docs/drive-photo">Photo editor</a></li>
+            <li><a href="/docs/drive-pdf" aria-current="page">PDF tools</a></li>
+            <li><a href="/docs/drive-docs">Documents, sheets &amp; text</a></li>
+            <li><a href="/docs/drive-video">Video editor</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/docs/drive">Drive basics</a></li>
+            <li><a href="/docs/drive-plans">Drive plans</a></li>
+            <li><a href="/docs/drive-files">Files &amp; folders</a></li>
+            <li><a href="/docs/drive-sharing">Sharing &amp; downloads</a></li>
+            <li><a href="/docs/drive-safety">Safety &amp; privacy</a></li>
+            <li><a href="/docs/drive-faq">Drive questions</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Drive tools</p>
+          <ul>
+            <li><a href="/docs/drive-tools">Tools &amp; editors</a></li>
+            <li><a href="/docs/drive-photo">Photo editor</a></li>
+            <li><a href="/docs/drive-pdf" aria-current="page">PDF tools</a></li>
+            <li><a href="/docs/drive-docs">Documents, sheets &amp; text</a></li>
+            <li><a href="/docs/drive-video">Video editor</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/docs/">Docs</a> <span aria-hidden="true">/</span> Drive tools</p>
+<!-- drive:start -->
+      <h1>PDF tools</h1>
+      <p class="lede">Sign a letter, fill in a form, join and split files, or make a PDF lighter, without leaving the browser.</p>
+      <nav class="docs-toc" aria-label="On this page">
+        <p>On this page</p>
+        <ul>
+          <li><a href="#open">Opening PDFs</a></li>
+          <li><a href="#pages">Pages</a></li>
+          <li><a href="#sign">Fill &amp; sign</a></li>
+          <li><a href="#form">Form</a></li>
+          <li><a href="#tools">Tools</a></li>
+        </ul>
+      </nav>
+
+<h2 id="open">Opening PDFs</h2>
+<ul>
+  <li><em>PDF tools</em> in a PDF's menu. Select several PDFs first to join them: the menu says <em>Merge 2 PDFs</em> and so on.</li>
+  <li><em>Make a PDF</em> for one or more photos puts them into one PDF, a page each.</li>
+  <li>A PDF locked with a password asks for it, and can then only be viewed.</li>
+</ul>
+<p>The tabs: <em>View</em>, <em>Pages</em>, <em>Fill &amp; sign</em>, <em>Form</em> (only when the PDF has fields) and <em>Tools</em>. <em>Undo</em> sits at the top.</p>
+
+<h2 id="pages">Pages</h2>
+<p>Tap pages to select them (<em>Select all</em> for every page), then:</p>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Button</th><th scope="col">What it does</th></tr></thead>
+    <tbody>
+      <tr><th scope="row" data-label="Button"><em>Rotate left</em> / <em>Rotate right</em></th><td data-label="What it does">Turns the selected pages a quarter.</td></tr>
+      <tr><th scope="row" data-label="Button"><em>Move earlier</em> / <em>Move later</em></th><td data-label="What it does">Changes their order.</td></tr>
+      <tr><th scope="row" data-label="Button"><em>Duplicate</em></th><td data-label="What it does">Puts a copy of each right after it, with anything placed on it.</td></tr>
+      <tr><th scope="row" data-label="Button"><em>Delete</em></th><td data-label="What it does">Takes them out (at least one page stays).</td></tr>
+      <tr><th scope="row" data-label="Button"><em>Take out selected</em></th><td data-label="What it does">Saves only those pages as a new PDF.</td></tr>
+      <tr><th scope="row" data-label="Button"><em>Split into pages</em></th><td data-label="What it does">Saves every page as its own PDF.</td></tr>
+      <tr><th scope="row" data-label="Button"><em>Blank page</em></th><td data-label="What it does">Adds an empty page, the size of the selected one, after it.</td></tr>
+      <tr><th scope="row" data-label="Button"><em>Add a PDF</em> / <em>Add pictures</em></th><td data-label="What it does">Adds pages from other PDFs or photos at the end.</td></tr>
+    </tbody>
+  </table></div>
+
+<h2 id="sign">Fill &amp; sign</h2>
+<p>Choose what to put on a page, then tap the page where it goes. Once placed, drag it to move it, drag its corner to resize it, or press <em>×</em> to remove it.</p>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Button</th><th scope="col">What it puts on the page</th></tr></thead>
+    <tbody>
+      <tr><th scope="row" data-label="Button"><em>Signature</em></th><td data-label="What it puts on the page">Draw it with a finger or mouse, type your name, or take a photo of it on white paper (the paper is removed). <em>Remember on this device</em> keeps it for next time.</td></tr>
+      <tr><th scope="row" data-label="Button"><em>Text</em>, <em>Date</em></th><td data-label="What it puts on the page">Words you type, or today's date.</td></tr>
+      <tr><th scope="row" data-label="Button"><em>Tick</em>, <em>Cross</em></th><td data-label="What it puts on the page">A ✓ or ✗, for boxes on paper forms.</td></tr>
+      <tr><th scope="row" data-label="Button"><em>Highlight</em></th><td data-label="What it puts on the page">Drag across text to mark it in yellow; the text stays readable.</td></tr>
+      <tr><th scope="row" data-label="Button"><em>White-out</em></th><td data-label="What it puts on the page">Drag to cover part of the page with white.</td></tr>
+      <tr><th scope="row" data-label="Button"><em>Picture</em></th><td data-label="What it puts on the page">A logo or a company stamp from your device.</td></tr>
+    </tbody>
+  </table></div>
+<p>The coloured dots set the ink for text, dates, ticks and crosses: black, blue or red. Signatures are black or blue.</p>
+<p><strong>White-out only covers what you see.</strong> The text under it can still be copied out of the PDF. To really remove it, save first, then use <em>Tools</em> → <em>Make it smaller</em> → <em>Smallest</em>, which turns every page into a picture.</p>
+
+<h2 id="form">Form</h2>
+<p>When a PDF has fields to fill in, the <em>Form</em> tab lists them page by page: text boxes, tick boxes and choices. Fill them in and save; the answers go into the PDF's own fields, so they can still be changed in any PDF app. Tick <em>Lock the answers</em> to make them part of the page instead.</p>
+<p>Joining, reordering or deleting pages locks the answers by itself, so they are never lost. Form fields only take Latin letters.</p>
+
+<h2 id="tools">Tools</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Tool</th><th scope="col">What it does</th></tr></thead>
+    <tbody>
+      <tr><th scope="row" data-label="Tool"><em>Watermark</em></th><td data-label="What it does">Slanted words across the middle of every page, such as CONFIDENTIAL or SAMPLE. Set the words, the strength and the size; you see it on the pages while you work.</td></tr>
+      <tr><th scope="row" data-label="Tool"><em>Page numbers</em></th><td data-label="What it does">Bottom centre, bottom right or top right, as “1”, “1 / 10” or “Page 1 of 10”, starting from the number you choose.</td></tr>
+      <tr><th scope="row" data-label="Tool"><em>Make it smaller</em></th><td data-label="What it does"><em>Balanced</em> shrinks the photos inside and keeps the text selectable; <em>Smallest</em> turns every page into a picture. If the result is not smaller, it says so.</td></tr>
+      <tr><th scope="row" data-label="Tool"><em>Turn into pictures</em></th><td data-label="What it does">Every page as a JPG or PNG, at 150 or 300 dpi, signatures and marks included.</td></tr>
+      <tr><th scope="row" data-label="Tool"><em>Get the text</em></th><td data-label="What it does">All the text as one .txt file, page by page. A scanned PDF has no text to take out.</td></tr>
+    </tbody>
+  </table></div>
+<p>Everything in Tools works on the PDF as it would be saved now, with what you placed and filled in.</p>
+<!-- drive:end -->
+
+      <nav class="docs-pager" aria-label="Previous and next page">
+        <a class="prev" href="/docs/drive-photo"><small>Previous</small>Photo editor</a>
+        <a class="next" href="/docs/drive-docs"><small>Next</small>Documents, sheets &amp; text</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> Zeiko</p>
+    <nav aria-label="Footer links">
+      <a href="/">Home</a>
+      <a href="/models">Models</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/drive">Drive</a>
+      <a href="/docs/">Docs</a>
+      <a href="/#contact">Contact</a>
+      <a href="/account">Account</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Video editor — Zeiko Docs</title>
+<meta name="description" content="The Zeiko Drive video editor: trim, split, delete and reorder parts, join several videos, and save the Fast or the Precise way.">
+<meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
+<meta property="og:title" content="Video editor — Zeiko Docs">
+<meta property="og:description" content="The Zeiko Drive video editor: trim, split, delete and reorder parts, join several videos, and save the Fast or the Precise way.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/mark-32.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/">
+      <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
+      <span class="brand-name">Zeiko</span><span class="brand-doc" aria-hidden="true"> - Video editor</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Main navigation">
+      <a href="/#decision">Pranata V1</a>
+      <a href="/drive">Drive</a>
+      <a href="/#models">Roleplay</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/models">Models</a>
+      <a href="/docs/" aria-current="page">Docs</a>
+      <a class="nav-account" href="/account">Sign in</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Create account</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <a class="lang-switch" href="/id/docs/drive-video" hreflang="id" lang="id" data-lang="id">ID</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Docs">
+      <details class="docs-menu">
+        <summary>Docs menu <span>Drive basics</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/docs/drive">Drive basics</a></li>
+            <li><a href="/docs/drive-plans">Drive plans</a></li>
+            <li><a href="/docs/drive-files">Files &amp; folders</a></li>
+            <li><a href="/docs/drive-sharing">Sharing &amp; downloads</a></li>
+            <li><a href="/docs/drive-safety">Safety &amp; privacy</a></li>
+            <li><a href="/docs/drive-faq">Drive questions</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Drive tools</p>
+          <ul>
+            <li><a href="/docs/drive-tools">Tools &amp; editors</a></li>
+            <li><a href="/docs/drive-photo">Photo editor</a></li>
+            <li><a href="/docs/drive-pdf">PDF tools</a></li>
+            <li><a href="/docs/drive-docs">Documents, sheets &amp; text</a></li>
+            <li><a href="/docs/drive-video" aria-current="page">Video editor</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/docs/drive">Drive basics</a></li>
+            <li><a href="/docs/drive-plans">Drive plans</a></li>
+            <li><a href="/docs/drive-files">Files &amp; folders</a></li>
+            <li><a href="/docs/drive-sharing">Sharing &amp; downloads</a></li>
+            <li><a href="/docs/drive-safety">Safety &amp; privacy</a></li>
+            <li><a href="/docs/drive-faq">Drive questions</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Drive tools</p>
+          <ul>
+            <li><a href="/docs/drive-tools">Tools &amp; editors</a></li>
+            <li><a href="/docs/drive-photo">Photo editor</a></li>
+            <li><a href="/docs/drive-pdf">PDF tools</a></li>
+            <li><a href="/docs/drive-docs">Documents, sheets &amp; text</a></li>
+            <li><a href="/docs/drive-video" aria-current="page">Video editor</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/docs/">Docs</a> <span aria-hidden="true">/</span> Drive tools</p>
+<!-- drive:start -->
+      <h1>Video editor</h1>
+      <p class="lede">Cut the start and end off a clip, take out the bits you don't want, or join several videos into one, in the browser.</p>
+      <nav class="docs-toc" aria-label="On this page">
+        <p>On this page</p>
+        <ul>
+          <li><a href="#open">Opening videos</a></li>
+          <li><a href="#cut">Cutting</a></li>
+          <li><a href="#save">Saving: Fast or Precise</a></li>
+        </ul>
+      </nav>
+
+<h2 id="open">Opening videos</h2>
+<p><em>Edit video</em> in a video's menu. Select several videos first to join them: the menu says <em>Join 3 videos</em> and so on. <em>Add video</em> inside the editor adds more clips at the end.</p>
+
+<h2 id="cut">Cutting</h2>
+<p>The timeline shows your video as parts. Move the marker to a moment, then:</p>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Button</th><th scope="col">What it does</th></tr></thead>
+    <tbody>
+      <tr><th scope="row" data-label="Button"><em>Play</em> / <em>Pause</em></th><td data-label="What it does">Plays from the marker.</td></tr>
+      <tr><th scope="row" data-label="Button"><em>Start here</em> / <em>End here</em></th><td data-label="What it does">Trims the selected part so it starts or ends at the marker.</td></tr>
+      <tr><th scope="row" data-label="Button"><em>Split here</em></th><td data-label="What it does">Cuts the part in two at the marker.</td></tr>
+      <tr><th scope="row" data-label="Button"><em>Delete part</em></th><td data-label="What it does">Takes the selected part out.</td></tr>
+      <tr><th scope="row" data-label="Button"><em>Move left</em> / <em>Move right</em></th><td data-label="What it does">Changes the order of the parts.</td></tr>
+    </tbody>
+  </table></div>
+<p>Each part shows where it starts and ends and how long it is. Undo works step by step. If the browser can't play a video it can still cut and save it.</p>
+
+<h2 id="save">Saving: Fast or Precise</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Way</th><th scope="col">Good for</th></tr></thead>
+    <tbody>
+      <tr><th scope="row" data-label="Way"><em>Fast</em></th><td data-label="Good for">No re-encoding, so the quality stays exactly the same and it is quick. Cuts snap to the nearest key frame, so they can be slightly off. Only joins videos of the same format and size.</td></tr>
+      <tr><th scope="row" data-label="Way"><em>Precise</em></th><td data-label="Good for">Re-encodes: cuts are frame-exact, and videos of different sizes can be joined. Takes longer, and needs a browser that can encode video.</td></tr>
+    </tbody>
+  </table></div>
+<p>Then choose <em>Join into one file</em>, or <em>Each part as its own file</em>, and press <em>Make the video</em>.</p>
+<!-- drive:end -->
+
+      <nav class="docs-pager" aria-label="Previous and next page">
+        <a class="prev" href="/docs/drive-docs"><small>Previous</small>Documents, sheets &amp; text</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> Zeiko</p>
+    <nav aria-label="Footer links">
+      <a href="/">Home</a>
+      <a href="/models">Models</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/drive">Drive</a>
+      <a href="/docs/">Docs</a>
+      <a href="/#contact">Contact</a>
+      <a href="/account">Account</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
+</body>
+</html>

@@ -263,7 +263,7 @@ Every page is in English and in Indonesian (the operator's, October 2026):
   Messages the account door writes come back in its own words (English).
 - **A new page, or a change to one**, is made in both languages in the same
   commit. Every docs page has the same frame (top bar, both docs lists,
-  pager, footer): a change to it goes into all 26 pages, and the two
+  pager, footer): a change to it goes into all 42 pages, and the two
   languages' docs lists and pagers stay the same.
 
 ## Zeiko Accounts (`public/account/`, `public/js/account/`)
@@ -500,10 +500,12 @@ copy, and the snapshot's figures are keyed on it. The display name
 
 ## The docs (`public/docs/`, `public/id/docs/`)
 
-`/docs` is thirteen plain pages, one per topic, grouped Get started
+`/docs` is twenty-one plain pages, one per topic, grouped Get started
 (`index`, `account`, `playground`), Models (`pranata-v1`, `roleplay`,
-`pricing`), API (`api`, `api-decisions`, `api-chat`, `faq`) and Zeiko Drive
-(`drive`, `drive-plans`, `drive-sharing`), each with its Indonesian twin
+`pricing`), API (`api`, `api-decisions`, `api-chat`, `faq`), Zeiko Drive
+(`drive`, `drive-plans`, `drive-files`, `drive-sharing`, `drive-safety`,
+`drive-faq`) and Drive tools (`drive-tools`, `drive-photo`, `drive-pdf`,
+`drive-docs`, `drive-video`), each with its Indonesian twin
 under `/id/docs/`. `/docs/<name>` serves `docs/<name>.html`; `/docs` itself
 goes to `/docs/`. The Zeiko Drive pages are written from the Drive app
 itself (its own words and button names) and sit in Drive blocks; they never

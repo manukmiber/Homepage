@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Photo editor — Zeiko Docs</title>
+<meta name="description" content="The Zeiko Drive photo editor, tool by tool: Looks, Tune image, Details, Curves, White balance, Crop, Rotate, Healing, Lens blur, Vignette, Effects, Text, Frames and Size.">
+<meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
+<meta property="og:title" content="Photo editor — Zeiko Docs">
+<meta property="og:description" content="The Zeiko Drive photo editor, tool by tool: Looks, Tune image, Details, Curves, White balance, Crop, Rotate, Healing, Lens blur, Vignette, Effects, Text, Frames and Size.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/mark-32.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/">
+      <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
+      <span class="brand-name">Zeiko</span><span class="brand-doc" aria-hidden="true"> - Photo editor</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Main navigation">
+      <a href="/#decision">Pranata V1</a>
+      <a href="/drive">Drive</a>
+      <a href="/#models">Roleplay</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/models">Models</a>
+      <a href="/docs/" aria-current="page">Docs</a>
+      <a class="nav-account" href="/account">Sign in</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Create account</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <a class="lang-switch" href="/id/docs/drive-photo" hreflang="id" lang="id" data-lang="id">ID</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Docs">
+      <details class="docs-menu">
+        <summary>Docs menu <span>Drive basics</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/docs/drive">Drive basics</a></li>
+            <li><a href="/docs/drive-plans">Drive plans</a></li>
+            <li><a href="/docs/drive-files">Files &amp; folders</a></li>
+            <li><a href="/docs/drive-sharing">Sharing &amp; downloads</a></li>
+            <li><a href="/docs/drive-safety">Safety &amp; privacy</a></li>
+            <li><a href="/docs/drive-faq">Drive questions</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Drive tools</p>
+          <ul>
+            <li><a href="/docs/drive-tools">Tools &amp; editors</a></li>
+            <li><a href="/docs/drive-photo" aria-current="page">Photo editor</a></li>
+            <li><a href="/docs/drive-pdf">PDF tools</a></li>
+            <li><a href="/docs/drive-docs">Documents, sheets &amp; text</a></li>
+            <li><a href="/docs/drive-video">Video editor</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/docs/drive">Drive basics</a></li>
+            <li><a href="/docs/drive-plans">Drive plans</a></li>
+            <li><a href="/docs/drive-files">Files &amp; folders</a></li>
+            <li><a href="/docs/drive-sharing">Sharing &amp; downloads</a></li>
+            <li><a href="/docs/drive-safety">Safety &amp; privacy</a></li>
+            <li><a href="/docs/drive-faq">Drive questions</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Drive tools</p>
+          <ul>
+            <li><a href="/docs/drive-tools">Tools &amp; editors</a></li>
+            <li><a href="/docs/drive-photo" aria-current="page">Photo editor</a></li>
+            <li><a href="/docs/drive-pdf">PDF tools</a></li>
+            <li><a href="/docs/drive-docs">Documents, sheets &amp; text</a></li>
+            <li><a href="/docs/drive-video">Video editor</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/docs/">Docs</a> <span aria-hidden="true">/</span> Drive tools</p>
+<!-- drive:start -->
+      <h1>Photo editor</h1>
+      <p class="lede">A full photo editor in your browser, laid out like the phone apps you know: ready-made Looks, and a set of tools you open one at a time.</p>
+      <nav class="docs-toc" aria-label="On this page">
+        <p>On this page</p>
+        <ul>
+          <li><a href="#how">How it works</a></li>
+          <li><a href="#looks">Looks</a></li>
+          <li><a href="#tools">The tools</a></li>
+          <li><a href="#tips">Tips</a></li>
+        </ul>
+      </nav>
+
+<h2 id="how">How it works</h2>
+<ol class="steps">
+  <li><strong>Open the photo</strong><em>Edit photo</em> in the file's menu, or <em>Tools</em> → <em>Edit photo</em> for a photo on your device.</li>
+  <li><strong>Pick a Look, or a tool</strong>The two tabs at the bottom: <em>Looks</em> and <em>Tools</em>.</li>
+  <li><strong>Apply or cancel</strong>A tool opens under the photo. <em>✓</em> keeps the change as one step, <em>✕</em> drops it.</li>
+  <li><strong>Save</strong>As a new file, in place of the original, or to your device (<a href="/docs/drive-tools#saving">saving</a>).</li>
+</ol>
+<p>At the top: <em>Undo</em> and <em>Redo</em> go back and forward one step at a time, and holding the eye button shows the photo as it came, in the same frame. <kbd>Ctrl</kbd>+<kbd>Z</kbd> and <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> work too.</p>
+
+<h2 id="looks">Looks</h2>
+<p>Fifteen ready-made styles, each shown on your own photo: Original, Pop, Bright, Morning, Faded, Film, Vintage, Drama, HDR, Glow, Cool, Warm, Black &amp; white, Noir and Sepia. Tap one to use it, then set its <em>Strength</em>. A Look adds to your own changes from the tools, so you can use both.</p>
+
+<h2 id="tools">The tools</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Tool</th><th scope="col">What it does</th></tr></thead>
+    <tbody>
+      <tr><th scope="row" data-label="Tool"><em>Tune image</em></th><td data-label="What it does">Brightness, Contrast, Saturation, Ambiance (balances light and livens muted colours), Highlights, Shadows and Warmth. Pick one at the top, move the slider. <em>Auto</em> suggests settings for your photo.</td></tr>
+      <tr><th scope="row" data-label="Tool"><em>Details</em></th><td data-label="What it does">Structure brings out texture (or, below 0, smooths it); Sharpening makes edges crisp.</td></tr>
+      <tr><th scope="row" data-label="Tool"><em>Curves</em></th><td data-label="What it does">Drag the line to shape light and dark, for all colours or red, green or blue alone, over the photo's histogram. Tap the line to add a point, double-tap a point to remove it. Ready-made curves: Straight, Contrast, Strong contrast, Brighter, Darker, Matte.</td></tr>
+      <tr><th scope="row" data-label="Tool"><em>White balance</em></th><td data-label="What it does">Temperature (bluer to yellower) and Tint (greener to more magenta). <em>Auto</em> makes the average colour neutral.</td></tr>
+      <tr><th scope="row" data-label="Tool"><em>Crop</em></th><td data-label="What it does">Drag the box or its corners. Shapes: Free, Original, 1:1, 4:3, 3:4, 16:9, 9:16, 4:5.</td></tr>
+      <tr><th scope="row" data-label="Tool"><em>Rotate</em></th><td data-label="What it does">Turn left or right, flip left-right or upside down, and <em>Straighten</em> up to 45° either way with a grid to line things up. The photo grows just enough that no empty corners show.</td></tr>
+      <tr><th scope="row" data-label="Tool"><em>Healing</em></th><td data-label="What it does">Tap a spot, blemish or small object: it is patched with the area around it that matches best. Set the brush size first; <em>Remove all spots</em> starts over.</td></tr>
+      <tr><th scope="row" data-label="Tool"><em>Lens blur</em></th><td data-label="What it does">Round or Band: keeps one part sharp and blurs the rest, like a camera with a wide lens. Drag the circle on the photo to move the sharp part; set the blur strength, centre size, transition and (for a band) its angle.</td></tr>
+      <tr><th scope="row" data-label="Tool"><em>Vignette</em></th><td data-label="What it does">Darker (or lighter) edges. Drag the circle to move the centre.</td></tr>
+      <tr><th scope="row" data-label="Tool"><em>Effects</em></th><td data-label="What it does">Glow (soft, bright light), Film grain and Fade (lifted blacks).</td></tr>
+      <tr><th scope="row" data-label="Tool"><em>Text</em></th><td data-label="What it does"><em>Add text</em>, type it, choose Plain, Bold, Box or Outline, a colour and a size, and drag it where you want. Text moves with the photo when you crop or rotate.</td></tr>
+      <tr><th scope="row" data-label="Tool"><em>Frames</em></th><td data-label="What it does">Thin, Thick, Polaroid or Round corners, in the colour and thickness you choose.</td></tr>
+      <tr><th scope="row" data-label="Tool"><em>Size</em></th><td data-label="What it does">Scale (100%, 75%, 50%, 25%) or an exact width or height in pixels, the format (JPEG, PNG, WebP) and the quality.</td></tr>
+    </tbody>
+  </table></div>
+
+<h2 id="tips">Tips</h2>
+<ul>
+  <li><strong>Double-tap a slider</strong> to put it back where it started. <em>Reset</em> in a tool clears that tool.</li>
+  <li><strong>Small screen?</strong> The photo you see is a lighter copy; the saved photo is made at full size, and looks the same.</li>
+  <li><strong>Bigger photos take longer to save</strong>, a few seconds on a phone with many tools used.</li>
+  <li><strong>Location and camera details</strong> are not kept in the saved photo.</li>
+</ul>
+<!-- drive:end -->
+
+      <nav class="docs-pager" aria-label="Previous and next page">
+        <a class="prev" href="/docs/drive-tools"><small>Previous</small>Tools &amp; editors</a>
+        <a class="next" href="/docs/drive-pdf"><small>Next</small>PDF tools</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> Zeiko</p>
+    <nav aria-label="Footer links">
+      <a href="/">Home</a>
+      <a href="/models">Models</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/drive">Drive</a>
+      <a href="/docs/">Docs</a>
+      <a href="/#contact">Contact</a>
+      <a href="/account">Account</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
+</body>
+</html>

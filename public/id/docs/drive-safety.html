@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Keamanan &amp; privasi — Dokumentasi Zeiko</title>
+<meta name="description" content="Cara Zeiko Drive memeriksa upload, arti file yang diblokir, cara editor menjaga file tetap di perangkatmu, melaporkan penyalahgunaan, notifikasi, dan datamu.">
+<meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
+<meta property="og:title" content="Keamanan &amp; privasi — Dokumentasi Zeiko">
+<meta property="og:description" content="Cara Zeiko Drive memeriksa upload, arti file yang diblokir, cara editor menjaga file tetap di perangkatmu, melaporkan penyalahgunaan, notifikasi, dan datamu.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/mark-32.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Langsung ke isi</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/id/">
+      <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
+      <span class="brand-name">Zeiko</span><span class="brand-doc" aria-hidden="true"> - Keamanan &amp; privasi</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Navigasi utama">
+      <a href="/id/#decision">Pranata V1</a>
+      <a href="/id/drive">Drive</a>
+      <a href="/id/#models">Roleplay</a>
+      <a href="/id/#pricing">Harga</a>
+      <a href="/id/models">Model</a>
+      <a href="/id/docs/" aria-current="page">Dokumentasi</a>
+      <a class="nav-account" href="/account">Masuk</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Buat akun</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <a class="lang-switch" href="/docs/drive-safety" hreflang="en" lang="en" data-lang="en">EN</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Ganti tema terang dan gelap">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Dokumentasi">
+      <details class="docs-menu">
+        <summary>Menu dokumentasi <span>Dasar Drive</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Mulai</p>
+          <ul>
+            <li><a href="/id/docs/">Pengantar</a></li>
+            <li><a href="/id/docs/account">Akunmu</a></li>
+            <li><a href="/id/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Model AI</p>
+          <ul>
+            <li><a href="/id/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
+            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/id/docs/api">Dasar API</a></li>
+            <li><a href="/id/docs/api-decisions">API Keputusan</a></li>
+            <li><a href="/id/docs/api-chat">API Chat</a></li>
+            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive">Dasar Drive</a></li>
+            <li><a href="/id/docs/drive-plans">Paket Drive</a></li>
+            <li><a href="/id/docs/drive-files">File &amp; folder</a></li>
+            <li><a href="/id/docs/drive-sharing">Berbagi &amp; unduhan</a></li>
+            <li><a href="/id/docs/drive-safety" aria-current="page">Keamanan &amp; privasi</a></li>
+            <li><a href="/id/docs/drive-faq">Tanya jawab Drive</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Alat Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive-tools">Alat &amp; editor</a></li>
+            <li><a href="/id/docs/drive-photo">Editor foto</a></li>
+            <li><a href="/id/docs/drive-pdf">Alat PDF</a></li>
+            <li><a href="/id/docs/drive-docs">Dokumen, spreadsheet &amp; teks</a></li>
+            <li><a href="/id/docs/drive-video">Editor video</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Mulai</p>
+          <ul>
+            <li><a href="/id/docs/">Pengantar</a></li>
+            <li><a href="/id/docs/account">Akunmu</a></li>
+            <li><a href="/id/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Model AI</p>
+          <ul>
+            <li><a href="/id/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
+            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/id/docs/api">Dasar API</a></li>
+            <li><a href="/id/docs/api-decisions">API Keputusan</a></li>
+            <li><a href="/id/docs/api-chat">API Chat</a></li>
+            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive">Dasar Drive</a></li>
+            <li><a href="/id/docs/drive-plans">Paket Drive</a></li>
+            <li><a href="/id/docs/drive-files">File &amp; folder</a></li>
+            <li><a href="/id/docs/drive-sharing">Berbagi &amp; unduhan</a></li>
+            <li><a href="/id/docs/drive-safety" aria-current="page">Keamanan &amp; privasi</a></li>
+            <li><a href="/id/docs/drive-faq">Tanya jawab Drive</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Alat Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive-tools">Alat &amp; editor</a></li>
+            <li><a href="/id/docs/drive-photo">Editor foto</a></li>
+            <li><a href="/id/docs/drive-pdf">Alat PDF</a></li>
+            <li><a href="/id/docs/drive-docs">Dokumen, spreadsheet &amp; teks</a></li>
+            <li><a href="/id/docs/drive-video">Editor video</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/id/docs/">Dokumentasi</a> <span aria-hidden="true">/</span> Zeiko Drive</p>
+<!-- drive:start -->
+      <h1>Keamanan &amp; privasi</h1>
+      <p class="lede">Apa yang Drive lakukan supaya kamu dan orang yang kamu kirimi file tetap aman, dan apa yang tetap pribadi.</p>
+      <nav class="docs-toc" aria-label="Di halaman ini">
+        <p>Di halaman ini</p>
+        <ul>
+          <li><a href="#check">Pemindaian keamanan</a></li>
+          <li><a href="#editors">Edit tetap di perangkatmu</a></li>
+          <li><a href="#links">Berbagi dengan aman</a></li>
+          <li><a href="#report">Melaporkan penyalahgunaan</a></li>
+          <li><a href="#notify">Notifikasi</a></li>
+          <li><a href="#account">Akun dan datamu</a></li>
+        </ul>
+      </nav>
+
+<h2 id="check">Pemindaian keamanan</h2>
+<p>Setiap upload diperiksa otomatis sebelum bisa diunduh atau dibagikan. Statusnya terlihat di file dan di <em>Detail</em>:</p>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Status</th><th scope="col">Artinya</th></tr></thead>
+    <tbody>
+      <tr><th scope="row" data-label="Status"><em>Sedang dipindai</em></th><td data-label="Artinya">Baru saja diupload. Biasanya beberapa detik; belum bisa dibagikan.</td></tr>
+      <tr><th scope="row" data-label="Status"><em>Aman</em></th><td data-label="Artinya">Tidak ditemukan yang berbahaya.</td></tr>
+      <tr><th scope="row" data-label="Status"><em>Berbahaya</em> / <em>Ditolak (berbahaya)</em></th><td data-label="Artinya">Cocok dengan sesuatu yang berbahaya. File tetap ada di Drive-mu tapi tidak bisa diunduh atau dibagikan, dan kamu dapat notifikasi.</td></tr>
+      <tr><th scope="row" data-label="Status"><em>Tidak dipindai penuh</em></th><td data-label="Artinya">Sebagian isinya tidak bisa diperiksa (misalnya arsip bersandi).</td></tr>
+      <tr><th scope="row" data-label="Status"><em>Gagal dipindai</em></th><td data-label="Artinya">Pemeriksaannya tidak selesai. Akan dicoba lagi.</td></tr>
+    </tbody>
+  </table></div>
+<p>Tidak ada orang yang membuka file-mu untuk ini: pemeriksaannya otomatis.</p>
+
+<h2 id="editors">Edit tetap di perangkatmu</h2>
+<p>Editor foto, video, dan PDF, dokumen, spreadsheet, file teks, dan penampil ZIP semuanya bekerja di dalam browsermu. File tidak dikirim ke mana pun selama kamu mengedit: baru saat kamu menekan <em>Simpan ke Drive</em> hasilnya naik, seperti upload biasa. <em>Unduh ke perangkat</em> sama sekali tidak menyentuh Drive.</p>
+<p>Foto yang disimpan kehilangan data lokasi (GPS) dan info kameranya.</p>
+
+<h2 id="links">Berbagi dengan aman</h2>
+<ul>
+  <li>Link share bisa diberi sandi, batas waktu (<em>Berlaku</em>), dan batas unduhan, dan kamu bisa <em>Cabut link</em> atau <em>Buat ulang link</em> kapan saja.</li>
+  <li>Hanya file yang lolos pemindaian yang bisa dibagikan.</li>
+  <li><em>Dibagikan</em> mendaftar semua link yang kamu buat dan apakah masih berlaku.</li>
+</ul>
+<p>Selengkapnya di <a href="/id/docs/drive-sharing">Berbagi &amp; unduhan</a>.</p>
+
+<h2 id="report">Melaporkan penyalahgunaan</h2>
+<p>Menemukan sesuatu yang berbahaya di balik link Zeiko, atau iklan yang melanggar aturan? Buka <em>Laporkan</em> di halaman share (atau <em>Lapor penyalahgunaan</em> di bawah halaman kebijakan Drive), tempel linknya, pilih masalahnya, lalu tekan <em>Kirim laporan</em>. Laporan dibaca tim Zeiko; yang mendesak (eksploitasi anak, terorisme, kekerasan) ditangani paling lambat 4 jam. Kamu boleh meninggalkan kontak, boleh juga tidak.</p>
+
+<h2 id="notify">Notifikasi</h2>
+<p>Lonceng di Drive selalu menampilkan notifikasi. Di <em>Pengaturan</em> kamu memilih mana yang juga dikirim lewat email: file yang ditolak pemindaian, ruang hampir atau sudah penuh, pengingat perpanjangan, perubahan paket, undangan keluarga, arsip siap, kompres selesai, dan status iklan. Pengingat perpanjangan dan tanda terima selalu dikirim lewat email.</p>
+
+<h2 id="account">Akun dan datamu</h2>
+<ul>
+  <li><strong>Satu kali masuk.</strong> Drive memakai <a href="/id/docs/account">Akun Zeiko</a>-mu; keluar di sana berarti keluar dari Drive juga. Jaga kata sandinya.</li>
+  <li><strong>Salinanmu.</strong> <em>Unduh data saya</em> dan <em>Unduh semua file</em> di Pengaturan memberimu semuanya.</li>
+  <li><strong>Berhenti.</strong> Menghapus Drive di Pengaturan menghapusnya beserta file-nya untuk selamanya beberapa hari kemudian; sampai saat itu masih bisa dibatalkan.</li>
+  <li><strong>Aturannya.</strong> Syarat &amp; Ketentuan dan Kebijakan Privasi Drive ada di halaman masuk Drive dan menu sampingnya.</li>
+</ul>
+<!-- drive:end -->
+
+      <nav class="docs-pager" aria-label="Halaman sebelum dan sesudah">
+        <a class="prev" href="/id/docs/drive-sharing"><small>Sebelumnya</small>Berbagi &amp; unduhan</a>
+        <a class="next" href="/id/docs/drive-faq"><small>Berikutnya</small>Tanya jawab Drive</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> Zeiko</p>
+    <nav aria-label="Tautan bawah">
+      <a href="/id/">Beranda</a>
+      <a href="/id/models">Model</a>
+      <a href="/id/#pricing">Harga</a>
+      <a href="/id/drive">Drive</a>
+      <a href="/id/docs/">Dokumentasi</a>
+      <a href="/id/#contact">Kontak</a>
+      <a href="/account">Akun</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
+</body>
+</html>

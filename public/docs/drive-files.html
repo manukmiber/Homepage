@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Files &amp; folders — Zeiko Docs</title>
+<meta name="description" content="Zeiko Drive in detail: new folders and files, the uploads panel, views, selecting, moving and copying, details, previews, keyboard shortcuts and Trash.">
+<meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
+<meta property="og:title" content="Files &amp; folders — Zeiko Docs">
+<meta property="og:description" content="Zeiko Drive in detail: new folders and files, the uploads panel, views, selecting, moving and copying, details, previews, keyboard shortcuts and Trash.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/mark-32.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/">
+      <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
+      <span class="brand-name">Zeiko</span><span class="brand-doc" aria-hidden="true"> - Files &amp; folders</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Main navigation">
+      <a href="/#decision">Pranata V1</a>
+      <a href="/drive">Drive</a>
+      <a href="/#models">Roleplay</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/models">Models</a>
+      <a href="/docs/" aria-current="page">Docs</a>
+      <a class="nav-account" href="/account">Sign in</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Create account</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <a class="lang-switch" href="/id/docs/drive-files" hreflang="id" lang="id" data-lang="id">ID</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Docs">
+      <details class="docs-menu">
+        <summary>Docs menu <span>Drive basics</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/docs/drive">Drive basics</a></li>
+            <li><a href="/docs/drive-plans">Drive plans</a></li>
+            <li><a href="/docs/drive-files" aria-current="page">Files &amp; folders</a></li>
+            <li><a href="/docs/drive-sharing">Sharing &amp; downloads</a></li>
+            <li><a href="/docs/drive-safety">Safety &amp; privacy</a></li>
+            <li><a href="/docs/drive-faq">Drive questions</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Drive tools</p>
+          <ul>
+            <li><a href="/docs/drive-tools">Tools &amp; editors</a></li>
+            <li><a href="/docs/drive-photo">Photo editor</a></li>
+            <li><a href="/docs/drive-pdf">PDF tools</a></li>
+            <li><a href="/docs/drive-docs">Documents, sheets &amp; text</a></li>
+            <li><a href="/docs/drive-video">Video editor</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/docs/drive">Drive basics</a></li>
+            <li><a href="/docs/drive-plans">Drive plans</a></li>
+            <li><a href="/docs/drive-files" aria-current="page">Files &amp; folders</a></li>
+            <li><a href="/docs/drive-sharing">Sharing &amp; downloads</a></li>
+            <li><a href="/docs/drive-safety">Safety &amp; privacy</a></li>
+            <li><a href="/docs/drive-faq">Drive questions</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Drive tools</p>
+          <ul>
+            <li><a href="/docs/drive-tools">Tools &amp; editors</a></li>
+            <li><a href="/docs/drive-photo">Photo editor</a></li>
+            <li><a href="/docs/drive-pdf">PDF tools</a></li>
+            <li><a href="/docs/drive-docs">Documents, sheets &amp; text</a></li>
+            <li><a href="/docs/drive-video">Video editor</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/docs/">Docs</a> <span aria-hidden="true">/</span> Zeiko Drive</p>
+<!-- drive:start -->
+      <h1>Files &amp; folders</h1>
+      <p class="lede">Everything you can do with files in Drive, button by button. New to Drive? Start with <a href="/docs/drive">Drive basics</a>.</p>
+      <nav class="docs-toc" aria-label="On this page">
+        <p>On this page</p>
+        <ul>
+          <li><a href="#new">Making folders and files</a></li>
+          <li><a href="#uploads">The uploads panel</a></li>
+          <li><a href="#views">Views and sorting</a></li>
+          <li><a href="#select">Selecting several</a></li>
+          <li><a href="#move">Moving and copying</a></li>
+          <li><a href="#menu">The file menu</a></li>
+          <li><a href="#preview">Previews</a></li>
+          <li><a href="#keys">Keyboard shortcuts</a></li>
+          <li><a href="#trash">Trash in detail</a></li>
+        </ul>
+      </nav>
+
+<h2 id="new">Making folders and files</h2>
+<p>Press <em>New</em> in the folder you want:</p>
+<ul>
+  <li><em>New folder</em> makes an empty folder (it starts as <em>Untitled folder</em>; type its name).</li>
+  <li><em>Upload files</em> and <em>Upload a folder</em> pick from your device. A folder keeps the folders inside it.</li>
+  <li><em>Document</em>, <em>Spreadsheet</em> and <em>Text file</em> open an empty file in its editor. When you save, it goes into the folder you are in. See <a href="/docs/drive-docs">Documents, sheets &amp; text</a>.</li>
+</ul>
+<p>On a computer you can also drag files from your desktop onto the page: Drive says where they will go (<em>Drop to upload to …</em>).</p>
+
+<h2 id="uploads">The uploads panel</h2>
+<p>While files go up, a panel at the bottom shows each one with its speed and the time left.</p>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">What it says</th><th scope="col">What it means</th></tr></thead>
+    <tbody>
+      <tr><th scope="row" data-label="What it says"><em>Waiting</em></th><td data-label="What it means">It starts as soon as one of the files ahead of it is done. A few files go up at the same time.</td></tr>
+      <tr><th scope="row" data-label="What it says"><em>Retrying…</em></th><td data-label="What it means">The connection hiccuped. Drive tries again by itself.</td></tr>
+      <tr><th scope="row" data-label="What it says"><em>Finishing…</em></th><td data-label="What it means">Everything is up; Drive is putting the file together.</td></tr>
+      <tr><th scope="row" data-label="What it says"><em>Paused</em></th><td data-label="What it means">You pressed <em>Pause</em>. <em>Resume</em> carries on from there.</td></tr>
+      <tr><th scope="row" data-label="What it says"><em>Failed</em> / <em>Cancelled</em> / <em>Skipped</em></th><td data-label="What it means">It did not go up. <em>Clear</em> removes finished rows from the panel.</td></tr>
+    </tbody>
+  </table></div>
+<ul>
+  <li><strong>The page closed halfway?</strong> Next time you open Drive it asks whether to pick up where it stopped: <em>Resume</em> or <em>Start over</em>.</li>
+  <li><strong>Name already taken?</strong> Choose <em>Replace</em>, <em>Keep both</em> or <em>Skip</em>; tick <em>Do this for all</em> to answer once for every file.</li>
+  <li><strong>Out of space?</strong> The upload stops and offers <em>Get more space</em>. See <a href="/docs/drive-plans">Drive plans</a>.</li>
+</ul>
+
+<h2 id="views">Views and sorting</h2>
+<p>Switch between <em>Grid view</em> (thumbnails) and <em>List view</em> (rows with <em>Modified</em> and <em>Size</em>). Sort by <em>Name</em>, <em>Date modified</em>, <em>Size</em> or <em>Type</em>. A long folder shows the first files and a <em>Load more</em> button.</p>
+
+<h2 id="select">Selecting several</h2>
+<ul>
+  <li><strong>Computer:</strong> click a file to select it, <kbd>Ctrl</kbd>-click (<kbd>⌘</kbd> on a Mac) to add or remove one, <kbd>Shift</kbd>-click to select everything in between. <kbd>Ctrl</kbd>+<kbd>A</kbd> selects the whole folder.</li>
+  <li><strong>Phone:</strong> press and hold a file, then tap the others.</li>
+</ul>
+<p>The bar at the top says how many are selected and offers what works for all of them: download (several files come as one archive), share, move, star, move to Trash. <em>Clear selection</em> (or <kbd>Esc</kbd>) lets go.</p>
+
+<h2 id="move">Moving and copying</h2>
+<ul>
+  <li><em>Move to…</em> opens your folders: go into the one you want and press <em>Move here</em>.</li>
+  <li><em>Make a copy</em> puts a copy next to the original.</li>
+  <li>Or use the keyboard: <kbd>Ctrl</kbd>+<kbd>C</kbd> (copy) or <kbd>Ctrl</kbd>+<kbd>X</kbd> (cut), open the folder you want, then <kbd>Ctrl</kbd>+<kbd>V</kbd>.</li>
+</ul>
+<p>Every action also has a short <em>Undo</em> on the message that appears after it.</p>
+
+<h2 id="menu">The file menu</h2>
+<p>Right-click a file, or press its <em>⋮</em>, for everything you can do with it. What shows depends on the file:</p>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Item</th><th scope="col">What it does</th></tr></thead>
+    <tbody>
+      <tr><th scope="row" data-label="Item"><em>Open</em> / <em>Preview</em></th><td data-label="What it does">Opens a folder, or shows the file.</td></tr>
+      <tr><th scope="row" data-label="Item"><em>Download</em></th><td data-label="What it does">Saves it to your device.</td></tr>
+      <tr><th scope="row" data-label="Item"><em>Share</em></th><td data-label="What it does">Makes a link. See <a href="/docs/drive-sharing">Sharing &amp; downloads</a>.</td></tr>
+      <tr><th scope="row" data-label="Item"><em>Rename</em>, <em>Make a copy</em>, <em>Move to…</em></th><td data-label="What it does">As above.</td></tr>
+      <tr><th scope="row" data-label="Item"><em>Edit photo</em>, <em>Edit video</em>, <em>PDF tools</em>, <em>Make a PDF</em>, <em>Edit document</em>, <em>Edit spreadsheet</em>, <em>Edit text</em>, <em>Open the ZIP</em></th><td data-label="What it does">Opens the file in its editor. See <a href="/docs/drive-tools">Tools &amp; editors</a>.</td></tr>
+      <tr><th scope="row" data-label="Item"><em>Star</em> / <em>Remove star</em></th><td data-label="What it does">Puts it in Starred, or takes it out.</td></tr>
+      <tr><th scope="row" data-label="Item"><em>Details</em></th><td data-label="What it does">Type, location, owner, when it was made and changed, its safety check, and whether it is in your personal or family space.</td></tr>
+      <tr><th scope="row" data-label="Item"><em>Move to Trash</em></th><td data-label="What it does">Deletes it, with a way back (below).</td></tr>
+    </tbody>
+  </table></div>
+
+<h2 id="preview">Previews</h2>
+<p>Photos, videos, audio, PDFs, text and code, and Word documents open in a preview. Use the arrows (or <kbd>←</kbd> <kbd>→</kbd>) to go to the previous or next file, and <kbd>Esc</kbd> to close. The preview's <em>Edit</em> opens the file's editor. For other kinds of files the preview says there is none yet; download them instead.</p>
+
+<h2 id="keys">Keyboard shortcuts</h2>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+    <thead><tr><th scope="col">Keys</th><th scope="col">What they do</th></tr></thead>
+    <tbody>
+      <tr><th scope="row" data-label="Keys"><kbd>Enter</kbd></th><td data-label="What they do">Open the selected file or folder</td></tr>
+      <tr><th scope="row" data-label="Keys"><kbd>F2</kbd></th><td data-label="What they do">Rename it</td></tr>
+      <tr><th scope="row" data-label="Keys"><kbd>Delete</kbd> or <kbd>Backspace</kbd></th><td data-label="What they do">Move the selection to Trash</td></tr>
+      <tr><th scope="row" data-label="Keys"><kbd>Ctrl</kbd>+<kbd>A</kbd></th><td data-label="What they do">Select everything in the folder</td></tr>
+      <tr><th scope="row" data-label="Keys"><kbd>Ctrl</kbd>+<kbd>C</kbd>, <kbd>Ctrl</kbd>+<kbd>X</kbd>, <kbd>Ctrl</kbd>+<kbd>V</kbd></th><td data-label="What they do">Copy, cut, paste</td></tr>
+      <tr><th scope="row" data-label="Keys">Arrow keys</th><td data-label="What they do">Move between files</td></tr>
+      <tr><th scope="row" data-label="Keys"><kbd>Esc</kbd></th><td data-label="What they do">Clear the selection, close a preview or a menu</td></tr>
+    </tbody>
+  </table></div>
+<p>On a Mac, <kbd>⌘</kbd> works where <kbd>Ctrl</kbd> is written.</p>
+
+<h2 id="trash">Trash in detail</h2>
+<ul>
+  <li><em>Move to Trash</em> takes files out of their folder; they still count towards your space until they are deleted for good.</li>
+  <li>In <em>Trash</em>, <em>Restore</em> puts a file back where it was, and <em>Delete forever</em> removes it at once. This cannot be undone.</li>
+  <li><em>Empty Trash</em> deletes everything in it for good. Trash says how many days a file stays before that happens by itself.</li>
+</ul>
+<!-- drive:end -->
+
+      <nav class="docs-pager" aria-label="Previous and next page">
+        <a class="prev" href="/docs/drive-plans"><small>Previous</small>Drive plans</a>
+        <a class="next" href="/docs/drive-sharing"><small>Next</small>Sharing &amp; downloads</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> Zeiko</p>
+    <nav aria-label="Footer links">
+      <a href="/">Home</a>
+      <a href="/models">Models</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/drive">Drive</a>
+      <a href="/docs/">Docs</a>
+      <a href="/#contact">Contact</a>
+      <a href="/account">Account</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
+</body>
+</html>
