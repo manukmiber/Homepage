@@ -233,6 +233,7 @@ export function message({ heading, text, link = '/account', label = L('Go to you
 const tabs = () => [
   ['overview', '/account', L('Overview', 'Ringkasan')],
   ['plans', '/account/plans', L('Plans & balance', 'Paket & saldo')],
+  ['hosting', '/account/hosting', 'Hosting'],
   ['key', '/account/key', L('API key', 'Kunci API')],
   ['settings', '/account/settings', L('Settings', 'Pengaturan')],
 ];
@@ -531,6 +532,107 @@ export function plans(o, { flash, pick }) {
   return shell('plans', o, body, flash);
 }
 
+// hosting:start
+/* ------------------------------------------------------------- hosting */
+// Zeiko Hosting: the person's hosting and the order form. Prices are rupiah
+// from the door (`GET /v1/hosting`); the page names what a plan comes with,
+// so its markup is a hosting block for scripts/check-site.mjs.
+
+/** `17000` → `Rp17.000`, in both languages, as on the Hosting page. */
+const rp = (n) => `Rp${Number(n || 0).toLocaleString('id-ID')}`;
+const size = (mb) => (mb >= 1024 ? `${String(+(mb / 1024).toFixed(1)).replace('.', L('.', ','))} GB` : `${num(mb)} MB`);
+const gb = (n) => `${String(+Number(n || 0).toFixed(1)).replace('.', L('.', ','))} GB`;
+
+const hostingStatus = () => ({
+  ordered: [L('Waiting for payment', 'Menunggu pembayaran'), 'warn'],
+  paid: [L('Being made', 'Sedang dibuat'), 'status'],
+  active: [L('Active', 'Aktif'), 'ok'],
+  suspended: [L('Suspended', 'Di-suspend'), 'err'],
+  deleted: [L('Deleted', 'Dihapus'), ''],
+  cancelled: [L('Cancelled', 'Dibatalkan'), ''],
+});
+
+function hostingCard(x) {
+  const [label, tone] = hostingStatus()[x.status] || [x.status, ''];
+  const cycle = (c) => (c === 'year' ? L('a year', 'per tahun') : L('a month', 'per bulan'));
+  let line = '';
+  let act = '';
+  if (x.status === 'ordered') {
+    line = L('Pay its QRIS to start. An unpaid order is dropped after a few days.', 'Bayar QRIS-nya untuk mulai. Pesanan yang tidak dibayar dihapus setelah beberapa hari.');
+    act = `${x.payment ? `<a class="btn btn-primary btn-sm" href="/account/pay?id=${encodeURIComponent(x.payment)}">${L('Open QR', 'Buka QR')}</a>` : ''}
+      <form data-act="hosting-cancel"><input type="hidden" name="id" value="${esc(x.id)}"><button class="btn-link" type="submit" data-busy="…">${L('Cancel order', 'Batalkan pesanan')}</button></form>`;
+  } else if (x.status === 'paid') {
+    line = L('Paid — we are making it now, usually within 15–60 minutes. Your cPanel details come by email.', 'Sudah dibayar — sedang kami buat, biasanya dalam 15–60 menit. Detail cPanel-mu dikirim lewat email.');
+  } else if (x.status === 'active' || x.status === 'suspended') {
+    line = x.status === 'active'
+      ? L(`Active until <strong>${esc(day(x.paidUntil))}</strong>. Renew before then; a day after it ends it is suspended, and a week after it is deleted.`, `Aktif sampai <strong>${esc(day(x.paidUntil))}</strong>. Perpanjang sebelum itu; sehari setelah habis di-suspend, dan seminggu setelahnya dihapus.`)
+      : L(`Suspended since it ended on ${esc(day(x.paidUntil))}. Renew before <strong>${esc(day(x.deleteAt))}</strong> or it is deleted with its files.`, `Di-suspend karena habis ${esc(day(x.paidUntil))}. Perpanjang sebelum <strong>${esc(day(x.deleteAt))}</strong> atau dihapus beserta file-nya.`);
+    const r = x.renew || {};
+    act = r.monthIdr ? `<form data-act="hosting-renew" class="host-renew">
+        <input type="hidden" name="id" value="${esc(x.id)}">
+        <button class="btn btn-primary btn-sm" type="submit" name="cycle" value="month" data-busy="${L('Opening…', 'Membuka…')}">${L('Renew a month', 'Perpanjang sebulan')} · ${esc(rp(r.monthIdr))}</button>
+        ${r.yearIdr ? `<button class="btn btn-ghost btn-sm" type="submit" name="cycle" value="year" data-busy="${L('Opening…', 'Membuka…')}">${L('Renew a year', 'Perpanjang setahun')} · ${esc(rp(r.yearIdr))}</button>` : ''}
+      </form>` : '';
+  }
+  return `<article class="card host-item">
+    <div class="section-row"><h3>${esc(x.domain)}</h3><span class="tag tag-${esc(tone)}">${esc(label)}</span></div>
+    <p class="muted-note">${esc(x.planName)} · ${esc(cycle(x.cycle))}${x.panelUser ? ` · cPanel <code>${esc(x.panelUser)}</code>` : ''}</p>
+    ${line ? `<p>${line}</p>` : ''}
+    ${act ? `<div class="row-links">${act}</div>` : ''}
+  </article>`;
+}
+
+export function hosting(o, h, { flash, pick = '', domain = '' }) {
+  const plans = (h && h.plans) || [];
+  const open = Boolean(h && h.open);
+  const mine = (h && h.services) || [];
+  const chosen = plans.some((p) => p.id === pick) ? pick : (plans[0] || {}).id;
+  const options = plans.map((p) => {
+    const first = p.firstMonthIdr > 0;
+    const facts = [
+      L(`${num(p.websites)} website${p.websites === 1 ? '' : 's'}`, `${num(p.websites)} situs`),
+      `RAM ${size(p.ramMb)}`,
+      `NVMe ${size(p.diskMb)}`,
+      p.objectGb > 0 ? `${gb(p.objectGb)} object storage` : '',
+    ].filter(Boolean).join(' · ');
+    return `<label class="host-option">
+      <input type="radio" name="plan" value="${esc(p.id)}"${p.id === chosen ? ' checked' : ''} required>
+      <span class="host-option-body">
+        <strong>${esc(p.name)}</strong>
+        <span class="host-option-price">${first ? `<s>${esc(rp(p.monthIdr))}</s> ${esc(rp(p.firstMonthIdr))} ${L('first month, then', 'bulan pertama, lalu')} ${esc(rp(p.monthIdr))}/${L('month', 'bulan')}` : `${esc(rp(p.monthIdr))}/${L('month', 'bulan')}`}${p.yearIdr ? ` · ${L('or', 'atau')} ${esc(rp(p.yearIdr))}/${L('year', 'tahun')}` : ''}</span>
+        <span class="muted-note">${esc(facts)}</span>
+      </span>
+    </label>`;
+  }).join('');
+  const verified = Boolean(h && h.emailVerified);
+  const form = !open
+    ? alert('warn', L('Hosting orders are not open yet. Please try again later.', 'Pemesanan hosting belum dibuka. Coba lagi nanti.'))
+    : !verified
+      ? alert('warn', L('Confirm your email address first: your hosting details are sent there.', 'Konfirmasi alamat email-mu dulu: detail hosting-mu dikirim ke sana.'))
+      : `<form data-act="hosting-order" class="host-order">
+        <fieldset class="host-choose"><legend>${L('Plan', 'Paket')}</legend>${options}</fieldset>
+        <fieldset class="funds-way"><legend>${L('Pay', 'Bayar')}</legend>
+          <label><input type="radio" name="cycle" value="month" checked> ${L('Monthly', 'Bulanan')}</label>
+          <label><input type="radio" name="cycle" value="year"> ${L('Yearly (10 months’ price)', 'Tahunan (harga 10 bulan)')}</label>
+        </fieldset>
+        <label class="field">${L('Your domain', 'Domainmu')}<input type="text" name="domain" value="${esc(domain)}" placeholder="${L('example.com', 'contoh.com')}" autocomplete="off" autocapitalize="none" spellcheck="false" required></label>
+        <button class="btn btn-primary" type="submit" data-busy="${L('Opening…', 'Membuka…')}">${L('Order and pay by QRIS', 'Pesan dan bayar dengan QRIS')}</button>
+        <p class="fineprint">${L(h && h.firstOffer ? 'The first-month price is for your first hosting, by the month. ' : '', h && h.firstOffer ? 'Harga bulan pertama berlaku untuk hosting pertamamu, bulanan. ' : '')}${L('We check your QRIS payment by hand in 1–5 minutes, make your hosting within 15–60 minutes, and email you your cPanel address, username, password and nameservers.', 'Kami memeriksa pembayaran QRIS-mu secara manual dalam 1–5 menit, membuat hosting-mu dalam 15–60 menit, lalu mengirim alamat cPanel, username, password dan nameserver lewat email.')} <a href="${L('/docs/hosting', '/id/docs/hosting')}">${L('How hosting works', 'Cara kerja hosting')}</a></p>
+      </form>`;
+  const body = `<!-- hosting:start -->
+    ${mine.length ? `<section class="acct-section-plain">
+      <div class="section-row"><h2>${L('Your hosting', 'Hosting-mu')}</h2><p class="muted-note">${L('We email you 7, 3 and 1 day before each one ends', 'Kami kirim email 7, 3 dan 1 hari sebelum masing-masing habis')}</p></div>
+      <div class="host-list">${mine.map(hostingCard).join('')}</div>
+    </section>` : ''}
+    <section class="card acct-section" id="order">
+      <div class="section-row"><h2>${L('Order WordPress hosting', 'Pesan hosting WordPress')}</h2><a class="btn-link" href="${L('/hosting', '/id/hosting')}">${L('Compare the plans', 'Bandingkan paket')}</a></div>
+      ${form}
+    </section>
+<!-- hosting:end -->`;
+  return shell('hosting', o, body, flash);
+}
+// hosting:end
+
 /** The QR as SVG, from the door's rows of 0 and 1 (dark is 1), with the
  * quiet zone round it. Black on white whatever the theme: that is what a
  * scanner reads. Anything but 0 and 1 draws nothing. */
@@ -557,7 +659,8 @@ function qrSvg(rows) {
 export function qrisPay(o, q, flash) {
   // A Zeiko Drive payment goes back to Drive (app.js checks the address).
   const drive = q.product === 'drive' && q.driveBack ? String(q.driveBack) : '';
-  const back = drive || (q.product === 'chat' ? '/account/plans#chat' : '/account/plans');
+  const host = q.product === 'hosting';
+  const back = drive || (host ? '/account/hosting' : q.product === 'chat' ? '/account/plans#chat' : '/account/plans');
   let body;
   if (q.status === 'waiting') {
     const left = Math.max(0, Math.ceil((Number(q.expiresAt) - Date.now()) / 60000));
@@ -583,7 +686,7 @@ export function qrisPay(o, q, flash) {
     </section>`;
   } else {
     const state = {
-      confirming: [L('Checking your payment', 'Memeriksa pembayaranmu'), L(`We are looking for ${q.rupiahText} in our QRIS account, usually within 10 minutes. ${drive ? 'Zeiko Drive updates' : 'Your plan or balance switches on'} by itself, and this page updates on its own: you can leave it.`, `Kami sedang mencari ${q.rupiahText} di akun QRIS kami, biasanya dalam 10 menit. ${drive ? 'Zeiko Drive diperbarui' : 'Paket atau saldomu aktif'} dengan sendirinya, dan halaman ini ikut diperbarui: kamu boleh meninggalkannya.`), 'status'],
+      confirming: [L('Checking your payment', 'Memeriksa pembayaranmu'), L(`We are looking for ${q.rupiahText} in our QRIS account, usually within 10 minutes. ${drive ? 'Zeiko Drive updates' : host ? 'Then we make your hosting within 15–60 minutes and email you its details. It' : 'Your plan or balance switches on'} by itself, and this page updates on its own: you can leave it.`, `Kami sedang mencari ${q.rupiahText} di akun QRIS kami, biasanya dalam 10 menit. ${drive ? 'Zeiko Drive diperbarui' : host ? 'Setelah itu hosting-mu kami buat dalam 15–60 menit dan detailnya dikirim lewat email. Semuanya berjalan' : 'Paket atau saldomu aktif'} dengan sendirinya, dan halaman ini ikut diperbarui: kamu boleh meninggalkannya.`), 'status'],
       paid: [L('Payment received — thank you', 'Pembayaran diterima — terima kasih'), L(`${q.what} is yours.`, `${q.what} sudah jadi milikmu.`), 'ok'],
       failed: [L('We could not find this payment', 'Kami tidak menemukan pembayaran ini'), L(`If you did pay ${q.rupiahText}, write to payment@zeiko.biz.id with the amount, the time and your app's receipt.`, `Kalau kamu memang sudah membayar ${q.rupiahText}, tulis ke payment@zeiko.biz.id beserta jumlah, waktu, dan bukti dari aplikasimu.`), 'err'],
       expired: [L('This code has closed', 'Kode ini sudah ditutup'), L(`It was not marked as paid in time. If you already paid ${q.rupiahText}, write to payment@zeiko.biz.id with your app's receipt; otherwise start a new payment.`, `Kode ini tidak ditandai lunas tepat waktu. Kalau kamu sudah membayar ${q.rupiahText}, tulis ke payment@zeiko.biz.id beserta bukti dari aplikasimu; kalau belum, mulai pembayaran baru.`), 'warn'],
@@ -595,9 +698,9 @@ export function qrisPay(o, q, flash) {
         <div><h2>${esc(heading)}</h2><p>${esc(text)}</p><p class="muted-note">${esc(q.what)} · ${esc(q.rupiahText)} (${esc(q.amountText)})</p></div>
       </div>
       <div class="row-links">
-        ${q.status === 'paid' ? (drive ? `<a class="btn btn-primary btn-sm" href="${esc(drive)}">${L('Back to Zeiko Drive', 'Kembali ke Zeiko Drive')}</a>` : `<a class="btn btn-primary btn-sm" href="/account">${L('Go to your account', 'Buka akunmu')}</a>`) : ''}
+        ${q.status === 'paid' ? (drive ? `<a class="btn btn-primary btn-sm" href="${esc(drive)}">${L('Back to Zeiko Drive', 'Kembali ke Zeiko Drive')}</a>` : `<a class="btn btn-primary btn-sm" href="${host ? '/account/hosting' : '/account'}">${host ? L('Your hosting', 'Hosting-mu') : L('Go to your account', 'Buka akunmu')}</a>`) : ''}
         ${q.status === 'failed' || q.status === 'expired' ? `<a class="btn btn-primary btn-sm" href="${esc(back)}">${L('Start a new payment', 'Mulai pembayaran baru')}</a>` : ''}
-        ${drive ? '' : `<a class="btn btn-ghost btn-sm" href="/account/plans">${L('Plans &amp; balance', 'Paket &amp; saldo')}</a>`}
+        ${drive ? '' : host ? `<a class="btn btn-ghost btn-sm" href="/account/hosting">Hosting</a>` : `<a class="btn btn-ghost btn-sm" href="/account/plans">${L('Plans &amp; balance', 'Paket &amp; saldo')}</a>`}
       </div>
     </section>`;
   }
@@ -608,13 +711,14 @@ export function qrisPay(o, q, flash) {
  * their account (or to Zeiko Drive) when the countdown runs out. */
 export function qrisThanks(o, q, seconds) {
   const drive = q.product === 'drive' && q.driveBack ? String(q.driveBack) : '';
+  const host = q.product === 'hosting';
   const body = `<section class="card acct-section qris qris-ok" role="status">
       <div class="qris-state">
         ${icon(I.check)}
-        <div><h2>${L("Thanks, we're gonna check your payment", 'Terima kasih, pembayaranmu akan kami periksa')}</h2><p>${L(`We are looking for ${esc(q.rupiahText)} in our QRIS account, usually within 10 minutes. ${drive ? 'Zeiko Drive updates' : 'Your plan or balance switches on'} by itself.`, `Kami sedang mencari ${esc(q.rupiahText)} di akun QRIS kami, biasanya dalam 10 menit. ${drive ? 'Zeiko Drive diperbarui' : 'Paket atau saldomu aktif'} dengan sendirinya.`)}</p><p class="muted-note">${L(`Taking you back to ${drive ? 'Zeiko Drive' : 'your account'} in <span id="qris-countdown">${num(seconds)}</span> seconds.`, `Kembali ke ${drive ? 'Zeiko Drive' : 'akunmu'} dalam <span id="qris-countdown">${num(seconds)}</span> detik.`)}</p></div>
+        <div><h2>${L("Thanks, we're gonna check your payment", 'Terima kasih, pembayaranmu akan kami periksa')}</h2><p>${L(`We are looking for ${esc(q.rupiahText)} in our QRIS account, usually within 10 minutes. ${drive ? 'Zeiko Drive updates' : host ? 'Then we make your hosting within 15–60 minutes and email you its details; the page updates' : 'Your plan or balance switches on'} by itself.`, `Kami sedang mencari ${esc(q.rupiahText)} di akun QRIS kami, biasanya dalam 10 menit. ${drive ? 'Zeiko Drive diperbarui' : host ? 'Setelah itu hosting-mu kami buat dalam 15–60 menit dan detailnya dikirim lewat email; halamannya diperbarui' : 'Paket atau saldomu aktif'} dengan sendirinya.`)}</p><p class="muted-note">${L(`Taking you back to ${drive ? 'Zeiko Drive' : host ? 'your hosting' : 'your account'} in <span id="qris-countdown">${num(seconds)}</span> seconds.`, `Kembali ke ${drive ? 'Zeiko Drive' : host ? 'hosting-mu' : 'akunmu'} dalam <span id="qris-countdown">${num(seconds)}</span> detik.`)}</p></div>
       </div>
       <div class="row-links">
-        <a class="btn btn-primary btn-sm" href="${esc(drive || '/account')}">${drive ? L('Back to Zeiko Drive now', 'Kembali ke Zeiko Drive sekarang') : L('Go to your account now', 'Buka akunmu sekarang')}</a>
+        <a class="btn btn-primary btn-sm" href="${esc(drive || (host ? '/account/hosting' : '/account'))}">${drive ? L('Back to Zeiko Drive now', 'Kembali ke Zeiko Drive sekarang') : L('Go to your account now', 'Buka akunmu sekarang')}</a>
       </div>
     </section>`;
   return shell('pay', o, body, '');

@@ -1533,6 +1533,22 @@ body:has(#win-30d:checked) [data-w="30d"] { display: revert; }
 .funds-way legend { float: left; margin-right: 4px; padding: 0; color: var(--muted); font-size: 15px; }
 .funds .funds-way label { display: inline-flex; flex-direction: row; gap: 6px; align-items: center; margin: 0; white-space: nowrap; }
 .chips-row { display: flex; flex-wrap: wrap; gap: 8px; }
+/* Zeiko Hosting in the account area: the person's hosting, and the order form. */
+.host-list { display: grid; gap: 12px; }
+.host-item h3 { margin: 0; font-size: 1.05rem; overflow-wrap: anywhere; }
+.host-item p { margin: 6px 0 0; }
+.host-item .row-links { margin-top: 12px; }
+.host-renew { display: flex; flex-wrap: wrap; gap: 8px; }
+.host-order { display: grid; gap: 14px; }
+.host-order .field input { width: 100%; max-width: 420px; }
+.host-order .funds-way label { display: inline-flex; gap: 6px; align-items: center; }
+.host-choose { display: grid; gap: 6px; margin: 0; padding: 0; border: 0; }
+.host-choose legend { margin-bottom: 6px; padding: 0; color: var(--muted); font-size: 15px; }
+.host-option { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; background: var(--well); box-shadow: var(--sunk); cursor: pointer; }
+.host-option input { margin-top: 3px; }
+.host-option-body { display: grid; gap: 2px; min-width: 0; }
+.host-option-price { font-variant-numeric: tabular-nums; }
+.host-option-price s { color: var(--muted); }
 .chip-btn { min-width: 76px; min-height: 40px; padding: 6px 14px; border: 0; background: var(--face); box-shadow: var(--raise); color: var(--text); font: 700 15px var(--sans); font-variant-numeric: tabular-nums; cursor: pointer; }
 .chip-btn:active { box-shadow: var(--press); }
 .chip-btn:focus-visible { outline: 1px dotted var(--text); outline-offset: -5px; }

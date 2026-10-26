@@ -38,8 +38,9 @@ understands the offer in one screen and finishes what they came to do without he
   real performance (time to first token, speed, latency, availability) measured and published
   every hour.
 - **Zeiko Drive** is file storage for Indonesia, priced in rupiah, opened at its own address.
-- **Zeiko Hosting** is web hosting for WordPress, PHP, Node.js, Python and Ruby, managed in cPanel,
-  priced in rupiah by plan, plus static sites per GB; ordered by email for now.
+- **Zeiko Hosting** is WordPress hosting (PHP, Node.js, Python and Ruby run too), managed in cPanel,
+  priced in rupiah by plan with a cheaper first month on the smaller plans, plus static sites per GB;
+  ordered and renewed in the account area, paid by QRIS.
 - **One Zeiko Account** signs a person into ZeikoAI, Zeiko Chat and Zeiko Drive.
 
 ## Operating Context

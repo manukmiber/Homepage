@@ -78,9 +78,10 @@ there too, and the AI products' copy keeps the rule whole.
 **The fourth exception is Zeiko Hosting**, on the operator's request (October
 2026). Its own pages (`hosting.html`, `id/hosting.html`) and blocks marked
 `<!-- hosting:start -->` … `<!-- hosting:end -->` (the homepage's window and
-About column, the hosting docs) may name what a hosting plan comes with —
-web and object storage, MySQL databases, Cloudflare CDN — and its prices in
-rupiah. Everything else above holds there too. **Who runs the hosting is
+About column, the hosting docs; in the account area's script,
+`// hosting:start` … `// hosting:end`) may name what a hosting plan comes
+with — web and object storage, MySQL databases, Cloudflare CDN — its prices
+in rupiah, and paying for one. Everything else above holds there too. **Who runs the hosting is
 never named or hinted at anywhere in this repository** — pages, comments,
 commit messages: say what the customer gets, never where it comes from.
 
@@ -234,17 +235,26 @@ things:
 
 ## Zeiko Hosting (`/hosting`)
 
-Web hosting for WordPress, PHP, Node.js, Python and Ruby, managed in cPanel,
-sold in rupiah by plan (Mini, Small, Medium, Large, Extra Large, XXL;
-monthly or yearly) and static sites per GB (the operator's, October 2026).
+WordPress hosting (PHP, Node.js, Python and Ruby run too), managed in
+cPanel, sold in rupiah by plan — Mini, Small, Medium, Large, Extra Large;
+monthly or yearly, a year being ten months; the first month of the three
+smaller plans cheaper on an account's first hosting — and static sites per
+GB (the operator's, October 2026).
 
 - **Prices are typed in the pages** with `data-price="hosting:<plan>"`,
-  `:year` and `:save` keys, so `/hosting`, `/id/hosting`, the homepage window
-  and the docs must agree (`npm run check`). Rupiah is written `Rp17.000` in
-  both languages.
-- **Ordering is by email for now**: each plan's Order button is a `mailto:`
-  to the contact address with the plan in the subject and body. Nothing on
-  the site creates hosting, and no request leaves the page.
+  `:first`, `:year` and `:save` keys, so `/hosting`, `/id/hosting`, the
+  homepage window and the docs must agree (`npm run check`). Rupiah is
+  written `Rp17.000` in both languages. The door's prices (the relay's
+  `hosting.plans`) are what is actually asked: change both together.
+- **Ordering is in the account area** (`/account/hosting`,
+  `views.js::hosting`): each plan's Order button opens it with `?plan=`;
+  the person types a domain, picks monthly or yearly, and pays by QRIS on
+  the ordinary `/account/pay` page (`product: "hosting"`, which goes back to
+  `/account/hosting`). The door is `GET /v1/hosting`,
+  `POST /v1/hosting/order`, `/v1/hosting/{id}/renew` and `/cancel`. The
+  relay checks the payment by hand and the operator makes the hosting by
+  hand; the page promises 1–5 minutes for the first and 15–60 for the
+  second. Static sites are still ordered by email (a `mailto:`).
 - **The docs** (`/docs/hosting`, `hosting-domain`, `hosting-sites`, and their
   Indonesian twins) are the customer's how-to: the welcome email, connecting
   a domain, SSL, cPanel, apps. They name cPanel's own menus; the details a

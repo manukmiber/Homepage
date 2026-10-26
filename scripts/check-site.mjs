@@ -223,16 +223,17 @@ function driveAllows(src, ranges, m) {
 // the operator's request (October 2026). Its own page (hosting.html, and
 // id/hosting.html) and the marked hosting blocks elsewhere
 // (<!-- hosting:start --> … <!-- hosting:end -->: the homepage's window and
-// the hosting docs) may name what a hosting plan comes with — web and object
-// storage, MySQL databases, Cloudflare CDN — and its prices in rupiah. Only
-// these words; every other rule holds there too, so nothing says who runs
-// the hosting or how.
+// the hosting docs, and in the account area its page, marked
+// // hosting:start … // hosting:end in the script) may name what a hosting
+// plan comes with — web and object storage, MySQL databases, Cloudflare CDN
+// — its prices in rupiah, and paying for one. Only these words; every other
+// rule holds there too, so nothing says who runs the hosting or how.
 const HOSTING_PAGES = new Set([join(PUBLIC, 'hosting.html'), join(PUBLIC, 'id', 'hosting.html')]);
-const HOSTING_WORDS = /^(storage|database|mysql|cloudflare|rupiah|penyimpanan|basis data)$/i;
+const HOSTING_WORDS = /^(storage|database|mysql|cloudflare|rupiah|pay|paid|pays|payment|payments|penyimpanan|basis data|bayar|membayar|dibayar|pembayaran)$/i;
 function hostingRanges(file, src) {
   if (HOSTING_PAGES.has(file)) return [[0, src.length]];
   const out = [];
-  for (const m of src.matchAll(/<!-- hosting:start -->[\s\S]*?<!-- hosting:end -->/g)) out.push([m.index, m.index + m[0].length]);
+  for (const m of src.matchAll(/(?:<!-- |\/\/ )hosting:start[\s\S]*?(?:<!-- |\/\/ )hosting:end/g)) out.push([m.index, m.index + m[0].length]);
   return out;
 }
 
@@ -508,6 +509,7 @@ const ACCOUNT = 'rendered /account (made-up account)';
 
 function scanAccount(file, src) {
   const words = src.split(CONTACT).join(' '.repeat(CONTACT.length));
+  const hosting = hostingRanges(file, src);
   for (const [what, re] of ACCOUNT_BANNED) {
     const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
     for (const m of words.matchAll(g)) {
@@ -517,6 +519,7 @@ function scanAccount(file, src) {
       // table row of its own, and nowhere else.
       if (what === 'model origin' && m[0] === 'Gemini' && words.startsWith('<th scope="row">Gemini</th>', m.index - 16)) continue;
       if (drivePath(words, m)) continue;
+      if (inRanges(hosting, m.index) && HOSTING_WORDS.test(m[0])) continue;
       report(file, m.index, src, `${what}: "${m[0]}"`);
     }
   }
@@ -594,8 +597,17 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
     accountViews.key(o, { flash: '', shown: 'k-123', apiBase: 'https://example.test' }),
     accountViews.settings(o, { flash: '', door }),
     accountViews.howToBuy(o, ''),
+    // Zeiko Hosting: the person's hosting in every state, and the order form.
+    ...[true, false].map((open) => accountViews.hosting(o, {
+      open, firstOffer: open, emailVerified: open,
+      plans: [{ id: evil, name: evil, websites: 1, ramMb: 512, diskMb: 512, objectGb: 13.5, monthIdr: 17000, firstMonthIdr: 8000, yearIdr: 170000 }],
+      services: ['ordered', 'paid', 'active', 'suspended', 'deleted', 'cancelled', evil].map((status) => ({
+        id: evil, domain: evil, plan: evil, planName: evil, cycle: evil, status, payment: evil, panelUser: evil,
+        paidUntil: Date.UTC(2026, 10, 1), deleteAt: Date.UTC(2026, 10, 8), renew: { monthIdr: 17000, yearIdr: 170000 },
+      })),
+    }, { flash: '', pick: evil, domain: evil })),
     ...['waiting', 'confirming', 'paid', 'failed', 'expired', evil].map((status) => accountViews.qrisPay(o, {
-      id: evil, what: evil, amountText: evil, rupiah: 449237, rupiahText: evil, merchant: evil, nmid: evil, product: 'pranata',
+      id: evil, what: evil, amountText: evil, rupiah: 449237, rupiahText: evil, merchant: evil, nmid: evil, product: status === 'paid' ? 'hosting' : 'pranata',
       qr: status === 'waiting' ? ['1010', '0101', '1100', '0011'] : [evil], status, createdAt: Date.now(), expiresAt: Date.now() + 3_600_000,
     }, '')),
     // Rows that are not all 0 and 1 draw no code at all.

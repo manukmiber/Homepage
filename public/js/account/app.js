@@ -177,11 +177,12 @@ const TITLES = {
   '/account': L('Account', 'Akun'),
   '/account/plans': L('Plans & balance', 'Paket & saldo'),
   '/account/key': L('API key', 'Kunci API'),
+  '/account/hosting': 'Hosting',
   '/account/settings': L('Settings', 'Pengaturan'),
   '/account/how-to-buy': L('How to pay', 'Cara membayar'),
   '/account/pay': L('Pay by QRIS', 'Bayar dengan QRIS'),
 };
-const TABS = { '/account': 'overview', '/account/plans': 'plans', '/account/key': 'key', '/account/settings': 'settings', '/account/how-to-buy': 'howtobuy', '/account/pay': 'pay' };
+const TABS = { '/account': 'overview', '/account/plans': 'plans', '/account/hosting': 'hosting', '/account/key': 'key', '/account/settings': 'settings', '/account/how-to-buy': 'howtobuy', '/account/pay': 'pay' };
 
 // A QRIS payment's page asks again every few seconds while it can still move.
 const PAY_POLL_MS = 8_000;
@@ -249,6 +250,7 @@ async function accountPage(extra = {}) {
   const tab = TABS[path] || 'overview';
   document.title = `${TITLES[path] || TITLES['/account']} — Zeiko`;
   if (tab === 'pay') return payPage(flash);
+  if (tab === 'hosting') return hostingPage(flash, extra);
   if (tab === 'plans') draw(view.plans(o, { flash, pick: extra.pick || params.get('plan') || '' }));
   else if (tab === 'key') draw(view.key(o, { flash, shown: extra.shown, apiBase: o.apiBase || '' }));
   else if (tab === 'settings') draw(view.settings(o, { flash, door: DOOR }));
@@ -258,6 +260,16 @@ async function accountPage(extra = {}) {
     const at = document.getElementById(here.hash.slice(1));
     if (at) at.scrollIntoView();
   }
+}
+
+/** Zeiko Hosting: the person's hosting and the order form. */
+async function hostingPage(flash, extra = {}) {
+  const r = await ask('GET', '/hosting');
+  if (r.status !== 200 || !r.data) {
+    draw(view.message({ heading: L('Not available right now', 'Sedang tidak tersedia'), text: problem(r), link: '/account/hosting', label: L('Try again', 'Coba lagi') }));
+    return;
+  }
+  draw(view.hosting(o, r.data, { flash, pick: extra.pick || params.get('plan') || '', domain: extra.domain || '' }));
 }
 
 /** A QRIS payment of the person's, redrawn until it stops moving. */
@@ -288,7 +300,7 @@ function thanks(q) {
   thanked = true;
   clearTimeout(payTimer);
   const until = Date.now() + THANKS_MS;
-  const back = driveBack(q);
+  const back = driveBack(q) || (q.product === 'hosting' ? '/account/hosting' : '');
   draw(view.qrisThanks(o, { ...q, driveBack: back }, THANKS_MS / 1000));
   const tick = () => {
     const left = Math.max(0, Math.ceil((until - Date.now()) / 1000));
@@ -366,6 +378,23 @@ async function act(name, f, submitter) {
       const r = await ask('POST', `/payments/${encodeURIComponent(f.id)}/sent`, {});
       if (r.status === 200 && r.data) return thanks(r.data);
       return payPage(view.flash('err', problem(r)));
+    }
+    case 'hosting-order': {
+      const r = await ask('POST', '/hosting/order', { plan: f.plan || '', cycle: f.cycle === 'year' ? 'year' : 'month', domain: f.domain || '', lang: getLang() });
+      if (r.status === 200 && r.data && r.data.payment && PAY_ID.test(r.data.payment.id || '')) return location.assign(`/account/pay?id=${encodeURIComponent(r.data.payment.id)}`);
+      return hostingPage(view.flash('err', problem(r)), { pick: f.plan || '', domain: f.domain || '' });
+    }
+    case 'hosting-renew': {
+      if (!PAY_ID.test(f.id || '')) return hostingPage(view.flash('err', L('That hosting was not found.', 'Hosting itu tidak ditemukan.')));
+      const cycle = submitter && submitter.value === 'year' ? 'year' : 'month';
+      const r = await ask('POST', `/hosting/${encodeURIComponent(f.id)}/renew`, { cycle });
+      if (r.status === 200 && r.data && r.data.payment && PAY_ID.test(r.data.payment.id || '')) return location.assign(`/account/pay?id=${encodeURIComponent(r.data.payment.id)}`);
+      return hostingPage(view.flash('err', problem(r)));
+    }
+    case 'hosting-cancel': {
+      if (!PAY_ID.test(f.id || '')) return hostingPage(view.flash('err', L('That hosting was not found.', 'Hosting itu tidak ditemukan.')));
+      const r = await ask('POST', `/hosting/${encodeURIComponent(f.id)}/cancel`, {});
+      return hostingPage(r.status === 200 ? view.flash('ok', L('Order cancelled.', 'Pesanan dibatalkan.')) : view.flash('err', problem(r)));
     }
     case 'subscribe': {
       const product = f.product === 'chat' ? 'chat' : 'pranata';
