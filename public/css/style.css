@@ -1080,6 +1080,7 @@ input[type="checkbox"]:focus-visible, input[type="radio"]:focus-visible { outlin
 .host-specs strong { color: var(--text); font-variant-numeric: tabular-nums; }
 .host-meter .drv-meter-bar i { width: 36%; }
 .host-ticks { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 24px; }
+#address .kinds + .fineprint { margin-top: 12px; }
 .host-order { margin: 16px 0 0; }
 
 /* The taskbar, along the bottom of the desktop. */
@@ -1549,6 +1550,20 @@ body:has(#win-30d:checked) [data-w="30d"] { display: revert; }
 .host-option-body { display: grid; gap: 2px; min-width: 0; }
 .host-option-price { font-variant-numeric: tabular-nums; }
 .host-option-price s { color: var(--muted); }
+.host-option code { overflow-wrap: anywhere; }
+.host-addr-field { margin-top: 6px; }
+.host-addr-in { display: flex; align-items: center; gap: 6px; max-width: 420px; }
+.host-addr-in input { flex: 1 1 auto; min-width: 0; }
+.host-addr-in span { flex: none; color: var(--muted); font-size: 14px; }
+/* Only the field the chosen address needs, where the browser can tell. */
+@supports selector(:has(*)) {
+  .host-addr-field { display: none; }
+  .host-address:has(input[value="name"]:checked) .host-addr-name,
+  .host-address:has(input[value="own"]:checked) .host-addr-own { display: grid; }
+}
+.host-move { margin-top: 12px; }
+.host-move summary { cursor: pointer; font-weight: 700; }
+.host-move .host-order { margin-top: 10px; }
 .chip-btn { min-width: 76px; min-height: 40px; padding: 6px 14px; border: 0; background: var(--face); box-shadow: var(--raise); color: var(--text); font: 700 15px var(--sans); font-variant-numeric: tabular-nums; cursor: pointer; }
 .chip-btn:active { box-shadow: var(--press); }
 .chip-btn:focus-visible { outline: 1px dotted var(--text); outline-offset: -5px; }

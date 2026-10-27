@@ -246,12 +246,29 @@ GB (the operator's, October 2026).
   homepage window and the docs must agree (`npm run check`). Rupiah is
   written `Rp17.000` in both languages. The door's prices (the relay's
   `hosting.plans`) are what is actually asked: change both together.
+- **The address** (the operator's, 2026-10-27): every hosting starts on a
+  free one of its own, six random letters and digits under zeiko.biz.id
+  (`k3x9qa.zeiko.biz.id`, made by the door). A name of the customer's own
+  there (`hosting:name`, Rp3.000) or their own domain (`hosting:domain`,
+  Rp10.000) is paid by three months, in the same QRIS as the hosting: the
+  first three with the order, the next with the renewal that needs them.
+  **Egress**: 500 GB a month free, then `hosting:egress` (Rp5.000) per
+  500 GB, counted by the operator and added to the next renewal. The door's
+  `hosting.nameIdr`, `domainIdr` and `egressBlockIdr` are what is asked:
+  change them with the pages. The public pages say "added to your next
+  renewal" — never "billed" (`ditagih` is banned too).
 - **Ordering is in the account area** (`/account/hosting`,
   `views.js::hosting`): each plan's Order button opens it with `?plan=`;
-  the person types a domain, picks monthly or yearly, and pays by QRIS on
+  the person picks an address (`address`: `free`, `name` with `name`, or
+  `own` with `domain`; `views.js::addressFields`, the field for the choice
+  shown by `:has()`), picks monthly or yearly, and pays by QRIS on
   the ordinary `/account/pay` page (`product: "hosting"`, which goes back to
-  `/account/hosting`). The door is `GET /v1/hosting`,
-  `POST /v1/hosting/order`, `/v1/hosting/{id}/renew` and `/cancel`. The
+  `/account/hosting`). A running hosting's card has **Change the address**
+  (a name or a domain, paid for the months left, rounded up to three). The
+  door is `GET /v1/hosting` (plans, `address`, `egress`, and per hosting
+  `renew.month`/`renew.year` with what each carries and `move`),
+  `POST /v1/hosting/order`, `/v1/hosting/{id}/renew`, `/address` and
+  `/cancel`. The
   relay checks the payment by hand and the operator makes the hosting by
   hand; the page promises 1–5 minutes for the first and 15–60 for the
   second. Static sites are still ordered by email (a `mailto:`).

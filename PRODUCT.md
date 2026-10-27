@@ -40,7 +40,9 @@ understands the offer in one screen and finishes what they came to do without he
 - **Zeiko Drive** is file storage for Indonesia, priced in rupiah, opened at its own address.
 - **Zeiko Hosting** is WordPress hosting (PHP, Node.js, Python and Ruby run too), managed in cPanel,
   priced in rupiah by plan with a cheaper first month on the smaller plans, plus static sites per GB;
-  ordered and renewed in the account area, paid by QRIS.
+  ordered and renewed in the account area, paid by QRIS. Every hosting starts on a free address of
+  its own under zeiko.biz.id; a name there or the customer's own domain is paid by three months with
+  it, and egress past 500 GB a month is added to the next renewal.
 - **One Zeiko Account** signs a person into ZeikoAI, Zeiko Chat and Zeiko Drive.
 
 ## Operating Context

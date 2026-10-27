@@ -269,7 +269,7 @@ async function hostingPage(flash, extra = {}) {
     draw(view.message({ heading: L('Not available right now', 'Sedang tidak tersedia'), text: problem(r), link: '/account/hosting', label: L('Try again', 'Coba lagi') }));
     return;
   }
-  draw(view.hosting(o, r.data, { flash, pick: extra.pick || params.get('plan') || '', domain: extra.domain || '' }));
+  draw(view.hosting(o, r.data, { flash, pick: extra.pick || params.get('plan') || '', domain: extra.domain || '', address: extra.address || '', name: extra.name || '' }));
 }
 
 /** A QRIS payment of the person's, redrawn until it stops moving. */
@@ -380,9 +380,17 @@ async function act(name, f, submitter) {
       return payPage(view.flash('err', problem(r)));
     }
     case 'hosting-order': {
-      const r = await ask('POST', '/hosting/order', { plan: f.plan || '', cycle: f.cycle === 'year' ? 'year' : 'month', domain: f.domain || '', lang: getLang() });
+      const address = ['free', 'name', 'own'].includes(f.address) ? f.address : 'free';
+      const r = await ask('POST', '/hosting/order', { plan: f.plan || '', cycle: f.cycle === 'year' ? 'year' : 'month', address, name: f.name || '', domain: f.domain || '', lang: getLang() });
       if (r.status === 200 && r.data && r.data.payment && PAY_ID.test(r.data.payment.id || '')) return location.assign(`/account/pay?id=${encodeURIComponent(r.data.payment.id)}`);
-      return hostingPage(view.flash('err', problem(r)), { pick: f.plan || '', domain: f.domain || '' });
+      return hostingPage(view.flash('err', problem(r)), { pick: f.plan || '', domain: f.domain || '', address, name: f.name || '' });
+    }
+    case 'hosting-address': {
+      if (!PAY_ID.test(f.id || '')) return hostingPage(view.flash('err', L('That hosting was not found.', 'Hosting itu tidak ditemukan.')));
+      const address = f.address === 'own' ? 'own' : 'name';
+      const r = await ask('POST', `/hosting/${encodeURIComponent(f.id)}/address`, { address, name: f.name || '', domain: f.domain || '' });
+      if (r.status === 200 && r.data && r.data.payment && PAY_ID.test(r.data.payment.id || '')) return location.assign(`/account/pay?id=${encodeURIComponent(r.data.payment.id)}`);
+      return hostingPage(view.flash('err', problem(r)));
     }
     case 'hosting-renew': {
       if (!PAY_ID.test(f.id || '')) return hostingPage(view.flash('err', L('That hosting was not found.', 'Hosting itu tidak ditemukan.')));

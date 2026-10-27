@@ -177,6 +177,7 @@
         <p>On this page</p>
         <ul>
           <li><a href="#plan">What a plan gives you</a></li>
+          <li><a href="#address">Your address</a></li>
           <li><a href="#ordering">Ordering</a></li>
           <li><a href="#welcome">Your welcome email</a></li>
           <li><a href="#renewing">Renewing</a></li>
@@ -197,12 +198,25 @@
     <tr><th scope="row" data-label="Each plan has">Price</th><td data-label="What it means">Per month or per year, in rupiah. A year costs the same as ten months; the first month of Mini, Small and Medium costs less on your first hosting.</td></tr>
   </tbody>
 </table></div>
-<p>Every plan also has SSL, unlimited MySQL databases, email on your own domain, unlimited bandwidth, jailed SSH, PHP Speedboost on LiteSpeed, Imunify360, Cloudflare CDN, Softaculous, and app setup for Node.js, Python and Ruby.</p>
+<p>Every plan also has SSL, unlimited MySQL databases, email on your own domain, jailed SSH, PHP Speedboost on LiteSpeed, Imunify360, Cloudflare CDN, Softaculous, and app setup for Node.js, Python and Ruby.</p>
+<p>500 GB of egress a month, what your site sends to its visitors, is free on every plan. Past that it is <strong data-price="hosting:egress">Rp5.000</strong> per 500 GB: <em>Hosting</em> in your Zeiko Account shows it, and it is added to your next renewal.</p>
+
+<h2 id="address">Your address</h2>
+<p>Every hosting is online at an address of its own as soon as it is made. You pick one of three when you order:</p>
+<div class="doc-table-wrap"><table class="doc-table doc-table-cards">
+  <thead><tr><th scope="col">Address</th><th scope="col">Price</th><th scope="col">What to do</th></tr></thead>
+  <tbody>
+    <tr><th scope="row" data-label="Address">Free, like <code>k3x9qa.zeiko.biz.id</code></th><td data-label="Price">Free</td><td data-label="What to do">Nothing: six random letters and digits are made for you, with SSL.</td></tr>
+    <tr><th scope="row" data-label="Address">A name of your own, like <code>toko-bunga.zeiko.biz.id</code></th><td data-label="Price"><span data-price="hosting:name">Rp3.000</span> per 3 months</td><td data-label="What to do">Nothing: it is online as soon as your hosting is.</td></tr>
+    <tr><th scope="row" data-label="Address">Your own domain, like <code>example.com</code></th><td data-label="Price"><span data-price="hosting:domain">Rp10.000</span> per 3 months</td><td data-label="What to do">Point it here with the nameservers from your welcome email: <a href="/docs/hosting-domain">Connect your domain</a>.</td></tr>
+  </tbody>
+</table></div>
+<p>A name or a domain is paid 3 months at a time, in the same QRIS as your hosting: the first 3 months come with your order, and after that the renewal that needs them carries the next 3 (by the year, a year of them). To change the address later, open <em>Hosting</em> in your Zeiko Account and press <em>Change the address</em>: you pay for the months left of your hosting, rounded up to 3, and we move it within 15–60 minutes. Your files stay as they are.</p>
 
 <h2 id="ordering">Ordering</h2>
 <ol class="steps">
   <li><strong>Pick a plan</strong>On <a href="/hosting#plans">the Hosting page</a>, press <em>Order</em>. Sign in to your Zeiko Account, or make one, and confirm your email: your hosting details are sent there.</li>
-  <li><strong>Type your domain</strong>And choose monthly or yearly. No domain yet? Write to <a href="mailto:admin@zeiko.biz.id">admin@zeiko.biz.id</a> first.</li>
+  <li><strong>Pick your address</strong>The free one, a name of your own, or your own domain (see <a href="#address">Your address</a>), and choose monthly or yearly.</li>
   <li><strong>Pay by QRIS</strong>Scan the QR with your banking app or any app that pays QRIS, pay the exact amount it shows, and press <em>I’ve paid</em>.</li>
   <li><strong>We check your payment</strong>By hand, usually in 1–5 minutes.</li>
   <li><strong>We make your hosting</strong>Within 15–60 minutes, then we send your welcome email.</li>
@@ -215,7 +229,7 @@
   <tbody>
     <tr><th scope="row" data-label="In the email">cPanel address</th><td data-label="What it is for">Where you sign in to manage your hosting.</td></tr>
     <tr><th scope="row" data-label="In the email">Username and password</th><td data-label="What it is for">Your cPanel sign-in. The same username is used for FTP and SSH.</td></tr>
-    <tr><th scope="row" data-label="In the email">Two nameservers</th><td data-label="What it is for">What you put at your domain to point it here. See <a href="/docs/hosting-domain">Connect your domain</a>.</td></tr>
+    <tr><th scope="row" data-label="In the email">Two nameservers</th><td data-label="What it is for">For your own domain only: what you put at it to point it here. See <a href="/docs/hosting-domain">Connect your domain</a>.</td></tr>
     <tr><th scope="row" data-label="In the email">IP address</th><td data-label="What it is for">For pointing your domain with A records instead of nameservers.</td></tr>
     <tr><th scope="row" data-label="In the email">SSH port</th><td data-label="What it is for">For connecting over SSH from your own computer.</td></tr>
   </tbody>
@@ -230,6 +244,7 @@
   <li><strong>7 days after</strong>It is deleted, with its files, databases and email, for good.</li>
 </ol>
 <p>Renewed while suspended, it comes back as it was: we lift the suspension within 15–60 minutes.</p>
+<p>A renewal asks the plan’s price, plus the next 3 months of a name or a domain when they are due, plus any egress past the free 500 GB a month. <em>Hosting</em> in your Zeiko Account shows the whole amount on each button before you pay.</p>
 
 <h2 id="cpanel">cPanel, your control panel</h2>
 <p>Everything about your hosting is done in cPanel. The parts you will use most:</p>
