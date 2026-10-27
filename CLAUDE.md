@@ -276,8 +276,15 @@ GB (the operator's, October 2026).
   `POST /v1/hosting/order`, `/v1/hosting/{id}/renew`, `/address` and
   `/cancel`. The
   relay checks the payment by hand and the operator makes the hosting by
-  hand; the page promises 1–5 minutes for the first and 15–60 for the
-  second. Static sites are still ordered by email (a `mailto:`).
+  hand; the page promises 1–5 minutes for the first and **1–2 hours** for
+  the second (the owner's, 2026-10-27, for hosting and VPS alike). Static
+  sites are still ordered by email (a `mailto:`).
+- **Upgrades** (the owner's, 2026-10-27): a running hosting's card offers
+  the dearer plans on sale (`upgrade: [{id, name, monthIdr, priceIdr}]`
+  from `GET /v1/hosting`), each at what the door asks for the days left;
+  "Upgrade and pay by QRIS" posts `/v1/hosting/{id}/upgrade {plan}` and opens
+  the ordinary pay page. A paid one shows as "Upgrading to …" until the
+  operator has made it (`nextPlan`, `nextPlanName`). No downgrade.
 - **The docs** (`/docs/hosting`, `hosting-domain`, `hosting-sites`, and their
   Indonesian twins) are the customer's how-to: the welcome email, connecting
   a domain, SSL, cPanel, apps. They name cPanel's own menus; the details a
@@ -285,6 +292,32 @@ GB (the operator's, October 2026).
   never written on the site — they come in the welcome email.
 - **Never promise what the plan cannot give.** Each feature on the page must
   be one the hosting really has; ask the operator before adding one.
+
+## Zeiko VPS and Zeiko S3 in the account (`/account/vps`, `/account/s3`)
+
+The owner's (2026-10-27): one client area on the Zeiko Account for hosting,
+VPS and S3 — buy, renew, upgrade — paid by QRIS.
+
+- **VPS** (`views.js::vps`, `vpsCard`; `app.js::vpsPage`): everything comes
+  from the door's `GET /v1/vps` — plans (vCPU, RAM, NVMe, object storage;
+  a month, `halfYearIdr` for 6 months, a year), the systems (`templates`),
+  `setupIdr` (once, with the first payment) and `gift {months, tlds}` (a
+  free .my.id/.biz.id/.web.id domain from 6 months). The order form posts
+  `/v1/vps/order {plan, cycle: month|half|year, template, name, password,
+  domain, lang}`; a refused order is drawn again with what was typed,
+  **the password left out**, and the password is never drawn into a page.
+  Cards renew (`/renew {cycle}`), upgrade (`/upgrade {plan}`, the same
+  `upgradeBlock` as hosting) and cancel an unpaid order. The pay page says
+  `product: "vps"` and goes back to `/account/vps`. No public VPS page yet:
+  its prices are the door's only.
+- **S3** (`views.js::s3`) is a tab that opens Zeiko S3 in Zeiko Drive
+  (`https://drive.zeiko.biz.id/s3`), where it is bought, upgraded and
+  renewed; the site shows no S3 price of its own.
+- Both pages are hosting blocks for the check (`// hosting:start` …
+  `// hosting:end` in `views.js`, `<!-- hosting:start -->` in their markup),
+  and the check renders them in every state from the made-up account.
+- On a phone the account tabs scroll sideways; `app.js::draw` brings the
+  open one into the row.
 
 ## Two languages (EN | ID)
 

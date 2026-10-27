@@ -156,6 +156,10 @@ function flashFromAddress() {
 
 function draw(html) {
   root.innerHTML = html;
+  // On a phone the tabs scroll sideways: the one open is brought into the row.
+  const strip = root.querySelector('.acct-tabs');
+  const current = strip && strip.querySelector('[aria-current="page"]');
+  if (current) strip.scrollLeft += current.getBoundingClientRect().left - strip.getBoundingClientRect().left - (strip.clientWidth - current.offsetWidth) / 2;
   const focus = root.querySelector('[role="alert"]');
   if (focus) focus.scrollIntoView({ block: 'nearest' });
   // On the sign-in pages, the first empty box is ready to type in — with a
@@ -178,11 +182,13 @@ const TITLES = {
   '/account/plans': L('Plans & balance', 'Paket & saldo'),
   '/account/key': L('API key', 'Kunci API'),
   '/account/hosting': 'Hosting',
+  '/account/vps': 'VPS',
+  '/account/s3': 'Zeiko S3',
   '/account/settings': L('Settings', 'Pengaturan'),
   '/account/how-to-buy': L('How to pay', 'Cara membayar'),
   '/account/pay': L('Pay by QRIS', 'Bayar dengan QRIS'),
 };
-const TABS = { '/account': 'overview', '/account/plans': 'plans', '/account/hosting': 'hosting', '/account/key': 'key', '/account/settings': 'settings', '/account/how-to-buy': 'howtobuy', '/account/pay': 'pay' };
+const TABS = { '/account': 'overview', '/account/plans': 'plans', '/account/hosting': 'hosting', '/account/vps': 'vps', '/account/s3': 's3', '/account/key': 'key', '/account/settings': 'settings', '/account/how-to-buy': 'howtobuy', '/account/pay': 'pay' };
 
 // A QRIS payment's page asks again every few seconds while it can still move.
 const PAY_POLL_MS = 8_000;
@@ -251,6 +257,8 @@ async function accountPage(extra = {}) {
   document.title = `${TITLES[path] || TITLES['/account']} — Zeiko`;
   if (tab === 'pay') return payPage(flash);
   if (tab === 'hosting') return hostingPage(flash, extra);
+  if (tab === 'vps') return vpsPage(flash, extra);
+  if (tab === 's3') return draw(view.s3(o, flash));
   if (tab === 'plans') draw(view.plans(o, { flash, pick: extra.pick || params.get('plan') || '' }));
   else if (tab === 'key') draw(view.key(o, { flash, shown: extra.shown, apiBase: o.apiBase || '' }));
   else if (tab === 'settings') draw(view.settings(o, { flash, door: DOOR }));
@@ -270,6 +278,23 @@ async function hostingPage(flash, extra = {}) {
     return;
   }
   draw(view.hosting(o, r.data, { flash, pick: extra.pick || params.get('plan') || '', domain: extra.domain || '', address: extra.address || '', name: extra.name || '' }));
+}
+
+/** Zeiko VPS: the person's servers and the order form. A refused order is
+ * drawn again with what was typed, the password left out. */
+async function vpsPage(flash, extra = {}) {
+  const r = await ask('GET', '/vps');
+  if (r.status !== 200 || !r.data) {
+    draw(view.message({ heading: L('Not available right now', 'Sedang tidak tersedia'), text: problem(r), link: '/account/vps', label: L('Try again', 'Coba lagi') }));
+    return;
+  }
+  draw(view.vps(o, r.data, { flash, pick: extra.pick || params.get('plan') || '', cycle: extra.cycle || '', template: extra.template || '', name: extra.name || '', domain: extra.domain || '' }));
+}
+
+/** A payment the door answered with: open its QR, or say why not on `page`. */
+function toPay(r, page) {
+  if (r.status === 200 && r.data && r.data.payment && PAY_ID.test(r.data.payment.id || '')) return location.assign(`/account/pay?id=${encodeURIComponent(r.data.payment.id)}`);
+  return page(view.flash('err', problem(r)));
 }
 
 /** A QRIS payment of the person's, redrawn until it stops moving. */
@@ -300,7 +325,7 @@ function thanks(q) {
   thanked = true;
   clearTimeout(payTimer);
   const until = Date.now() + THANKS_MS;
-  const back = driveBack(q) || (q.product === 'hosting' ? '/account/hosting' : '');
+  const back = driveBack(q) || (q.product === 'hosting' ? '/account/hosting' : q.product === 'vps' ? '/account/vps' : '');
   draw(view.qrisThanks(o, { ...q, driveBack: back }, THANKS_MS / 1000));
   const tick = () => {
     const left = Math.max(0, Math.ceil((until - Date.now()) / 1000));
@@ -398,6 +423,34 @@ async function act(name, f, submitter) {
       const r = await ask('POST', `/hosting/${encodeURIComponent(f.id)}/renew`, { cycle });
       if (r.status === 200 && r.data && r.data.payment && PAY_ID.test(r.data.payment.id || '')) return location.assign(`/account/pay?id=${encodeURIComponent(r.data.payment.id)}`);
       return hostingPage(view.flash('err', problem(r)));
+    }
+    case 'hosting-upgrade': {
+      if (!PAY_ID.test(f.id || '')) return hostingPage(view.flash('err', L('That hosting was not found.', 'Hosting itu tidak ditemukan.')));
+      const r = await ask('POST', `/hosting/${encodeURIComponent(f.id)}/upgrade`, { plan: f.plan || '' });
+      return toPay(r, hostingPage);
+    }
+    case 'vps-order': {
+      const cycle = ['month', 'half', 'year'].includes(f.cycle) ? f.cycle : 'month';
+      const r = await ask('POST', '/vps/order', { plan: f.plan || '', cycle, template: f.template || '', name: f.name || '', password: f.password || '', domain: f.domain || '', lang: getLang() });
+      if (r.status === 200 && r.data && r.data.payment && PAY_ID.test(r.data.payment.id || '')) return location.assign(`/account/pay?id=${encodeURIComponent(r.data.payment.id)}`);
+      return vpsPage(view.flash('err', problem(r)), { pick: f.plan || '', cycle, template: f.template || '', name: f.name || '', domain: f.domain || '' });
+    }
+    case 'vps-renew': {
+      if (!PAY_ID.test(f.id || '')) return vpsPage(view.flash('err', L('That VPS was not found.', 'VPS itu tidak ditemukan.')));
+      const value = submitter ? submitter.value : '';
+      const cycle = ['month', 'half', 'year'].includes(value) ? value : 'month';
+      const r = await ask('POST', `/vps/${encodeURIComponent(f.id)}/renew`, { cycle });
+      return toPay(r, vpsPage);
+    }
+    case 'vps-upgrade': {
+      if (!PAY_ID.test(f.id || '')) return vpsPage(view.flash('err', L('That VPS was not found.', 'VPS itu tidak ditemukan.')));
+      const r = await ask('POST', `/vps/${encodeURIComponent(f.id)}/upgrade`, { plan: f.plan || '' });
+      return toPay(r, vpsPage);
+    }
+    case 'vps-cancel': {
+      if (!PAY_ID.test(f.id || '')) return vpsPage(view.flash('err', L('That VPS was not found.', 'VPS itu tidak ditemukan.')));
+      const r = await ask('POST', `/vps/${encodeURIComponent(f.id)}/cancel`, {});
+      return vpsPage(r.status === 200 ? view.flash('ok', L('Order cancelled.', 'Pesanan dibatalkan.')) : view.flash('err', problem(r)));
     }
     case 'hosting-cancel': {
       if (!PAY_ID.test(f.id || '')) return hostingPage(view.flash('err', L('That hosting was not found.', 'Hosting itu tidak ditemukan.')));

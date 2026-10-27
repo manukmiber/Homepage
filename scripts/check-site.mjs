@@ -223,8 +223,9 @@ function driveAllows(src, ranges, m) {
 // the operator's request (October 2026). Its own page (hosting.html, and
 // id/hosting.html) and the marked hosting blocks elsewhere
 // (<!-- hosting:start --> … <!-- hosting:end -->: the homepage's window and
-// the hosting docs, and in the account area its page, marked
-// // hosting:start … // hosting:end in the script) may name what a hosting
+// the hosting docs, and in the account area its page and the VPS and S3
+// pages beside it, marked // hosting:start … // hosting:end in the
+// script) may name what a hosting
 // plan comes with — web and object storage, MySQL databases, Cloudflare CDN
 // — its prices in rupiah, and paying for one. Only these words; every other
 // rule holds there too, so nothing says who runs the hosting or how.
@@ -615,10 +616,28 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
           year: { totalIdr: 213120, planIdr: 170000, addressBlocks: 4, addressMonths: 12, addressIdr: 40000, egressGb: 312, egressIdr: 3120 },
         },
         move: { nameIdr: 3000, domainIdr: 5000 },
+        upgrade: [{ id: evil, name: evil, monthIdr: 60000, priceIdr: 15000 }],
+        nextPlan: i === 7 ? evil : '', nextPlanName: evil,
       })),
     }, { flash: '', pick: evil, domain: evil, address: evil, name: evil })),
+    // Zeiko VPS: every state, an upgrade offered and one paid, and the order form.
+    ...[true, false].map((open) => accountViews.vps(o, {
+      open, emailVerified: open, setupIdr: 10000, gift: { months: 6, tlds: [evil, 'my.id'] },
+      plans: [{ id: evil, name: evil, vcpu: 1, ramGb: 2, diskGb: 20, objectGb: 30, monthIdr: 50000, halfYearIdr: 300000, yearIdr: 560000 }],
+      templates: [{ id: evil, name: evil }],
+      services: [...['ordered', 'paid', 'active', 'suspended', 'deleted', 'cancelled', evil], 'active'].map((status, i) => ({
+        id: evil, vpsName: evil, plan: evil, planName: evil, cycle: ['month', 'half', 'year', evil][i % 4], status, payment: evil,
+        panelUser: evil, template: evil, templateName: evil, domain: evil, domainKind: i % 2 ? 'gift' : 'free',
+        paidUntil: Date.UTC(2026, 10, 1), deleteAt: Date.UTC(2026, 10, 8),
+        spec: { vcpu: 1, ramGb: 2, diskGb: 20, objectGb: 30 },
+        renew: { monthIdr: 50000, halfYearIdr: 300000, yearIdr: 560000 },
+        upgrade: [{ id: evil, name: evil, monthIdr: 80000, priceIdr: 15000 }],
+        nextPlan: i === 7 ? evil : '', nextPlanName: evil,
+      })),
+    }, { flash: '', pick: evil, cycle: evil, template: evil, name: evil, domain: evil })),
+    accountViews.s3(o, ''),
     ...['waiting', 'confirming', 'paid', 'failed', 'expired', evil].map((status) => accountViews.qrisPay(o, {
-      id: evil, what: evil, amountText: evil, rupiah: 449237, rupiahText: evil, merchant: evil, nmid: evil, product: status === 'paid' ? 'hosting' : 'pranata',
+      id: evil, what: evil, amountText: evil, rupiah: 449237, rupiahText: evil, merchant: evil, nmid: evil, product: status === 'paid' ? 'hosting' : status === 'confirming' ? 'vps' : 'pranata',
       qr: status === 'waiting' ? ['1010', '0101', '1100', '0011'] : [evil], status, createdAt: Date.now(), expiresAt: Date.now() + 3_600_000,
     }, '')),
     // Rows that are not all 0 and 1 draw no code at all.
