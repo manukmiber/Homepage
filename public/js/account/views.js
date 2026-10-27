@@ -568,10 +568,14 @@ const addressKind = () => ({
 const monthsText = (n) => L(`${num(n)} month${n === 1 ? '' : 's'}`, `${num(n)} bulan`);
 
 /** What a renewal carries besides the plan, in words: "includes 3 months of the address Rp3.000". */
-function renewExtras(q) {
+function renewExtras(q, domain = false) {
   if (!q) return '';
   const parts = [];
-  if (q.addressBlocks > 0) parts.push(`${L(`${monthsText(q.addressMonths)} of the address`, `alamat ${monthsText(q.addressMonths)}`)} ${esc(rp(q.addressIdr))}`);
+  if (q.addressBlocks > 0 && q.addressIdr > 0) {
+    parts.push(domain
+      ? `${L(`${monthsText(q.addressMonths)} of the domain`, `domain ${monthsText(q.addressMonths)}`)} ${esc(rp(q.addressIdr))}`
+      : `${L(`${monthsText(q.addressMonths)} of the address`, `alamat ${monthsText(q.addressMonths)}`)} ${esc(rp(q.addressIdr))}`);
+  }
   if (q.egressGb > 0) parts.push(`egress ${num(q.egressGb)} GB ${esc(rp(q.egressIdr))}`);
   return parts.length ? `${L('includes', 'termasuk')} ${parts.join(', ')}` : '';
 }
@@ -599,6 +603,41 @@ function addressFields(a, { free, nameIdr, domainIdr, months, once = false, labe
       <label class="field host-addr-field host-addr-name">${L('Your name', 'Nama pilihanmu')}<span class="host-addr-in"><input type="text" name="name" value="${esc(name)}" placeholder="toko-bunga" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="40"><span>.${label ? esc(label) : 'xxxxxx'}.${base}</span></span>${label ? '' : `<small>${L('xxxxxx is your hosting’s six random letters and digits, made when you order.', 'xxxxxx adalah enam huruf dan angka acak hosting-mu, dibuat saat kamu memesan.')}</small>`}</label>
       <label class="field host-addr-field host-addr-own">${L('Your domain', 'Domainmu')}<input type="text" name="domain" value="${esc(domain)}" placeholder="${L('example.com', 'contoh.com')}" autocomplete="off" autocapitalize="none" spellcheck="false"></label>
     </fieldset>`;
+}
+
+/** A paid hosting or VPS can be ended (there is no downgrade: end it and
+ * order the plan you want). The door works out the refund for the days
+ * left; it is sent by hand within 3 working days to where the person says.
+ * `act` is the form's action. */
+function endBlock(x, act) {
+  const end = x.end;
+  if (!end || x.refundAskedAt) return '';
+  const refund = Number(end.refundIdr) || 0;
+  return `<details class="host-move"><summary>${L('End this plan', 'Hentikan paket ini')}</summary>
+      <form data-act="${esc(act)}" class="host-order">
+        <input type="hidden" name="id" value="${esc(x.id)}">
+        <p>${refund > 0
+    ? L(`We delete it with everything on it and send you <strong>${esc(rp(refund))}</strong> for the days left, within 3 working days.`, `Kami hapus beserta semua isinya dan mengirim <strong>${esc(rp(refund))}</strong> untuk sisa harinya, dalam 3 hari kerja.`)
+    : L('We delete it with everything on it. No paid time is left to give back.', 'Kami hapus beserta semua isinya. Tidak ada sisa masa aktif yang bisa dikembalikan.')}</p>
+        ${refund > 0 ? `<label class="field">${L('Send the refund to', 'Kirim refund ke')}<input type="text" name="refundTo" maxlength="200" placeholder="${L('Bank or e-wallet, number, name on it', 'Bank atau e-wallet, nomor, atas nama')}" autocomplete="off" required></label>` : ''}
+        <label class="check"><input type="checkbox" name="sure" value="1" required> ${L('I understand it is deleted and cannot be brought back.', 'Saya paham ini dihapus dan tidak bisa dikembalikan.')}</label>
+        <p class="fineprint">${L('Want a smaller plan? End this one, then order the plan you want.', 'Mau paket yang lebih kecil? Hentikan yang ini, lalu pesan paket yang kamu mau.')}</p>
+        <button class="btn btn-sm" type="submit" data-busy="${L('Sending…', 'Mengirim…')}">${L('End this plan', 'Hentikan paket ini')}</button>
+      </form>
+    </details>`;
+}
+
+/** What an ended or ending plan says about its refund. */
+function endedLine(x) {
+  const refund = Number(x.refundIdr) || 0;
+  if (x.refundedAt) {
+    return refund > 0
+      ? L(`Ended on ${esc(day(x.refundedAt))}; your refund of <strong>${esc(rp(refund))}</strong> is sent.`, `Dihentikan ${esc(day(x.refundedAt))}; refund <strong>${esc(rp(refund))}</strong> sudah kami kirim.`)
+      : L(`Ended on ${esc(day(x.refundedAt))}.`, `Dihentikan ${esc(day(x.refundedAt))}.`);
+  }
+  return refund > 0
+    ? L(`Ending: we delete it and send <strong>${esc(rp(refund))}</strong> to ${esc(x.refundTo)} within 3 working days.`, `Sedang dihentikan: kami hapus lalu mengirim <strong>${esc(rp(refund))}</strong> ke ${esc(x.refundTo)} dalam 3 hari kerja.`)
+    : L('Ending: we delete it shortly and email you.', 'Sedang dihentikan: segera kami hapus lalu kirim email.');
 }
 
 /** A running hosting or VPS: the dearer plans it can move to now, each
@@ -632,12 +671,15 @@ function hostingCard(x, h) {
   let line = '';
   let act = '';
   let more = '';
-  if (x.status === 'ordered') {
+  if (x.refundAskedAt) {
+    line = endedLine(x);
+  } else if (x.status === 'ordered') {
     line = L('Pay its QRIS to start. An unpaid order is dropped after a few days.', 'Bayar QRIS-nya untuk mulai. Pesanan yang tidak dibayar dihapus setelah beberapa hari.');
     act = `${x.payment ? `<a class="btn btn-primary btn-sm" href="/account/pay?id=${encodeURIComponent(x.payment)}">${L('Open QR', 'Buka QR')}</a>` : ''}
       <form data-act="hosting-cancel"><input type="hidden" name="id" value="${esc(x.id)}"><button class="btn-link" type="submit" data-busy="…">${L('Cancel order', 'Batalkan pesanan')}</button></form>`;
   } else if (x.status === 'paid') {
     line = L('Paid — we are making it now, usually within 1–2 hours. Your cPanel details come by email.', 'Sudah dibayar — sedang kami buat, biasanya dalam 1–2 jam. Detail cPanel-mu dikirim lewat email.');
+    more += endBlock(x, 'hosting-end');
   } else if (x.status === 'active' || x.status === 'suspended') {
     line = x.status === 'active'
       ? L(`Active until <strong>${esc(day(x.paidUntil))}</strong>. Renew before then; a day after it ends it is suspended, and a week after it is deleted.`, `Aktif sampai <strong>${esc(day(x.paidUntil))}</strong>. Perpanjang sebelum itu; sehari setelah habis di-suspend, dan seminggu setelahnya dihapus.`)
@@ -674,6 +716,7 @@ function hostingCard(x, h) {
         </form>
       </details>`;
     }
+    more += endBlock(x, 'hosting-end');
   }
   const kind = addressKind()[x.domainKind];
   return `<article class="card host-item">
@@ -762,12 +805,15 @@ function vpsCard(x) {
   let line = '';
   let act = '';
   let more = '';
-  if (x.status === 'ordered') {
+  if (x.refundAskedAt) {
+    line = endedLine(x);
+  } else if (x.status === 'ordered') {
     line = L('Pay its QRIS to start. An unpaid order is dropped after a few days.', 'Bayar QRIS-nya untuk mulai. Pesanan yang tidak dibayar dihapus setelah beberapa hari.');
     act = `${x.payment ? `<a class="btn btn-primary btn-sm" href="/account/pay?id=${encodeURIComponent(x.payment)}">${L('Open QR', 'Buka QR')}</a>` : ''}
       <form data-act="vps-cancel"><input type="hidden" name="id" value="${esc(x.id)}"><button class="btn-link" type="submit" data-busy="…">${L('Cancel order', 'Batalkan pesanan')}</button></form>`;
   } else if (x.status === 'paid') {
     line = L('Paid — we are making it now, usually within 1–2 hours. How to sign in comes by email.', 'Sudah dibayar — sedang kami buat, biasanya dalam 1–2 jam. Cara masuknya dikirim lewat email.');
+    more += endBlock(x, 'vps-end');
   } else if (x.status === 'active' || x.status === 'suspended') {
     line = x.status === 'active'
       ? L(`Running until <strong>${esc(day(x.paidUntil))}</strong>. Renew before then; a day after it ends it is turned off, and a week after it is deleted.`, `Aktif sampai <strong>${esc(day(x.paidUntil))}</strong>. Perpanjang sebelum itu; sehari setelah habis dimatikan, dan seminggu setelahnya dihapus.`)
@@ -780,7 +826,13 @@ function vpsCard(x) {
         ${btn('half', L('Renew 6 months', 'Perpanjang 6 bulan'), r.halfYearIdr, false)}
         ${btn('year', L('Renew a year', 'Perpanjang setahun'), r.yearIdr, false)}
       </form>` : '';
+    const extras = [['month', L('A month', 'Sebulan')], ['half', L('6 months', '6 bulan')], ['year', L('A year', 'Setahun')]]
+      .map(([k, name]) => [name, renewExtras(r[k], true)])
+      .filter(([, t]) => t)
+      .map(([name, t]) => `${name} ${t}`);
+    if (extras.length) act += `<p class="muted-note">${extras.join('. ')}.</p>`;
     more += upgradeBlock(x, 'vps-upgrade');
+    more += endBlock(x, 'vps-end');
   }
   const facts = [
     `${esc(x.planName)} · ${esc(CYCLES()[x.cycle] || x.cycle)}`,
@@ -817,7 +869,7 @@ export function vps(o, v, { flash, pick = '', cycle = '', template = '', name = 
         <span class="muted-note">${esc(vpsFacts(p))}</span>
       </span>
     </label>`).join('');
-  const systemOptions = systems.map((t) => `<label><input type="radio" name="template" value="${esc(t.id)}"${t.id === system ? ' checked' : ''} required> ${esc(t.name)}</label>`).join('');
+  const systemOptions = systems.map((t) => `<label><input type="radio" name="template" value="${esc(t.id)}"${t.id === system ? ' checked' : ''} required> ${esc(t.name)}${t.extraIdr > 0 ? ` (+${esc(rp(t.extraIdr))}/${L('month', 'bulan')})` : ''}</label>`).join('');
   const verified = Boolean(v && v.emailVerified);
   const form = !open
     ? alert('warn', L('VPS orders are not open yet. Please try again later.', 'Pemesanan VPS belum dibuka. Coba lagi nanti.'))
@@ -833,7 +885,7 @@ export function vps(o, v, { flash, pick = '', cycle = '', template = '', name = 
         <fieldset class="funds-way vps-systems"><legend>${L('System', 'Sistem')}</legend>${systemOptions}</fieldset>
         <label class="field">${L('VPS name', 'Nama VPS')}<input type="text" name="name" value="${esc(name)}" placeholder="web1" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="30" pattern="[A-Za-z0-9][A-Za-z0-9-]{0,28}[A-Za-z0-9]|[A-Za-z0-9]" required><small>${L('Letters, digits and -, up to 30.', 'Huruf, angka dan -, maksimal 30.')}</small></label>
         <label class="field">${L('Password', 'Password')}<input type="password" name="password" autocomplete="new-password" minlength="10" maxlength="64" required><small>${L('10 to 64 characters with a lowercase letter, a capital and a digit, no spaces or quotes. Your VPS is made with it; we do not email it.', '10 sampai 64 karakter dengan huruf kecil, huruf besar dan angka, tanpa spasi atau tanda kutip. VPS-mu dibuat dengan password ini; kami tidak mengirimnya lewat email.')}</small></label>
-        ${giftOn ? `<label class="field">${L('Free domain', 'Domain gratis')}<input type="text" name="domain" value="${esc(domain)}" placeholder="toko.${esc(gift.tlds[0])}" autocomplete="off" autocapitalize="none" spellcheck="false"><small>${L(`With ${num(gift.months)} months or more: one ${tlds} domain, free. Leave it empty for none.`, `Dengan ${num(gift.months)} bulan atau lebih: satu domain ${tlds}, gratis. Kosongkan kalau tidak perlu.`)}</small></label>` : ''}
+        ${giftOn ? `<label class="field">${L('Free domain', 'Domain gratis')}<input type="text" name="domain" value="${esc(domain)}" placeholder="toko.${esc(gift.tlds[0])}" autocomplete="off" autocapitalize="none" spellcheck="false"><small>${L(`With ${num(gift.months)} months or more: one ${tlds} domain, free for its first year; after that it comes with your renewals at ${esc(rp(gift.domainIdr))} per 3 months. Leave it empty for none.`, `Dengan ${num(gift.months)} bulan atau lebih: satu domain ${tlds}, gratis untuk tahun pertamanya; setelah itu ikut perpanjanganmu ${esc(rp(gift.domainIdr))} per 3 bulan. Kosongkan kalau tidak perlu.`)}</small></label>` : ''}
         <button class="btn btn-primary" type="submit" data-busy="${L('Opening…', 'Membuka…')}">${L('Order and pay by QRIS', 'Pesan dan bayar dengan QRIS')}</button>
         ${v.setupIdr > 0 ? `<p class="fineprint">${L(`The first payment includes ${esc(rp(v.setupIdr))} to set it up, once.`, `Pembayaran pertama sudah termasuk ${esc(rp(v.setupIdr))} biaya pembuatan, sekali saja.`)}</p>` : ''}
         <p class="fineprint">${L('We check your QRIS payment by hand in 1–5 minutes, make your VPS within 1–2 hours, and email you its IP address and how to sign in.', 'Kami memeriksa pembayaran QRIS-mu secara manual dalam 1–5 menit, membuat VPS-mu dalam 1–2 jam, lalu mengirim alamat IP dan cara masuknya lewat email.')}</p>

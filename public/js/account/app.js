@@ -447,6 +447,19 @@ async function act(name, f, submitter) {
       const r = await ask('POST', `/vps/${encodeURIComponent(f.id)}/upgrade`, { plan: f.plan || '' });
       return toPay(r, vpsPage);
     }
+    case 'hosting-end':
+    case 'vps-end': {
+      const vps = name === 'vps-end';
+      const page = vps ? vpsPage : hostingPage;
+      if (!PAY_ID.test(f.id || '')) return page(view.flash('err', L('That plan was not found.', 'Paket itu tidak ditemukan.')));
+      if (f.sure !== '1') return page(view.flash('err', L('Tick the box to confirm.', 'Centang kotaknya untuk mengonfirmasi.')));
+      const r = await ask('POST', `/${vps ? 'vps' : 'hosting'}/${encodeURIComponent(f.id)}/end`, { refundTo: f.refundTo || '' });
+      if (r.status !== 200) return page(view.flash('err', problem(r)));
+      const refund = r.data && r.data.refundIdr > 0;
+      return page(view.flash('ok', refund
+        ? L('Your plan is ending. We send the refund within 3 working days and email you.', 'Paketmu sedang dihentikan. Refund kami kirim dalam 3 hari kerja lalu kami kirim email.')
+        : L('Your plan is ending. We delete it shortly and email you.', 'Paketmu sedang dihentikan. Segera kami hapus lalu kirim email.')));
+    }
     case 'vps-cancel': {
       if (!PAY_ID.test(f.id || '')) return vpsPage(view.flash('err', L('That VPS was not found.', 'VPS itu tidak ditemukan.')));
       const r = await ask('POST', `/vps/${encodeURIComponent(f.id)}/cancel`, {});

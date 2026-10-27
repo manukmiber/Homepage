@@ -284,7 +284,8 @@ GB (the operator's, October 2026).
   from `GET /v1/hosting`), each at what the door asks for the days left;
   "Upgrade and pay by QRIS" posts `/v1/hosting/{id}/upgrade {plan}` and opens
   the ordinary pay page. A paid one shows as "Upgrading to …" until the
-  operator has made it (`nextPlan`, `nextPlanName`). No downgrade.
+  operator has made it (`nextPlan`, `nextPlanName`). No downgrade: a plan
+  is ended (below) and a new one ordered.
 - **The docs** (`/docs/hosting`, `hosting-domain`, `hosting-sites`, and their
   Indonesian twins) are the customer's how-to: the welcome email, connecting
   a domain, SSL, cPanel, apps. They name cPanel's own menus; the details a
@@ -306,8 +307,20 @@ VPS and S3 — buy, renew, upgrade — paid by QRIS.
   `/v1/vps/order {plan, cycle: month|half|year, template, name, password,
   domain, lang}`; a refused order is drawn again with what was typed,
   **the password left out**, and the password is never drawn into a page.
+  A system may cost more a month (`extraIdr`: Windows +Rp20.000), said
+  beside it; the free domain is free for its first year, then carried by
+  the renewals at `gift.domainIdr` per 3 months (each renewal button's
+  total includes it, and the line under them says so).
   Cards renew (`/renew {cycle}`), upgrade (`/upgrade {plan}`, the same
-  `upgradeBlock` as hosting) and cancel an unpaid order. The pay page says
+  `upgradeBlock` as hosting) and cancel an unpaid order.
+- **Ending a plan** (hosting and VPS, `endBlock`, `endedLine`): there is no
+  downgrade (the owner's: end it and order again; the refund is sent by
+  hand within 3 working days). A paid card offers "End this plan" with the
+  door's `end.refundIdr`, where to send it (`refundTo`, free text, required
+  when there is money) and a box to tick; it posts `/v1/hosting/{id}/end`
+  or `/v1/vps/{id}/end`. An ending card says what is coming
+  (`refundAskedAt`, `refundIdr`, `refundTo`), an ended one that it was sent
+  (`refundedAt`). The pay page says
   `product: "vps"` and goes back to `/account/vps`. No public VPS page yet:
   its prices are the door's only.
 - **S3** (`views.js::s3`) is a tab that opens Zeiko S3 in Zeiko Drive
