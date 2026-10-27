@@ -537,9 +537,10 @@ export function plans(o, { flash, pick }) {
 // Zeiko Hosting: the person's hosting and the order form. Prices are rupiah
 // from the door (`GET /v1/hosting`); the page names what a plan comes with,
 // so its markup is a hosting block for scripts/check-site.mjs. Every hosting
-// has an address: a free one the door makes (six random characters under
-// `address.base`), a name of the person's own under it, or their own domain;
-// the last two go by three months, in the same QRIS as the hosting.
+// has an address: a free one the door makes (six random characters, its
+// `label`, under `address.base`), a name of the person's own in front of
+// that label, or their own domain; the last two go by three months, in the
+// same QRIS as the hosting, and a running one moves at one flat price.
 
 /** `17000` → `Rp17.000`, in both languages, as on the Hosting page. */
 const rp = (n) => `Rp${Number(n || 0).toLocaleString('id-ID')}`;
@@ -564,31 +565,36 @@ const addressKind = () => ({
 /** `months` (3, 6, 12…) as words. */
 const monthsText = (n) => L(`${num(n)} month${n === 1 ? '' : 's'}`, `${num(n)} bulan`);
 
-/** What a renewal carries besides the plan, in words: "+ 3 months of the address Rp3.000". */
-function renewExtras(q, eg) {
+/** What a renewal carries besides the plan, in words: "includes 3 months of the address Rp3.000". */
+function renewExtras(q) {
   if (!q) return '';
   const parts = [];
   if (q.addressBlocks > 0) parts.push(`${L(`${monthsText(q.addressMonths)} of the address`, `alamat ${monthsText(q.addressMonths)}`)} ${esc(rp(q.addressIdr))}`);
-  if (q.egressBlocks > 0) parts.push(`${L('egress', 'egress')} ${num(q.egressBlocks)} × ${num(eg.blockGb || 0)} GB ${esc(rp(q.egressIdr))}`);
+  if (q.egressGb > 0) parts.push(`egress ${num(q.egressGb)} GB ${esc(rp(q.egressIdr))}`);
   return parts.length ? `${L('includes', 'termasuk')} ${parts.join(', ')}` : '';
 }
 
-/** The fields that choose an address: a name under the house's domain or a
- * domain of their own (and, when ordering, the free one first). Prices are
- * for `months` months: three for an order, the months left for a change. */
-function addressFields(a, { free, nameIdr, domainIdr, months, address = '', name = '', domain = '' }) {
+/** Egress as the page says it: "Rp5.000 per 500 GB, by the GB". */
+const egressRate = (eg) => L(`${esc(rp(eg.blockIdr))} per ${num(eg.blockGb || 0)} GB, by the GB`, `${esc(rp(eg.blockIdr))} per ${num(eg.blockGb || 0)} GB, dihitung per GB`);
+
+/** The fields that choose an address: a name in front of the hosting's six
+ * random characters (`label`; unknown until it is ordered) or a domain of
+ * their own, and, when ordering, the free one first. `once` prices a move
+ * of a running hosting (one flat price); otherwise they are per 3 months. */
+function addressFields(a, { free, nameIdr, domainIdr, months, once = false, label = '', address = '', name = '', domain = '' }) {
   const pick = address || (free ? 'free' : 'name');
   const base = esc(a.base || '');
+  const six = label ? esc(label) : 'k3x9qa';
   const option = (value, title, price, note) => `<label class="host-option">
       <input type="radio" name="address" value="${value}"${pick === value ? ' checked' : ''}>
       <span class="host-option-body"><strong>${title}</strong>${price ? `<span class="host-option-price">${price}</span>` : ''}<span class="muted-note">${note}</span></span>
     </label>`;
-  const per = `/ ${esc(monthsText(months))}`;
+  const per = once ? L('once', 'sekali') : `/ ${esc(monthsText(months))}`;
   return `<fieldset class="host-choose host-address"><legend>${L('Address', 'Alamat')}</legend>
-      ${free ? option('free', L('Free address', 'Alamat gratis'), L('Free', 'Gratis'), L(`Six random letters and digits, like <code>k3x9qa.${base}</code>.`, `Enam huruf dan angka acak, misalnya <code>k3x9qa.${base}</code>.`)) : ''}
-      ${option('name', L('A name of your own', 'Nama pilihanmu'), `${esc(rp(nameIdr))} ${per}`, L(`Like <code>toko-bunga.${base}</code>, ready with nothing to connect.`, `Misalnya <code>toko-bunga.${base}</code>, langsung jalan tanpa perlu menyambungkan apa pun.`))}
+      ${free ? option('free', L('Free address', 'Alamat gratis'), L('Free', 'Gratis'), L(`Six random letters and digits, like <code>${six}.${base}</code>.`, `Enam huruf dan angka acak, misalnya <code>${six}.${base}</code>.`)) : ''}
+      ${option('name', L('A name of your own', 'Nama pilihanmu'), `${esc(rp(nameIdr))} ${per}`, L(`In front of ${label ? 'your' : 'your hosting’s'} six letters, like <code>toko-bunga.${six}.${base}</code>: nothing to connect.`, `Di depan enam huruf ${label ? 'milikmu' : 'hosting-mu'}, misalnya <code>toko-bunga.${six}.${base}</code>: tanpa perlu menyambungkan apa pun.`))}
       ${option('own', L('Your own domain', 'Domain sendiri'), `${esc(rp(domainIdr))} ${per}`, L('A domain you bought, like <code>example.com</code>. You point it at us with nameservers.', 'Domain yang kamu beli, misalnya <code>contoh.com</code>. Kamu sambungkan lewat nameserver.'))}
-      <label class="field host-addr-field host-addr-name">${L('Your name', 'Nama pilihanmu')}<span class="host-addr-in"><input type="text" name="name" value="${esc(name)}" placeholder="toko-bunga" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="40"><span>.${base}</span></span></label>
+      <label class="field host-addr-field host-addr-name">${L('Your name', 'Nama pilihanmu')}<span class="host-addr-in"><input type="text" name="name" value="${esc(name)}" placeholder="toko-bunga" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="40"><span>.${label ? esc(label) : 'xxxxxx'}.${base}</span></span>${label ? '' : `<small>${L('xxxxxx is your hosting’s six random letters and digits, made when you order.', 'xxxxxx adalah enam huruf dan angka acak hosting-mu, dibuat saat kamu memesan.')}</small>`}</label>
       <label class="field host-addr-field host-addr-own">${L('Your domain', 'Domainmu')}<input type="text" name="domain" value="${esc(domain)}" placeholder="${L('example.com', 'contoh.com')}" autocomplete="off" autocapitalize="none" spellcheck="false"></label>
     </fieldset>`;
 }
@@ -613,7 +619,7 @@ function hostingCard(x, h) {
       : L(`Suspended since it ended on ${esc(day(x.paidUntil))}. Renew before <strong>${esc(day(x.deleteAt))}</strong> or it is deleted with its files.`, `Di-suspend karena habis ${esc(day(x.paidUntil))}. Perpanjang sebelum <strong>${esc(day(x.deleteAt))}</strong> atau dihapus beserta file-nya.`);
     const r = x.renew || {};
     const extras = [['month', L('A month', 'Sebulan')], ['year', L('A year', 'Setahun')]]
-      .map(([k, name]) => [name, renewExtras(r[k], eg)])
+      .map(([k, name]) => [name, renewExtras(r[k])])
       .filter(([, t]) => t)
       .map(([name, t]) => `${name} ${t}`);
     act = r.monthIdr ? `<form data-act="hosting-renew" class="host-renew">
@@ -621,8 +627,13 @@ function hostingCard(x, h) {
         <button class="btn btn-primary btn-sm" type="submit" name="cycle" value="month" data-busy="${L('Opening…', 'Membuka…')}">${L('Renew a month', 'Perpanjang sebulan')} · ${esc(rp(r.monthIdr))}</button>
         ${r.yearIdr ? `<button class="btn btn-ghost btn-sm" type="submit" name="cycle" value="year" data-busy="${L('Opening…', 'Membuka…')}">${L('Renew a year', 'Perpanjang setahun')} · ${esc(rp(r.yearIdr))}</button>` : ''}
       </form>${extras.length ? `<p class="muted-note">${extras.join('. ')}.</p>` : ''}` : '';
-    if (x.egressOwed > 0) {
-      more += `<p>${L(`Egress past the free ${num(eg.freeGb || 0)} GB a month: <strong>${num(x.egressOwed)} × ${num(eg.blockGb || 0)} GB</strong>, ${esc(rp(x.egressOwed * (eg.blockIdr || 0)))}, added to your next renewal.`, `Egress di atas ${num(eg.freeGb || 0)} GB gratis per bulan: <strong>${num(x.egressOwed)} × ${num(eg.blockGb || 0)} GB</strong>, ${esc(rp(x.egressOwed * (eg.blockIdr || 0)))}, ditambahkan ke perpanjangan berikutnya.`)}</p>`;
+    const e = x.egressMonth;
+    if (e && e.measured) {
+      more += `<p class="muted-note">${L(`Egress this month: <strong>${esc(gb(e.usedGb))}</strong> of the free ${num(eg.freeGb || 0)} GB.`, `Egress bulan ini: <strong>${esc(gb(e.usedGb))}</strong> dari ${num(eg.freeGb || 0)} GB gratis.`)}</p>`;
+    }
+    if (x.egressGb > 0) {
+      const owed = Math.ceil((x.egressGb * (eg.blockIdr || 0)) / Math.max(1, eg.blockGb || 1));
+      more += `<p>${L(`Egress past the free ${num(eg.freeGb || 0)} GB a month: <strong>${num(x.egressGb)} GB</strong>, ${esc(rp(owed))}, added to your next renewal.`, `Egress di atas ${num(eg.freeGb || 0)} GB gratis per bulan: <strong>${num(x.egressGb)} GB</strong>, ${esc(rp(owed))}, ditambahkan ke perpanjangan berikutnya.`)}</p>`;
     }
     if (x.nextDomain) {
       more += `<p>${L(`Moving to <strong>${esc(x.nextDomain)}</strong>: paid. We move it within 15–60 minutes and email you.`, `Pindah ke <strong>${esc(x.nextDomain)}</strong>: sudah dibayar. Kami pindahkan dalam 15–60 menit lalu kirim email.`)}</p>`;
@@ -631,8 +642,8 @@ function hostingCard(x, h) {
       more += `<details class="host-move"><summary>${L('Change the address', 'Ganti alamat')}</summary>
         <form data-act="hosting-address" class="host-order">
           <input type="hidden" name="id" value="${esc(x.id)}">
-          ${addressFields(a, { free: false, nameIdr: m.nameIdr, domainIdr: m.domainIdr, months: m.addressMonths, address: x.domainKind === 'name' ? 'own' : 'name' })}
-          <p class="fineprint">${L(`Paid for the ${monthsText(m.addressMonths)} from now that cover the rest of your paid time; after that it comes with your renewals. Your files stay as they are.`, `Dibayar untuk ${monthsText(m.addressMonths)} dari sekarang, yang menutup sisa masa aktifmu; setelah itu ikut perpanjangan. File-mu tetap seperti sekarang.`)}</p>
+          ${addressFields(a, { free: false, nameIdr: m.nameIdr, domainIdr: m.domainIdr, once: true, label: x.label || '', address: x.domainKind === 'name' ? 'own' : 'name' })}
+          <p class="fineprint">${L('Paid once, it covers the new address to the end of your paid time; after that it goes with your renewals. Your files stay as they are.', 'Dibayar sekali, alamat barunya berlaku sampai akhir masa aktifmu; setelah itu ikut perpanjangan. File-mu tetap seperti sekarang.')}</p>
           <button class="btn btn-primary btn-sm" type="submit" data-busy="${L('Opening…', 'Membuka…')}">${L('Change and pay by QRIS', 'Ganti dan bayar dengan QRIS')}</button>
         </form>
       </details>`;
@@ -685,7 +696,7 @@ export function hosting(o, h, { flash, pick = '', domain = '', address = '', nam
         </fieldset>
         ${addressFields(a, { free: true, nameIdr: a.nameIdr, domainIdr: a.domainIdr, months: a.months || 3, address, name, domain })}
         <button class="btn btn-primary" type="submit" data-busy="${L('Opening…', 'Membuka…')}">${L('Order and pay by QRIS', 'Pesan dan bayar dengan QRIS')}</button>
-        <p class="fineprint">${L(h && h.firstOffer ? 'The first-month price is for your first hosting, by the month. ' : '', h && h.firstOffer ? 'Harga bulan pertama berlaku untuk hosting pertamamu, bulanan. ' : '')}${L(`A name or a domain is paid ${monthsText(a.months || 3)} at a time: the first come with this order, the next with the renewal that needs them. ${num(eg.freeGb || 0)} GB of egress a month is free; past it, ${esc(rp(eg.blockIdr))} per ${num(eg.blockGb || 0)} GB, added to your next renewal.`, `Nama atau domain dibayar per ${monthsText(a.months || 3)}: yang pertama ikut pesanan ini, berikutnya ikut perpanjangan yang memerlukannya. Egress ${num(eg.freeGb || 0)} GB per bulan gratis; lebih dari itu ${esc(rp(eg.blockIdr))} per ${num(eg.blockGb || 0)} GB, ditambahkan ke perpanjangan berikutnya.`)}</p>
+        <p class="fineprint">${L(h && h.firstOffer ? 'The first-month price is for your first hosting, by the month. ' : '', h && h.firstOffer ? 'Harga bulan pertama berlaku untuk hosting pertamamu, bulanan. ' : '')}${L(`A name or a domain is paid ${monthsText(a.months || 3)} at a time: the first come with this order, the next with the renewal that needs them. ${num(eg.freeGb || 0)} GB of egress a month is free; past it, ${egressRate(eg)}, added to your next renewal.`, `Nama atau domain dibayar per ${monthsText(a.months || 3)}: yang pertama ikut pesanan ini, berikutnya ikut perpanjangan yang memerlukannya. Egress ${num(eg.freeGb || 0)} GB per bulan gratis; lebih dari itu ${egressRate(eg)}, ditambahkan ke perpanjangan berikutnya.`)}</p>
         <p class="fineprint">${L('We check your QRIS payment by hand in 1–5 minutes, make your hosting within 15–60 minutes, and email you your cPanel address, username and password.', 'Kami memeriksa pembayaran QRIS-mu secara manual dalam 1–5 menit, membuat hosting-mu dalam 15–60 menit, lalu mengirim alamat cPanel, username dan password lewat email.')} <a href="${L('/docs/hosting', '/id/docs/hosting')}">${L('How hosting works', 'Cara kerja hosting')}</a></p>
       </form>`;
   const body = `<!-- hosting:start -->

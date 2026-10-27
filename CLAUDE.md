@@ -249,14 +249,20 @@ GB (the operator's, October 2026).
 - **The address** (the operator's, 2026-10-27): every hosting starts on a
   free one of its own, six random letters and digits under zeiko.biz.id
   (`k3x9qa.zeiko.biz.id`, made by the door). A name of the customer's own
-  there (`hosting:name`, Rp3.000) or their own domain (`hosting:domain`,
-  Rp10.000) is paid by three months, in the same QRIS as the hosting: the
-  first three with the order, the next with the renewal that needs them.
+  goes **in front of those six** (`toko-bunga.k3x9qa.zeiko.biz.id`, so it
+  never meets the house's names or anyone else's; `hosting:name`, Rp3.000)
+  or their own domain (`hosting:domain`, Rp10.000), each paid by three
+  months in the same QRIS as the hosting: the first three with the order,
+  the next with the renewal that needs them. Changing a running hosting's
+  address is one flat price, once: `hosting:move-name` (Rp3.000) or
+  `hosting:move-domain` (Rp5.000).
   **Egress**: 500 GB a month free, then `hosting:egress` (Rp5.000) per
-  500 GB, counted by the operator and added to the next renewal. The door's
-  `hosting.nameIdr`, `domainIdr` and `egressBlockIdr` are what is asked:
-  change them with the pages. The public pages say "added to your next
-  renewal" — never "billed" (`ditagih` is banned too).
+  500 GB by the GB (`hosting:egress-gb`, Rp10), measured by the door each
+  month and added to the next renewal. The door's `hosting.nameIdr`,
+  `domainIdr`, `nameMoveIdr`, `domainMoveIdr` and `egressBlockIdr` are what
+  is asked: change them with the pages. The public pages say "added to
+  your next renewal" — never "billed" (`ditagih` is banned too), nor
+  "counted by" (a tokenizer word on this site).
 - **Ordering is in the account area** (`/account/hosting`,
   `views.js::hosting`): each plan's Order button opens it with `?plan=`;
   the person picks an address (`address`: `free`, `name` with `name`, or
@@ -264,7 +270,7 @@ GB (the operator's, October 2026).
   shown by `:has()`), picks monthly or yearly, and pays by QRIS on
   the ordinary `/account/pay` page (`product: "hosting"`, which goes back to
   `/account/hosting`). A running hosting's card has **Change the address**
-  (a name or a domain, paid for the months left, rounded up to three). The
+  (a name or a domain, one flat price). The
   door is `GET /v1/hosting` (plans, `address`, `egress`, and per hosting
   `renew.month`/`renew.year` with what each carries and `move`),
   `POST /v1/hosting/order`, `/v1/hosting/{id}/renew`, `/address` and

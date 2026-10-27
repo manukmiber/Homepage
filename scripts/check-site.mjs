@@ -602,18 +602,19 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
       open, firstOffer: open, emailVerified: open,
       plans: [{ id: evil, name: evil, websites: 1, ramMb: 512, diskMb: 512, objectGb: 13.5, monthIdr: 17000, firstMonthIdr: 8000, yearIdr: 170000 }],
       address: { base: evil, months: 3, nameIdr: 3000, domainIdr: 10000 },
-      egress: { freeGb: 500, blockGb: 500, blockIdr: 5000 },
+      egress: { freeGb: 500, blockGb: 500, blockIdr: 5000, measured: true },
       // Every state, then a running one being moved to a new address.
       services: [...['ordered', 'paid', 'active', 'suspended', 'deleted', 'cancelled', evil].map((status) => [status, '']), ['active', evil]].map(([status, nextDomain], i) => ({
         id: evil, domain: evil, plan: evil, planName: evil, cycle: evil, status, payment: evil, panelUser: evil,
-        domainKind: ['free', 'name', 'own', evil][i % 4], nextDomain, egressOwed: i % 2 ? 2 : 0,
+        domainKind: ['free', 'name', 'own', evil][i % 4], nextDomain, label: i % 3 ? evil : '', egressGb: i % 2 ? 312 : 0,
+        egressMonth: i % 2 ? { month: evil, measured: i % 4 === 1, usedGb: 321.4, overGb: 0, booked: false } : null,
         paidUntil: Date.UTC(2026, 10, 1), deleteAt: Date.UTC(2026, 10, 8),
         renew: {
-          monthIdr: 30000, yearIdr: 220000,
-          month: { totalIdr: 30000, planIdr: 17000, addressBlocks: 1, addressMonths: 3, addressIdr: 3000, egressBlocks: 2, egressIdr: 10000 },
-          year: { totalIdr: 220000, planIdr: 170000, addressBlocks: 4, addressMonths: 12, addressIdr: 40000, egressBlocks: 2, egressIdr: 10000 },
+          monthIdr: 23120, yearIdr: 213120,
+          month: { totalIdr: 23120, planIdr: 17000, addressBlocks: 1, addressMonths: 3, addressIdr: 3000, egressGb: 312, egressIdr: 3120 },
+          year: { totalIdr: 213120, planIdr: 170000, addressBlocks: 4, addressMonths: 12, addressIdr: 40000, egressGb: 312, egressIdr: 3120 },
         },
-        move: { addressBlocks: 2, addressMonths: 6, nameIdr: 6000, domainIdr: 20000 },
+        move: { nameIdr: 3000, domainIdr: 5000 },
       })),
     }, { flash: '', pick: evil, domain: evil, address: evil, name: evil })),
     ...['waiting', 'confirming', 'paid', 'failed', 'expired', evil].map((status) => accountViews.qrisPay(o, {
