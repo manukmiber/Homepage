@@ -1555,11 +1555,15 @@ body:has(#win-30d:checked) [data-w="30d"] { display: revert; }
 .host-addr-in { display: flex; align-items: center; gap: 6px; max-width: 420px; }
 .host-addr-in input { flex: 1 1 auto; min-width: 0; }
 .host-addr-in span { flex: none; color: var(--muted); font-size: 14px; }
+.host-gift-opt { display: contents; }
 /* Only the field the chosen address needs, where the browser can tell. */
 @supports selector(:has(*)) {
   .host-addr-field { display: none; }
   .host-address:has(input[value="name"]:checked) .host-addr-name,
-  .host-address:has(input[value="own"]:checked) .host-addr-own { display: grid; }
+  .host-address:has(input[value="own"]:checked) .host-addr-own,
+  .host-address:has(input[value="gift"]:checked) .host-addr-gift { display: grid; }
+  /* The free domain comes with 6 months or more: not shown for a month. */
+  .host-order:has(input[name="cycle"][value="month"]:checked) .host-gift { display: none; }
 }
 .host-move { margin-top: 12px; }
 .host-move summary { cursor: pointer; font-weight: 700; }

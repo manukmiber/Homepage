@@ -132,7 +132,9 @@ const NETWORK = [
 
 // The only absolute URL allowed is the SVG namespace in the favicon.
 const URL_RE = /(?:https?:)?\/\/[a-z0-9-]+(?:\.[a-z0-9-]+)+[^\s"'<>)]*/gi;
-const URL_OK = [/^(?:https?:)?\/\/www\.w3\.org\/2000\/svg$/i];
+// The one contact (the owner's, 2026-10-28): WhatsApp, with an optional
+// message typed in for the visitor.
+const URL_OK = [/^(?:https?:)?\/\/www\.w3\.org\/2000\/svg$/i, /^https:\/\/wa\.me\/6281932416096(?:\?text=[A-Za-z0-9%._~-]*)?$/];
 
 const TEXT_EXT = new Set(['.html', '.css', '.js', '.mjs', '.json', '.txt', '.svg', '.xml', '.webmanifest', '']);
 
@@ -601,13 +603,14 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
     // Zeiko Hosting: the person's hosting in every state, and the order form.
     ...[true, false].map((open) => accountViews.hosting(o, {
       open, firstOffer: open, emailVerified: open,
-      plans: [{ id: evil, name: evil, websites: 1, ramMb: 512, diskMb: 512, objectGb: 13.5, monthIdr: 17000, firstMonthIdr: 8000, yearIdr: 170000 }],
-      address: { base: evil, months: 3, nameIdr: 3000, domainIdr: 10000 },
+      plans: [{ id: evil, name: evil, websites: 1, ramMb: 512, diskMb: 512, objectGb: 13.5, monthIdr: 17000, firstMonthIdr: 8000, halfIdr: 102000, yearIdr: 170000 }],
+      address: { base: evil, months: 3, nameIdr: 3000, domainIdr: 10000, gift: { months: 6, tlds: [evil, 'my.id'], freeMonths: 12 } },
+      setupIdr: 5000,
       egress: { freeGb: 500, blockGb: 500, blockIdr: 5000, measured: true },
       // Every state, then a running one being moved to a new address.
       services: [...['ordered', 'paid', 'active', 'suspended', 'deleted', 'cancelled', evil].map((status) => [status, '']), ['active', evil]].map(([status, nextDomain], i) => ({
         id: evil, domain: evil, plan: evil, planName: evil, cycle: evil, status, payment: evil, panelUser: evil,
-        domainKind: ['free', 'name', 'own', evil][i % 4], nextDomain, label: i % 3 ? evil : '', egressGb: i % 2 ? 312 : 0,
+        domainKind: ['free', 'name', 'own', 'gift', evil][i % 5], nextDomain, label: i % 3 ? evil : '', egressGb: i % 2 ? 312 : 0,
         egressMonth: i % 2 ? { month: evil, measured: i % 4 === 1, usedGb: 321.4, overGb: 0, booked: false } : null,
         paidUntil: Date.UTC(2026, 10, 1), deleteAt: Date.UTC(2026, 10, 8),
         renew: {

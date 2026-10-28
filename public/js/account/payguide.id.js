@@ -37,7 +37,7 @@ export const PAY_GUIDE_ID = `<p>ZeikoAI dan Zeiko Chat menerima pembayaran denga
 <li>Kembali ke halaman, tekan <strong>Sudah bayar</strong>.</li>
 <li>Kami memeriksa setiap pembayaran QRIS secara manual, biasanya dalam 10 menit. Paket atau saldomu lalu aktif dengan sendirinya, dan halamannya memberi tahu.</li>
 </ol>
-<p>Sebuah kode terbuka selama satu jam; lewat dari itu, mulai kode baru. Kirim satu pembayaran per kode, dengan jumlah yang persis: jumlah yang berbeda tidak bisa kami cocokkan denganmu. Kalau ada yang tidak beres — kamu sudah membayar tapi halaman bilang kodenya sudah ditutup, atau pembayarannya tidak ditemukan — tulis ke <strong><a href="mailto:payment@zeiko.biz.id">payment@zeiko.biz.id</a></strong> beserta nama pengguna, jumlah, waktu, dan bukti dari aplikasimu.</p>
+<p>Sebuah kode terbuka selama satu jam; lewat dari itu, mulai kode baru. Kirim satu pembayaran per kode, dengan jumlah yang persis: jumlah yang berbeda tidak bisa kami cocokkan denganmu. Kalau ada yang tidak beres — kamu sudah membayar tapi halaman bilang kodenya sudah ditutup, atau pembayarannya tidak ditemukan — tulis ke <strong><a href="https://wa.me/6281932416096">WhatsApp +62 819-3241-6096</a></strong> beserta nama pengguna, jumlah, waktu, dan bukti dari aplikasimu.</p>
 <p>Sisa panduan ini tentang membayar dengan kripto.</p>
 <h2 id="the-short-version">Versi singkatnya</h2>
 <ol>
@@ -474,7 +474,7 @@ export const PAY_GUIDE_ID = `<p>ZeikoAI dan Zeiko Chat menerima pembayaran denga
 </ul>
 <p>Kami menyarankan paket yang panjang, dibayar di muka, dan secangkir teh.</p>
 <h2 id="prefer-a-bank-transfer-or-another-fiat-method">Lebih suka transfer bank atau cara fiat lain?</h2>
-<p>Kripto bukan satu-satunya cara: dalam rupiah, <a href="#paying-by-qris">bayar dengan QRIS</a>. Kalau kamu lebih suka membayar lewat transfer bank, e-wallet, atau cara biasa (fiat) lainnya, atau P2P dan exchange tidak bisa dipakai di tempat tinggalmu, kirim email ke <strong><a href="mailto:payment@zeiko.biz.id">payment@zeiko.biz.id</a></strong> dari alamat yang terdaftar di akunmu dan beri tahu kami:</p>
+<p>Kripto bukan satu-satunya cara: dalam rupiah, <a href="#paying-by-qris">bayar dengan QRIS</a>. Kalau kamu lebih suka membayar lewat transfer bank, e-wallet, atau cara biasa (fiat) lainnya, atau P2P dan exchange tidak bisa dipakai di tempat tinggalmu, kirim email ke <strong><a href="https://wa.me/6281932416096">WhatsApp +62 819-3241-6096</a></strong> dari alamat yang terdaftar di akunmu dan beri tahu kami:</p>
 <ul>
 <li>nama penggunamu (<code>@nama</code> di profilmu);</li>
 <li>paket atau isi saldo yang kamu mau;</li>
@@ -486,8 +486,8 @@ export const PAY_GUIDE_ID = `<p>ZeikoAI dan Zeiko Chat menerima pembayaran denga
 <h2 id="when-something-goes-wrong">Kalau ada yang tidak beres</h2>
 <ul>
 <li><strong>Verifikasi ditolak.</strong> Foto ulang dengan cahaya yang baik dan seluruh dokumen terbaca, dan pastikan namamu sama dengan rekening bankmu. Pusat bantuan exchange itu menjelaskan apa yang dibutuhkannya.</li>
-<li><strong>Penghitung waktu habis.</strong> Invoice kedaluwarsa; tidak ada yang terutang. Mulai pembayaran baru dari <strong>Paket &amp; saldo</strong>. Kalau kamu sudah terlanjur mengirim koin, jangan kirim lagi: email <a href="mailto:payment@zeiko.biz.id">payment@zeiko.biz.id</a> beserta id transaksinya (hash).</li>
-<li><strong>Sampainya kurang</strong> (biaya penarikan terpotong darinya). Tampil sebagai "dibayar sebagian". Email <a href="mailto:payment@zeiko.biz.id">payment@zeiko.biz.id</a> beserta id transaksinya; diselesaikan secara manual.</li>
+<li><strong>Penghitung waktu habis.</strong> Invoice kedaluwarsa; tidak ada yang terutang. Mulai pembayaran baru dari <strong>Paket &amp; saldo</strong>. Kalau kamu sudah terlanjur mengirim koin, jangan kirim lagi: chat <a href="https://wa.me/6281932416096">WhatsApp +62 819-3241-6096</a> beserta id transaksinya (hash).</li>
+<li><strong>Sampainya kurang</strong> (biaya penarikan terpotong darinya). Tampil sebagai "dibayar sebagian". Chat <a href="https://wa.me/6281932416096">WhatsApp +62 819-3241-6096</a> beserta id transaksinya; diselesaikan secara manual.</li>
 <li><strong>Jaringan salah atau memo tidak diisi.</strong> Hubungi dulu exchange tempat kamu mengirim; kami hanya bisa membantu kalau koinnya sampai di alamat invoice.</li>
 <li><strong>Exchange-mu menanyakan siapa penerima koinnya</strong> ("travel rule"). Ini pembayaran ke merchant lewat NOWPayments: pilih opsi untuk dompet lain atau layanan yang tidak ada di daftarnya, dan sebutkan NOWPayments sebagai penerima kalau ditanya.</li>
 <li><strong>Penjual P2P tidak melepas koinnya.</strong> Pakai <strong>Appeal</strong> di order itu dan kirim bukti transfermu ke exchange. Jangan pernah membatalkan order yang sudah kamu bayar.</li>

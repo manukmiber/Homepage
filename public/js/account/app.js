@@ -405,10 +405,12 @@ async function act(name, f, submitter) {
       return payPage(view.flash('err', problem(r)));
     }
     case 'hosting-order': {
-      const address = ['free', 'name', 'own'].includes(f.address) ? f.address : 'free';
-      const r = await ask('POST', '/hosting/order', { plan: f.plan || '', cycle: f.cycle === 'year' ? 'year' : 'month', address, name: f.name || '', domain: f.domain || '', lang: getLang() });
+      const address = ['free', 'name', 'own', 'gift'].includes(f.address) ? f.address : 'free';
+      const cycle = ['month', 'half', 'year'].includes(f.cycle) ? f.cycle : 'month';
+      const domain = (address === 'gift' ? f.giftDomain : f.domain) || '';
+      const r = await ask('POST', '/hosting/order', { plan: f.plan || '', cycle, address, name: f.name || '', domain, lang: getLang() });
       if (r.status === 200 && r.data && r.data.payment && PAY_ID.test(r.data.payment.id || '')) return location.assign(`/account/pay?id=${encodeURIComponent(r.data.payment.id)}`);
-      return hostingPage(view.flash('err', problem(r)), { pick: f.plan || '', domain: f.domain || '', address, name: f.name || '' });
+      return hostingPage(view.flash('err', problem(r)), { pick: f.plan || '', domain, address, name: f.name || '', cycle });
     }
     case 'hosting-address': {
       if (!PAY_ID.test(f.id || '')) return hostingPage(view.flash('err', L('That hosting was not found.', 'Hosting itu tidak ditemukan.')));
@@ -419,7 +421,8 @@ async function act(name, f, submitter) {
     }
     case 'hosting-renew': {
       if (!PAY_ID.test(f.id || '')) return hostingPage(view.flash('err', L('That hosting was not found.', 'Hosting itu tidak ditemukan.')));
-      const cycle = submitter && submitter.value === 'year' ? 'year' : 'month';
+      const value = submitter ? submitter.value : '';
+      const cycle = ['month', 'half', 'year'].includes(value) ? value : 'month';
       const r = await ask('POST', `/hosting/${encodeURIComponent(f.id)}/renew`, { cycle });
       if (r.status === 200 && r.data && r.data.payment && PAY_ID.test(r.data.payment.id || '')) return location.assign(`/account/pay?id=${encodeURIComponent(r.data.payment.id)}`);
       return hostingPage(view.flash('err', problem(r)));

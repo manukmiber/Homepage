@@ -249,11 +249,16 @@ GB (the operator's, October 2026).
 - **The address** (the operator's, 2026-10-27): every hosting starts on a
   free one of its own, six random letters and digits under zeiko.biz.id
   (`k3x9qa.zeiko.biz.id`, made by the door). A name of the customer's own
-  goes **in front of those six** (`toko-bunga.k3x9qa.zeiko.biz.id`, so it
-  never meets the house's names or anyone else's; `hosting:name`, Rp3.000)
-  or their own domain (`hosting:domain`, Rp10.000), each paid by three
-  months in the same QRIS as the hosting: the first three with the order,
-  the next with the renewal that needs them. Changing a running hosting's
+  goes **straight under zeiko.biz.id** (`toko-bunga.zeiko.biz.id`, the
+  owner's of 2026-10-28; `hosting:name`, Rp3.000) or their own domain
+  (`hosting:domain`, Rp5.000), each paid by three months in the same QRIS
+  as the hosting: the first three with the order, the next with the renewal
+  that needs them. **6 months** (six months' price) or a year may take a
+  **free .my.id/.biz.id/.web.id domain** as the address (`address: gift`,
+  typed as `giftDomain`; the option and its field hide while Monthly is
+  picked, `.host-gift`), free for its first year, then `hosting:domain`
+  per 3 months. **The setup** (`hosting:setup`, Rp5.000) is paid once,
+  with the first payment. Changing a running hosting's
   address is one flat price, once: `hosting:move-name` (Rp3.000) or
   `hosting:move-domain` (Rp5.000).
   **Egress**: 500 GB a month free, then `hosting:egress` (Rp5.000) per
@@ -263,6 +268,11 @@ GB (the operator's, October 2026).
   is asked: change them with the pages. The public pages say "added to
   your next renewal" — never "billed" (`ditagih` is banned too), nor
   "counted by" (a tokenizer word on this site).
+- **Support is WhatsApp** (the owner's, 2026-10-28): payments, support and
+  questions go to `https://wa.me/6281932416096` (+62 819-3241-6096,
+  08.00–22.00 WIB) on every page and in the account area — the one
+  outside address the check lets through besides Drive's, with an optional
+  `?text=`. No page sends people to an email address.
 - **Ordering is in the account area** (`/account/hosting`,
   `views.js::hosting`): each plan's Order button opens it with `?plan=`;
   the person picks an address (`address`: `free`, `name` with `name`, or
@@ -307,8 +317,9 @@ VPS and S3 — buy, renew, upgrade — paid by QRIS.
   `/v1/vps/order {plan, cycle: month|half|year, template, name, password,
   domain, lang}`; a refused order is drawn again with what was typed,
   **the password left out**, and the password is never drawn into a page.
-  A system may cost more a month (`extraIdr`: Windows +Rp20.000), said
-  beside it; the free domain is free for its first year, then carried by
+  A system may carry a licence, paid once with the setup (`extraIdr`:
+  Windows +Rp20.000), said beside it; the free domain field hides while
+  Monthly is picked; the free domain is free for its first year, then carried by
   the renewals at `gift.domainIdr` per 3 months (each renewal button's
   total includes it, and the line under them says so).
   Cards renew (`/renew {cycle}`), upgrade (`/upgrade {plan}`, the same

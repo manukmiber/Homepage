@@ -40,7 +40,7 @@ export const PAY_GUIDE = `<p>ZeikoAI and Zeiko Chat take payment two ways: <stro
 <li>Back on the page, press <strong>I've paid</strong>.</li>
 <li>We check every QRIS payment by hand, usually within 10 minutes. Your plan or balance then switches on by itself, and the page says so.</li>
 </ol>
-<p>A code stays open for an hour; past that, start a new one. Send one payment per code, of the exact amount: a different amount cannot be matched to you. If something went wrong — you paid but the page says the code closed, or that the payment was not found — write to <strong><a href="mailto:payment@zeiko.biz.id">payment@zeiko.biz.id</a></strong> with your username, the amount, the time and your app's receipt.</p>
+<p>A code stays open for an hour; past that, start a new one. Send one payment per code, of the exact amount: a different amount cannot be matched to you. If something went wrong — you paid but the page says the code closed, or that the payment was not found — write to <strong><a href="https://wa.me/6281932416096">WhatsApp +62 819-3241-6096</a></strong> with your username, the amount, the time and your app's receipt.</p>
 <p>The rest of this guide is about paying in crypto.</p>
 <h2 id="the-short-version">The short version</h2>
 <ol>
@@ -477,7 +477,7 @@ export const PAY_GUIDE = `<p>ZeikoAI and Zeiko Chat take payment two ways: <stro
 </ul>
 <p>We recommend a long plan, paid in advance, and a cup of tea.</p>
 <h2 id="prefer-a-bank-transfer-or-another-fiat-method">Prefer a bank transfer or another fiat method?</h2>
-<p>Crypto is not the only way: in rupiah, <a href="#paying-by-qris">pay by QRIS</a>. If you would rather pay by bank transfer, an e-wallet or another ordinary (fiat) method, or P2P and exchanges are not an option where you live, email <strong><a href="mailto:payment@zeiko.biz.id">payment@zeiko.biz.id</a></strong> from the address on your account and tell us:</p>
+<p>Crypto is not the only way: in rupiah, <a href="#paying-by-qris">pay by QRIS</a>. If you would rather pay by bank transfer, an e-wallet or another ordinary (fiat) method, or P2P and exchanges are not an option where you live, email <strong><a href="https://wa.me/6281932416096">WhatsApp +62 819-3241-6096</a></strong> from the address on your account and tell us:</p>
 <ul>
 <li>your username (the <code>@name</code> on your profile);</li>
 <li>the plan or the top-up you want;</li>
@@ -489,8 +489,8 @@ export const PAY_GUIDE = `<p>ZeikoAI and Zeiko Chat take payment two ways: <stro
 <h2 id="when-something-goes-wrong">When something goes wrong</h2>
 <ul>
 <li><strong>Verification was rejected.</strong> Retake the photos in good light with the whole document readable, and check that your name matches your bank account. The exchange's own help centre says what it needs.</li>
-<li><strong>The timer ran out.</strong> The invoice expires; nothing is owed. Start a new payment from <strong>Plans &amp; balance</strong>. If you had already sent coins, do not send again: email <a href="mailto:payment@zeiko.biz.id">payment@zeiko.biz.id</a> with the transaction id (hash).</li>
-<li><strong>It arrived short</strong> (the withdrawal fee came out of it). It shows as "paid only in part". Email <a href="mailto:payment@zeiko.biz.id">payment@zeiko.biz.id</a> with the transaction id; it is settled by hand.</li>
+<li><strong>The timer ran out.</strong> The invoice expires; nothing is owed. Start a new payment from <strong>Plans &amp; balance</strong>. If you had already sent coins, do not send again: chat <a href="https://wa.me/6281932416096">WhatsApp +62 819-3241-6096</a> with the transaction id (hash).</li>
+<li><strong>It arrived short</strong> (the withdrawal fee came out of it). It shows as "paid only in part". Chat <a href="https://wa.me/6281932416096">WhatsApp +62 819-3241-6096</a> with the transaction id; it is settled by hand.</li>
 <li><strong>Wrong network or a missing memo.</strong> Contact the exchange you sent from first; we can only help if the coins reached the invoice's address.</li>
 <li><strong>Your exchange asks who receives the coins</strong> (the "travel rule"). It is a payment to a merchant through NOWPayments: choose the option for another wallet or a service not on its list, and give NOWPayments as the recipient if asked.</li>
 <li><strong>A P2P seller did not release.</strong> Use <strong>Appeal</strong> in the order and send the exchange your transfer receipt. Never cancel an order you have already paid.</li>

@@ -540,9 +540,10 @@ export function plans(o, { flash, pick }) {
 // from the door (`GET /v1/hosting`); the page names what a plan comes with,
 // so its markup is a hosting block for scripts/check-site.mjs. Every hosting
 // has an address: a free one the door makes (six random characters, its
-// `label`, under `address.base`), a name of the person's own in front of
-// that label, or their own domain; the last two go by three months, in the
-// same QRIS as the hosting, and a running one moves at one flat price.
+// `label`, under `address.base`), a name of the person's own straight under
+// the base, their own domain, or — with six months or more — a free domain;
+// a name or a domain goes by three months, in the same QRIS as the hosting,
+// and a running one moves at one flat price.
 
 /** `17000` → `Rp17.000`, in both languages, as on the Hosting page. */
 const rp = (n) => `Rp${Number(n || 0).toLocaleString('id-ID')}`;
@@ -562,6 +563,7 @@ const addressKind = () => ({
   free: L('Free address', 'Alamat gratis'),
   name: L('Your name', 'Nama pilihanmu'),
   own: L('Your own domain', 'Domain sendiri'),
+  gift: L('Free domain', 'Domain gratis'),
 });
 
 /** `months` (3, 6, 12…) as words. */
@@ -583,14 +585,17 @@ function renewExtras(q, domain = false) {
 /** Egress as the page says it: "Rp5.000 per 500 GB, by the GB". */
 const egressRate = (eg) => L(`${esc(rp(eg.blockIdr))} per ${num(eg.blockGb || 0)} GB, by the GB`, `${esc(rp(eg.blockIdr))} per ${num(eg.blockGb || 0)} GB, dihitung per GB`);
 
-/** The fields that choose an address: a name in front of the hosting's six
- * random characters (`label`; unknown until it is ordered) or a domain of
- * their own, and, when ordering, the free one first. `once` prices a move
- * of a running hosting (one flat price); otherwise they are per 3 months. */
+/** The fields that choose an address: a name straight under the base or a
+ * domain of their own, and, when ordering, the free one first and the free
+ * domain last (only shown with 6 months or more). `once` prices a move of a
+ * running hosting (one flat price); otherwise they are per 3 months. */
 function addressFields(a, { free, nameIdr, domainIdr, months, once = false, label = '', address = '', name = '', domain = '' }) {
   const pick = address || (free ? 'free' : 'name');
   const base = esc(a.base || '');
   const six = label ? esc(label) : 'k3x9qa';
+  const gift = (!once && a.gift) || {};
+  const tlds = (Array.isArray(gift.tlds) ? gift.tlds : []).map((t) => `.${esc(t)}`).join(', ');
+  const giftOn = gift.months > 0 && tlds;
   const option = (value, title, price, note) => `<label class="host-option">
       <input type="radio" name="address" value="${value}"${pick === value ? ' checked' : ''}>
       <span class="host-option-body"><strong>${title}</strong>${price ? `<span class="host-option-price">${price}</span>` : ''}<span class="muted-note">${note}</span></span>
@@ -598,10 +603,12 @@ function addressFields(a, { free, nameIdr, domainIdr, months, once = false, labe
   const per = once ? L('once', 'sekali') : `/ ${esc(monthsText(months))}`;
   return `<fieldset class="host-choose host-address"><legend>${L('Address', 'Alamat')}</legend>
       ${free ? option('free', L('Free address', 'Alamat gratis'), L('Free', 'Gratis'), L(`Six random letters and digits, like <code>${six}.${base}</code>.`, `Enam huruf dan angka acak, misalnya <code>${six}.${base}</code>.`)) : ''}
-      ${option('name', L('A name of your own', 'Nama pilihanmu'), `${esc(rp(nameIdr))} ${per}`, L(`In front of ${label ? 'your' : 'your hosting’s'} six letters, like <code>toko-bunga.${six}.${base}</code>: nothing to connect.`, `Di depan enam huruf ${label ? 'milikmu' : 'hosting-mu'}, misalnya <code>toko-bunga.${six}.${base}</code>: tanpa perlu menyambungkan apa pun.`))}
+      ${option('name', L('A name of your own', 'Nama pilihanmu'), `${esc(rp(nameIdr))} ${per}`, L(`Like <code>toko-bunga.${base}</code>: nothing to connect.`, `Misalnya <code>toko-bunga.${base}</code>: tanpa perlu menyambungkan apa pun.`))}
       ${option('own', L('Your own domain', 'Domain sendiri'), `${esc(rp(domainIdr))} ${per}`, L('A domain you bought, like <code>example.com</code>. You point it at us with nameservers.', 'Domain yang kamu beli, misalnya <code>contoh.com</code>. Kamu sambungkan lewat nameserver.'))}
-      <label class="field host-addr-field host-addr-name">${L('Your name', 'Nama pilihanmu')}<span class="host-addr-in"><input type="text" name="name" value="${esc(name)}" placeholder="toko-bunga" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="40"><span>.${label ? esc(label) : 'xxxxxx'}.${base}</span></span>${label ? '' : `<small>${L('xxxxxx is your hosting’s six random letters and digits, made when you order.', 'xxxxxx adalah enam huruf dan angka acak hosting-mu, dibuat saat kamu memesan.')}</small>`}</label>
-      <label class="field host-addr-field host-addr-own">${L('Your domain', 'Domainmu')}<input type="text" name="domain" value="${esc(domain)}" placeholder="${L('example.com', 'contoh.com')}" autocomplete="off" autocapitalize="none" spellcheck="false"></label>
+      ${giftOn ? `<span class="host-gift host-gift-opt">${option('gift', L('Free domain', 'Domain gratis'), L('Free for its first year', 'Gratis tahun pertama'), L(`With ${num(gift.months)} months or more: one ${tlds} domain, registered and connected for you. After its first year it comes with your renewals at ${esc(rp(domainIdr))} per 3 months.`, `Dengan ${num(gift.months)} bulan atau lebih: satu domain ${tlds}, kami daftarkan dan sambungkan. Setelah tahun pertamanya ikut perpanjanganmu ${esc(rp(domainIdr))} per 3 bulan.`))}</span>` : ''}
+      <label class="field host-addr-field host-addr-name">${L('Your name', 'Nama pilihanmu')}<span class="host-addr-in"><input type="text" name="name" value="${esc(name)}" placeholder="toko-bunga" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="40"><span>.${base}</span></span></label>
+      <label class="field host-addr-field host-addr-own">${L('Your domain', 'Domainmu')}<input type="text" name="domain" value="${esc(address === 'gift' ? '' : domain)}" placeholder="${L('example.com', 'contoh.com')}" autocomplete="off" autocapitalize="none" spellcheck="false"></label>
+      ${giftOn ? `<label class="field host-addr-field host-addr-gift host-gift">${L('Free domain', 'Domain gratis')}<input type="text" name="giftDomain" value="${esc(address === 'gift' ? domain : '')}" placeholder="toko-bunga.${esc(gift.tlds[0])}" autocomplete="off" autocapitalize="none" spellcheck="false"></label>` : ''}
     </fieldset>`;
 }
 
@@ -665,7 +672,7 @@ function upgradeBlock(x, act) {
 
 function hostingCard(x, h) {
   const [label, tone] = hostingStatus()[x.status] || [x.status, ''];
-  const cycle = (c) => (c === 'year' ? L('a year', 'per tahun') : L('a month', 'per bulan'));
+  const cycle = (c) => CYCLES()[c] || L('a month', 'per bulan');
   const a = (h && h.address) || {};
   const eg = (h && h.egress) || {};
   let line = '';
@@ -685,13 +692,14 @@ function hostingCard(x, h) {
       ? L(`Active until <strong>${esc(day(x.paidUntil))}</strong>. Renew before then; a day after it ends it is suspended, and a week after it is deleted.`, `Aktif sampai <strong>${esc(day(x.paidUntil))}</strong>. Perpanjang sebelum itu; sehari setelah habis di-suspend, dan seminggu setelahnya dihapus.`)
       : L(`Suspended since it ended on ${esc(day(x.paidUntil))}. Renew before <strong>${esc(day(x.deleteAt))}</strong> or it is deleted with its files.`, `Di-suspend karena habis ${esc(day(x.paidUntil))}. Perpanjang sebelum <strong>${esc(day(x.deleteAt))}</strong> atau dihapus beserta file-nya.`);
     const r = x.renew || {};
-    const extras = [['month', L('A month', 'Sebulan')], ['year', L('A year', 'Setahun')]]
+    const extras = [['month', L('A month', 'Sebulan')], ['half', L('6 months', '6 bulan')], ['year', L('A year', 'Setahun')]]
       .map(([k, name]) => [name, renewExtras(r[k])])
       .filter(([, t]) => t)
       .map(([name, t]) => `${name} ${t}`);
     act = r.monthIdr ? `<form data-act="hosting-renew" class="host-renew">
         <input type="hidden" name="id" value="${esc(x.id)}">
         <button class="btn btn-primary btn-sm" type="submit" name="cycle" value="month" data-busy="${L('Opening…', 'Membuka…')}">${L('Renew a month', 'Perpanjang sebulan')} · ${esc(rp(r.monthIdr))}</button>
+        ${r.halfIdr ? `<button class="btn btn-ghost btn-sm" type="submit" name="cycle" value="half" data-busy="${L('Opening…', 'Membuka…')}">${L('Renew 6 months', 'Perpanjang 6 bulan')} · ${esc(rp(r.halfIdr))}</button>` : ''}
         ${r.yearIdr ? `<button class="btn btn-ghost btn-sm" type="submit" name="cycle" value="year" data-busy="${L('Opening…', 'Membuka…')}">${L('Renew a year', 'Perpanjang setahun')} · ${esc(rp(r.yearIdr))}</button>` : ''}
       </form>${extras.length ? `<p class="muted-note">${extras.join('. ')}.</p>` : ''}` : '';
     const e = x.egressMonth;
@@ -728,7 +736,7 @@ function hostingCard(x, h) {
   </article>`;
 }
 
-export function hosting(o, h, { flash, pick = '', domain = '', address = '', name = '' }) {
+export function hosting(o, h, { flash, pick = '', domain = '', address = '', name = '', cycle = '' }) {
   const plans = (h && h.plans) || [];
   const open = Boolean(h && h.open);
   const mine = (h && h.services) || [];
@@ -745,7 +753,7 @@ export function hosting(o, h, { flash, pick = '', domain = '', address = '', nam
       <input type="radio" name="plan" value="${esc(p.id)}"${p.id === chosen ? ' checked' : ''} required>
       <span class="host-option-body">
         <strong>${esc(p.name)}</strong>
-        <span class="host-option-price">${first ? `<s>${esc(rp(p.monthIdr))}</s> ${esc(rp(p.firstMonthIdr))} ${L('first month, then', 'bulan pertama, lalu')} ${esc(rp(p.monthIdr))}/${L('month', 'bulan')}` : `${esc(rp(p.monthIdr))}/${L('month', 'bulan')}`}${p.yearIdr ? ` · ${L('or', 'atau')} ${esc(rp(p.yearIdr))}/${L('year', 'tahun')}` : ''}</span>
+        <span class="host-option-price">${first ? `<s>${esc(rp(p.monthIdr))}</s> ${esc(rp(p.firstMonthIdr))} ${L('first month, then', 'bulan pertama, lalu')} ${esc(rp(p.monthIdr))}/${L('month', 'bulan')}` : `${esc(rp(p.monthIdr))}/${L('month', 'bulan')}`}${p.halfIdr ? ` · ${L('6 months', '6 bulan')} ${esc(rp(p.halfIdr))}` : ''}${p.yearIdr ? ` · ${esc(rp(p.yearIdr))}/${L('year', 'tahun')}` : ''}</span>
         <span class="muted-note">${esc(facts)}</span>
       </span>
     </label>`;
@@ -753,6 +761,7 @@ export function hosting(o, h, { flash, pick = '', domain = '', address = '', nam
   const verified = Boolean(h && h.emailVerified);
   const a = (h && h.address) || {};
   const eg = (h && h.egress) || {};
+  const per = cycle === 'half' || cycle === 'year' ? cycle : 'month';
   const form = !open
     ? alert('warn', L('Hosting orders are not open yet. Please try again later.', 'Pemesanan hosting belum dibuka. Coba lagi nanti.'))
     : !verified
@@ -760,11 +769,13 @@ export function hosting(o, h, { flash, pick = '', domain = '', address = '', nam
       : `<form data-act="hosting-order" class="host-order">
         <fieldset class="host-choose"><legend>${L('Plan', 'Paket')}</legend>${options}</fieldset>
         <fieldset class="funds-way"><legend>${L('Pay', 'Bayar')}</legend>
-          <label><input type="radio" name="cycle" value="month" checked> ${L('Monthly', 'Bulanan')}</label>
-          <label><input type="radio" name="cycle" value="year"> ${L('Yearly (10 months’ price)', 'Tahunan (harga 10 bulan)')}</label>
+          <label><input type="radio" name="cycle" value="month"${per === 'month' ? ' checked' : ''}> ${L('Monthly', 'Bulanan')}</label>
+          <label><input type="radio" name="cycle" value="half"${per === 'half' ? ' checked' : ''}> ${L('6 months', '6 bulan')}</label>
+          <label><input type="radio" name="cycle" value="year"${per === 'year' ? ' checked' : ''}> ${L('Yearly (10 months’ price)', 'Tahunan (harga 10 bulan)')}</label>
         </fieldset>
         ${addressFields(a, { free: true, nameIdr: a.nameIdr, domainIdr: a.domainIdr, months: a.months || 3, address, name, domain })}
         <button class="btn btn-primary" type="submit" data-busy="${L('Opening…', 'Membuka…')}">${L('Order and pay by QRIS', 'Pesan dan bayar dengan QRIS')}</button>
+        ${h.setupIdr > 0 ? `<p class="fineprint">${L(`The first payment includes ${esc(rp(h.setupIdr))} to set it up, once: renewals never carry it.`, `Pembayaran pertama sudah termasuk ${esc(rp(h.setupIdr))} biaya pembuatan, sekali saja: perpanjangan tidak pernah memuatnya.`)}</p>` : ''}
         <p class="fineprint">${L(h && h.firstOffer ? 'The first-month price is for your first hosting, by the month. ' : '', h && h.firstOffer ? 'Harga bulan pertama berlaku untuk hosting pertamamu, bulanan. ' : '')}${L(`A name or a domain is paid ${monthsText(a.months || 3)} at a time: the first come with this order, the next with the renewal that needs them. ${num(eg.freeGb || 0)} GB of egress a month is free; past it, ${egressRate(eg)}, added to your next renewal.`, `Nama atau domain dibayar per ${monthsText(a.months || 3)}: yang pertama ikut pesanan ini, berikutnya ikut perpanjangan yang memerlukannya. Egress ${num(eg.freeGb || 0)} GB per bulan gratis; lebih dari itu ${egressRate(eg)}, ditambahkan ke perpanjangan berikutnya.`)}</p>
         <p class="fineprint">${L('We check your QRIS payment by hand in 1–5 minutes, make your hosting within 1–2 hours, and email you your cPanel address, username and password.', 'Kami memeriksa pembayaran QRIS-mu secara manual dalam 1–5 menit, membuat hosting-mu dalam 1–2 jam, lalu mengirim alamat cPanel, username dan password lewat email.')} <a href="${L('/docs/hosting', '/id/docs/hosting')}">${L('How hosting works', 'Cara kerja hosting')}</a></p>
       </form>`;
@@ -869,7 +880,7 @@ export function vps(o, v, { flash, pick = '', cycle = '', template = '', name = 
         <span class="muted-note">${esc(vpsFacts(p))}</span>
       </span>
     </label>`).join('');
-  const systemOptions = systems.map((t) => `<label><input type="radio" name="template" value="${esc(t.id)}"${t.id === system ? ' checked' : ''} required> ${esc(t.name)}${t.extraIdr > 0 ? ` (+${esc(rp(t.extraIdr))}/${L('month', 'bulan')})` : ''}</label>`).join('');
+  const systemOptions = systems.map((t) => `<label><input type="radio" name="template" value="${esc(t.id)}"${t.id === system ? ' checked' : ''} required> ${esc(t.name)}${t.extraIdr > 0 ? ` (+${esc(rp(t.extraIdr))} ${L('licence, once', 'lisensi, sekali')})` : ''}</label>`).join('');
   const verified = Boolean(v && v.emailVerified);
   const form = !open
     ? alert('warn', L('VPS orders are not open yet. Please try again later.', 'Pemesanan VPS belum dibuka. Coba lagi nanti.'))
@@ -885,9 +896,9 @@ export function vps(o, v, { flash, pick = '', cycle = '', template = '', name = 
         <fieldset class="funds-way vps-systems"><legend>${L('System', 'Sistem')}</legend>${systemOptions}</fieldset>
         <label class="field">${L('VPS name', 'Nama VPS')}<input type="text" name="name" value="${esc(name)}" placeholder="web1" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="30" pattern="[A-Za-z0-9][A-Za-z0-9-]{0,28}[A-Za-z0-9]|[A-Za-z0-9]" required><small>${L('Letters, digits and -, up to 30.', 'Huruf, angka dan -, maksimal 30.')}</small></label>
         <label class="field">${L('Password', 'Password')}<input type="password" name="password" autocomplete="new-password" minlength="10" maxlength="64" required><small>${L('10 to 64 characters with a lowercase letter, a capital and a digit, no spaces or quotes. Your VPS is made with it; we do not email it.', '10 sampai 64 karakter dengan huruf kecil, huruf besar dan angka, tanpa spasi atau tanda kutip. VPS-mu dibuat dengan password ini; kami tidak mengirimnya lewat email.')}</small></label>
-        ${giftOn ? `<label class="field">${L('Free domain', 'Domain gratis')}<input type="text" name="domain" value="${esc(domain)}" placeholder="toko.${esc(gift.tlds[0])}" autocomplete="off" autocapitalize="none" spellcheck="false"><small>${L(`With ${num(gift.months)} months or more: one ${tlds} domain, free for its first year; after that it comes with your renewals at ${esc(rp(gift.domainIdr))} per 3 months. Leave it empty for none.`, `Dengan ${num(gift.months)} bulan atau lebih: satu domain ${tlds}, gratis untuk tahun pertamanya; setelah itu ikut perpanjanganmu ${esc(rp(gift.domainIdr))} per 3 bulan. Kosongkan kalau tidak perlu.`)}</small></label>` : ''}
+        ${giftOn ? `<label class="field host-gift">${L('Free domain', 'Domain gratis')}<input type="text" name="domain" value="${esc(domain)}" placeholder="toko.${esc(gift.tlds[0])}" autocomplete="off" autocapitalize="none" spellcheck="false"><small>${L(`With ${num(gift.months)} months or more: one ${tlds} domain, free for its first year; after that it comes with your renewals at ${esc(rp(gift.domainIdr))} per 3 months. Leave it empty for none.`, `Dengan ${num(gift.months)} bulan atau lebih: satu domain ${tlds}, gratis untuk tahun pertamanya; setelah itu ikut perpanjanganmu ${esc(rp(gift.domainIdr))} per 3 bulan. Kosongkan kalau tidak perlu.`)}</small></label>` : ''}
         <button class="btn btn-primary" type="submit" data-busy="${L('Opening…', 'Membuka…')}">${L('Order and pay by QRIS', 'Pesan dan bayar dengan QRIS')}</button>
-        ${v.setupIdr > 0 ? `<p class="fineprint">${L(`The first payment includes ${esc(rp(v.setupIdr))} to set it up, once.`, `Pembayaran pertama sudah termasuk ${esc(rp(v.setupIdr))} biaya pembuatan, sekali saja.`)}</p>` : ''}
+        ${v.setupIdr > 0 ? `<p class="fineprint">${L(`The first payment includes ${esc(rp(v.setupIdr))} to set it up, once, and a system’s licence where it has one: renewals never carry them.`, `Pembayaran pertama sudah termasuk ${esc(rp(v.setupIdr))} biaya pembuatan, sekali saja, dan lisensi sistem kalau ada: perpanjangan tidak pernah memuatnya.`)}</p>` : ''}
         <p class="fineprint">${L('We check your QRIS payment by hand in 1–5 minutes, make your VPS within 1–2 hours, and email you its IP address and how to sign in.', 'Kami memeriksa pembayaran QRIS-mu secara manual dalam 1–5 menit, membuat VPS-mu dalam 1–2 jam, lalu mengirim alamat IP dan cara masuknya lewat email.')}</p>
       </form>`;
   const body = `<!-- hosting:start -->
@@ -975,8 +986,8 @@ export function qrisPay(o, q, flash) {
     const state = {
       confirming: [L('Checking your payment', 'Memeriksa pembayaranmu'), L(`We are looking for ${q.rupiahText} in our QRIS account, usually within 10 minutes. ${drive ? 'Zeiko Drive updates' : host ? `Then we set ${yours} up within 1–2 hours and email you. It` : 'Your plan or balance switches on'} by itself, and this page updates on its own: you can leave it.`, `Kami sedang mencari ${q.rupiahText} di akun QRIS kami, biasanya dalam 10 menit. ${drive ? 'Zeiko Drive diperbarui' : host ? `Setelah itu ${yours} kami siapkan dalam 1–2 jam lalu kami kirim email. Semuanya berjalan` : 'Paket atau saldomu aktif'} dengan sendirinya, dan halaman ini ikut diperbarui: kamu boleh meninggalkannya.`), 'status'],
       paid: [L('Payment received — thank you', 'Pembayaran diterima — terima kasih'), L(`${q.what} is yours.`, `${q.what} sudah jadi milikmu.`), 'ok'],
-      failed: [L('We could not find this payment', 'Kami tidak menemukan pembayaran ini'), L(`If you did pay ${q.rupiahText}, write to payment@zeiko.biz.id with the amount, the time and your app's receipt.`, `Kalau kamu memang sudah membayar ${q.rupiahText}, tulis ke payment@zeiko.biz.id beserta jumlah, waktu, dan bukti dari aplikasimu.`), 'err'],
-      expired: [L('This code has closed', 'Kode ini sudah ditutup'), L(`It was not marked as paid in time. If you already paid ${q.rupiahText}, write to payment@zeiko.biz.id with your app's receipt; otherwise start a new payment.`, `Kode ini tidak ditandai lunas tepat waktu. Kalau kamu sudah membayar ${q.rupiahText}, tulis ke payment@zeiko.biz.id beserta bukti dari aplikasimu; kalau belum, mulai pembayaran baru.`), 'warn'],
+      failed: [L('We could not find this payment', 'Kami tidak menemukan pembayaran ini'), L(`If you did pay ${q.rupiahText}, chat WhatsApp +62 819-3241-6096 with the amount, the time and your app's receipt.`, `Kalau kamu memang sudah membayar ${q.rupiahText}, chat WhatsApp +62 819-3241-6096 beserta jumlah, waktu, dan bukti dari aplikasimu.`), 'err'],
+      expired: [L('This code has closed', 'Kode ini sudah ditutup'), L(`It was not marked as paid in time. If you already paid ${q.rupiahText}, chat WhatsApp +62 819-3241-6096 with your app's receipt; otherwise start a new payment.`, `Kode ini tidak ditandai lunas tepat waktu. Kalau kamu sudah membayar ${q.rupiahText}, chat WhatsApp +62 819-3241-6096 beserta bukti dari aplikasimu; kalau belum, mulai pembayaran baru.`), 'warn'],
     }[q.status] || [L('Not available right now', 'Sedang tidak tersedia'), L('Try again in a minute.', 'Coba lagi semenit lagi.'), 'warn'];
     const [heading, text, tone] = state;
     body = `<section class="card acct-section qris qris-${esc(tone)}">
