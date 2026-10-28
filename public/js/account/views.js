@@ -861,7 +861,7 @@ function vpsCard(x) {
   </article>`;
 }
 
-export function vps(o, v, { flash, pick = '', cycle = '', template = '', name = '', domain = '' }) {
+export function vps(o, v, { flash, pick = '', cycle = '', template = '', name = '', domain = '', sshKey = '' }) {
   const plans = (v && v.plans) || [];
   const systems = (v && v.templates) || [];
   const open = Boolean(v && v.open);
@@ -896,6 +896,7 @@ export function vps(o, v, { flash, pick = '', cycle = '', template = '', name = 
         <fieldset class="funds-way vps-systems"><legend>${L('System', 'Sistem')}</legend>${systemOptions}</fieldset>
         <label class="field">${L('VPS name', 'Nama VPS')}<input type="text" name="name" value="${esc(name)}" placeholder="web1" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="30" pattern="[A-Za-z0-9][A-Za-z0-9-]{0,28}[A-Za-z0-9]|[A-Za-z0-9]" required><small>${L('Letters, digits and -, up to 30.', 'Huruf, angka dan -, maksimal 30.')}</small></label>
         <label class="field">${L('Password', 'Password')}<input type="password" name="password" autocomplete="new-password" minlength="10" maxlength="64" required><small>${L('10 to 64 characters with a lowercase letter, a capital and a digit, no spaces or quotes. Your VPS is made with it; we do not email it.', '10 sampai 64 karakter dengan huruf kecil, huruf besar dan angka, tanpa spasi atau tanda kutip. VPS-mu dibuat dengan password ini; kami tidak mengirimnya lewat email.')}</small></label>
+        <label class="field">${L('SSH public key (optional)', 'Kunci SSH publik (opsional)')}<textarea name="sshKey" rows="3" placeholder="ssh-ed25519 AAAA… ${L('you@laptop', 'kamu@laptop')}" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="4096">${esc(sshKey)}</textarea><small>${L('Paste the one line from your .pub file to sign in with your key as well as the password. Never paste a private key. Not for Windows.', 'Tempel satu baris dari file .pub-mu supaya bisa masuk dengan kunci selain password. Jangan pernah menempel kunci privat. Tidak untuk Windows.')}</small></label>
         ${giftOn ? `<label class="field host-gift">${L('Free domain', 'Domain gratis')}<input type="text" name="domain" value="${esc(domain)}" placeholder="toko.${esc(gift.tlds[0])}" autocomplete="off" autocapitalize="none" spellcheck="false"><small>${L(`With ${num(gift.months)} months or more: one ${tlds} domain, free for its first year; after that it comes with your renewals at ${esc(rp(gift.domainIdr))} per 3 months. Leave it empty for none.`, `Dengan ${num(gift.months)} bulan atau lebih: satu domain ${tlds}, gratis untuk tahun pertamanya; setelah itu ikut perpanjanganmu ${esc(rp(gift.domainIdr))} per 3 bulan. Kosongkan kalau tidak perlu.`)}</small></label>` : ''}
         <button class="btn btn-primary" type="submit" data-busy="${L('Opening…', 'Membuka…')}">${L('Order and pay by QRIS', 'Pesan dan bayar dengan QRIS')}</button>
         ${v.setupIdr > 0 ? `<p class="fineprint">${L(`The first payment includes ${esc(rp(v.setupIdr))} to set it up, once, and a system’s licence where it has one: renewals never carry them.`, `Pembayaran pertama sudah termasuk ${esc(rp(v.setupIdr))} biaya pembuatan, sekali saja, dan lisensi sistem kalau ada: perpanjangan tidak pernah memuatnya.`)}</p>` : ''}
