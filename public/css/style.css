@@ -1568,6 +1568,8 @@ body:has(#win-30d:checked) [data-w="30d"] { display: revert; }
 .host-move { margin-top: 12px; }
 .host-move summary { cursor: pointer; font-weight: 700; }
 .host-move .host-order { margin-top: 10px; }
+.host-requests { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; }
+.host-requests form { display: inline; }
 .chip-btn { min-width: 76px; min-height: 40px; padding: 6px 14px; border: 0; background: var(--face); box-shadow: var(--raise); color: var(--text); font: 700 15px var(--sans); font-variant-numeric: tabular-nums; cursor: pointer; }
 .chip-btn:active { box-shadow: var(--press); }
 .chip-btn:focus-visible { outline: 1px dotted var(--text); outline-offset: -5px; }

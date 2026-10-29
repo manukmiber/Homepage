@@ -122,6 +122,9 @@ public/
   hosting.html    /hosting: Zeiko Hosting's plans (typed here, in rupiah), what runs on
                   it, static sites, the way from order to online, FAQ (a static file)
   id/hosting.html /id/hosting: the same page in Indonesian
+  vps.html        /vps: Zeiko VPS's plans (typed here, in rupiah), systems, free domain,
+                  the way from order to online, FAQ (a static file)
+  id/vps.html     /id/vps: the same page in Indonesian
   models.html     /models: at-a-glance table, then each model's specs and rate card
   404.html
   _redirects      old /models/<id> links → /models#<id>
@@ -324,16 +327,44 @@ VPS and S3 — buy, renew, upgrade — paid by QRIS.
   total includes it, and the line under them says so).
   Cards renew (`/renew {cycle}`), upgrade (`/upgrade {plan}`, the same
   `upgradeBlock` as hosting) and cancel an unpaid order.
-- **Ending a plan** (hosting and VPS, `endBlock`, `endedLine`): there is no
-  downgrade (the owner's: end it and order again; the refund is sent by
+- **A smaller plan, from the next renewal** (VPS only, the owner's,
+  2026-10-29; `downgradeBlock`): a running card with `downgrade: [plans]`
+  offers the cheaper plans on sale and posts `/v1/vps/{id}/downgrade {plan}`;
+  an empty `plan` ("Keep my current plan") drops the choice. Nothing changes
+  or is charged now and the days already paid are not given back; the card's
+  renewal buttons are then priced at the smaller plan (`lowerPlan`,
+  `lowerPlanName`), and the plan change is made by hand after that renewal is
+  paid (`nextPlan`, "Moving to …"). A hosting still has none.
+- **Controls** (VPS, `controlsBlock`, `requestsList`; the owner's,
+  2026-10-29): a running card has start, stop, reboot and emergency console
+  buttons, a new-password form and a reinstall form, each posting
+  `/v1/vps/{id}/request {kind, …}` (`kind`: start, stop, reboot, reinstall,
+  password, console; a reinstall also sends `template`, `password`, an
+  optional `sshKey` and `confirm: true`). Each is done by hand and answered
+  under the card (`requests: [{kind, status: open|done|cancelled, answer,
+  createdAt, doneAt}]`); a waiting one can be withdrawn
+  (`/v1/vps/{id}/request/{rid}/cancel`). **The password typed in these forms
+  goes to the door once and is never drawn back.** The page promises no time
+  for them, only that we answer there.
+- **Ending a plan** (hosting and VPS, `endBlock`, `endedLine`): a hosting has
+  no downgrade (the owner's: end it and order again; the refund is sent by
   hand within 3 working days). A paid card offers "End this plan" with the
   door's `end.refundIdr`, where to send it (`refundTo`, free text, required
   when there is money) and a box to tick; it posts `/v1/hosting/{id}/end`
   or `/v1/vps/{id}/end`. An ending card says what is coming
   (`refundAskedAt`, `refundIdr`, `refundTo`), an ended one that it was sent
   (`refundedAt`). The pay page says
-  `product: "vps"` and goes back to `/account/vps`. No public VPS page yet:
-  its prices are the door's only.
+  `product: "vps"` and goes back to `/account/vps`.
+- **The public VPS page** (`/vps`, `/id/vps`, the owner's, 2026-10-29): plans
+  with `data-price="vps:<plan>"`, `:half`, `:year` and `:save` keys, `vps:setup`
+  (Rp5.000, once), `vps:windows` (the licence, Rp20.000 once), `vps:domain`
+  (Rp5.000 per 3 months after the free domain's first year) and `vps:egress`
+  (Rp5.000 per 500 GB past the 500 GB a month that is free). It is a hosting
+  page for the check (`HOSTING_PAGES`). The prices are typed from the door's
+  `vps.plans`: change both together. It says IPv4 and nothing about IPv6 or
+  where the servers are (not decided). Its top bar adds a VPS link to the nav
+  and the Hosting pages link to it from the footer; the other pages' navs do
+  not list it yet.
 - **S3** (`views.js::s3`) is a tab that opens Zeiko S3 in Zeiko Drive
   (`https://drive.zeiko.biz.id/s3`), where it is bought, upgraded and
   renewed; the site shows no S3 price of its own.

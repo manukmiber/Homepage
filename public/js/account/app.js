@@ -450,6 +450,30 @@ async function act(name, f, submitter) {
       const r = await ask('POST', `/vps/${encodeURIComponent(f.id)}/upgrade`, { plan: f.plan || '' });
       return toPay(r, vpsPage);
     }
+    case 'vps-downgrade': {
+      if (!PAY_ID.test(f.id || '')) return vpsPage(view.flash('err', L('That VPS was not found.', 'VPS itu tidak ditemukan.')));
+      const r = await ask('POST', `/vps/${encodeURIComponent(f.id)}/downgrade`, { plan: f.plan || '' });
+      if (r.status !== 200) return vpsPage(view.flash('err', problem(r)));
+      return vpsPage(view.flash('ok', f.plan
+        ? L('Noted. Your next renewal is priced at the smaller plan and the VPS moves to it then.', 'Sudah dicatat. Perpanjangan berikutnya memakai harga paket yang lebih kecil dan VPS pindah ke sana.')
+        : L('Noted. You stay on your current plan.', 'Sudah dicatat. Kamu tetap di paket sekarang.')));
+    }
+    case 'vps-request': {
+      if (!PAY_ID.test(f.id || '')) return vpsPage(view.flash('err', L('That VPS was not found.', 'VPS itu tidak ditemukan.')));
+      const kind = f.kind || (submitter ? submitter.value : '');
+      if (kind === 'reinstall' && f.sure !== '1') return vpsPage(view.flash('err', L('Tick the box to confirm.', 'Centang kotaknya untuk mengonfirmasi.')));
+      const body = { kind };
+      if (kind === 'password' || kind === 'reinstall') body.password = f.password || '';
+      if (kind === 'reinstall') Object.assign(body, { template: f.template || '', sshKey: (f.sshKey || '').trim(), confirm: true });
+      const r = await ask('POST', `/vps/${encodeURIComponent(f.id)}/request`, body);
+      if (r.status !== 200) return vpsPage(view.flash('err', problem(r)));
+      return vpsPage(view.flash('ok', L('Asked. We do it by hand and answer under your VPS here.', 'Sudah diminta. Kami kerjakan manual dan menjawab di bawah VPS-mu di sini.')));
+    }
+    case 'vps-request-cancel': {
+      if (!PAY_ID.test(f.id || '') || !PAY_ID.test(f.rid || '')) return vpsPage(view.flash('err', L('That request was not found.', 'Permintaan itu tidak ditemukan.')));
+      const r = await ask('POST', `/vps/${encodeURIComponent(f.id)}/request/${encodeURIComponent(f.rid)}/cancel`, {});
+      return vpsPage(r.status === 200 ? view.flash('ok', L('Withdrawn.', 'Dibatalkan.')) : view.flash('err', problem(r)));
+    }
     case 'hosting-end':
     case 'vps-end': {
       const vps = name === 'vps-end';

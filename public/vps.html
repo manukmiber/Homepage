@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zeiko VPS — your own server in rupiah</title>
+<meta name="description" content="Zeiko VPS: a server of your own with an IPv4 address and 500 GB of egress a month, from Rp50.000 a month. Ubuntu, Debian, AlmaLinux, Rocky Linux, Windows, WordPress, n8n, ownCloud or OpenClaw.">
+<meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
+<meta property="og:title" content="Zeiko VPS — your own server in rupiah">
+<meta property="og:description" content="A server of your own, ready in 1–2 hours, from Rp50.000 a month.">
+<meta property="og:type" content="website">
+<link rel="alternate" hreflang="en" href="/vps">
+<link rel="alternate" hreflang="id" href="/id/vps">
+<link rel="icon" href="/img/mark-32.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/">
+      <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
+      <span class="brand-name">Zeiko</span><span class="brand-doc" aria-hidden="true"> - VPS</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Main navigation">
+      <a href="/#decision">Pranata V1</a>
+      <a href="/drive">Drive</a>
+      <a href="/hosting">Hosting</a>
+      <a href="/vps" aria-current="page">VPS</a>
+      <a href="/#models">Roleplay</a>
+      <a href="/models">Models</a>
+      <a href="/docs/">Docs</a>
+      <a class="nav-account" href="/account">Sign in</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Create account</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <a class="lang-switch" href="/id/vps" hreflang="id" lang="id" data-lang="id">ID</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="page-head" id="top" aria-labelledby="heroTitle">
+    <div class="wrap">
+      <div class="drive-copy">
+        <h1 id="heroTitle">
+          <span class="h1-name">Zeiko VPS</span>
+          <span class="h1-line">A server of your own, ready in 1–2 hours.</span>
+        </h1>
+        <p class="lede">
+          Pick a plan and a system, choose a password, and get your own VPS with an IPv4 address and 500 GB of egress a month.
+          From <strong data-price="vps:mini">Rp50.000</strong> a month.
+        </p>
+        <div class="cta">
+          <a class="btn btn-primary btn-lg" href="#plans">See the plans</a>
+          <a class="btn btn-lg" href="https://wa.me/6281932416096?text=Zeiko%20VPS">Ask us first</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="included" aria-labelledby="inclTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="sec-title" id="inclTitle">On every plan</h2>
+      </div>
+      <ul class="ticks host-ticks">
+        <li>NVMe storage and Zeiko S3 object storage</li>
+        <li>An IPv4 address</li>
+        <li>500 GB of egress a month</li>
+        <li>Sign in with a password, and with an SSH key too (Linux)</li>
+        <li>Start, stop, reboot, reinstall, a new password and an emergency console, asked for in your Zeiko Account</li>
+        <li>Move to a bigger plan any time, or to a smaller one from your next renewal</li>
+        <li>A free domain with 6 months or more</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" id="plans" aria-labelledby="plansTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="sec-title" id="plansTitle">Pick a plan</h2>
+        <p class="sec-lede">Monthly, 6 months or yearly, in rupiah. 6 months cost six months’ price and a year costs less than twelve months. Setting it up is <span data-price="vps:setup">Rp5.000</span>, once, with your first payment.</p>
+      </div>
+      <div class="plans host-plans">
+        <article class="plan" id="vps-mini">
+          <div class="plan-top"><h3>Mini</h3></div>
+          <p class="plan-price"><span data-price="vps:mini">Rp50.000</span><small>/month</small></p>
+          <p class="plan-reqs">or <strong data-price="vps:mini:half">Rp300.000</strong> for 6 months · or <strong data-price="vps:mini:year">Rp560.000</strong> a year, save <span data-price="vps:mini:save">Rp40.000</span></p>
+          <ul class="drive-facts host-specs">
+            <li><strong>1</strong> vCPU</li>
+            <li><strong>2 GB</strong> RAM</li>
+            <li><strong>20 GB</strong> NVMe storage</li>
+            <li><strong>30 GB</strong> object storage</li>
+          </ul>
+          <a class="btn btn-sm" href="/account/vps?plan=mini#order">Order</a>
+        </article>
+        <article class="plan" id="vps-small">
+          <div class="plan-top"><h3>Small</h3></div>
+          <p class="plan-price"><span data-price="vps:small">Rp80.000</span><small>/month</small></p>
+          <p class="plan-reqs">or <strong data-price="vps:small:half">Rp480.000</strong> for 6 months · or <strong data-price="vps:small:year">Rp920.000</strong> a year, save <span data-price="vps:small:save">Rp40.000</span></p>
+          <ul class="drive-facts host-specs">
+            <li><strong>2</strong> vCPU</li>
+            <li><strong>2 GB</strong> RAM</li>
+            <li><strong>40 GB</strong> NVMe storage</li>
+            <li><strong>60 GB</strong> object storage</li>
+          </ul>
+          <a class="btn btn-sm" href="/account/vps?plan=small#order">Order</a>
+        </article>
+        <article class="plan" id="vps-medium">
+          <div class="plan-top"><h3>Medium</h3></div>
+          <p class="plan-price"><span data-price="vps:medium">Rp160.000</span><small>/month</small></p>
+          <p class="plan-reqs">or <strong data-price="vps:medium:half">Rp960.000</strong> for 6 months · or <strong data-price="vps:medium:year">Rp1.800.000</strong> a year, save <span data-price="vps:medium:save">Rp120.000</span></p>
+          <ul class="drive-facts host-specs">
+            <li><strong>2</strong> vCPU</li>
+            <li><strong>8 GB</strong> RAM</li>
+            <li><strong>64 GB</strong> NVMe storage</li>
+            <li><strong>64 GB</strong> object storage</li>
+          </ul>
+          <a class="btn btn-sm" href="/account/vps?plan=medium#order">Order</a>
+        </article>
+        <article class="plan" id="vps-large">
+          <div class="plan-top"><h3>Large</h3></div>
+          <p class="plan-price"><span data-price="vps:large">Rp299.000</span><small>/month</small></p>
+          <p class="plan-reqs">or <strong data-price="vps:large:half">Rp1.794.000</strong> for 6 months · or <strong data-price="vps:large:year">Rp3.300.000</strong> a year, save <span data-price="vps:large:save">Rp288.000</span></p>
+          <ul class="drive-facts host-specs">
+            <li><strong>4</strong> vCPU</li>
+            <li><strong>14 GB</strong> RAM</li>
+            <li><strong>128 GB</strong> NVMe storage</li>
+            <li><strong>128 GB</strong> object storage</li>
+          </ul>
+          <a class="btn btn-sm" href="/account/vps?plan=large#order">Order</a>
+        </article>
+        <article class="plan" id="vps-xl">
+          <div class="plan-top"><h3>Extra Large</h3></div>
+          <p class="plan-price"><span data-price="vps:xl">Rp570.000</span><small>/month</small></p>
+          <p class="plan-reqs">or <strong data-price="vps:xl:half">Rp3.420.000</strong> for 6 months · or <strong data-price="vps:xl:year">Rp6.650.000</strong> a year, save <span data-price="vps:xl:save">Rp190.000</span></p>
+          <ul class="drive-facts host-specs">
+            <li><strong>12</strong> vCPU</li>
+            <li><strong>24 GB</strong> RAM</li>
+            <li><strong>256 GB</strong> NVMe storage</li>
+            <li><strong>256 GB</strong> object storage</li>
+          </ul>
+          <a class="btn btn-sm" href="/account/vps?plan=xl#order">Order</a>
+        </article>
+      </div>
+      <p class="fineprint host-order">Order in your Zeiko Account and pay by QRIS. We check your payment in 1–5 minutes and make your VPS within 1–2 hours, then email you its IP address and how to sign in.</p>
+      <p class="fineprint">500 GB of egress a month is free on every plan. Past that, <strong data-price="vps:egress">Rp5.000</strong> per 500 GB.</p>
+    </div>
+  </section>
+
+  <section class="section" id="systems" aria-labelledby="systemsTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="sec-title" id="systemsTitle">Choose your system</h2>
+        <p class="sec-lede">Start from a clean system or from an app that is already set up.</p>
+      </div>
+      <ul class="ticks host-ticks">
+        <li>Ubuntu</li>
+        <li>Debian</li>
+        <li>AlmaLinux</li>
+        <li>Rocky Linux</li>
+        <li>Windows, with its licence for <span data-price="vps:windows">Rp20.000</span>, once</li>
+        <li>WordPress</li>
+        <li>n8n</li>
+        <li>ownCloud</li>
+        <li>OpenClaw</li>
+      </ul>
+      <p class="fineprint">Linux systems are signed in to with SSH; Windows with Remote Desktop.</p>
+    </div>
+  </section>
+
+  <section class="section" id="domain" aria-labelledby="domainTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="sec-title" id="domainTitle">A free domain</h2>
+        <p class="sec-lede">With 6 months or more, one .my.id, .biz.id or .web.id domain comes with your VPS, registered for you and free for its first year. After that it comes with your renewals at <span data-price="vps:domain">Rp5.000</span> per 3 months.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="start" aria-labelledby="startTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="sec-title" id="startTitle">From order to online</h2>
+      </div>
+      <ol class="steps">
+        <li><strong>Order</strong>Press Order on a plan, sign in or make a Zeiko Account, pick a system, name your VPS, choose a password (and an SSH key if you like), and pay by QRIS.</li>
+        <li><strong>We check your payment</strong>By hand, usually in 1–5 minutes.</li>
+        <li><strong>We make your VPS</strong>Within 1–2 hours. Then your welcome email arrives with its IP address and how to sign in. Your password is never emailed.</li>
+        <li><strong>Run it from your account</strong>Renew, move to another plan, or ask us to start, stop, reboot or reinstall it. We do each one by hand and answer under your VPS.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" id="faq" aria-labelledby="faqTitle">
+    <div class="wrap faq-layout">
+      <div class="faq-intro">
+        <h2 class="sec-title" id="faqTitle">Questions, answered</h2>
+        <p class="sec-lede">Something else? Chat us on <a href="https://wa.me/6281932416096">WhatsApp +62 819-3241-6096</a> (08.00–22.00 WIB).</p>
+      </div>
+      <div class="faq-list">
+        <details class="faq" open>
+          <summary>How do I order?</summary>
+          <p>Press Order on the plan you want. You sign in to your Zeiko Account (or make one), pick a system, name your VPS, choose a password, choose monthly, 6 months or yearly, and pay by QRIS. We make your VPS within 1–2 hours.</p>
+        </details>
+        <details class="faq">
+          <summary>How much traffic is included?</summary>
+          <p>500 GB of egress a month on every plan. Past that it is <span data-price="vps:egress">Rp5.000</span> per 500 GB.</p>
+        </details>
+        <details class="faq">
+          <summary>Can I move to another plan?</summary>
+          <p>To a bigger plan, any time: you pay the difference for the days left and it still ends on the same day. To a smaller one, choose it in your Zeiko Account and it starts at your next renewal, which is then priced at the smaller plan. Nothing changes until then, and the days you already paid for are not given back. Make sure what is on your VPS fits the smaller disk.</p>
+        </details>
+        <details class="faq">
+          <summary>Can I reinstall it or change its password?</summary>
+          <p>Yes. Ask for it in your Zeiko Account. We do it by hand, take a copy of the disk first when you reinstall, and answer under your VPS. A reinstall erases everything on the disk.</p>
+        </details>
+        <details class="faq">
+          <summary>What if I forget to renew?</summary>
+          <p>We email you 7, 3 and 1 day before your VPS ends, and you renew in your Zeiko Account. A day after it ends it is turned off; a week after, it is deleted with everything on it. Renew any time before that and it carries on as it was.</p>
+        </details>
+        <details class="faq">
+          <summary>Can I end a plan early?</summary>
+          <p>Yes, in your Zeiko Account. We delete the VPS and send you a refund for the days left, within 3 working days.</p>
+        </details>
+        <details class="faq">
+          <summary>Do I get a free domain?</summary>
+          <p>With 6 months or more, one .my.id, .biz.id or .web.id domain, free for its first year; after that <span data-price="vps:domain">Rp5.000</span> per 3 months with your renewals.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+
+<footer class="footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="/">
+        <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
+        <span class="brand-name">Zeiko</span>
+      </a>
+      <p>Pranata V1 for decisions, three roleplay models, Zeiko Drive for your files and Zeiko Hosting for your sites and Zeiko VPS for your servers.</p>
+    </div>
+    <nav class="footer-cols" aria-label="Footer links">
+      <div>
+        <h2>Hosting</h2>
+        <a href="/vps">Zeiko VPS</a>
+        <a href="/hosting#features">What you can run</a>
+        <a href="/hosting#plans">Plans</a>
+        <a href="/hosting#address">Your address</a>
+        <a href="/hosting#static">Static sites</a>
+        <a href="/docs/hosting">Hosting docs</a>
+      </div>
+      <div>
+        <h2>Drive</h2>
+        <a href="/drive">Zeiko Drive</a>
+        <a href="/drive#plans">Drive plans</a>
+        <a href="https://drive.zeiko.biz.id">Open Drive</a>
+      </div>
+      <div>
+        <h2>AI models</h2>
+        <a href="/#decision">Pranata V1</a>
+        <a href="/#models">Roleplay models</a>
+        <a href="/models">Specs &amp; performance</a>
+        <a href="/docs/">Docs</a>
+      </div>
+      <div>
+        <h2>Account</h2>
+        <a href="/account" data-signed-out>Sign in</a>
+        <a href="/account/signup" data-signed-out>Create account</a>
+        <a href="/account" data-signed-in hidden>Your account</a>
+      </div>
+    </nav>
+  </div>
+  <div class="wrap footer-base">
+    <p>© <span id="year">2026</span> Zeiko</p>
+    <p>VPS prices in rupiah.</p>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
+</body>
+</html>

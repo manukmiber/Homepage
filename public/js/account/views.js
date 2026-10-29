@@ -612,8 +612,9 @@ function addressFields(a, { free, nameIdr, domainIdr, months, once = false, labe
     </fieldset>`;
 }
 
-/** A paid hosting or VPS can be ended (there is no downgrade: end it and
- * order the plan you want). The door works out the refund for the days
+/** A paid hosting or VPS can be ended (a hosting has no downgrade: end it
+ * and order the plan you want; a VPS may take a smaller plan at its next
+ * renewal, `downgradeBlock`). The door works out the refund for the days
  * left; it is sent by hand within 3 working days to where the person says.
  * `act` is the form's action. */
 function endBlock(x, act) {
@@ -628,7 +629,7 @@ function endBlock(x, act) {
     : L('We delete it with everything on it. No paid time is left to give back.', 'Kami hapus beserta semua isinya. Tidak ada sisa masa aktif yang bisa dikembalikan.')}</p>
         ${refund > 0 ? `<label class="field">${L('Send the refund to', 'Kirim refund ke')}<input type="text" name="refundTo" maxlength="200" placeholder="${L('Bank or e-wallet, number, name on it', 'Bank atau e-wallet, nomor, atas nama')}" autocomplete="off" required></label>` : ''}
         <label class="check"><input type="checkbox" name="sure" value="1" required> ${L('I understand it is deleted and cannot be brought back.', 'Saya paham ini dihapus dan tidak bisa dikembalikan.')}</label>
-        <p class="fineprint">${L('Want a smaller plan? End this one, then order the plan you want.', 'Mau paket yang lebih kecil? Hentikan yang ini, lalu pesan paket yang kamu mau.')}</p>
+        ${x.downgrade ? '' : `<p class="fineprint">${L('Want a smaller plan? End this one, then order the plan you want.', 'Mau paket yang lebih kecil? Hentikan yang ini, lalu pesan paket yang kamu mau.')}</p>`}
         <button class="btn btn-sm" type="submit" data-busy="${L('Sending…', 'Mengirim…')}">${L('End this plan', 'Hentikan paket ini')}</button>
       </form>
     </details>`;
@@ -652,7 +653,7 @@ function endedLine(x) {
  * has paid for. `act` is the form's action. */
 function upgradeBlock(x, act) {
   if (x.nextPlan) {
-    return `<p>${L(`Upgrading to <strong>${esc(x.nextPlanName || x.nextPlan)}</strong>: paid. We give it the new plan within 1–2 hours and email you.`, `Naik ke <strong>${esc(x.nextPlanName || x.nextPlan)}</strong>: sudah dibayar. Paket barunya kami pasang dalam 1–2 jam lalu kami kirim email.`)}</p>`;
+    return `<p>${L(`Moving to <strong>${esc(x.nextPlanName || x.nextPlan)}</strong>: paid. We give it the new plan within 1–2 hours and email you.`, `Pindah ke <strong>${esc(x.nextPlanName || x.nextPlan)}</strong>: sudah dibayar. Paket barunya kami pasang dalam 1–2 jam lalu kami kirim email.`)}</p>`;
   }
   const ups = Array.isArray(x.upgrade) ? x.upgrade : [];
   if (x.status !== 'active' || !ups.length) return '';
@@ -811,7 +812,93 @@ function vpsFacts(p) {
   ].filter(Boolean).join(' · ');
 }
 
-function vpsCard(x) {
+/** A running VPS: a smaller plan from the next renewal (the owner's,
+ * 2026-10-29). Nothing changes or is charged now, and the days already paid
+ * are not given back; the door prices the renewal at the smaller plan. */
+function downgradeBlock(x) {
+  if (x.lowerPlan) {
+    return `<div class="host-move"><p>${L(`From your next renewal this VPS moves to <strong>${esc(x.lowerPlanName || x.lowerPlan)}</strong>, and the renewal below is priced at it. Until then nothing changes.`, `Mulai perpanjangan berikutnya VPS ini pindah ke <strong>${esc(x.lowerPlanName || x.lowerPlan)}</strong>, dan harga perpanjangan di atas memakai paket itu. Sampai saat itu tidak ada yang berubah.`)}</p>
+      <form data-act="vps-downgrade" class="host-order">
+        <input type="hidden" name="id" value="${esc(x.id)}">
+        <input type="hidden" name="plan" value="">
+        <button class="btn btn-ghost btn-sm" type="submit" data-busy="${L('Saving…', 'Menyimpan…')}">${L('Keep my current plan', 'Tetap di paket sekarang')}</button>
+      </form></div>`;
+  }
+  const lower = Array.isArray(x.downgrade) ? x.downgrade : [];
+  if (x.status !== 'active' || x.nextPlan || !lower.length) return '';
+  const options = lower.map((p, i) => `<label class="host-option">
+      <input type="radio" name="plan" value="${esc(p.id)}"${i === 0 ? ' checked' : ''} required>
+      <span class="host-option-body"><strong>${esc(p.name)}</strong><span class="host-option-price">${esc(rp(p.monthIdr))}/${L('month', 'bulan')}</span><span class="muted-note">${esc(vpsFacts(p))}</span></span>
+    </label>`).join('');
+  return `<details class="host-move"><summary>${L('Choose a smaller plan', 'Pilih paket yang lebih kecil')}</summary>
+      <form data-act="vps-downgrade" class="host-order">
+        <input type="hidden" name="id" value="${esc(x.id)}">
+        <fieldset class="host-choose"><legend>${L('Smaller plan', 'Paket lebih kecil')}</legend>${options}</fieldset>
+        <p class="fineprint">${L('It starts at your next renewal, which is then priced at the smaller plan. Nothing changes or is charged now, and the days you already paid for stay as they are (no refund of the difference). Make sure what is on it fits the smaller disk: we cannot shrink it below what it holds.', 'Berlaku mulai perpanjangan berikutnya, yang harganya memakai paket yang lebih kecil. Sekarang tidak ada yang berubah atau ditagih, dan hari yang sudah kamu bayar tetap (selisihnya tidak dikembalikan). Pastikan isinya muat di disk yang lebih kecil: kami tidak bisa mengecilkannya di bawah isinya.')}</p>
+        <button class="btn btn-sm" type="submit" data-busy="${L('Saving…', 'Menyimpan…')}">${L('Use it from the next renewal', 'Pakai mulai perpanjangan berikutnya')}</button>
+      </form>
+    </details>`;
+}
+
+const ASKED = () => ({
+  start: L('Start', 'Nyalakan'),
+  stop: L('Stop', 'Matikan'),
+  reboot: L('Reboot', 'Reboot'),
+  reinstall: L('Reinstall', 'Instal ulang'),
+  password: L('New password', 'Password baru'),
+  console: L('Emergency console', 'Konsol darurat'),
+});
+
+/** What the person asked of this VPS, newest first: waiting ones can be
+ * withdrawn, answered ones show our answer. */
+function requestsList(x) {
+  const list = Array.isArray(x.requests) ? x.requests.slice(0, 6) : [];
+  if (!list.length) return '';
+  const state = { open: L('Waiting', 'Menunggu'), done: L('Done', 'Selesai'), cancelled: L('Not done', 'Tidak dikerjakan') };
+  const rows = list.map((r) => `<li>
+      <strong>${esc(ASKED()[r.kind] || r.kind)}</strong> · ${esc(state[r.status] || r.status)}${r.doneAt ? ` · ${esc(day(r.doneAt))}` : ''}
+      ${r.answer ? `<br><span class="muted-note">${esc(r.answer)}</span>` : ''}
+      ${r.status === 'open' ? `<form data-act="vps-request-cancel" class="host-order"><input type="hidden" name="id" value="${esc(x.id)}"><input type="hidden" name="rid" value="${esc(r.id)}"><button class="btn-link" type="submit" data-busy="…">${L('Withdraw', 'Batalkan')}</button></form>` : ''}
+    </li>`).join('');
+  return `<ul class="host-requests">${rows}</ul>`;
+}
+
+/** A running VPS's controls. Each one is a request we do by hand and answer
+ * here; a new password or a reinstall's password goes to the door once and is
+ * never drawn back into the page. */
+function controlsBlock(x, systems) {
+  if (x.status !== 'active' || x.refundAskedAt) return requestsList(x);
+  const asked = ASKED();
+  const quick = ['start', 'stop', 'reboot', 'console']
+    .map((k) => `<button class="btn btn-ghost btn-sm" type="submit" name="kind" value="${k}" data-busy="${L('Sending…', 'Mengirim…')}">${esc(asked[k])}</button>`).join('');
+  const systemOptions = systems.map((t) => `<option value="${esc(t.id)}"${t.id === x.template ? ' selected' : ''}>${esc(t.name)}${t.extraIdr > 0 ? ` (+${esc(rp(t.extraIdr))})` : ''}</option>`).join('');
+  const windows = x.template === 'windows';
+  return `<details class="host-move"><summary>${L('Control this VPS', 'Kendalikan VPS ini')}</summary>
+      <form data-act="vps-request" class="host-renew">
+        <input type="hidden" name="id" value="${esc(x.id)}">
+        ${quick}
+      </form>
+      <p class="fineprint">${L('We do each one by hand and answer under it here. The emergency console answer carries how to open it.', 'Kami kerjakan satu per satu dan menjawab di bawahnya. Jawaban konsol darurat berisi cara membukanya.')}</p>
+      <form data-act="vps-request" class="host-order">
+        <input type="hidden" name="id" value="${esc(x.id)}"><input type="hidden" name="kind" value="password">
+        <label class="field">${L('New password', 'Password baru')}<input type="password" name="password" autocomplete="new-password" minlength="10" maxlength="64" required><small>${L('10 to 64 characters with a lowercase letter, a capital and a digit, no spaces or quotes. We set it on your VPS; we do not email it.', '10 sampai 64 karakter dengan huruf kecil, huruf besar dan angka, tanpa spasi atau tanda kutip. Kami pasang di VPS-mu; tidak dikirim lewat email.')}</small></label>
+        <button class="btn btn-sm" type="submit" data-busy="${L('Sending…', 'Mengirim…')}">${L('Ask for a new password', 'Minta password baru')}</button>
+      </form>
+      ${systems.length ? `<details class="host-move"><summary>${L('Reinstall', 'Instal ulang')}</summary>
+        <form data-act="vps-request" class="host-order">
+          <input type="hidden" name="id" value="${esc(x.id)}"><input type="hidden" name="kind" value="reinstall">
+          <label class="field">${L('System', 'Sistem')}<select name="template" required>${systemOptions}</select></label>
+          <label class="field">${L('Password', 'Password')}<input type="password" name="password" autocomplete="new-password" minlength="10" maxlength="64" required></label>
+          ${windows ? '' : `<label class="field">${L('SSH public key (optional)', 'Kunci publik SSH (opsional)')}<input type="text" name="sshKey" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="ssh-ed25519 AAAA… you@laptop"></label>`}
+          <label class="check"><input type="checkbox" name="sure" value="1" required> ${L('I understand everything on the disk is erased. We save a copy of the disk first.', 'Saya paham semua isi disk dihapus. Kami simpan salinan disknya dulu.')}</label>
+          <button class="btn btn-sm" type="submit" data-busy="${L('Sending…', 'Mengirim…')}">${L('Reinstall', 'Instal ulang')}</button>
+        </form>
+      </details>` : ''}
+    </details>
+    ${requestsList(x)}`;
+}
+
+function vpsCard(x, systems = []) {
   const [label, tone] = hostingStatus()[x.status] || [x.status, ''];
   let line = '';
   let act = '';
@@ -843,6 +930,8 @@ function vpsCard(x) {
       .map(([name, t]) => `${name} ${t}`);
     if (extras.length) act += `<p class="muted-note">${extras.join('. ')}.</p>`;
     more += upgradeBlock(x, 'vps-upgrade');
+    more += downgradeBlock(x);
+    more += controlsBlock(x, systems);
     more += endBlock(x, 'vps-end');
   }
   const facts = [
@@ -905,7 +994,7 @@ export function vps(o, v, { flash, pick = '', cycle = '', template = '', name = 
   const body = `<!-- hosting:start -->
     ${mine.length ? `<section class="acct-section-plain">
       <div class="section-row"><h2>${L('Your VPS', 'VPS-mu')}</h2><p class="muted-note">${L('We email you 7, 3 and 1 day before each one ends', 'Kami kirim email 7, 3 dan 1 hari sebelum masing-masing habis')}</p></div>
-      <div class="host-list">${mine.map(vpsCard).join('')}</div>
+      <div class="host-list">${mine.map((x) => vpsCard(x, systems)).join('')}</div>
     </section>` : ''}
     <section class="card acct-section" id="order">
       <div class="section-row"><h2>${L('Order a VPS', 'Pesan VPS')}</h2></div>

@@ -231,7 +231,7 @@ function driveAllows(src, ranges, m) {
 // plan comes with — web and object storage, MySQL databases, Cloudflare CDN
 // — its prices in rupiah, and paying for one. Only these words; every other
 // rule holds there too, so nothing says who runs the hosting or how.
-const HOSTING_PAGES = new Set([join(PUBLIC, 'hosting.html'), join(PUBLIC, 'id', 'hosting.html')]);
+const HOSTING_PAGES = new Set([join(PUBLIC, 'hosting.html'), join(PUBLIC, 'id', 'hosting.html'), join(PUBLIC, 'vps.html'), join(PUBLIC, 'id', 'vps.html')]);
 const HOSTING_WORDS = /^(storage|database|mysql|cloudflare|rupiah|pay|paid|pays|payment|payments|penyimpanan|basis data|bayar|membayar|dibayar|pembayaran)$/i;
 function hostingRanges(file, src) {
   if (HOSTING_PAGES.has(file)) return [[0, src.length]];
@@ -644,6 +644,13 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
         },
         upgrade: [{ id: evil, name: evil, monthIdr: 80000, priceIdr: 15000 }],
         nextPlan: i === 7 ? evil : '', nextPlanName: evil,
+        // A cheaper plan offered, and one chosen for the next renewal.
+        downgrade: i === 7 ? [] : [{ id: evil, name: evil, vcpu: 1, ramGb: 1, diskGb: 10, objectGb: 0, monthIdr: 30000 }],
+        lowerPlan: i === 2 ? evil : '', lowerPlanName: evil,
+        // The controls asked for: waiting, answered and turned down.
+        requests: ['open', 'done', 'cancelled', evil].map((status, k) => ({
+          id: evil, kind: ['reboot', 'console', 'reinstall', evil][k], status, answer: evil, createdAt: Date.UTC(2026, 9, 29), doneAt: status === 'open' ? null : Date.UTC(2026, 9, 29),
+        })),
         end: { refundIdr: i % 2 ? 25000 : 0 },
         refundAskedAt: i === 3 || i === 4 ? Date.UTC(2026, 9, 27) : null, refundedAt: i === 4 ? Date.UTC(2026, 9, 28) : null,
         refundIdr: i % 2 ? 25000 : 0, refundTo: evil,
