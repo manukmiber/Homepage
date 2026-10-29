@@ -596,8 +596,12 @@ const egressRate = (eg) => L(`${esc(rp(eg.blockIdr))} per ${num(eg.blockGb || 0)
 /** The fields that choose an address: a name straight under the base or a
  * domain of their own, and, when ordering, the free one first and the free
  * domain last (only shown with 6 months or more). `once` prices a move of a
- * running hosting (one flat price); otherwise they are per 3 months. */
-function addressFields(a, { free, nameIdr, domainIdr, months, once = false, label = '', address = '', name = '', domain = '' }) {
+ * running hosting or VPS (one flat price); otherwise they are per 3 months.
+ * `vps` says how a VPS's own domain is connected (a CNAME to its free
+ * address), and `fields` renames the inputs where the form already has a
+ * `name` and a `domain` (the VPS order). */
+function addressFields(a, { free, nameIdr, domainIdr, months, once = false, label = '', address = '', name = '', domain = '', vps = false, giftIdr = domainIdr, fields = {} }) {
+  const field = { name: 'name', domain: 'domain', gift: 'giftDomain', ...fields };
   const pick = address || (free ? 'free' : 'name');
   const base = esc(a.base || '');
   const six = label ? esc(label) : 'k3x9qa';
@@ -612,11 +616,13 @@ function addressFields(a, { free, nameIdr, domainIdr, months, once = false, labe
   return `<fieldset class="host-choose host-address"><legend>${L('Address', 'Alamat')}</legend>
       ${free ? option('free', L('Free address', 'Alamat gratis'), L('Free', 'Gratis'), L(`Six random letters and digits, like <code>${six}.${base}</code>.`, `Enam huruf dan angka acak, misalnya <code>${six}.${base}</code>.`)) : ''}
       ${option('name', L('A name of your own', 'Nama pilihanmu'), `${esc(rp(nameIdr))} ${per}`, L(`Like <code>toko-bunga.${base}</code>: nothing to connect.`, `Misalnya <code>toko-bunga.${base}</code>: tanpa perlu menyambungkan apa pun.`))}
-      ${option('own', L('Your own domain', 'Domain sendiri'), `${esc(rp(domainIdr))} ${per}`, L('A domain you bought, like <code>example.com</code>. You point it at us with nameservers.', 'Domain yang kamu beli, misalnya <code>contoh.com</code>. Kamu sambungkan lewat nameserver.'))}
-      ${giftOn ? `<span class="host-gift host-gift-opt">${option('gift', L('Free domain', 'Domain gratis'), L('Free for its first year', 'Gratis tahun pertama'), L(`With ${num(gift.months)} months or more: one ${tlds} domain, registered and connected for you. After its first year it comes with your renewals at ${esc(rp(domainIdr))} per 3 months.`, `Dengan ${num(gift.months)} bulan atau lebih: satu domain ${tlds}, kami daftarkan dan sambungkan. Setelah tahun pertamanya ikut perpanjanganmu ${esc(rp(domainIdr))} per 3 bulan.`))}</span>` : ''}
-      <label class="field host-addr-field host-addr-name">${L('Your name', 'Nama pilihanmu')}<span class="host-addr-in"><input type="text" name="name" value="${esc(name)}" placeholder="toko-bunga" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="40"><span>.${base}</span></span></label>
-      <label class="field host-addr-field host-addr-own">${L('Your domain', 'Domainmu')}<input type="text" name="domain" value="${esc(address === 'gift' ? '' : domain)}" placeholder="${L('example.com', 'contoh.com')}" autocomplete="off" autocapitalize="none" spellcheck="false"></label>
-      ${giftOn ? `<label class="field host-addr-field host-addr-gift host-gift">${L('Free domain', 'Domain gratis')}<input type="text" name="giftDomain" value="${esc(address === 'gift' ? domain : '')}" placeholder="toko-bunga.${esc(gift.tlds[0])}" autocomplete="off" autocapitalize="none" spellcheck="false"></label>` : ''}
+      ${option('own', L('Your own domain', 'Domain sendiri'), `${esc(rp(domainIdr))} ${per}`, vps
+    ? L(`A domain you bought, like <code>example.com</code>. You point it at your free address with a CNAME record.`, `Domain yang kamu beli, misalnya <code>contoh.com</code>. Kamu arahkan ke alamat gratismu dengan record CNAME.`)
+    : L('A domain you bought, like <code>example.com</code>. You point it at us with nameservers.', 'Domain yang kamu beli, misalnya <code>contoh.com</code>. Kamu sambungkan lewat nameserver.'))}
+      ${giftOn ? `<span class="host-gift host-gift-opt">${option('gift', L('Free domain', 'Domain gratis'), L('Free for its first year', 'Gratis tahun pertama'), L(`With ${num(gift.months)} months or more: one ${tlds} domain, registered and connected for you. After its first year it comes with your renewals at ${esc(rp(giftIdr))} per 3 months.`, `Dengan ${num(gift.months)} bulan atau lebih: satu domain ${tlds}, kami daftarkan dan sambungkan. Setelah tahun pertamanya ikut perpanjanganmu ${esc(rp(giftIdr))} per 3 bulan.`))}</span>` : ''}
+      <label class="field host-addr-field host-addr-name">${L('Your name', 'Nama pilihanmu')}<span class="host-addr-in"><input type="text" name="${field.name}" value="${esc(name)}" placeholder="toko-bunga" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="40"><span>.${base}</span></span></label>
+      <label class="field host-addr-field host-addr-own">${L('Your domain', 'Domainmu')}<input type="text" name="${field.domain}" value="${esc(address === 'gift' ? '' : domain)}" placeholder="${L('example.com', 'contoh.com')}" autocomplete="off" autocapitalize="none" spellcheck="false"></label>
+      ${giftOn ? `<label class="field host-addr-field host-addr-gift host-gift">${L('Free domain', 'Domain gratis')}<input type="text" name="${field.gift}" value="${esc(address === 'gift' ? domain : '')}" placeholder="toko-bunga.${esc(gift.tlds[0])}" autocomplete="off" autocapitalize="none" spellcheck="false"></label>` : ''}
     </fieldset>`;
 }
 
@@ -906,7 +912,24 @@ function controlsBlock(x, systems) {
     ${requestsList(x)}`;
 }
 
-function vpsCard(x, systems = []) {
+/** A running VPS: the address it is moving to, or a new one (a name or
+ * their own domain, one flat price). Its server stays as it is. */
+function addressBlock(x, a) {
+  if (x.nextDomain) {
+    return `<p>${L(`Moving to <strong>${esc(x.nextDomain)}</strong>: paid. It answers there shortly and we email you.`, `Pindah ke <strong>${esc(x.nextDomain)}</strong>: sudah dibayar. Sebentar lagi alamat itu aktif dan kami kirim email.`)}</p>`;
+  }
+  if (x.status !== 'active' || !x.move) return '';
+  return `<details class="host-move"><summary>${L('Change the address', 'Ganti alamat')}</summary>
+      <form data-act="vps-address" class="host-order">
+        <input type="hidden" name="id" value="${esc(x.id)}">
+        ${addressFields(a, { free: false, nameIdr: x.move.nameIdr, domainIdr: x.move.domainIdr, once: true, label: x.label || '', address: x.domainKind === 'name' ? 'own' : 'name', vps: true })}
+        <p class="fineprint">${L('Paid once, it covers the new address to the end of your paid time; after that it goes with your renewals. Your server, username and password stay as they are.', 'Dibayar sekali, alamat barunya berlaku sampai akhir masa aktifmu; setelah itu ikut perpanjangan. Server, username, dan password-mu tetap seperti sekarang.')}</p>
+        <button class="btn btn-primary btn-sm" type="submit" data-busy="${L('Opening…', 'Membuka…')}">${L('Change and pay by QRIS', 'Ganti dan bayar dengan QRIS')}</button>
+      </form>
+    </details>`;
+}
+
+function vpsCard(x, systems = [], a = {}) {
   const [label, tone] = hostingStatus()[x.status] || [x.status, ''];
   let line = '';
   let act = '';
@@ -939,33 +962,41 @@ function vpsCard(x, systems = []) {
     if (extras.length) act += `<p class="muted-note">${extras.join('. ')}.</p>`;
     more += upgradeBlock(x, 'vps-upgrade');
     more += downgradeBlock(x);
+    more += addressBlock(x, a);
     more += controlsBlock(x, systems);
     more += endBlock(x, 'vps-end');
   }
+  // Its address: a free one is said only once it answers (signInAt).
+  const shown = x.domainKind === 'free' ? (x.signInAt ? x.domain : '') : x.domain;
   const facts = [
     `${esc(x.planName)} · ${esc(CYCLES()[x.cycle] || x.cycle)}`,
     esc(x.templateName || x.template),
-    x.domainKind === 'gift' && x.domain ? esc(x.domain) : '',
+    shown ? `${esc(addressKind()[x.domainKind] || '')} <code>${esc(shown)}</code>` : '',
     x.panelUser ? `${L('sign in', 'masuk')} <code>${esc(x.panelUser)}</code>` : '',
   ].filter(Boolean).join(' · ');
+  const own = x.domainKind === 'own' && x.freeAddress && x.status === 'active'
+    ? `<p class="muted-note">${L(`Point <code>${esc(x.domain)}</code> at it with a CNAME record to <code>${esc(x.freeAddress)}</code> where you manage that domain.`, `Arahkan <code>${esc(x.domain)}</code> ke VPS ini dengan record CNAME ke <code>${esc(x.freeAddress)}</code> di tempat kamu mengelola domain itu.`)}</p>`
+    : '';
   return `<article class="card host-item">
     <div class="section-row"><h3>${esc(x.vpsName)}</h3><span class="tag tag-${esc(tone)}">${esc(label)}</span></div>
     <p class="muted-note">${facts}</p>
     ${x.spec ? `<p class="muted-note">${esc(vpsFacts(x.spec))}</p>` : ''}
+    ${own}
     ${line ? `<p>${line}</p>` : ''}
     ${act ? `<div class="row-links">${act}</div>` : ''}
     ${more}
   </article>`;
 }
 
-export function vps(o, v, { flash, pick = '', cycle = '', template = '', name = '', domain = '', sshKey = '' }) {
+export function vps(o, v, { flash, pick = '', cycle = '', template = '', name = '', domain = '', sshKey = '', address = '', addressName = '', ownDomain = '' }) {
   const plans = (v && v.plans) || [];
   const systems = (v && v.templates) || [];
   const open = Boolean(v && v.open);
   const mine = (v && v.services) || [];
   const gift = (v && v.gift) || {};
-  const tlds = (Array.isArray(gift.tlds) ? gift.tlds : []).map((t) => `.${esc(t)}`).join(', ');
-  const giftOn = gift.months > 0 && tlds;
+  // The address fields read the free domain from `gift`, as on a hosting's.
+  const a = { ...((v && v.address) || {}), gift };
+  const pickAddress = ['free', 'name', 'own', 'gift'].includes(address) ? address : (domain ? 'gift' : 'free');
   const chosen = plans.some((p) => p.id === pick) ? pick : (plans[0] || {}).id;
   const system = systems.some((t) => t.id === template) ? template : (systems[0] || {}).id;
   const per = cycle === 'half' || cycle === 'year' ? cycle : 'month';
@@ -994,15 +1025,16 @@ export function vps(o, v, { flash, pick = '', cycle = '', template = '', name = 
         <label class="field">${L('VPS name', 'Nama VPS')}<input type="text" name="name" value="${esc(name)}" placeholder="web1" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="30" pattern="[A-Za-z0-9][A-Za-z0-9-]{0,28}[A-Za-z0-9]|[A-Za-z0-9]" required><small>${L('Letters, digits and -, up to 30.', 'Huruf, angka dan -, maksimal 30.')}</small></label>
         <label class="field">${L('Password', 'Password')}<input type="password" name="password" autocomplete="new-password" minlength="10" maxlength="64" required><small>${L('10 to 64 characters with a lowercase letter, a capital and a digit, no spaces or quotes. Your VPS is made with it; we do not email it.', '10 sampai 64 karakter dengan huruf kecil, huruf besar dan angka, tanpa spasi atau tanda kutip. VPS-mu dibuat dengan password ini; kami tidak mengirimnya lewat email.')}</small></label>
         <label class="field">${L('SSH public key (optional)', 'Kunci SSH publik (opsional)')}<textarea name="sshKey" rows="3" placeholder="ssh-ed25519 AAAA… ${L('you@laptop', 'kamu@laptop')}" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="4096">${esc(sshKey)}</textarea><small>${L('Paste the one line from your .pub file to sign in with your key as well as the password. Never paste a private key. Not for Windows.', 'Tempel satu baris dari file .pub-mu supaya bisa masuk dengan kunci selain password. Jangan pernah menempel kunci privat. Tidak untuk Windows.')}</small></label>
-        ${giftOn ? `<label class="field host-gift">${L('Free domain', 'Domain gratis')}<input type="text" name="domain" value="${esc(domain)}" placeholder="toko.${esc(gift.tlds[0])}" autocomplete="off" autocapitalize="none" spellcheck="false"><small>${L(`With ${num(gift.months)} months or more: one ${tlds} domain, free for its first year; after that it comes with your renewals at ${esc(rp(gift.domainIdr))} per 3 months. Leave it empty for none.`, `Dengan ${num(gift.months)} bulan atau lebih: satu domain ${tlds}, gratis untuk tahun pertamanya; setelah itu ikut perpanjanganmu ${esc(rp(gift.domainIdr))} per 3 bulan. Kosongkan kalau tidak perlu.`)}</small></label>` : ''}
+        ${a.base ? addressFields(a, { free: true, nameIdr: a.nameIdr, domainIdr: a.domainIdr, months: a.months, address: pickAddress, name: addressName, domain: pickAddress === 'gift' ? domain : ownDomain, vps: true, giftIdr: gift.domainIdr, fields: { name: 'addressName', domain: 'ownDomain', gift: 'domain' } }) : ''}
+        ${a.base ? `<p class="fineprint">${L('You sign in at this address, not at the server’s own.', 'Kamu masuk lewat alamat ini, bukan alamat server-nya sendiri.')}</p>` : ''}
         <button class="btn btn-primary" type="submit" data-busy="${L('Opening…', 'Membuka…')}">${L('Order and pay by QRIS', 'Pesan dan bayar dengan QRIS')}</button>
         ${v.setupIdr > 0 ? `<p class="fineprint">${L(`The first payment includes ${esc(rp(v.setupIdr))} to set it up, once, and a system’s licence where it has one: renewals never carry them.`, `Pembayaran pertama sudah termasuk ${esc(rp(v.setupIdr))} biaya pembuatan, sekali saja, dan lisensi sistem kalau ada: perpanjangan tidak pernah memuatnya.`)}</p>` : ''}
-        <p class="fineprint">${L('We check your QRIS payment by hand in 1–5 minutes, make your VPS within 1–2 hours, and email you its IP address and how to sign in.', 'Kami memeriksa pembayaran QRIS-mu secara manual dalam 1–5 menit, membuat VPS-mu dalam 1–2 jam, lalu mengirim alamat IP dan cara masuknya lewat email.')}</p>
+        <p class="fineprint">${L('We check your QRIS payment by hand in 1–5 minutes, make your VPS within 1–2 hours, and email you its address and how to sign in.', 'Kami memeriksa pembayaran QRIS-mu secara manual dalam 1–5 menit, membuat VPS-mu dalam 1–2 jam, lalu mengirim alamat dan cara masuknya lewat email.')}</p>
       </form>`;
   const body = `<!-- hosting:start -->
     ${mine.length ? `<section class="acct-section-plain">
       <div class="section-row"><h2>${L('Your VPS', 'VPS-mu')}</h2><p class="muted-note">${L('We email you 7, 3 and 1 day before each one ends', 'Kami kirim email 7, 3 dan 1 hari sebelum masing-masing habis')} · <a href="/account/receipts">${L('Receipts', 'Kuitansi')}</a></p></div>
-      <div class="host-list">${mine.map((x) => vpsCard(x, systems)).join('')}</div>
+      <div class="host-list">${mine.map((x) => vpsCard(x, systems, a)).join('')}</div>
     </section>` : ''}
     <section class="card acct-section" id="order">
       <div class="section-row"><h2>${L('Order a VPS', 'Pesan VPS')}</h2></div>

@@ -297,7 +297,7 @@ async function vpsPage(flash, extra = {}) {
     draw(view.message({ heading: L('Not available right now', 'Sedang tidak tersedia'), text: problem(r), link: '/account/vps', label: L('Try again', 'Coba lagi') }));
     return;
   }
-  draw(view.vps(o, r.data, { flash, pick: extra.pick || params.get('plan') || '', cycle: extra.cycle || '', template: extra.template || '', name: extra.name || '', domain: extra.domain || '', sshKey: extra.sshKey || '' }));
+  draw(view.vps(o, r.data, { flash, pick: extra.pick || params.get('plan') || '', cycle: extra.cycle || '', template: extra.template || '', name: extra.name || '', domain: extra.domain || '', sshKey: extra.sshKey || '', address: extra.address || '', addressName: extra.addressName || '', ownDomain: extra.ownDomain || '' }));
 }
 
 /** Zeiko Sites: the person's websites and the order form. A refused order
@@ -542,9 +542,23 @@ async function act(name, f, submitter, form) {
     }
     case 'vps-order': {
       const cycle = ['month', 'half', 'year'].includes(f.cycle) ? f.cycle : 'month';
-      const r = await ask('POST', '/vps/order', { plan: f.plan || '', cycle, template: f.template || '', name: f.name || '', password: f.password || '', sshKey: (f.sshKey || '').trim(), domain: f.domain || '', lang: getLang() });
+      const address = ['free', 'name', 'own', 'gift'].includes(f.address) ? f.address : '';
+      // Only the chosen address's field goes: a free domain typed and then
+      // left for another choice is not ordered.
+      const typed = {
+        domain: address === 'gift' || !address ? f.domain || '' : '',
+        addressName: address === 'name' ? f.addressName || '' : '',
+        ownDomain: address === 'own' ? f.ownDomain || '' : '',
+      };
+      const r = await ask('POST', '/vps/order', { plan: f.plan || '', cycle, template: f.template || '', name: f.name || '', password: f.password || '', sshKey: (f.sshKey || '').trim(), address, ...typed, lang: getLang() });
       if (r.status === 200 && r.data && r.data.payment && PAY_ID.test(r.data.payment.id || '')) return location.assign(`/account/pay?id=${encodeURIComponent(r.data.payment.id)}`);
-      return vpsPage(view.flash('err', problem(r)), { pick: f.plan || '', cycle, template: f.template || '', name: f.name || '', domain: f.domain || '', sshKey: f.sshKey || '' });
+      return vpsPage(view.flash('err', problem(r)), { pick: f.plan || '', cycle, template: f.template || '', name: f.name || '', domain: f.domain || '', sshKey: f.sshKey || '', address, addressName: f.addressName || '', ownDomain: f.ownDomain || '' });
+    }
+    case 'vps-address': {
+      if (!PAY_ID.test(f.id || '')) return vpsPage(view.flash('err', L('That VPS was not found.', 'VPS itu tidak ditemukan.')));
+      const address = f.address === 'own' ? 'own' : 'name';
+      const r = await ask('POST', `/vps/${encodeURIComponent(f.id)}/address`, { address, name: f.name || '', domain: f.domain || '' });
+      return toPay(r, vpsPage);
     }
     case 'vps-renew': {
       if (!PAY_ID.test(f.id || '')) return vpsPage(view.flash('err', L('That VPS was not found.', 'VPS itu tidak ditemukan.')));

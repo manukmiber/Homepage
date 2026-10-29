@@ -334,6 +334,19 @@ VPS and S3 — buy, renew, upgrade — paid by QRIS.
   total includes it, and the line under them says so).
   Cards renew (`/renew {cycle}`), upgrade (`/upgrade {plan}`, the same
   `upgradeBlock` as hosting) and cancel an unpaid order.
+- **A VPS's address** (the owner's, 2026-10-29: it hides the server's own,
+  priced like a hosting's): the order form has the same `addressFields`
+  (`free`, `name`, `own`, and the free domain with 6 months or more), its
+  inputs renamed `addressName`, `ownDomain` and `domain` (the free domain)
+  because the form already has a `name`; only the chosen one is sent. The
+  door's `address {base, months, nameIdr, domainIdr}` prices it. A card
+  says the address (a free one only once it answers, `signInAt`), signs in
+  at `panelUser` as the door gives it, tells an own domain to CNAME to
+  `freeAddress`, and has **Change the address** (`addressBlock`, posting
+  `/v1/vps/{id}/address {address: name|own, name, domain}`) or "Moving to
+  …" (`nextDomain`). `/vps` says it under `#domain` with the
+  `hosting:name`, `hosting:domain`, `hosting:move-name` and
+  `hosting:move-domain` keys.
 - **A smaller plan, from the next renewal** (VPS only, the owner's,
   2026-10-29; `downgradeBlock`): a running card with `downgrade: [plans]`
   offers the cheaper plans on sale and posts `/v1/vps/{id}/downgrade {plan}`;

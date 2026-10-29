@@ -676,11 +676,14 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
     // Zeiko VPS: every state, an upgrade offered and one paid, and the order form.
     ...[true, false].map((open) => accountViews.vps(o, {
       open, emailVerified: open, setupIdr: 10000, gift: { months: 6, tlds: [evil, 'my.id'], freeMonths: 12, domainIdr: 5000 },
+      address: { base: evil, months: 3, nameIdr: 3000, domainIdr: 5000 },
       plans: [{ id: evil, name: evil, vcpu: 1, ramGb: 2, diskGb: 20, objectGb: 30, monthIdr: 50000, halfYearIdr: 300000, yearIdr: 560000 }],
       templates: [{ id: evil, name: evil, extraIdr: 0 }, { id: 'windows', name: evil, extraIdr: 20000 }],
       services: [...['ordered', 'paid', 'active', 'suspended', 'deleted', 'cancelled', evil], 'active'].map((status, i) => ({
         id: evil, vpsName: evil, plan: evil, planName: evil, cycle: ['month', 'half', 'year', evil][i % 4], status, payment: evil,
-        panelUser: evil, template: evil, templateName: evil, domain: evil, domainKind: i % 2 ? 'gift' : 'free',
+        panelUser: evil, template: evil, templateName: evil, domain: evil, domainKind: ['free', 'name', 'own', 'gift', evil][i % 5],
+        // Its address of ours: answering or not yet, moving, and a move offered.
+        label: evil, freeAddress: evil, signInAt: i % 3 ? evil : '', nextDomain: i === 3 ? evil : '', move: { nameIdr: 3000, domainIdr: 5000 },
         paidUntil: Date.UTC(2026, 10, 1), deleteAt: Date.UTC(2026, 10, 8),
         spec: { vcpu: 1, ramGb: 2, diskGb: 20, objectGb: 30 },
         renew: {
