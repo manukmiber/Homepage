@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Staging, Git, cron &amp; PHP — Zeiko Docs</title>
+<meta name="description" content="A staging copy of WordPress, deploying from Git, cron jobs, and the PHP version and settings, in cPanel.">
+<meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
+<meta property="og:title" content="Staging, Git, cron &amp; PHP — Zeiko Docs">
+<meta property="og:description" content="A staging copy of WordPress, deploying from Git, cron jobs, and the PHP version and settings, in cPanel.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/mark-32.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/">
+      <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
+      <span class="brand-name">Zeiko</span><span class="brand-doc" aria-hidden="true"> - Staging, Git, cron &amp; PHP</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Main navigation">
+      <a href="/#decision">Pranata V1</a>
+      <a href="/drive">Drive</a>
+      <a href="/hosting">Hosting</a>
+      <a href="/#models">Roleplay</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/models">Models</a>
+      <a href="/docs/" aria-current="page">Docs</a>
+      <a class="nav-account" href="/account">Sign in</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Create account</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <a class="lang-switch" href="/id/docs/hosting-tools" hreflang="id" lang="id" data-lang="id">ID</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Docs">
+      <details class="docs-menu">
+        <summary>Docs menu <span>Put your site online</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/docs/drive">Drive basics</a></li>
+            <li><a href="/docs/drive-plans">Drive plans</a></li>
+            <li><a href="/docs/drive-files">Files &amp; folders</a></li>
+            <li><a href="/docs/drive-sharing">Sharing &amp; downloads</a></li>
+            <li><a href="/docs/drive-safety">Safety &amp; privacy</a></li>
+            <li><a href="/docs/drive-faq">Drive questions</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Drive tools</p>
+          <ul>
+            <li><a href="/docs/drive-tools">Tools &amp; editors</a></li>
+            <li><a href="/docs/drive-photo">Photo editor</a></li>
+            <li><a href="/docs/drive-pdf">PDF tools</a></li>
+            <li><a href="/docs/drive-docs">Documents, sheets &amp; text</a></li>
+            <li><a href="/docs/drive-video">Video editor</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Hosting</p>
+          <ul>
+            <li><a href="/docs/hosting">Hosting basics</a></li>
+            <li><a href="/docs/hosting-domain">Connect your domain</a></li>
+            <li><a href="/docs/hosting-sites">Put your site online</a></li>
+            <li><a href="/docs/hosting-tools" aria-current="page">Staging, Git, cron &amp; PHP</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Get started</p>
+          <ul>
+            <li><a href="/docs/">Introduction</a></li>
+            <li><a href="/docs/account">Your account</a></li>
+            <li><a href="/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Models</p>
+          <ul>
+            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/docs/roleplay">Roleplay models</a></li>
+            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/docs/api">API basics</a></li>
+            <li><a href="/docs/api-decisions">Decisions API</a></li>
+            <li><a href="/docs/api-chat">Chat API</a></li>
+            <li><a href="/docs/faq">Troubleshooting</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/docs/drive">Drive basics</a></li>
+            <li><a href="/docs/drive-plans">Drive plans</a></li>
+            <li><a href="/docs/drive-files">Files &amp; folders</a></li>
+            <li><a href="/docs/drive-sharing">Sharing &amp; downloads</a></li>
+            <li><a href="/docs/drive-safety">Safety &amp; privacy</a></li>
+            <li><a href="/docs/drive-faq">Drive questions</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Drive tools</p>
+          <ul>
+            <li><a href="/docs/drive-tools">Tools &amp; editors</a></li>
+            <li><a href="/docs/drive-photo">Photo editor</a></li>
+            <li><a href="/docs/drive-pdf">PDF tools</a></li>
+            <li><a href="/docs/drive-docs">Documents, sheets &amp; text</a></li>
+            <li><a href="/docs/drive-video">Video editor</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Hosting</p>
+          <ul>
+            <li><a href="/docs/hosting">Hosting basics</a></li>
+            <li><a href="/docs/hosting-domain">Connect your domain</a></li>
+            <li><a href="/docs/hosting-sites">Put your site online</a></li>
+            <li><a href="/docs/hosting-tools" aria-current="page">Staging, Git, cron &amp; PHP</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/docs/">Docs</a> <span aria-hidden="true">/</span> Zeiko Hosting</p>
+<!-- hosting:start -->
+      <h1>Staging, Git, cron &amp; PHP</h1>
+      <p class="lede">The tools behind a site that keeps changing: a copy of WordPress to try things on, deploying from a Git repository, jobs that run on a clock, and the PHP version and settings your site runs with. All of them are in cPanel; sign in first (<a href="/docs/hosting-sites#sign-in">how</a>).</p>
+      <nav class="docs-toc" aria-label="On this page">
+        <p>On this page</p>
+        <ul>
+          <li><a href="#staging">A staging copy of WordPress</a></li>
+          <li><a href="#git">Deploy from Git</a></li>
+          <li><a href="#cron">Cron jobs</a></li>
+          <li><a href="#php">PHP version and settings</a></li>
+        </ul>
+      </nav>
+
+<h2 id="staging">A staging copy of WordPress</h2>
+<p>A staging copy is a second WordPress, with the same posts, theme and plugins, where you can update or change things without your visitors seeing it. When it looks right, you push it to the live site.</p>
+<ol class="steps">
+  <li><strong>Open your installations</strong>In cPanel, open <em>Softaculous Apps Installer</em>, then <em>All Installations</em> (the boxes icon at the top).</li>
+  <li><strong>Make the copy</strong>Beside your WordPress, press the <em>Create Staging</em> icon. Choose a folder such as <code>staging</code>, so the copy opens at <code>yourdomain.com/staging</code>, and press <em>Create Staging</em>.</li>
+  <li><strong>Work on it</strong>Sign in to the copy at <code>yourdomain.com/staging/wp-login.php</code> with the same username and password. Update plugins, change the theme, try what you like.</li>
+  <li><strong>Push it live</strong>Back in <em>All Installations</em>, the copy has a <em>Push to Live</em> icon. Choose what to push (files, the database, or both) and press <em>Push to Live</em>. Softaculous backs up the live site first.</li>
+</ol>
+<p>The copy uses your plan’s space and a database of its own. Delete it from <em>All Installations</em> when you are done.</p>
+
+<h2 id="git">Deploy from Git</h2>
+<p>cPanel keeps a copy of your repository and can put its files into your site each time you update it.</p>
+<ol class="steps">
+  <li><strong>Let cPanel read a private repository</strong>Skip this for a public one. Open <em>SSH Access</em>, <em>Manage SSH Keys</em>, <em>Generate a New Key</em>, and leave the passphrase empty. Open the new public key with <em>View/Download</em> and add it to your repository as a read-only deploy key.</li>
+  <li><strong>Clone it</strong>Open <em>Git Version Control</em> and press <em>Create</em>. Paste the repository’s clone address (for a private one, the SSH address, like <code>git@github.com:you/site.git</code>), choose a folder outside <code>public_html</code>, such as <code>repositories/site</code>, and press <em>Create</em>.</li>
+  <li><strong>Say where its files go</strong>Add a file named <code>.cpanel.yml</code> to the top of the repository, like the one below, with your cPanel username in it. Commit and push it.</li>
+  <li><strong>Deploy</strong>In <em>Git Version Control</em>, press <em>Manage</em> on the repository, open <em>Pull or Deploy</em>, press <em>Update from Remote</em>, then <em>Deploy HEAD Commit</em>.</li>
+</ol>
+<div class="code">
+  <div class="code-bar"><span>.cpanel.yml</span><button class="copy" type="button" data-copy="#code-1">Copy</button></div>
+<pre id="code-1">---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/USERNAME/public_html/
+    - /bin/cp -R index.html css js img $DEPLOYPATH</pre>
+</div>
+<p>List the files and folders your site needs after <code>cp -R</code>. A repository without <code>.cpanel.yml</code> is cloned and updated, but nothing is deployed.</p>
+
+<h2 id="cron">Cron jobs</h2>
+<p>A cron job runs a command on a clock: a nightly cleanup, a newsletter, a report.</p>
+<ol class="steps">
+  <li><strong>Open Cron Jobs</strong>In cPanel, open <em>Cron Jobs</em>.</li>
+  <li><strong>Pick when</strong>Under <em>Add New Cron Job</em>, choose from <em>Common Settings</em> (once an hour, once a day…) or type the minute, hour, day, month and weekday yourself. Times are the server’s.</li>
+  <li><strong>Type the command</strong>Run PHP with its full path, like the first line below, with your cPanel username in it. Press <em>Add New Cron Job</em>.</li>
+</ol>
+<div class="code">
+  <div class="code-bar"><span>command</span><button class="copy" type="button" data-copy="#code-2">Copy</button></div>
+<pre id="code-2">/usr/local/bin/php /home/USERNAME/public_html/cron.php
+cd /home/USERNAME/public_html &amp;&amp; /usr/local/bin/php wp-cron.php &gt;/dev/null 2&gt;&amp;1</pre>
+</div>
+<p>The second line runs WordPress’s own scheduled tasks on the clock instead of on page visits. Use it every 15 minutes, and add <code>define('DISABLE_WP_CRON', true);</code> to <code>wp-config.php</code>. Run a job at most every 5 minutes. Whatever a job prints is emailed to the address under <em>Cron Email</em>; end the command with <code>&gt;/dev/null 2&gt;&amp;1</code> to get no email.</p>
+
+<h2 id="php">PHP version and settings</h2>
+<ol class="steps">
+  <li><strong>Pick the version</strong>In cPanel, open <em>MultiPHP Manager</em> (or <em>Select PHP Version</em>, if that is the one your cPanel shows). Tick your domain, choose the PHP version and press <em>Apply</em>. Each domain can have its own.</li>
+  <li><strong>Change a setting</strong>Open <em>MultiPHP INI Editor</em>, choose your domain, and change what you need, such as <code>upload_max_filesize</code>, <code>post_max_size</code>, <code>memory_limit</code> or <code>max_execution_time</code>. Press <em>Apply</em>.</li>
+</ol>
+<p>Check that your site works after a change of version: a plugin or theme that is too old for a newer PHP shows an error or a blank page. Switch back the same way if it does. A setting cannot go past what your plan gives, such as its RAM.</p>
+<!-- hosting:end -->
+
+      <nav class="docs-pager" aria-label="Previous and next page">
+        <a class="prev" href="/docs/hosting-sites"><small>Previous</small>Put your site online</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> Zeiko</p>
+    <nav aria-label="Footer links">
+      <a href="/">Home</a>
+      <a href="/models">Models</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/drive">Drive</a>
+      <a href="/docs/">Docs</a>
+      <a href="/#contact">Contact</a>
+      <a href="/account">Account</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
+</body>
+</html>

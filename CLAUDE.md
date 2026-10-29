@@ -125,6 +125,12 @@ public/
   vps.html        /vps: Zeiko VPS's plans (typed here, in rupiah), systems, free domain,
                   the way from order to online, FAQ (a static file)
   id/vps.html     /id/vps: the same page in Indonesian
+  sites.html      /sites: Zeiko Sites' school and business packages and the static site
+                  by the GB (typed here, in rupiah), the way from order to online, FAQ
+  id/sites.html   /id/sites: the same page in Indonesian
+  status.html     /status: whether each service answers, filled by src/worker.js from
+                  the status document (src/status.js); "not available" without it
+  id/status.html  /id/status: the same page in Indonesian
   models.html     /models: at-a-glance table, then each model's specs and rate card
   404.html
   _redirects      old /models/<id> links → /models#<id>
@@ -150,6 +156,7 @@ src/
   worker.js       fills /models from the snapshot and /drive from Drive's catalog,
                   sends /dashboard… to Drive's address, answers 404.html for the rest
   render.js       snapshot → HTML for those placeholders; numbers only
+  status.js       the status document → /status's two placeholders; ids and numbers only
   drive.js        Drive's address (DRIVE_URL, driveAddress); Drive's catalog → plan
                   cards (numbers and escaped plan names only) and Zeiko S3's lines
 dev/
@@ -374,6 +381,64 @@ VPS and S3 — buy, renew, upgrade — paid by QRIS.
 - On a phone the account tabs scroll sideways; `app.js::draw` brings the
   open one into the row.
 
+## Zeiko Sites in the account (`/account/sites`), and `/sites`
+
+The owner's (2026-10-28/29): static websites and the school and business
+packages, sold in rupiah by QRIS and **live as soon as the payment is
+checked**, on a free address of their own. Its pages are hosting pages and
+hosting blocks for the check, like `/vps`.
+
+- **`/sites` and `/id/sites`**: every package with `data-price="sites:<id>"`
+  (a year), `:domain` (a year with a free domain) and `:event` (one event,
+  until a day picked), and the static site by the GB (`hosting:static`). The
+  door's `sites.packages` are what is asked: change both together.
+- **The account** (`views.js::sites`, `siteCard`, `siteFiles`,
+  `siteEditor`; `app.js::sitesPage`…): the order form (a package by the
+  year, with a free domain or per event, or static by GB and months; the
+  fields for the choice shown by `:has()`), each site's card (open it,
+  renew, files, edit the page), `/account/sites/files?id=` (upload a folder
+  or files, delete) and `/account/sites/edit?id=` (the template editor). The
+  door is `GET /v1/sites`, `POST /v1/sites/order`, `/{id}/renew`,
+  `/{id}/cancel`, `GET /{id}/files`, `POST /{id}/upload`,
+  `/{id}/files/delete`, and `GET`/`PUT /{id}/content`.
+- **Uploads go straight from the browser to the website's storage**
+  (the owner's, 2026-10-29): the door grants each file at its size and
+  answers a signed address per file; `app.js::sendFiles` PUTs the bytes
+  there, four at a time, and accepts only `https://` addresses. That
+  storage, `https://*.r2.cloudflarestorage.com`, is in the account shell's
+  `connect-src` beside the door, and only there; the check holds the shell
+  to exactly those two and blanks that one string in the shell's scan.
+- **Templates** (`js/account/templates.js`): `homepage`, `gallery`, `links`,
+  `news`, `invite`, `catalog`, `library` (a package's `template`; `upload`
+  is files only). The editor keeps what was typed at the door as one JSON
+  document (`cleanContent`); **Save and publish** builds `index.html`,
+  `style.css` (and `site.js` for the library's search) in the browser
+  (`buildSite`) and uploads them like any file. Everything typed is escaped;
+  a link is a file of the site, http(s), mailto or tel, or nothing; the
+  WhatsApp buttons go to `https://wa.me/<their number>` (the one URL prefix
+  the check lets through, in that file only). The check builds every
+  template from junk and fails on `<script>`, `javascript:` or `../..` in
+  what comes out.
+
+## Receipts (`/account/receipts`)
+
+Every QRIS payment of the person's that was paid out has a PDF receipt, from
+the door (`GET /v1/receipts`; the link is `{door}/v1/payments/{id}/receipt
+?lang=id|en`, opened as a plain link with the visitor's cookie). The page
+lists them; the pay page of a paid payment has **Download the receipt**; the
+Overview's Payments and the hosting, VPS and Sites lists link to it.
+
+## The status page (`/status`, `/id/status`)
+
+Every few minutes the account door's side asks each service once and writes
+`status.json` (ids and numbers only) into the same bucket as the model
+snapshot. `src/worker.js` fills `[data-status-summary]` and
+`[data-status-list]` from it with `src/status.js`, which names each service
+from its own fixed list (`SERVICES`) and draws nothing for an id it does not
+know. A document three rounds late says when it was last checked instead of
+showing old states as current. The check renders it from a sample laced with
+junk text and an unknown id. Never type a figure into the page.
+
 ## Two languages (EN | ID)
 
 Every page is in English and in Indonesian (the operator's, October 2026):
@@ -417,7 +482,7 @@ Every page is in English and in Indonesian (the operator's, October 2026):
   Messages the account door writes come back in its own words (English).
 - **A new page, or a change to one**, is made in both languages in the same
   commit. Every docs page has the same frame (top bar, both docs lists,
-  pager, footer): a change to it goes into all 48 pages, and the two
+  pager, footer): a change to it goes into all 50 pages, and the two
   languages' docs lists and pagers stay the same.
 
 ## Zeiko Accounts (`public/account/`, `public/js/account/`)
@@ -654,12 +719,13 @@ copy, and the snapshot's figures are keyed on it. The display name
 
 ## The docs (`public/docs/`, `public/id/docs/`)
 
-`/docs` is twenty-one plain pages, one per topic, grouped Get started
+`/docs` is twenty-five plain pages, one per topic, grouped Get started
 (`index`, `account`, `playground`), Models (`pranata-v1`, `roleplay`,
 `pricing`), API (`api`, `api-decisions`, `api-chat`, `faq`), Zeiko Drive
 (`drive`, `drive-plans`, `drive-files`, `drive-sharing`, `drive-safety`,
 `drive-faq`) and Drive tools (`drive-tools`, `drive-photo`, `drive-pdf`,
-`drive-docs`, `drive-video`), each with its Indonesian twin
+`drive-docs`, `drive-video`) and Zeiko Hosting (`hosting`, `hosting-domain`,
+`hosting-sites`, `hosting-tools`: staging, Git, cron and PHP), each with its Indonesian twin
 under `/id/docs/`. `/docs/<name>` serves `docs/<name>.html`; `/docs` itself
 goes to `/docs/`. The Zeiko Drive pages are written from the Drive app
 itself (its own words and button names) and sit in Drive blocks; they never

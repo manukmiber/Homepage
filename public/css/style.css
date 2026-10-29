@@ -1793,3 +1793,53 @@ body:has(#win-30d:checked) [data-w="30d"] { display: revert; }
   .drv-tag { display: none; }
   .clock { display: none; }
 }
+
+/* ---------------------------------------------------------------- status */
+/* /status: one sunken well per service, its state, its uptime over three
+   windows and the last 30 days as bars (src/status.js draws them). */
+.status-summary { margin: 16px 0 0; padding: 8px 10px; background: var(--well); box-shadow: var(--thin-sunk); }
+.status-summary.status-good strong { color: var(--ok); }
+.status-summary.status-bad strong { color: var(--err); }
+.status-summary.status-stale { color: var(--warn); font-weight: 700; }
+.status-list { display: grid; gap: 12px; }
+.status-row { padding: 12px 14px; background: var(--well); box-shadow: var(--sunk); }
+.status-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: baseline; justify-content: space-between; }
+.status-head h3 { margin: 0; font-size: 1.05rem; }
+.status-meta { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+.status-up { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 10px 0 8px; }
+.status-up div { display: flex; gap: 6px; align-items: baseline; }
+.status-up dt { color: var(--muted); font-size: 14px; }
+.status-up dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
+.status-days { display: block; width: 100%; height: 22px; }
+.status-days .sd-ok { fill: var(--ok); }
+.status-days .sd-warn { fill: var(--warn); }
+.status-days .sd-bad { fill: var(--err); }
+.status-days .sd-none { fill: var(--grid-line); }
+
+/* -------------------------------------------------------------- sites */
+/* The order form shows what the package picked is sold by: a package by the
+   year, with a free domain or per event; a static site by GB and months. */
+.site-order .site-gb input { max-width: 120px; }
+.site-cycle .site-pkg, .site-cycle .site-static { display: contents; }
+@supports selector(:has(*)) {
+  .site-order .site-static, .site-order .site-until, .site-order .site-gift { display: none; }
+  .site-order:has(input[name="package"][value="static"]:checked) .site-static { display: contents; }
+  .site-order:has(input[name="package"][value="static"]:checked) label.site-static { display: grid; }
+  .site-order:has(input[name="package"][value="static"]:checked) .site-pkg label:not(:first-child) { display: none; }
+  .site-order:has(input[name="cycle"][value="event"]:checked):not(:has(input[name="package"][value="static"]:checked)) .site-until { display: grid; }
+  .site-order:has(input[name="cycle"][value="domain"]:checked):not(:has(input[name="package"][value="static"]:checked)) .site-gift { display: grid; }
+  .site-order:has(input[name="cycle"][value="domain"]:checked) .site-own { display: none; }
+}
+.site-item { display: grid; gap: 8px; margin: 0 0 12px; padding: 10px 12px; border: 0; background: var(--well); box-shadow: var(--sunk); }
+.site-item legend { padding: 0 4px; font-weight: 700; }
+.site-editor .acct-section { display: grid; gap: 12px; }
+.site-editor input[type="color"] { width: 64px; height: 32px; padding: 0; }
+.site-editor textarea { width: 100%; }
+.site-progress { margin: 0; color: var(--muted); font-variant-numeric: tabular-nums; }
+.site-progress:empty { display: none; }
+.site-files { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; background: var(--well); box-shadow: var(--sunk); }
+.site-files li { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: baseline; padding: 8px 10px; border-bottom: 1px solid var(--grid-line); }
+.site-files li:last-child { border-bottom: 0; }
+.site-files .check { flex: 1 1 200px; min-width: 0; }
+.site-files code { overflow-wrap: anywhere; }
+.site-files .muted-note { margin: 0; font-size: 14px; }

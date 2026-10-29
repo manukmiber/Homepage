@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Staging, Git, cron &amp; PHP — Dokumentasi Zeiko</title>
+<meta name="description" content="Salinan staging WordPress, deploy dari Git, cron job, serta versi dan pengaturan PHP, di cPanel.">
+<meta name="color-scheme" content="light dark">
+<!-- The top bar asks this address who is signed in. -->
+<meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
+<meta property="og:title" content="Staging, Git, cron &amp; PHP — Dokumentasi Zeiko">
+<meta property="og:description" content="Salinan staging WordPress, deploy dari Git, cron job, serta versi dan pengaturan PHP, di cPanel.">
+<meta property="og:type" content="article">
+<link rel="icon" href="/img/mark-32.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<a class="skip" href="#doc">Langsung ke isi</a>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/id/">
+      <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
+      <span class="brand-name">Zeiko</span><span class="brand-doc" aria-hidden="true"> - Staging, Git, cron &amp; PHP</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Navigasi utama">
+      <a href="/id/#decision">Pranata V1</a>
+      <a href="/id/drive">Drive</a>
+      <a href="/id/hosting">Hosting</a>
+      <a href="/id/#models">Roleplay</a>
+      <a href="/id/#pricing">Harga</a>
+      <a href="/id/models">Model</a>
+      <a href="/id/docs/" aria-current="page">Dokumentasi</a>
+      <a class="nav-account" href="/account">Masuk</a>
+      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Buat akun</a>
+    </nav>
+
+    <div class="topbar-tools">
+      <a class="lang-switch" href="/docs/hosting-tools" hreflang="en" lang="en" data-lang="en">EN</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Ganti tema terang dan gelap">
+        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="nav">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="docs">
+  <div class="wrap docs-in">
+    <nav class="docs-side" aria-label="Dokumentasi">
+      <details class="docs-menu">
+        <summary>Menu dokumentasi <span>Online-kan situsmu</span></summary>
+        <div class="docs-group">
+          <p class="docs-group-title">Mulai</p>
+          <ul>
+            <li><a href="/id/docs/">Pengantar</a></li>
+            <li><a href="/id/docs/account">Akunmu</a></li>
+            <li><a href="/id/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Model AI</p>
+          <ul>
+            <li><a href="/id/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
+            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/id/docs/api">Dasar API</a></li>
+            <li><a href="/id/docs/api-decisions">API Keputusan</a></li>
+            <li><a href="/id/docs/api-chat">API Chat</a></li>
+            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive">Dasar Drive</a></li>
+            <li><a href="/id/docs/drive-plans">Paket Drive</a></li>
+            <li><a href="/id/docs/drive-files">File &amp; folder</a></li>
+            <li><a href="/id/docs/drive-sharing">Berbagi &amp; unduhan</a></li>
+            <li><a href="/id/docs/drive-safety">Keamanan &amp; privasi</a></li>
+            <li><a href="/id/docs/drive-faq">Tanya jawab Drive</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Alat Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive-tools">Alat &amp; editor</a></li>
+            <li><a href="/id/docs/drive-photo">Editor foto</a></li>
+            <li><a href="/id/docs/drive-pdf">Alat PDF</a></li>
+            <li><a href="/id/docs/drive-docs">Dokumen, spreadsheet &amp; teks</a></li>
+            <li><a href="/id/docs/drive-video">Editor video</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Hosting</p>
+          <ul>
+            <li><a href="/id/docs/hosting">Dasar hosting</a></li>
+            <li><a href="/id/docs/hosting-domain">Sambungkan domain</a></li>
+            <li><a href="/id/docs/hosting-sites">Online-kan situsmu</a></li>
+            <li><a href="/id/docs/hosting-tools" aria-current="page">Staging, Git, cron &amp; PHP</a></li>
+          </ul>
+        </div>
+      </details>
+      <div class="docs-list">
+        <div class="docs-group">
+          <p class="docs-group-title">Mulai</p>
+          <ul>
+            <li><a href="/id/docs/">Pengantar</a></li>
+            <li><a href="/id/docs/account">Akunmu</a></li>
+            <li><a href="/id/docs/playground">Playground</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Model AI</p>
+          <ul>
+            <li><a href="/id/docs/pranata-v1">Pranata V1</a></li>
+            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
+            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">API</p>
+          <ul>
+            <li><a href="/id/docs/api">Dasar API</a></li>
+            <li><a href="/id/docs/api-decisions">API Keputusan</a></li>
+            <li><a href="/id/docs/api-chat">API Chat</a></li>
+            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive">Dasar Drive</a></li>
+            <li><a href="/id/docs/drive-plans">Paket Drive</a></li>
+            <li><a href="/id/docs/drive-files">File &amp; folder</a></li>
+            <li><a href="/id/docs/drive-sharing">Berbagi &amp; unduhan</a></li>
+            <li><a href="/id/docs/drive-safety">Keamanan &amp; privasi</a></li>
+            <li><a href="/id/docs/drive-faq">Tanya jawab Drive</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Alat Drive</p>
+          <ul>
+            <li><a href="/id/docs/drive-tools">Alat &amp; editor</a></li>
+            <li><a href="/id/docs/drive-photo">Editor foto</a></li>
+            <li><a href="/id/docs/drive-pdf">Alat PDF</a></li>
+            <li><a href="/id/docs/drive-docs">Dokumen, spreadsheet &amp; teks</a></li>
+            <li><a href="/id/docs/drive-video">Editor video</a></li>
+          </ul>
+        </div>
+        <div class="docs-group">
+          <p class="docs-group-title">Zeiko Hosting</p>
+          <ul>
+            <li><a href="/id/docs/hosting">Dasar hosting</a></li>
+            <li><a href="/id/docs/hosting-domain">Sambungkan domain</a></li>
+            <li><a href="/id/docs/hosting-sites">Online-kan situsmu</a></li>
+            <li><a href="/id/docs/hosting-tools" aria-current="page">Staging, Git, cron &amp; PHP</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <article class="docs-main prose" id="doc">
+      <p class="crumbs"><a href="/id/docs/">Dokumentasi</a> <span aria-hidden="true">/</span> Zeiko Hosting</p>
+<!-- hosting:start -->
+      <h1>Staging, Git, cron &amp; PHP</h1>
+      <p class="lede">Alat untuk situs yang terus berubah: salinan WordPress untuk mencoba, deploy dari repositori Git, tugas yang berjalan terjadwal, serta versi dan pengaturan PHP situsmu. Semuanya ada di cPanel; masuk dulu (<a href="/id/docs/hosting-sites#sign-in">caranya</a>).</p>
+      <nav class="docs-toc" aria-label="Di halaman ini">
+        <p>Di halaman ini</p>
+        <ul>
+          <li><a href="#staging">Salinan staging WordPress</a></li>
+          <li><a href="#git">Deploy dari Git</a></li>
+          <li><a href="#cron">Cron job</a></li>
+          <li><a href="#php">Versi dan pengaturan PHP</a></li>
+        </ul>
+      </nav>
+
+<h2 id="staging">Salinan staging WordPress</h2>
+<p>Salinan staging adalah WordPress kedua, dengan tulisan, tema, dan plugin yang sama, tempat kamu bisa memperbarui atau mengubah sesuatu tanpa terlihat pengunjung. Kalau sudah pas, kamu dorong ke situs utama.</p>
+<ol class="steps">
+  <li><strong>Buka daftar instalasimu</strong>Di cPanel, buka <em>Softaculous Apps Installer</em>, lalu <em>All Installations</em> (ikon kotak-kotak di atas).</li>
+  <li><strong>Buat salinannya</strong>Di samping WordPress-mu, tekan ikon <em>Create Staging</em>. Pilih folder seperti <code>staging</code>, supaya salinannya terbuka di <code>domainmu.com/staging</code>, lalu tekan <em>Create Staging</em>.</li>
+  <li><strong>Kerjakan di sana</strong>Masuk ke salinannya di <code>domainmu.com/staging/wp-login.php</code> dengan username dan password yang sama. Perbarui plugin, ganti tema, coba apa saja.</li>
+  <li><strong>Dorong ke situs utama</strong>Kembali ke <em>All Installations</em>, salinannya punya ikon <em>Push to Live</em>. Pilih apa yang didorong (file, basis data, atau keduanya) lalu tekan <em>Push to Live</em>. Softaculous mencadangkan situs utama dulu.</li>
+</ol>
+<p>Salinannya memakai ruang paketmu dan basis data sendiri. Hapus dari <em>All Installations</em> kalau sudah selesai.</p>
+
+<h2 id="git">Deploy dari Git</h2>
+<p>cPanel menyimpan salinan repositorimu dan bisa memasang file-nya ke situsmu setiap kali kamu memperbaruinya.</p>
+<ol class="steps">
+  <li><strong>Izinkan cPanel membaca repositori privat</strong>Lewati untuk repositori publik. Buka <em>SSH Access</em>, <em>Manage SSH Keys</em>, <em>Generate a New Key</em>, dan biarkan passphrase kosong. Buka kunci publik barunya dengan <em>View/Download</em> lalu tambahkan ke repositorimu sebagai deploy key yang hanya bisa membaca.</li>
+  <li><strong>Clone repositorinya</strong>Buka <em>Git Version Control</em> lalu tekan <em>Create</em>. Tempel alamat clone repositorinya (untuk yang privat, alamat SSH, misalnya <code>git@github.com:kamu/situs.git</code>), pilih folder di luar <code>public_html</code>, misalnya <code>repositories/situs</code>, lalu tekan <em>Create</em>.</li>
+  <li><strong>Tentukan ke mana file-nya</strong>Tambahkan file bernama <code>.cpanel.yml</code> di bagian teratas repositori, seperti di bawah, dengan username cPanel-mu. Commit dan push.</li>
+  <li><strong>Deploy</strong>Di <em>Git Version Control</em>, tekan <em>Manage</em> pada repositorinya, buka <em>Pull or Deploy</em>, tekan <em>Update from Remote</em>, lalu <em>Deploy HEAD Commit</em>.</li>
+</ol>
+<div class="code">
+  <div class="code-bar"><span>.cpanel.yml</span><button class="copy" type="button" data-copy="#code-1">Salin</button></div>
+<pre id="code-1">---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/USERNAME/public_html/
+    - /bin/cp -R index.html css js img $DEPLOYPATH</pre>
+</div>
+<p>Tulis file dan folder yang dibutuhkan situsmu setelah <code>cp -R</code>. Repositori tanpa <code>.cpanel.yml</code> tetap di-clone dan diperbarui, tetapi tidak ada yang di-deploy.</p>
+
+<h2 id="cron">Cron job</h2>
+<p>Cron job menjalankan perintah sesuai jadwal: pembersihan tiap malam, newsletter, laporan.</p>
+<ol class="steps">
+  <li><strong>Buka Cron Jobs</strong>Di cPanel, buka <em>Cron Jobs</em>.</li>
+  <li><strong>Pilih kapan</strong>Di <em>Add New Cron Job</em>, pilih dari <em>Common Settings</em> (sejam sekali, sehari sekali…) atau ketik sendiri menit, jam, tanggal, bulan, dan hari. Waktunya mengikuti server.</li>
+  <li><strong>Ketik perintahnya</strong>Jalankan PHP dengan path lengkapnya, seperti baris pertama di bawah, dengan username cPanel-mu. Tekan <em>Add New Cron Job</em>.</li>
+</ol>
+<div class="code">
+  <div class="code-bar"><span>perintah</span><button class="copy" type="button" data-copy="#code-2">Salin</button></div>
+<pre id="code-2">/usr/local/bin/php /home/USERNAME/public_html/cron.php
+cd /home/USERNAME/public_html &amp;&amp; /usr/local/bin/php wp-cron.php &gt;/dev/null 2&gt;&amp;1</pre>
+</div>
+<p>Baris kedua menjalankan tugas terjadwal WordPress sesuai jadwal, bukan setiap ada pengunjung. Pakai setiap 15 menit, dan tambahkan <code>define('DISABLE_WP_CRON', true);</code> ke <code>wp-config.php</code>. Jalankan job paling sering 5 menit sekali. Apa pun yang ditampilkan job dikirim ke alamat di <em>Cron Email</em>; akhiri perintah dengan <code>&gt;/dev/null 2&gt;&amp;1</code> supaya tidak ada email.</p>
+
+<h2 id="php">Versi dan pengaturan PHP</h2>
+<ol class="steps">
+  <li><strong>Pilih versinya</strong>Di cPanel, buka <em>MultiPHP Manager</em> (atau <em>Select PHP Version</em>, kalau itu yang tampil di cPanel-mu). Centang domainmu, pilih versi PHP, lalu tekan <em>Apply</em>. Setiap domain bisa punya versi sendiri.</li>
+  <li><strong>Ubah pengaturan</strong>Buka <em>MultiPHP INI Editor</em>, pilih domainmu, lalu ubah yang perlu, seperti <code>upload_max_filesize</code>, <code>post_max_size</code>, <code>memory_limit</code>, atau <code>max_execution_time</code>. Tekan <em>Apply</em>.</li>
+</ol>
+<p>Cek situsmu setelah ganti versi: plugin atau tema yang terlalu tua untuk PHP yang lebih baru menampilkan error atau halaman kosong. Kalau begitu, kembalikan dengan cara yang sama. Pengaturan tidak bisa melebihi yang diberikan paketmu, seperti RAM-nya.</p>
+<!-- hosting:end -->
+
+      <nav class="docs-pager" aria-label="Halaman sebelum dan sesudah">
+        <a class="prev" href="/id/docs/hosting-sites"><small>Sebelumnya</small>Online-kan situsmu</a>
+      </nav>
+    </article>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-in">
+    <p>© <span id="year">2026</span> Zeiko</p>
+    <nav aria-label="Tautan bawah">
+      <a href="/id/">Beranda</a>
+      <a href="/id/models">Model</a>
+      <a href="/id/#pricing">Harga</a>
+      <a href="/id/drive">Drive</a>
+      <a href="/id/docs/">Dokumentasi</a>
+      <a href="/id/#contact">Kontak</a>
+      <a href="/account">Akun</a>
+    </nav>
+  </div>
+</footer>
+
+<script src="/js/main.js"></script>
+<script type="module" src="/js/account/session.js"></script>
+</body>
+</html>

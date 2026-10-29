@@ -8,6 +8,7 @@ import { PAY_GUIDE_ID } from './payguide.id.js';
 import { displayName, esc, meLink } from './me.js';
 import { L, day, getLang, num } from './lang.js';
 import { CITIES } from './cities.js';
+import { FIELD_LABEL, TEMPLATES } from './templates.js';
 
 export { esc };
 
@@ -235,12 +236,19 @@ const tabs = () => [
   ['plans', '/account/plans', L('Plans & balance', 'Paket & saldo')],
   ['hosting', '/account/hosting', 'Hosting'],
   ['vps', '/account/vps', 'VPS'],
+  ['sites', '/account/sites', L('Sites', 'Situs')],
   ['s3', '/account/s3', 'S3'],
   ['key', '/account/key', L('API key', 'Kunci API')],
   ['settings', '/account/settings', L('Settings', 'Pengaturan')],
 ];
 // Account pages that are not tabs: reached by a link, titled here.
-const pages = () => ({ howtobuy: L('How to pay', 'Cara membayar'), pay: L('Pay by QRIS', 'Bayar dengan QRIS') });
+const pages = () => ({
+  howtobuy: L('How to pay', 'Cara membayar'),
+  pay: L('Pay by QRIS', 'Bayar dengan QRIS'),
+  receipts: L('Receipts', 'Kuitansi'),
+  sitefiles: L('Website files', 'File situs'),
+  siteedit: L('Edit your website', 'Edit situsmu'),
+});
 
 function verifyBanner(a) {
   return `<div class="verify" role="status">
@@ -441,7 +449,7 @@ export function overview(o, flash) {
       ${usageChart(o.daily)}
     </section>
     <section class="card acct-section">
-      <div class="section-row"><h2>${L('Payments', 'Pembayaran')}</h2><span class="row-links"><a class="btn-link" href="/account/how-to-buy">${L('How to pay', 'Cara membayar')}</a><a class="btn btn-ghost btn-sm" href="/account/plans">${L('Buy a plan or add balance', 'Beli paket atau isi saldo')}</a></span></div>
+      <div class="section-row"><h2>${L('Payments', 'Pembayaran')}</h2><span class="row-links"><a class="btn-link" href="/account/receipts">${L('Receipts', 'Kuitansi')}</a><a class="btn-link" href="/account/how-to-buy">${L('How to pay', 'Cara membayar')}</a><a class="btn btn-ghost btn-sm" href="/account/plans">${L('Buy a plan or add balance', 'Beli paket atau isi saldo')}</a></span></div>
       ${payments(o.payments)}
     </section>`;
   return shell('overview', o, body, flash);
@@ -782,7 +790,7 @@ export function hosting(o, h, { flash, pick = '', domain = '', address = '', nam
       </form>`;
   const body = `<!-- hosting:start -->
     ${mine.length ? `<section class="acct-section-plain">
-      <div class="section-row"><h2>${L('Your hosting', 'Hosting-mu')}</h2><p class="muted-note">${L('We email you 7, 3 and 1 day before each one ends', 'Kami kirim email 7, 3 dan 1 hari sebelum masing-masing habis')}</p></div>
+      <div class="section-row"><h2>${L('Your hosting', 'Hosting-mu')}</h2><p class="muted-note">${L('We email you 7, 3 and 1 day before each one ends', 'Kami kirim email 7, 3 dan 1 hari sebelum masing-masing habis')} · <a href="/account/receipts">${L('Receipts', 'Kuitansi')}</a></p></div>
       <div class="host-list">${mine.map((x) => hostingCard(x, h)).join('')}</div>
     </section>` : ''}
     <section class="card acct-section" id="order">
@@ -993,7 +1001,7 @@ export function vps(o, v, { flash, pick = '', cycle = '', template = '', name = 
       </form>`;
   const body = `<!-- hosting:start -->
     ${mine.length ? `<section class="acct-section-plain">
-      <div class="section-row"><h2>${L('Your VPS', 'VPS-mu')}</h2><p class="muted-note">${L('We email you 7, 3 and 1 day before each one ends', 'Kami kirim email 7, 3 dan 1 hari sebelum masing-masing habis')}</p></div>
+      <div class="section-row"><h2>${L('Your VPS', 'VPS-mu')}</h2><p class="muted-note">${L('We email you 7, 3 and 1 day before each one ends', 'Kami kirim email 7, 3 dan 1 hari sebelum masing-masing habis')} · <a href="/account/receipts">${L('Receipts', 'Kuitansi')}</a></p></div>
       <div class="host-list">${mine.map((x) => vpsCard(x, systems)).join('')}</div>
     </section>` : ''}
     <section class="card acct-section" id="order">
@@ -1016,6 +1024,297 @@ export function s3(o, flash) {
     </section>
 <!-- hosting:end -->`;
   return shell('s3', o, body, flash);
+}
+
+// hosting:start
+/* --------------------------------------------------------------- sites */
+// Zeiko Sites: static websites and the school and business packages, from
+// the door (`GET /v1/sites`). A paid static site is live at once at its
+// address; its files go straight from this browser to its folder (app.js),
+// and a package's site can be made from a template (templates.js) instead.
+
+const siteStatus = () => ({
+  ordered: [L('Waiting for payment', 'Menunggu pembayaran'), 'warn'],
+  paid: [L('Being made', 'Sedang dibuat'), 'status'],
+  active: [L('Online', 'Online'), 'ok'],
+  suspended: [L('Offline: ended', 'Offline: habis'), 'err'],
+  deleted: [L('Deleted', 'Dihapus'), ''],
+  cancelled: [L('Cancelled', 'Dibatalkan'), ''],
+});
+
+/** Bytes as the page says them: "1,5 GB", "320 MB". */
+const bytesText = (n) => {
+  const v = Number(n) || 0;
+  if (v >= 1024 ** 3) return gb(v / 1024 ** 3);
+  if (v >= 1024 ** 2) return `${num(Math.ceil(v / 1024 ** 2))} MB`;
+  return `${num(Math.ceil(v / 1024))} KB`;
+};
+
+/** What a package costs, on one line. */
+function packagePrices(p) {
+  return [
+    p.yearIdr ? `${esc(rp(p.yearIdr))}/${L('year', 'tahun')}` : '',
+    p.yearDomainIdr ? `${L('with a free domain', 'dengan domain gratis')} ${esc(rp(p.yearDomainIdr))}/${L('year', 'tahun')}` : '',
+    p.eventIdr ? `${L('per event', 'per acara')} ${esc(rp(p.eventIdr))}` : '',
+  ].filter(Boolean).join(' · ');
+}
+
+function siteCard(x, s) {
+  const [label, tone] = x.blocked ? [L('Taken down', 'Diturunkan'), 'err'] : siteStatus()[x.status] || [x.status, ''];
+  const tpl = TEMPLATES()[x.template];
+  const pkg = (s.packages || []).find((p) => p.id === x.package);
+  const isStatic = x.engine !== 'cpanel';
+  let line = '';
+  let act = '';
+  let more = '';
+  if (x.blocked) {
+    line = L('This website was taken down after a report. Chat WhatsApp +62 819-3241-6096 about it.', 'Situs ini diturunkan setelah ada laporan. Hubungi WhatsApp +62 819-3241-6096 soal ini.');
+  } else if (x.status === 'ordered') {
+    line = L('Pay its QRIS to put it online. An unpaid order is dropped after a few days.', 'Bayar QRIS-nya supaya situsnya online. Pesanan yang tidak dibayar dihapus setelah beberapa hari.');
+    act = `${x.payment ? `<a class="btn btn-primary btn-sm" href="/account/pay?id=${encodeURIComponent(x.payment)}">${L('Open QR', 'Buka QR')}</a>` : ''}
+      <form data-act="sites-cancel"><input type="hidden" name="id" value="${esc(x.id)}"><button class="btn-link" type="submit" data-busy="…">${L('Cancel order', 'Batalkan pesanan')}</button></form>`;
+  } else if (x.status === 'paid') {
+    line = L('Paid — we are making it on the hosting panel, usually within 1–2 hours. How to sign in comes by email.', 'Sudah dibayar — sedang kami buat di panel hosting, biasanya dalam 1–2 jam. Cara masuknya dikirim lewat email.');
+  } else if (x.status === 'active' || x.status === 'suspended') {
+    const until = x.cycle === 'event'
+      ? L(`Online until the end of <strong>${esc(day(x.paidUntil))}</strong>.`, `Online sampai akhir <strong>${esc(day(x.paidUntil))}</strong>.`)
+      : L(`Online until <strong>${esc(day(x.paidUntil))}</strong>. Renew before then; a day after it ends it goes offline, and a week after its files are deleted.`, `Online sampai <strong>${esc(day(x.paidUntil))}</strong>. Perpanjang sebelum itu; sehari setelah habis situsnya offline, dan seminggu setelahnya file-nya dihapus.`);
+    line = x.status === 'active' ? until : L(`Offline since it ended on ${esc(day(x.paidUntil))}. Renew soon or its files are deleted.`, `Offline karena habis ${esc(day(x.paidUntil))}. Segera perpanjang atau file-nya dihapus.`);
+    if (isStatic && x.status === 'active') {
+      act = `<a class="btn btn-primary btn-sm" href="${esc(x.url)}" rel="noopener">${L('Open the website', 'Buka situsnya')}</a>
+        ${tpl ? `<a class="btn btn-sm" href="/account/sites/edit?id=${encodeURIComponent(x.id)}">${L('Edit the page', 'Edit halaman')}</a>` : ''}
+        <a class="btn btn-ghost btn-sm" href="/account/sites/files?id=${encodeURIComponent(x.id)}">${L('Files', 'File')}</a>`;
+    } else if (x.panelUser) {
+      act = `<span class="muted-note">cPanel <code>${esc(x.panelUser)}</code></span>`;
+    }
+    // Renewing: a package by the year (with its free domain, if it has one) or
+    // to a later day; a static site by GB and months.
+    const renew = [];
+    if (x.package === 'static') {
+      const gbNow = Math.max(s.static ? s.static.minGb : 1, Math.round(((x.quotaBytes || 0) / 1024 ** 3) * 2) / 2);
+      renew.push(`<form data-act="sites-renew" class="host-renew">
+        <input type="hidden" name="id" value="${esc(x.id)}">
+        <label class="field site-gb">GB<input type="number" name="gb" value="${esc(gbNow)}" min="${esc(s.static ? s.static.minGb : 1)}" max="${esc(s.static ? s.static.maxGb : 50)}" step="0.5" required></label>
+        <button class="btn btn-primary btn-sm" type="submit" name="cycle" value="month" data-busy="${L('Opening…', 'Membuka…')}">${L('Renew a month', 'Perpanjang sebulan')}</button>
+        <button class="btn btn-ghost btn-sm" type="submit" name="cycle" value="half" data-busy="${L('Opening…', 'Membuka…')}">${L('6 months', '6 bulan')}</button>
+        <button class="btn btn-ghost btn-sm" type="submit" name="cycle" value="year" data-busy="${L('Opening…', 'Membuka…')}">${L('A year', 'Setahun')}</button>
+      </form>`);
+    } else if (pkg) {
+      const yearIdr = x.domainKind === 'gift' ? pkg.yearDomainIdr : pkg.yearIdr;
+      if (yearIdr && x.cycle !== 'event') {
+        renew.push(`<form data-act="sites-renew" class="host-renew"><input type="hidden" name="id" value="${esc(x.id)}"><button class="btn btn-primary btn-sm" type="submit" name="cycle" value="year" data-busy="${L('Opening…', 'Membuka…')}">${L('Renew a year', 'Perpanjang setahun')} · ${esc(rp(yearIdr))}</button></form>`);
+      }
+      if (pkg.eventIdr && x.cycle === 'event') {
+        renew.push(`<form data-act="sites-renew" class="host-renew"><input type="hidden" name="id" value="${esc(x.id)}"><input type="hidden" name="cycle" value="event">
+          <label class="field">${L('Keep it online until', 'Tetap online sampai')}<input type="date" name="until" required></label>
+          <button class="btn btn-primary btn-sm" type="submit" data-busy="${L('Opening…', 'Membuka…')}">${L('Extend', 'Perpanjang')} · ${esc(rp(pkg.eventIdr))}</button></form>`);
+      }
+    }
+    if (renew.length) more += renew.join('');
+  }
+  if (x.domainKind === 'gift' && x.domain && !x.domainReady && x.status !== 'ordered') {
+    more += `<p class="muted-note">${L(`Your free domain <strong>${esc(x.domain)}</strong> is being registered; until then the website is at ${esc(x.host)}. We email you when it is ready.`, `Domain gratismu <strong>${esc(x.domain)}</strong> sedang didaftarkan; sampai saat itu situsnya ada di ${esc(x.host)}. Kami kirim email kalau sudah siap.`)}</p>`;
+  }
+  if (x.domainKind === 'own' && x.status === 'active') {
+    more += `<p class="muted-note">${L(`Point <strong>${esc(x.domain)}</strong> at it with a CNAME record to <code>${esc(x.label)}.${esc(s.base || '')}</code> at your domain’s DNS.`, `Arahkan <strong>${esc(x.domain)}</strong> ke situs ini dengan record CNAME ke <code>${esc(x.label)}.${esc(s.base || '')}</code> di DNS domainmu.`)} <a href="${L('/docs/hosting-sites', '/id/docs/hosting-sites')}">${L('How', 'Caranya')}</a></p>`;
+  }
+  const space = isStatic && x.quotaBytes && (x.status === 'active' || x.status === 'suspended') ? `<p class="muted-note">${L(`${esc(bytesText(x.usedBytes))} of ${esc(bytesText(x.quotaBytes))} used`, `${esc(bytesText(x.usedBytes))} dari ${esc(bytesText(x.quotaBytes))} terpakai`)}</p>${bar((x.usedBytes || 0) / x.quotaBytes)}` : '';
+  return `<article class="card host-item">
+    <div class="section-row"><h3>${esc(x.domainKind === 'gift' && x.domainReady ? x.domain : x.host)}</h3><span class="tag tag-${esc(tone)}">${esc(label)}</span></div>
+    <p class="muted-note">${esc(x.packageName)}${tpl ? ` · ${esc(tpl.name)}` : ''}</p>
+    ${line ? `<p>${line}</p>` : ''}
+    ${space}
+    ${act ? `<div class="row-links">${act}</div>` : ''}
+    ${more}
+  </article>`;
+}
+
+export function sites(o, s, { flash, pick = '', cycle = '', gb: gbTyped = '', until = '', domain = '', ownDomain = '' }) {
+  const packages = (s && s.packages) || [];
+  const open = Boolean(s && s.open);
+  const mine = (s && s.sites) || [];
+  const st = (s && s.static) || {};
+  const ids = [...packages.map((p) => p.id), 'static'];
+  const chosen = ids.includes(pick) ? pick : (packages[0] || { id: 'static' }).id;
+  const tlds = ((s && s.giftTlds) || []).map((t) => `.${esc(t)}`).join(', ');
+  const tpls = TEMPLATES();
+  const options = packages.map((p) => `<label class="host-option">
+      <input type="radio" name="package" value="${esc(p.id)}"${p.id === chosen ? ' checked' : ''} required>
+      <span class="host-option-body">
+        <strong>${esc(p.name)}</strong>
+        <span class="host-option-price">${packagePrices(p)}</span>
+        <span class="muted-note">${p.engine === 'cpanel' ? L('PHP and MySQL in cPanel, made by hand', 'PHP dan MySQL di cPanel, dibuat manual') : esc(tpls[p.template] ? tpls[p.template].name : L('Upload your own files', 'Unggah file sendiri'))} · ${esc(gb(p.quotaGb))}</span>
+      </span>
+    </label>`).join('');
+  const staticOption = `<label class="host-option">
+      <input type="radio" name="package" value="static"${chosen === 'static' ? ' checked' : ''} required>
+      <span class="host-option-body">
+        <strong>${L('Static website by the GB', 'Situs statis per GB')}</strong>
+        <span class="host-option-price">${esc(rp(st.perGbMonthIdr))} ${L('per GB a month', 'per GB per bulan')}</span>
+        <span class="muted-note">${L(`Your own HTML, CSS, JavaScript and files, ${num(st.minGb || 1)} to ${num(st.maxGb || 50)} GB`, `HTML, CSS, JavaScript dan file milikmu sendiri, ${num(st.minGb || 1)} sampai ${num(st.maxGb || 50)} GB`)}</span>
+      </span>
+    </label>`;
+  const per = ['year', 'domain', 'event', 'month', 'half'].includes(cycle) ? cycle : 'year';
+  const verified = Boolean(s && s.emailVerified);
+  const form = !open
+    ? alert('warn', L('Website orders are not open yet. Please try again later.', 'Pemesanan situs belum dibuka. Coba lagi nanti.'))
+    : !verified
+      ? alert('warn', L('Confirm your email address first: your website’s details are sent there.', 'Konfirmasi alamat email-mu dulu: detail situsmu dikirim ke sana.'))
+      : `<form data-act="sites-order" class="host-order site-order">
+        <fieldset class="host-choose"><legend>${L('Package', 'Paket')}</legend>${options}${staticOption}</fieldset>
+        <fieldset class="funds-way site-cycle"><legend>${L('How long', 'Berapa lama')}</legend>
+          <span class="site-pkg"><label><input type="radio" name="cycle" value="year"${per === 'year' ? ' checked' : ''}> ${L('A year', 'Setahun')}</label>
+          <label><input type="radio" name="cycle" value="domain"${per === 'domain' ? ' checked' : ''}> ${L('A year with a free domain', 'Setahun dengan domain gratis')}</label>
+          <label><input type="radio" name="cycle" value="event"${per === 'event' ? ' checked' : ''}> ${L('One event or project', 'Satu acara atau proyek')}</label></span>
+          <span class="site-static"><label><input type="radio" name="cycle" value="month"${per === 'month' ? ' checked' : ''}> ${L('Monthly', 'Bulanan')}</label>
+          <label><input type="radio" name="cycle" value="half"${per === 'half' ? ' checked' : ''}> ${L('6 months', '6 bulan')}</label></span>
+        </fieldset>
+        <label class="field site-static site-gb">${L('Space, GB', 'Ruang, GB')}<input type="number" name="gb" value="${esc(gbTyped || st.minGb || 1)}" min="${esc(st.minGb || 1)}" max="${esc(st.maxGb || 50)}" step="0.5"><small>${L('By the half GB. A static site’s “A year” is twelve months.', 'Per setengah GB. “Setahun” untuk situs statis adalah dua belas bulan.')}</small></label>
+        <label class="field site-until">${L('Online until', 'Online sampai')}<input type="date" name="until" value="${esc(until)}"><small>${L(`The last day it should be online, within ${num(s.eventMaxDays || 180)} days.`, `Hari terakhir situsnya online, paling lama ${num(s.eventMaxDays || 180)} hari.`)}</small></label>
+        <label class="field site-gift">${L('Free domain', 'Domain gratis')}<input type="text" name="domain" value="${esc(domain)}" placeholder="namasekolah${tlds ? esc((s.giftTlds || [])[0] ? `.${s.giftTlds[0]}` : '') : ''}" autocomplete="off" autocapitalize="none" spellcheck="false"><small>${L(`One ${tlds} domain, registered for you. Until it is ready, your website is at its free address.`, `Satu domain ${tlds}, kami daftarkan untukmu. Sampai siap, situsmu ada di alamat gratisnya.`)}</small></label>
+        <details class="host-move site-own"${ownDomain ? ' open' : ''}><summary>${L('Use a domain you already have (optional)', 'Pakai domain yang sudah kamu punya (opsional)')}</summary>
+          <label class="field">${L('Your domain', 'Domainmu')}<input type="text" name="ownDomain" value="${esc(ownDomain)}" placeholder="${L('example.com', 'contoh.com')}" autocomplete="off" autocapitalize="none" spellcheck="false"><small>${L('You point it at your website with one DNS record; the page shows how.', 'Kamu arahkan ke situsmu dengan satu record DNS; caranya tampil di halaman ini.')}</small></label>
+        </details>
+        <button class="btn btn-primary" type="submit" data-busy="${L('Opening…', 'Membuka…')}">${L('Order and pay by QRIS', 'Pesan dan bayar dengan QRIS')}</button>
+        <p class="fineprint">${L(`Every website gets a free address under ${esc(s.base || '')}. We check your QRIS payment by hand in 1–5 minutes; a website goes online as soon as it is checked, and you fill it in from this page.`, `Setiap situs dapat alamat gratis di bawah ${esc(s.base || '')}. Kami memeriksa pembayaran QRIS-mu secara manual dalam 1–5 menit; situsnya online begitu terperiksa, dan kamu mengisinya dari halaman ini.`)} <a href="${L('/sites', '/id/sites')}">${L('Compare the packages', 'Bandingkan paket')}</a></p>
+      </form>`;
+  const body = `<!-- hosting:start -->
+    ${mine.length ? `<section class="acct-section-plain">
+      <div class="section-row"><h2>${L('Your websites', 'Situsmu')}</h2><p class="muted-note">${L('We email you 7, 3 and 1 day before each one ends', 'Kami kirim email 7, 3 dan 1 hari sebelum masing-masing habis')} · <a href="/account/receipts">${L('Receipts', 'Kuitansi')}</a></p></div>
+      <div class="host-list">${mine.map((x) => siteCard(x, s)).join('')}</div>
+    </section>` : ''}
+    <section class="card acct-section" id="order">
+      <div class="section-row"><h2>${L('Order a website', 'Pesan situs')}</h2></div>
+      ${form}
+    </section>
+<!-- hosting:end -->`;
+  return shell('sites', o, body, flash);
+}
+
+/** A static site's files: what it holds, upload more (a folder or files),
+ * delete some. The bytes go from this browser to the website (app.js). */
+export function siteFiles(o, x, files, { flash, max = {} } = {}) {
+  const list = Array.isArray(files) ? files : [];
+  const rows = list.map((f, i) => `<li>
+      <label class="check"><input type="checkbox" name="path${i}" value="${esc(f.path)}"> <code>${esc(f.path)}</code></label>
+      <span class="muted-note">${esc(bytesText(f.size))}</span>
+      <a class="btn-link" href="${esc(`${x.url}${f.path.split('/').map(encodeURIComponent).join('/')}`)}" rel="noopener">${L('Open', 'Buka')}</a>
+    </li>`).join('');
+  const body = `<!-- hosting:start -->
+    <section class="card acct-section">
+      <div class="section-row"><h2>${esc(x.host)}</h2><span class="row-links"><a class="btn btn-ghost btn-sm" href="${esc(x.url)}" rel="noopener">${L('Open the website', 'Buka situsnya')}</a><a class="btn-link" href="/account/sites">${L('All websites', 'Semua situs')}</a></span></div>
+      <p class="muted-note">${L(`${esc(bytesText(x.usedBytes))} of ${esc(bytesText(x.quotaBytes))} used · ${num(list.length)} file${list.length === 1 ? '' : 's'}`, `${esc(bytesText(x.usedBytes))} dari ${esc(bytesText(x.quotaBytes))} terpakai · ${num(list.length)} file`)}</p>
+      ${x.quotaBytes ? bar((x.usedBytes || 0) / x.quotaBytes) : ''}
+    </section>
+    <section class="card acct-section" id="upload">
+      <div class="section-row"><h2>${L('Upload', 'Unggah')}</h2></div>
+      <form data-act="sites-upload" class="host-order">
+        <input type="hidden" name="id" value="${esc(x.id)}">
+        <label class="field">${L('A folder', 'Satu folder')}<input type="file" name="folder" webkitdirectory multiple><small>${L('Everything in it, keeping its folders. The folder itself is not part of the address: its index.html becomes the front page.', 'Semua isinya, beserta folder di dalamnya. Folder itu sendiri tidak masuk alamat: index.html di dalamnya menjadi halaman depan.')}</small></label>
+        <label class="field">${L('Or files', 'Atau file')}<input type="file" name="files" multiple></label>
+        <label class="field">${L('Into the folder (optional)', 'Ke folder (opsional)')}<input type="text" name="into" placeholder="img" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="120"></label>
+        <p class="fineprint">${L(`A file of the same name is replaced. At most ${num(max.fileMb || 50)} MB a file and ${num(max.files || 5000)} files.`, `File dengan nama yang sama diganti. Paling besar ${num(max.fileMb || 50)} MB per file dan ${num(max.files || 5000)} file.`)}</p>
+        <p class="site-progress" id="site-progress" role="status" aria-live="polite"></p>
+        <button class="btn btn-primary" type="submit" data-busy="${L('Uploading…', 'Mengunggah…')}">${L('Upload', 'Unggah')}</button>
+      </form>
+    </section>
+    <section class="card acct-section">
+      <div class="section-row"><h2>${L('Files', 'File')}</h2></div>
+      ${list.length ? `<form data-act="sites-delete" class="host-order">
+        <input type="hidden" name="id" value="${esc(x.id)}">
+        <ul class="site-files">${rows}</ul>
+        <button class="btn btn-sm" type="submit" data-busy="${L('Deleting…', 'Menghapus…')}">${L('Delete the ticked files', 'Hapus file yang dicentang')}</button>
+      </form>` : `<div class="empty">${icon(I.layers)}<p>${L('<strong>No files yet.</strong> Upload a folder with an index.html in it, or edit the page from a template.', '<strong>Belum ada file.</strong> Unggah folder yang berisi index.html, atau edit halamannya dari template.')}</p></div>`}
+    </section>
+<!-- hosting:end -->`;
+  return shell('sitefiles', o, body, flash);
+}
+
+/** One entry of a template's list in the editor: its fields, numbered. */
+function itemFields(tpl, it, i, images) {
+  const labels = FIELD_LABEL();
+  const imageList = `<datalist id="site-images">${images.map((p) => `<option value="${esc(p)}">`).join('')}</datalist>`;
+  const field = (k) => {
+    const v = it[k] || '';
+    if (k === 'text') return `<label class="field">${labels.text}<textarea name="item-${i}-text" rows="3" maxlength="4000">${esc(v)}</textarea></label>`;
+    if (k === 'image') return `<label class="field">${labels.image}<input type="text" name="item-${i}-image" value="${esc(v)}" list="site-images" placeholder="img/foto.jpg" autocomplete="off" autocapitalize="none" spellcheck="false"></label>`;
+    return `<label class="field">${labels[k]}<input type="text" name="item-${i}-${k}" value="${esc(v)}" maxlength="400"${k === 'link' ? ' autocapitalize="none" spellcheck="false" placeholder="https://… / file.pdf"' : ''}></label>`;
+  };
+  return `<fieldset class="site-item"><legend>${esc(tpl.items.one)} ${num(i + 1)}</legend>${tpl.items.fields.map(field).join('')}${i === 0 ? imageList : ''}</fieldset>`;
+}
+
+/** A package's page, filled in from its template. Saving keeps what was
+ * typed; publishing also makes the page's files and puts them online. */
+export function siteEditor(o, x, content, files, { flash } = {}) {
+  const tpls = TEMPLATES();
+  const tpl = tpls[x.template] || tpls.homepage;
+  const c = content || {};
+  const contact = c.contact || {};
+  const event = c.event || {};
+  const images = (Array.isArray(files) ? files : []).map((f) => f.path).filter((p) => /\.(png|jpe?g|gif|webp|avif|svg)$/i.test(p));
+  const items = Array.isArray(c.items) ? c.items : [];
+  // Room for three more each time; saving drops the empty ones.
+  const shown = [...items, {}, {}, {}].slice(0, Math.max(items.length + 3, 3));
+  const text = (name, label, value, extra = '') => `<label class="field">${label}<input type="text" name="${name}" value="${esc(value || '')}" maxlength="300"${extra}></label>`;
+  const body = `<!-- hosting:start -->
+    <section class="card acct-section">
+      <div class="section-row"><h2>${esc(tpl.name)} · ${esc(x.host)}</h2><span class="row-links"><a class="btn btn-ghost btn-sm" href="${esc(x.url)}" rel="noopener">${L('Open the website', 'Buka situsnya')}</a><a class="btn-link" href="/account/sites/files?id=${encodeURIComponent(x.id)}">${L('Files and pictures', 'File dan gambar')}</a></span></div>
+      <p class="muted-note">${esc(tpl.hint)} ${L('Pictures are files of your website: upload them under Files, then type their name here (like img/photo.jpg).', 'Gambar adalah file situsmu: unggah di menu File, lalu ketik namanya di sini (misalnya img/foto.jpg).')}</p>
+    </section>
+    <form data-act="sites-content" class="host-order site-editor">
+      <input type="hidden" name="id" value="${esc(x.id)}">
+      <section class="card acct-section">
+        <h2>${L('The page', 'Halamannya')}</h2>
+        ${text('title', L('Name', 'Nama'), c.title, ' required')}
+        ${text('tagline', L('One line under it', 'Satu kalimat di bawahnya'), c.tagline)}
+        <label class="field">${L('About', 'Tentang')}<textarea name="about" rows="5" maxlength="4000">${esc(c.about || '')}</textarea><small>${L('A blank line starts a new paragraph.', 'Baris kosong memulai paragraf baru.')}</small></label>
+        ${text('logo', L('Logo or photo', 'Logo atau foto'), c.logo, ' list="site-images" placeholder="img/logo.png" autocapitalize="none" spellcheck="false"')}
+        ${tpl.cover ? text('cover', L('Wide picture at the top', 'Gambar lebar di atas'), c.cover, ' list="site-images" placeholder="img/sampul.jpg" autocapitalize="none" spellcheck="false"') : ''}
+        <label class="field">${L('Colour', 'Warna')}<input type="color" name="accent" value="${esc(/^#[0-9a-fA-F]{6}$/.test(c.accent || '') ? c.accent : '#1f4e9d')}"></label>
+      </section>
+      ${tpl.event ? `<section class="card acct-section"><h2>${L('The event', 'Acaranya')}</h2>
+        ${text('eventDate', L('Date', 'Tanggal'), event.date, ' placeholder="Sabtu, 14 Desember 2026"')}
+        ${text('eventTime', L('Time', 'Waktu'), event.time, ' placeholder="08.00 – 12.00 WIB"')}
+        ${text('eventPlace', L('Place', 'Tempat'), event.place)}
+        ${text('eventMaps', L('Map link', 'Link peta'), event.maps, ' placeholder="https://…" autocapitalize="none" spellcheck="false"')}
+      </section>` : ''}
+      <section class="card acct-section"><h2>${esc(tpl.items.label)}</h2>
+        ${shown.map((it, i) => itemFields(tpl, it, i, images)).join('')}
+        <p class="fineprint">${L('Empty ones are left out. Need more? Save, and three more appear.', 'Yang kosong tidak dipakai. Perlu lebih? Simpan, lalu muncul tiga lagi.')}</p>
+      </section>
+      <section class="card acct-section"><h2>${L('Contact', 'Kontak')}</h2>
+        ${text('whatsapp', 'WhatsApp', contact.whatsapp, ' inputmode="tel" placeholder="0812…"')}
+        ${text('phone', L('Phone', 'Telepon'), contact.phone, ' inputmode="tel"')}
+        ${text('email', 'Email', contact.email, ' inputmode="email" autocapitalize="none" spellcheck="false"')}
+        ${text('address', L('Address', 'Alamat'), contact.address)}
+        ${text('maps', L('Map link', 'Link peta'), contact.maps, ' placeholder="https://…" autocapitalize="none" spellcheck="false"')}
+        ${['instagram', 'tiktok', 'youtube', 'facebook'].map((k) => text(k, k[0].toUpperCase() + k.slice(1), contact[k], ' placeholder="https://…" autocapitalize="none" spellcheck="false"')).join('')}
+      </section>
+      <div class="row-links site-editor-act">
+        <button class="btn btn-primary" type="submit" name="publish" value="1" data-busy="${L('Publishing…', 'Menerbitkan…')}">${L('Save and publish', 'Simpan dan terbitkan')}</button>
+        <button class="btn btn-ghost" type="submit" name="publish" value="0" data-busy="${L('Saving…', 'Menyimpan…')}">${L('Save only', 'Simpan saja')}</button>
+      </div>
+      <p class="fineprint">${L('Publishing replaces index.html and style.css on your website with the page made from this form. Your other files stay.', 'Menerbitkan mengganti index.html dan style.css di situsmu dengan halaman dari formulir ini. File lainnya tetap.')}</p>
+    </form>
+<!-- hosting:end -->`;
+  return shell('siteedit', o, body, flash);
+}
+
+/** Receipts: every QRIS payment of the person's that was paid out, each a
+ * PDF from the account door (`door`), in the page's language. */
+export function receipts(o, list, door, flash) {
+  const rows = (Array.isArray(list) ? list : []).map((r) => `<tr>
+      <th scope="row">${esc(r.what)}</th>
+      <td data-label="${L('Amount', 'Jumlah')}">${esc(r.rupiahText)}</td>
+      <td data-label="${L('Paid on', 'Lunas')}">${esc(day(r.paidAt))}</td>
+      <td class="ledger-act"><a class="btn btn-ghost btn-xs" href="${esc(`${door}/v1/payments/${encodeURIComponent(r.id)}/receipt?lang=${getLang()}`)}">PDF</a></td>
+    </tr>`).join('');
+  const body = `<section class="card acct-section">
+      <div class="section-row"><h2>${L('Receipts', 'Kuitansi')}</h2><p class="muted-note">${L('Every QRIS payment once we have checked it', 'Setiap pembayaran QRIS setelah kami periksa')}</p></div>
+      ${rows ? `<div class="table-scroll"><table class="table acct-table ledger"><thead><tr><th scope="col">${L('What', 'Apa')}</th><th scope="col">${L('Amount', 'Jumlah')}</th><th scope="col">${L('Paid on', 'Lunas')}</th><th scope="col"><span class="sr">${L('Download', 'Unduh')}</span></th></tr></thead><tbody>${rows}</tbody></table></div>`
+    : `<div class="empty">${icon(I.wallet)}<p>${L('<strong>No receipts yet.</strong> A QRIS payment gets one once we have checked it.', '<strong>Belum ada kuitansi.</strong> Pembayaran QRIS mendapat kuitansi setelah kami periksa.')}</p></div>`}
+    </section>`;
+  return shell('receipts', o, body, flash);
 }
 // hosting:end
 
@@ -1045,9 +1344,9 @@ function qrSvg(rows) {
 export function qrisPay(o, q, flash) {
   // A Zeiko Drive payment goes back to Drive (app.js checks the address).
   const drive = q.product === 'drive' && q.driveBack ? String(q.driveBack) : '';
-  const host = q.product === 'hosting' || q.product === 'vps';
-  const page = q.product === 'vps' ? '/account/vps' : '/account/hosting';
-  const yours = q.product === 'vps' ? L('your VPS', 'VPS-mu') : L('your hosting', 'hosting-mu');
+  const host = q.product === 'hosting' || q.product === 'vps' || q.product === 'sites';
+  const page = q.product === 'vps' ? '/account/vps' : q.product === 'sites' ? '/account/sites' : '/account/hosting';
+  const yours = q.product === 'vps' ? L('your VPS', 'VPS-mu') : q.product === 'sites' ? L('your website', 'situsmu') : L('your hosting', 'hosting-mu');
   const back = drive || (host ? page : q.product === 'chat' ? '/account/plans#chat' : '/account/plans');
   let body;
   if (q.status === 'waiting') {
@@ -1086,9 +1385,10 @@ export function qrisPay(o, q, flash) {
         <div><h2>${esc(heading)}</h2><p>${esc(text)}</p><p class="muted-note">${esc(q.what)} · ${esc(q.rupiahText)} (${esc(q.amountText)})</p></div>
       </div>
       <div class="row-links">
-        ${q.status === 'paid' ? (drive ? `<a class="btn btn-primary btn-sm" href="${esc(drive)}">${L('Back to Zeiko Drive', 'Kembali ke Zeiko Drive')}</a>` : `<a class="btn btn-primary btn-sm" href="${host ? page : '/account'}">${host ? (q.product === 'vps' ? L('Your VPS', 'VPS-mu') : L('Your hosting', 'Hosting-mu')) : L('Go to your account', 'Buka akunmu')}</a>`) : ''}
+        ${q.status === 'paid' ? (drive ? `<a class="btn btn-primary btn-sm" href="${esc(drive)}">${L('Back to Zeiko Drive', 'Kembali ke Zeiko Drive')}</a>` : `<a class="btn btn-primary btn-sm" href="${host ? page : '/account'}">${host ? (q.product === 'vps' ? L('Your VPS', 'VPS-mu') : q.product === 'sites' ? L('Your website', 'Situsmu') : L('Your hosting', 'Hosting-mu')) : L('Go to your account', 'Buka akunmu')}</a>`) : ''}
+        ${q.status === 'paid' && q.receiptUrl ? `<a class="btn btn-ghost btn-sm" href="${esc(q.receiptUrl)}">${L('Download the receipt (PDF)', 'Unduh kuitansi (PDF)')}</a>` : ''}
         ${q.status === 'failed' || q.status === 'expired' ? `<a class="btn btn-primary btn-sm" href="${esc(back)}">${L('Start a new payment', 'Mulai pembayaran baru')}</a>` : ''}
-        ${drive ? '' : host ? `<a class="btn btn-ghost btn-sm" href="${page}">${q.product === 'vps' ? 'VPS' : 'Hosting'}</a>` : `<a class="btn btn-ghost btn-sm" href="/account/plans">${L('Plans &amp; balance', 'Paket &amp; saldo')}</a>`}
+        ${drive ? '' : host ? `<a class="btn btn-ghost btn-sm" href="${page}">${q.product === 'vps' ? 'VPS' : q.product === 'sites' ? L('Sites', 'Situs') : 'Hosting'}</a>` : `<a class="btn btn-ghost btn-sm" href="/account/plans">${L('Plans &amp; balance', 'Paket &amp; saldo')}</a>`}
       </div>
     </section>`;
   }
@@ -1099,9 +1399,9 @@ export function qrisPay(o, q, flash) {
  * their account (or to Zeiko Drive) when the countdown runs out. */
 export function qrisThanks(o, q, seconds) {
   const drive = q.product === 'drive' && q.driveBack ? String(q.driveBack) : '';
-  const host = q.product === 'hosting' || q.product === 'vps';
-  const page = q.product === 'vps' ? '/account/vps' : '/account/hosting';
-  const yours = q.product === 'vps' ? L('your VPS', 'VPS-mu') : L('your hosting', 'hosting-mu');
+  const host = q.product === 'hosting' || q.product === 'vps' || q.product === 'sites';
+  const page = q.product === 'vps' ? '/account/vps' : q.product === 'sites' ? '/account/sites' : '/account/hosting';
+  const yours = q.product === 'vps' ? L('your VPS', 'VPS-mu') : q.product === 'sites' ? L('your website', 'situsmu') : L('your hosting', 'hosting-mu');
   const body = `<section class="card acct-section qris qris-ok" role="status">
       <div class="qris-state">
         ${icon(I.check)}

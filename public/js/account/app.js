@@ -10,6 +10,7 @@
 import * as view from './views.js';
 import { remember } from './me.js';
 import { L, getLang } from './lang.js';
+import { blankContent, buildSite, cleanContent } from './templates.js';
 
 const DOOR = (document.querySelector('meta[name="zeiko-accounts"]') || {}).content?.replace(/\/+$/, '') || '';
 const root = document.getElementById('acct');
@@ -184,11 +185,15 @@ const TITLES = {
   '/account/hosting': 'Hosting',
   '/account/vps': 'VPS',
   '/account/s3': 'Zeiko S3',
+  '/account/sites': L('Sites', 'Situs'),
+  '/account/sites/files': L('Website files', 'File situs'),
+  '/account/sites/edit': L('Edit your website', 'Edit situsmu'),
+  '/account/receipts': L('Receipts', 'Kuitansi'),
   '/account/settings': L('Settings', 'Pengaturan'),
   '/account/how-to-buy': L('How to pay', 'Cara membayar'),
   '/account/pay': L('Pay by QRIS', 'Bayar dengan QRIS'),
 };
-const TABS = { '/account': 'overview', '/account/plans': 'plans', '/account/hosting': 'hosting', '/account/vps': 'vps', '/account/s3': 's3', '/account/key': 'key', '/account/settings': 'settings', '/account/how-to-buy': 'howtobuy', '/account/pay': 'pay' };
+const TABS = { '/account': 'overview', '/account/plans': 'plans', '/account/hosting': 'hosting', '/account/vps': 'vps', '/account/sites': 'sites', '/account/sites/files': 'sitefiles', '/account/sites/edit': 'siteedit', '/account/s3': 's3', '/account/key': 'key', '/account/settings': 'settings', '/account/how-to-buy': 'howtobuy', '/account/pay': 'pay', '/account/receipts': 'receipts' };
 
 // A QRIS payment's page asks again every few seconds while it can still move.
 const PAY_POLL_MS = 8_000;
@@ -258,6 +263,10 @@ async function accountPage(extra = {}) {
   if (tab === 'pay') return payPage(flash);
   if (tab === 'hosting') return hostingPage(flash, extra);
   if (tab === 'vps') return vpsPage(flash, extra);
+  if (tab === 'sites') return sitesPage(flash, extra);
+  if (tab === 'sitefiles') return siteFilesPage(flash);
+  if (tab === 'siteedit') return siteEditPage(flash);
+  if (tab === 'receipts') return receiptsPage(flash);
   if (tab === 's3') return draw(view.s3(o, flash));
   if (tab === 'plans') draw(view.plans(o, { flash, pick: extra.pick || params.get('plan') || '' }));
   else if (tab === 'key') draw(view.key(o, { flash, shown: extra.shown, apiBase: o.apiBase || '' }));
@@ -291,6 +300,104 @@ async function vpsPage(flash, extra = {}) {
   draw(view.vps(o, r.data, { flash, pick: extra.pick || params.get('plan') || '', cycle: extra.cycle || '', template: extra.template || '', name: extra.name || '', domain: extra.domain || '', sshKey: extra.sshKey || '' }));
 }
 
+/** Zeiko Sites: the person's websites and the order form. A refused order
+ * is drawn again with what was chosen. */
+async function sitesPage(flash, extra = {}) {
+  const r = await ask('GET', '/sites');
+  if (r.status !== 200 || !r.data) {
+    draw(view.message({ heading: L('Not available right now', 'Sedang tidak tersedia'), text: problem(r), link: '/account/sites', label: L('Try again', 'Coba lagi') }));
+    return;
+  }
+  draw(view.sites(o, r.data, { flash, pick: extra.pick || params.get('package') || '', cycle: extra.cycle || params.get('cycle') || '', gb: extra.gb || '', until: extra.until || '', domain: extra.domain || '', ownDomain: extra.ownDomain || '' }));
+}
+
+/** One site of the person's and its files, by `?id=`: `{ site, files }`, or
+ * null after drawing why not. */
+async function siteAndFiles() {
+  const id = params.get('id') || '';
+  if (!PAY_ID.test(id)) {
+    location.replace('/account/sites');
+    return null;
+  }
+  const r = await ask('GET', `/sites/${encodeURIComponent(id)}/files`);
+  if (r.status !== 200 || !r.data || !r.data.site) {
+    draw(view.message({ heading: L('Not available right now', 'Sedang tidak tersedia'), text: problem(r), link: '/account/sites', label: L('Your websites', 'Situsmu') }));
+    return null;
+  }
+  return r.data;
+}
+
+let siteLimits = {};
+
+async function siteFilesPage(flash) {
+  const got = await siteAndFiles();
+  if (!got) return;
+  if (!siteLimits.fileMb) {
+    const all = await ask('GET', '/sites');
+    if (all.status === 200 && all.data) siteLimits = { fileMb: all.data.maxFileMb, files: all.data.maxFiles };
+  }
+  draw(view.siteFiles(o, got.site, got.files, { flash, max: siteLimits }));
+}
+
+async function siteEditPage(flash) {
+  const got = await siteAndFiles();
+  if (!got) return;
+  const c = await ask('GET', `/sites/${encodeURIComponent(got.site.id)}/content`);
+  if (c.status !== 200 || !c.data) {
+    draw(view.message({ heading: L('Not available right now', 'Sedang tidak tersedia'), text: problem(c), link: '/account/sites', label: L('Your websites', 'Situsmu') }));
+    return;
+  }
+  const content = c.data.content && typeof c.data.content === 'object' ? c.data.content : blankContent(got.site.template, '');
+  draw(view.siteEditor(o, got.site, content, got.files, { flash }));
+}
+
+async function receiptsPage(flash) {
+  const r = await ask('GET', '/receipts');
+  if (r.status !== 200 || !r.data) {
+    draw(view.message({ heading: L('Not available right now', 'Sedang tidak tersedia'), text: problem(r), link: '/account/receipts', label: L('Try again', 'Coba lagi') }));
+    return;
+  }
+  draw(view.receipts(o, r.data.receipts, DOOR, flash));
+}
+
+/** A file's path inside its site, as the door takes it: no leading slash,
+ * no `.` or `..`. Null for a name a website cannot have. */
+function sitePath(...parts) {
+  const p = parts.filter(Boolean).join('/').replace(/\\/g, '/').split('/').filter((x) => x && x !== '.').join('/');
+  return p && !p.split('/').includes('..') && p.length <= 300 ? p : null;
+}
+
+/** Sends files to a site: the door grants each at its size and answers a
+ * signed address per file, and the bytes go there straight from this
+ * browser, four at a time. `progress(done, total)` after each file. */
+async function sendFiles(id, entries, progress) {
+  let done = 0;
+  for (let i = 0; i < entries.length; i += 100) {
+    const chunk = entries.slice(i, i + 100);
+    const r = await ask('POST', `/sites/${encodeURIComponent(id)}/upload`, { files: chunk.map((e) => ({ path: e.path, size: e.blob.size, type: e.type || e.blob.type || '' })) });
+    if (r.status !== 200 || !r.data || !Array.isArray(r.data.uploads)) throw new Error(problem(r));
+    const byPath = new Map(chunk.map((e) => [e.path, e]));
+    const waiting = [...r.data.uploads];
+    const one = async () => {
+      while (waiting.length) {
+        const u = waiting.shift();
+        const e = byPath.get(u.path);
+        if (!e || typeof u.url !== 'string' || !u.url.startsWith('https://')) throw new Error(L('An upload could not start. Try again.', 'Unggahan tidak bisa dimulai. Coba lagi.'));
+        let res = null;
+        try {
+          res = await fetch(u.url, { method: 'PUT', headers: u.headers && typeof u.headers === 'object' ? u.headers : {}, body: e.blob });
+        } catch {
+          res = null;
+        }
+        if (!res || !res.ok) throw new Error(L(`${e.path} did not upload. Check your connection and try again.`, `${e.path} gagal diunggah. Periksa koneksimu lalu coba lagi.`));
+        done += 1;
+        progress(done, entries.length);
+      }
+    };
+    await Promise.all([one(), one(), one(), one()]);
+  }
+}
+
 /** A payment the door answered with: open its QR, or say why not on `page`. */
 function toPay(r, page) {
   if (r.status === 200 && r.data && r.data.payment && PAY_ID.test(r.data.payment.id || '')) return location.assign(`/account/pay?id=${encodeURIComponent(r.data.payment.id)}`);
@@ -309,7 +416,8 @@ async function payPage(flash) {
     draw(view.message({ heading: L('Not available right now', 'Sedang tidak tersedia'), text: problem(r), link: '/account/plans', label: L('Plans & balance', 'Paket & saldo') }));
     return;
   }
-  draw(view.qrisPay(o, { ...r.data, driveBack: driveBack(r.data) }, flash || ''));
+  const receiptUrl = r.data.status === 'paid' ? `${DOOR}/v1/payments/${encodeURIComponent(id)}/receipt?lang=${getLang()}` : '';
+  draw(view.qrisPay(o, { ...r.data, driveBack: driveBack(r.data), receiptUrl }, flash || ''));
   if (r.data.status === 'waiting' || r.data.status === 'confirming') {
     payTimer = setTimeout(() => {
       // Not while the person is pressing "I've paid".
@@ -325,7 +433,7 @@ function thanks(q) {
   thanked = true;
   clearTimeout(payTimer);
   const until = Date.now() + THANKS_MS;
-  const back = driveBack(q) || (q.product === 'hosting' ? '/account/hosting' : q.product === 'vps' ? '/account/vps' : '');
+  const back = driveBack(q) || (q.product === 'hosting' ? '/account/hosting' : q.product === 'vps' ? '/account/vps' : q.product === 'sites' ? '/account/sites' : '');
   draw(view.qrisThanks(o, { ...q, driveBack: back }, THANKS_MS / 1000));
   const tick = () => {
     const left = Math.max(0, Math.ceil((until - Date.now()) / 1000));
@@ -349,7 +457,7 @@ function paying(r, back) {
   return back(problem(r));
 }
 
-async function act(name, f, submitter) {
+async function act(name, f, submitter, form) {
   const back = (text, kind = 'err') => accountPage({ flash: view.flash(kind, text) });
   switch (name) {
     case 'signin': {
@@ -497,6 +605,94 @@ async function act(name, f, submitter) {
       const r = await ask('POST', `/hosting/${encodeURIComponent(f.id)}/cancel`, {});
       return hostingPage(r.status === 200 ? view.flash('ok', L('Order cancelled.', 'Pesanan dibatalkan.')) : view.flash('err', problem(r)));
     }
+    case 'sites-order': {
+      const cycle = ['year', 'domain', 'event', 'month', 'half'].includes(f.cycle) ? f.cycle : 'year';
+      const isStatic = f.package === 'static';
+      const body = {
+        package: f.package || '',
+        cycle: cycle === 'domain' ? 'year' : cycle,
+        withDomain: !isStatic && cycle === 'domain',
+        domain: !isStatic && cycle === 'domain' ? f.domain || '' : '',
+        ownDomain: cycle === 'domain' ? '' : (f.ownDomain || '').trim(),
+        gb: isStatic ? Number(f.gb) || 0 : 0,
+        until: cycle === 'event' ? f.until || '' : '',
+        lang: getLang(),
+      };
+      const r = await ask('POST', '/sites/order', body);
+      if (r.status === 200 && r.data && r.data.payment && PAY_ID.test(r.data.payment.id || '')) return location.assign(`/account/pay?id=${encodeURIComponent(r.data.payment.id)}`);
+      return sitesPage(view.flash('err', problem(r)), { pick: f.package || '', cycle, gb: f.gb || '', until: f.until || '', domain: f.domain || '', ownDomain: f.ownDomain || '' });
+    }
+    case 'sites-renew': {
+      if (!PAY_ID.test(f.id || '')) return sitesPage(view.flash('err', L('That website was not found.', 'Situs itu tidak ditemukan.')));
+      const value = f.cycle || (submitter ? submitter.value : '');
+      const cycle = ['year', 'event', 'month', 'half'].includes(value) ? value : 'year';
+      const r = await ask('POST', `/sites/${encodeURIComponent(f.id)}/renew`, { cycle, until: f.until || '', gb: Number(f.gb) || 0 });
+      return toPay(r, sitesPage);
+    }
+    case 'sites-cancel': {
+      if (!PAY_ID.test(f.id || '')) return sitesPage(view.flash('err', L('That website was not found.', 'Situs itu tidak ditemukan.')));
+      const r = await ask('POST', `/sites/${encodeURIComponent(f.id)}/cancel`, {});
+      return sitesPage(r.status === 200 ? view.flash('ok', L('Order cancelled.', 'Pesanan dibatalkan.')) : view.flash('err', problem(r)));
+    }
+    case 'sites-upload': {
+      if (!PAY_ID.test(f.id || '') || !form) return siteFilesPage(view.flash('err', L('That website was not found.', 'Situs itu tidak ditemukan.')));
+      const into = (f.into || '').trim();
+      const entries = [];
+      for (const file of form.elements.folder ? form.elements.folder.files : []) {
+        // "mysite/css/a.css" → "css/a.css": the folder picked is the site.
+        const rel = String(file.webkitRelativePath || file.name).split('/').slice(1).join('/') || file.name;
+        const path = sitePath(into, rel);
+        if (path) entries.push({ path, blob: file, type: file.type });
+      }
+      for (const file of form.elements.files ? form.elements.files.files : []) {
+        const path = sitePath(into, file.name);
+        if (path) entries.push({ path, blob: file, type: file.type });
+      }
+      if (!entries.length) return siteFilesPage(view.flash('err', L('Pick a folder or some files first.', 'Pilih folder atau beberapa file dulu.')));
+      const note = document.getElementById('site-progress');
+      try {
+        await sendFiles(f.id, entries, (done, total) => {
+          if (note) note.textContent = L(`${done} of ${total} files uploaded…`, `${done} dari ${total} file terunggah…`);
+        });
+      } catch (err) {
+        return siteFilesPage(view.flash('err', err.message));
+      }
+      return siteFilesPage(view.flash('ok', L(`${entries.length} file${entries.length === 1 ? '' : 's'} uploaded. Your website shows them now.`, `${entries.length} file terunggah. Situsmu sudah menampilkannya.`)));
+    }
+    case 'sites-delete': {
+      if (!PAY_ID.test(f.id || '')) return siteFilesPage(view.flash('err', L('That website was not found.', 'Situs itu tidak ditemukan.')));
+      const paths = Object.entries(f).filter(([k]) => /^path\d+$/.test(k)).map(([, v]) => v);
+      if (!paths.length) return siteFilesPage(view.flash('err', L('Tick the files to delete first.', 'Centang file yang mau dihapus dulu.')));
+      const r = await ask('POST', `/sites/${encodeURIComponent(f.id)}/files/delete`, { paths });
+      return siteFilesPage(r.status === 200 ? view.flash('ok', L('Deleted.', 'Dihapus.')) : view.flash('err', problem(r)));
+    }
+    case 'sites-content': {
+      if (!PAY_ID.test(f.id || '')) return siteEditPage(view.flash('err', L('That website was not found.', 'Situs itu tidak ditemukan.')));
+      const items = [];
+      for (let i = 0; i < 300; i += 1) {
+        if (!Object.keys(f).some((k) => k.startsWith(`item-${i}-`))) break;
+        items.push(Object.fromEntries(['title', 'text', 'image', 'link', 'price', 'date'].map((k) => [k, f[`item-${i}-${k}`] || ''])));
+      }
+      const got = await ask('GET', `/sites/${encodeURIComponent(f.id)}/files`);
+      if (got.status !== 200 || !got.data || !got.data.site) return siteEditPage(view.flash('err', problem(got)));
+      const template = got.data.site.template;
+      const content = cleanContent({
+        title: f.title, tagline: f.tagline, about: f.about, accent: f.accent, logo: f.logo, cover: f.cover,
+        contact: { whatsapp: f.whatsapp, phone: f.phone, email: f.email, address: f.address, maps: f.maps, instagram: f.instagram, tiktok: f.tiktok, youtube: f.youtube, facebook: f.facebook },
+        event: { date: f.eventDate, time: f.eventTime, place: f.eventPlace, maps: f.eventMaps },
+        items,
+      }, template);
+      const r = await ask('PUT', `/sites/${encodeURIComponent(f.id)}/content`, content);
+      if (r.status !== 200) return siteEditPage(view.flash('err', problem(r)));
+      if (!submitter || submitter.value !== '1') return siteEditPage(view.flash('ok', L('Saved. Publish when you are ready.', 'Perubahan sudah dicatat. Terbitkan kalau sudah siap.')));
+      const built = buildSite(template, content, getLang()).map((x) => ({ path: x.path, type: x.type, blob: new Blob([x.text], { type: x.type }) }));
+      try {
+        await sendFiles(f.id, built, () => {});
+      } catch (err) {
+        return siteEditPage(view.flash('err', err.message));
+      }
+      return siteEditPage(view.flash('ok', L('Published. Open your website to see it.', 'Sudah terbit. Buka situsmu untuk melihatnya.')));
+    }
     case 'subscribe': {
       const product = f.product === 'chat' ? 'chat' : 'pranata';
       const r = await ask('POST', '/subscribe', { product, plan: f.plan || '' });
@@ -546,7 +742,7 @@ document.addEventListener('submit', async (e) => {
   form.setAttribute('aria-busy', 'true');
   buttons.forEach((b) => { b.disabled = true; });
   try {
-    await act(form.dataset.act, fields, e.submitter || null);
+    await act(form.dataset.act, fields, e.submitter || null, form);
   } finally {
     buttons.forEach((b) => { b.disabled = false; });
     form.removeAttribute('aria-busy');

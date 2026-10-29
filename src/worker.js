@@ -1,7 +1,7 @@
 // The only code that runs on the server side of the site.
 //
-// `run_worker_first` in wrangler.jsonc sends /models, /drive and /account
-// (and /id/models, /id/drive) here; every other path that is a plain file
+// `run_worker_first` in wrangler.jsonc sends /models, /drive, /status and
+// /account (and /id/models, /id/drive, /id/status) here; every other path that is a plain file
 // never reaches this code. A path that is no file at all does, and is either
 // the way back to Zeiko Drive (/dashboard…) or the site's 404 page, in
 // Indonesian under /id/ or for a visitor who chose it (the zk_lang cookie).
@@ -26,6 +26,7 @@
 // goes out as is, with its "not available right now" notes.
 
 import { render, sanitize } from './render.js';
+import { renderStatus } from './status.js';
 import { cheapest, driveAddress, driveCatalog, hasFamily, renderPlans, renderS3 } from './drive.js';
 
 /** The account page, whatever account address was asked for. */
@@ -134,6 +135,42 @@ async function drivePage(request, env, lang) {
   return new Response(out.body, { status: out.status, headers });
 }
 
+/** /status and /id/status: each service's state, from the status document
+ * in the same bucket as the model snapshot (src/status.js draws it). Without
+ * it the page goes out as written: "not available right now". */
+async function statusPage(request, env, lang) {
+  const plain = new Request(request);
+  plain.headers.delete('if-none-match');
+  plain.headers.delete('if-modified-since');
+  const page = await env.ASSETS.fetch(plain);
+  if (!page.ok || !(page.headers.get('content-type') || '').includes('text/html')) return page;
+  let view = null;
+  try {
+    const object = env.MODELS ? await env.MODELS.get('status.json') : null;
+    if (object) view = renderStatus(JSON.parse(await object.text()), lang, Date.now());
+  } catch {
+    view = null;
+  }
+  if (!view) return page;
+  const out = new HTMLRewriter()
+    .on('[data-status-summary]', {
+      element(el) {
+        el.setInnerContent(view.summary, { html: true });
+      },
+    })
+    .on('[data-status-list]', {
+      element(el) {
+        el.setInnerContent(view.list, { html: true });
+      },
+    })
+    .transform(page);
+  const headers = new Headers(out.headers);
+  headers.delete('etag');
+  headers.delete('last-modified');
+  headers.set('cache-control', 'public, max-age=60');
+  return new Response(out.body, { status: out.status, headers });
+}
+
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
@@ -146,6 +183,8 @@ export default {
     if (url.pathname === '/id' || url.pathname === '/id/') return homePage(request, env, 'id');
     if (url.pathname === '/drive') return drivePage(request, env, 'en');
     if (url.pathname === '/id/drive') return drivePage(request, env, 'id');
+    if (url.pathname === '/status') return statusPage(request, env, 'en');
+    if (url.pathname === '/id/status') return statusPage(request, env, 'id');
     const lang = url.pathname === '/id/models' ? 'id' : 'en';
     if (url.pathname !== '/models' && url.pathname !== '/id/models') {
       const res = await env.ASSETS.fetch(request);

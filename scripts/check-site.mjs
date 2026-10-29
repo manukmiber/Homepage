@@ -34,10 +34,12 @@ import { join, relative, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { render, sanitize } from '../src/render.js';
 import { renderS3 } from '../src/drive.js';
+import { renderStatus } from '../src/status.js';
 import { sampleSnapshot } from '../dev/sample-stats.mjs';
 import * as accountViews from '../public/js/account/views.js';
 import * as accountMe from '../public/js/account/me.js';
 import * as accountLang from '../public/js/account/lang.js';
+import * as siteTemplates from '../public/js/account/templates.js';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const PUBLIC = join(ROOT, 'public');
@@ -159,6 +161,15 @@ const files = walk(PUBLIC).filter((f) => TEXT_EXT.has(extname(f)));
 const ACCOUNT_DIRS = [join(PUBLIC, 'account'), join(PUBLIC, 'js', 'account')];
 const inAccount = (f) => ACCOUNT_DIRS.some((d) => f.startsWith(d + '/') || f.startsWith(d + '\\'));
 const DOOR = 'https://auth.zeiko.biz.id';
+// Zeiko Sites' uploads (the owner's, 2026-10-29: the browser sends a
+// website's files straight to its storage, by addresses the account door
+// signs). The account shell's policy names that storage, and only there.
+const UPLOADS = 'https://*.r2.cloudflarestorage.com';
+const SHELL = join(PUBLIC, 'account', 'index.html');
+// The templates (js/account/templates.js) make the customer's own website,
+// whose order and reply buttons link to the customer's own WhatsApp number.
+const TEMPLATES_FILE = join(PUBLIC, 'js', 'account', 'templates.js');
+const WA_PREFIX = 'https://wa.me/';
 const html = [];
 const prices = new Map(); // key -> [{ value, file, index, src }]
 
@@ -231,7 +242,7 @@ function driveAllows(src, ranges, m) {
 // plan comes with — web and object storage, MySQL databases, Cloudflare CDN
 // — its prices in rupiah, and paying for one. Only these words; every other
 // rule holds there too, so nothing says who runs the hosting or how.
-const HOSTING_PAGES = new Set([join(PUBLIC, 'hosting.html'), join(PUBLIC, 'id', 'hosting.html'), join(PUBLIC, 'vps.html'), join(PUBLIC, 'id', 'vps.html')]);
+const HOSTING_PAGES = new Set([join(PUBLIC, 'hosting.html'), join(PUBLIC, 'id', 'hosting.html'), join(PUBLIC, 'vps.html'), join(PUBLIC, 'id', 'vps.html'), join(PUBLIC, 'sites.html'), join(PUBLIC, 'id', 'sites.html')]);
 const HOSTING_WORDS = /^(storage|database|mysql|cloudflare|rupiah|pay|paid|pays|payment|payments|penyimpanan|basis data|bayar|membayar|dibayar|pembayaran)$/i;
 function hostingRanges(file, src) {
   if (HOSTING_PAGES.has(file)) return [[0, src.length]];
@@ -502,6 +513,39 @@ for (const lang of ['en', 'id']) {
   }
 }
 
+// ------------------------------------------------------ rendered /status
+
+// The status document carries ids and numbers; the page names each service
+// itself. Junk text and unknown ids in it must not get through, and the two
+// placeholders on each page must be filled.
+{
+  const now = Date.UTC(2026, 9, 29, 5);
+  const day = (i) => ({ day: now - (30 - i) * 86_400_000, uptime: i % 7 ? 100 : 97.5 });
+  const doc = {
+    format: 1, checkedAt: now - 120_000, everyMinutes: 5, CANARY: '<b>CANARY</b>',
+    services: [
+      { id: 'website', up: true, ms: 84, since: now - 9 * 86_400_000, uptime: { '24h': 100, '7d': 99.98, '30d': 99.9 }, days: Array.from({ length: 30 }, (_, i) => day(i)), url: 'https://CANARY.example' },
+      { id: 'hosting', up: false, ms: 10_000, since: now - 600_000, uptime: { '24h': 'CANARY', '7d': 98.2, '30d': 99.4 }, days: [{ day: now, uptime: 'CANARY' }] },
+      { id: '<b>CANARY</b>', up: true, ms: 1 },
+    ],
+  };
+  for (const lang of ['en', 'id']) {
+    const where = `rendered /status (sample), ${lang}`;
+    const view = renderStatus(doc, lang, now);
+    if (!view) { problems.push(`${where}: src/status.js rendered nothing`); continue; }
+    const out = `${view.summary}\n${view.list}`;
+    scan(where, out);
+    for (const m of out.matchAll(/CANARY/g)) report(where, m.index, out, 'text from the status document reached the page; only numbers may');
+    const page = html.find((h) => h.file === join(PUBLIC, lang === 'id' ? 'id' : '', 'status.html'));
+    if (!page) { problems.push(`${where}: no page to fill (public/${lang === 'id' ? 'id/' : ''}status.html)`); continue; }
+    for (const ph of ['data-status-summary', 'data-status-list']) {
+      if (!page.src.includes(ph)) problems.push(`${relative(ROOT, page.file)}: no ${ph} for the status to fill`);
+    }
+    const stale = renderStatus(doc, lang, now + 86_400_000);
+    if (!stale || !stale.summary.includes('status-stale')) problems.push(`${where}: a day-old status is not said to be old`);
+  }
+}
+
 // ------------------------------------------------------- account pages
 
 // The account area may talk about money (it is the customer's own) and may
@@ -511,7 +555,8 @@ const ACCOUNT_BANNED = BANNED.filter(([what]) => !ACCOUNT_OK.has(what));
 const ACCOUNT = 'rendered /account (made-up account)';
 
 function scanAccount(file, src) {
-  const words = src.split(CONTACT).join(' '.repeat(CONTACT.length));
+  let words = src.split(CONTACT).join(' '.repeat(CONTACT.length));
+  if (file === SHELL) words = words.split(UPLOADS).join(' '.repeat(UPLOADS.length));
   const hosting = hostingRanges(file, src);
   for (const [what, re] of ACCOUNT_BANNED) {
     const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
@@ -545,13 +590,14 @@ for (const { file, src } of accountFiles) {
     // A policy lists addresses with a `;` after each.
     const url = m[0].replace(/;$/, '');
     if (url === DOOR || driveLink(url) || URL_OK.some((ok) => ok.test(url))) continue;
+    if (file === TEMPLATES_FILE && url.startsWith(WA_PREFIX)) continue;
     report(file, m.index, src, `external URL: "${m[0]}" (the account door is the only one)`);
   }
 }
 const shell = accountFiles.find((f) => f.file === join(PUBLIC, 'account', 'index.html'));
 if (!shell) problems.push('public/account/index.html is missing — /account must exist');
-else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shell.src.includes(`connect-src 'self' ${DOOR};`)) {
-  problems.push(`public/account/index.html: the account door (${DOOR}) must be its <meta name="zeiko-accounts"> and its only connect-src`);
+else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shell.src.includes(`connect-src 'self' ${DOOR} ${UPLOADS};`)) {
+  problems.push(`public/account/index.html: the account door (${DOOR}) must be its <meta name="zeiko-accounts">, and it and the websites' uploads (${UPLOADS}) its only connect-src`);
 }
 
 {
@@ -657,8 +703,29 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
       })),
     }, { flash: '', pick: evil, cycle: evil, template: evil, name: evil, domain: evil })),
     accountViews.s3(o, ''),
+    // Zeiko Sites: every state, the order form, the files and the editor.
+    ...[true, false].map((open) => accountViews.sites(o, {
+      open, emailVerified: open, base: evil, giftTlds: [evil, 'my.id'], eventMaxDays: 180, maxFileMb: 50, maxFiles: 5000,
+      static: { perGbMonthIdr: 1000, minGb: 1, maxGb: 50 },
+      packages: [{ id: evil, name: evil, engine: 'static', template: 'homepage', quotaGb: 1.5, yearIdr: 15000, yearDomainIdr: 25000, eventIdr: 0 }, { id: 'undangan', name: evil, engine: 'static', template: 'invite', quotaGb: 1, yearIdr: 15000, yearDomainIdr: 0, eventIdr: 10000 }, { id: 'coding', name: evil, engine: 'cpanel', template: 'upload', quotaGb: 1, yearIdr: 15000, yearDomainIdr: 0, eventIdr: 0 }],
+      sites: [...['ordered', 'paid', 'active', 'suspended', 'deleted', 'cancelled', evil], 'active'].map((status, i) => ({
+        id: evil, package: i % 3 ? 'static' : evil, packageName: evil, engine: i === 1 ? 'cpanel' : 'static', template: ['homepage', 'upload', evil][i % 3],
+        quotaBytes: 2 ** 30, usedBytes: 2 ** 28, host: evil, url: evil, label: evil, domain: evil, domainKind: ['gift', 'own', ''][i % 3], domainReady: i % 2 === 0,
+        cycle: ['year', 'event', 'month', evil][i % 4], status, paidUntil: Date.UTC(2026, 10, 1), blocked: i === 7, panelUser: evil, payment: evil,
+      })),
+    }, { flash: '', pick: evil, cycle: evil, gb: evil, until: evil, domain: evil, ownDomain: evil })),
+    accountViews.siteFiles(o, { id: evil, host: evil, url: evil, quotaBytes: 2 ** 30, usedBytes: 2 ** 20 }, [{ path: evil, size: 1234 }, { path: 'img/a.jpg', size: 99 }], { flash: '', max: { fileMb: 50, files: 5000 } }),
+    accountViews.siteFiles(o, { id: evil, host: evil, url: evil, quotaBytes: 0, usedBytes: 0 }, [], {}),
+    ...['homepage', 'gallery', 'links', 'news', 'invite', 'catalog', 'library', evil].map((template) => accountViews.siteEditor(o, { id: evil, host: evil, url: evil, template }, {
+      title: evil, tagline: evil, about: evil, accent: evil, logo: evil, cover: evil,
+      contact: { whatsapp: evil, phone: evil, email: evil, address: evil, maps: evil, instagram: evil },
+      event: { date: evil, time: evil, place: evil, maps: evil },
+      items: [{ title: evil, text: evil, image: evil, link: evil, price: evil, date: evil }],
+    }, [{ path: evil, size: 1 }, { path: 'img/a.jpg', size: 1 }], { flash: '' })),
+    accountViews.receipts(o, [{ id: evil, what: evil, rupiahText: evil, rupiah: 1, paidAt: Date.now(), product: 'hosting' }], door, ''),
+    accountViews.receipts(o, [], door, ''),
     ...['waiting', 'confirming', 'paid', 'failed', 'expired', evil].map((status) => accountViews.qrisPay(o, {
-      id: evil, what: evil, amountText: evil, rupiah: 449237, rupiahText: evil, merchant: evil, nmid: evil, product: status === 'paid' ? 'hosting' : status === 'confirming' ? 'vps' : 'pranata',
+      id: evil, what: evil, amountText: evil, rupiah: 449237, rupiahText: evil, merchant: evil, nmid: evil, product: status === 'paid' ? 'hosting' : status === 'confirming' ? 'vps' : status === 'failed' ? 'sites' : 'pranata', receiptUrl: evil,
       qr: status === 'waiting' ? ['1010', '0101', '1100', '0011'] : [evil], status, createdAt: Date.now(), expiresAt: Date.now() + 3_600_000,
     }, '')),
     // Rows that are not all 0 and 1 draw no code at all.
@@ -669,6 +736,23 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
     accountViews.reset({ error: evil, token: evil }),
   ])).join('\n');
   accountLang.setLang('en');
+  // The customer's own website, made from a template: what they typed is
+  // escaped, and a link is theirs or nothing.
+  for (const template of ['homepage', 'gallery', 'links', 'news', 'invite', 'catalog', 'library']) {
+    const made = siteTemplates.buildSite(template, {
+      title: evil, tagline: evil, about: evil, accent: 'red;}</style><script>CANARY</script>', logo: '../../etc/passwd', cover: 'javascript:alert(1)',
+      contact: { whatsapp: '0812 3456 7890', email: evil, instagram: 'javascript:CANARY', maps: evil },
+      event: { date: evil, place: evil, maps: 'javascript:CANARY' },
+      items: [{ title: evil, text: evil, image: evil, link: 'javascript:CANARY', price: evil, date: evil }],
+    }, 'id');
+    const index = made.find((x) => x.path === 'index.html');
+    const where = `website template ${template}`;
+    if (!index) { problems.push(`${where}: no index.html`); continue; }
+    for (const x of made) {
+      for (const m of x.text.matchAll(/<script>CANARY|javascript:|\.\.\/\.\./g)) report(where, m.index, x.text, `what was typed reached the ${x.path} unescaped: "${m[0]}"`);
+    }
+    if (!index.text.includes('https://wa.me/6281234567890')) problems.push(`${where}: the WhatsApp number is not linked as wa.me/62…`);
+  }
   scanAccount(ACCOUNT, pages);
   for (const m of pages.matchAll(/<script>CANARY/g)) report(ACCOUNT, m.index, pages, 'an account value reached the page unescaped');
   for (const re of NETWORK) {
