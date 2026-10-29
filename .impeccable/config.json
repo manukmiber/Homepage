@@ -20,6 +20,24 @@
         ],
         "createdAt": "2026-10-26T20:50:31.164Z",
         "reason": "Claude triage: only finding is the shared full-bleed .page-head hero band (drive.html gets the same, predates this session); its text is inset by the .wrap gutter"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "public/marketing-template.html"
+        ],
+        "createdAt": "2026-10-29T12:01:00.411Z",
+        "reason": "Claude triage: only finding is the shared full-bleed .page-head hero band (sites.html and hosting.html get the same, predates this page); its text is inset by the .wrap gutter, checked in a 375px and 1280px render"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "public/id/marketing-template.html"
+        ],
+        "createdAt": "2026-10-29T12:01:00.515Z",
+        "reason": "Claude triage: only finding is the shared full-bleed .page-head hero band (sites.html and hosting.html get the same, predates this page); its text is inset by the .wrap gutter, checked in a 375px and 1280px render"
       }
     ]
   }

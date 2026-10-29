@@ -1843,3 +1843,16 @@ body:has(#win-30d:checked) [data-w="30d"] { display: revert; }
 .site-files .check { flex: 1 1 200px; min-width: 0; }
 .site-files code { overflow-wrap: anywhere; }
 .site-files .muted-note { margin: 0; font-size: 14px; }
+
+/* ---------------------------------------------------------- marketing */
+/* /marketing-template: one window per sheet, the sheet in a sunken well and
+   its download button under it. One column on a phone. */
+.promo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
+.promo { display: flex; flex-direction: column; scroll-margin-top: calc(var(--topbar-h) + 16px); }
+.promo .win-body { display: flex; flex: 1; flex-direction: column; gap: 10px; padding: 10px; }
+.promo-shot { display: block; padding: 2px; background: var(--well); box-shadow: var(--sunk); }
+.promo-shot img { display: block; width: 100%; height: auto; }
+.promo-what { margin: 0; color: var(--muted); font-size: 14px; }
+.promo-actions { display: grid; gap: 6px; margin-top: auto; }
+.promo-actions .btn { width: 100%; font-weight: 700; }
+.promo-actions .btn-link { justify-content: center; font-size: 14px; }

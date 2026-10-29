@@ -128,12 +128,21 @@ public/
   sites.html      /sites: Zeiko Sites' school and business packages and the static site
                   by the GB (typed here, in rupiah), the way from order to online, FAQ
   id/sites.html   /id/sites: the same page in Indonesian
+  marketing-template.html  /marketing-template: the six A4 price and feature sheets
+                  (Hosting, VPS, two for Sites, two for Drive), each with its download
+                  button, and all of them in one ZIP; the sheets are in Indonesian
+  id/marketing-template.html  /id/marketing-template: the same page in Indonesian
   status.html     /status: whether each service answers, filled by src/worker.js from
                   the status document (src/status.js); "not available" without it
   id/status.html  /id/status: the same page in Indonesian
   models.html     /models: at-a-glance table, then each model's specs and rate card
   404.html
   _redirects      old /models/<id> links → /models#<id>
+  img/marketing/  the sheets: a PNG (1588 × 2246) to download, a JPG preview (794 ×
+                  1123) for the page, and zeiko-materi-promosi.zip with every PNG. They
+                  are pictures, so the check cannot read their prices: when a price on
+                  a product page changes, make the sheet again, and strip the export's
+                  metadata (it names the design and its author) before it goes in
   img/            logo.svg / logo-day.svg: the Zeiko mark, shared with Zeiko Chat;
                   mark-16.svg / mark-32.svg: the same mark drawn in pixels (title
                   bars, the Start button, the favicon); icons/: 16×16 pixel icons
