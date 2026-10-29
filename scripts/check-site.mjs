@@ -29,7 +29,7 @@
 // Exits 1 with one line per problem. Reword the page; never trim the lists
 // below to make a check pass.
 
-import { readdirSync, readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, relative, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { render, sanitize } from '../src/render.js';
@@ -720,7 +720,8 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
     accountViews.siteFiles(o, { id: evil, host: evil, url: evil, quotaBytes: 2 ** 30, usedBytes: 2 ** 20 }, [{ path: evil, size: 1234 }, { path: 'img/a.jpg', size: 99 }], { flash: '', max: { fileMb: 50, files: 5000 } }),
     accountViews.siteFiles(o, { id: evil, host: evil, url: evil, quotaBytes: 0, usedBytes: 0 }, [], {}),
     ...['homepage', 'gallery', 'links', 'news', 'invite', 'catalog', 'library', evil].map((template) => accountViews.siteEditor(o, { id: evil, host: evil, url: evil, template }, {
-      title: evil, tagline: evil, about: evil, accent: evil, logo: evil, cover: evil,
+      title: evil, tagline: evil, about: evil, accent: evil, logo: evil, cover: evil, design: evil,
+      fonts: { head: evil, body: evil, label: 'anton' }, colors: { paper: evil, accent: '#123456' },
       contact: { whatsapp: evil, phone: evil, email: evil, address: evil, maps: evil, instagram: evil },
       event: { date: evil, time: evil, place: evil, maps: evil },
       items: [{ title: evil, text: evil, image: evil, link: evil, price: evil, date: evil }],
@@ -741,20 +742,37 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
   accountLang.setLang('en');
   // The customer's own website, made from a template: what they typed is
   // escaped, and a link is theirs or nothing.
-  for (const template of ['homepage', 'gallery', 'links', 'news', 'invite', 'catalog', 'library']) {
-    const made = siteTemplates.buildSite(template, {
-      title: evil, tagline: evil, about: evil, accent: 'red;}</style><script>CANARY</script>', logo: '../../etc/passwd', cover: 'javascript:alert(1)',
+  // Every one of the fifty designs (js/account/designs.js), with a colour
+  // and fonts of the person's own that are junk too: a colour is #rrggbb or
+  // nothing, a font one of the catalogue's, every font file one of this
+  // site's, every design has its picture in the editor.
+  for (const design of siteTemplates.DESIGNS) {
+    const made = siteTemplates.buildSite(design.kind, {
+      design: design.id, title: evil, tagline: evil, about: evil, accent: 'red;}</style><script>CANARY</script>', logo: '../../etc/passwd', cover: 'javascript:alert(1)',
+      colors: { paper: 'red;}</style><script>CANARY</script>', ink: '#12345', accent: '#ABCDEF' }, fonts: { head: evil, body: 'anton', label: '../../x' },
       contact: { whatsapp: '0812 3456 7890', email: evil, instagram: 'javascript:CANARY', maps: evil },
       event: { date: evil, place: evil, maps: 'javascript:CANARY' },
       items: [{ title: evil, text: evil, image: evil, link: 'javascript:CANARY', price: evil, date: evil }],
     }, 'id');
     const index = made.find((x) => x.path === 'index.html');
-    const where = `website template ${template}`;
-    if (!index) { problems.push(`${where}: no index.html`); continue; }
+    const css = made.find((x) => x.path === 'style.css');
+    const where = `website design ${design.id}`;
+    if (!index || !css) { problems.push(`${where}: no index.html or style.css`); continue; }
+    if (!index.text.includes(`class="k-${design.kind} d-${design.id}"`)) problems.push(`${where}: the page is not drawn in its design`);
+    if (!css.text.includes('--accent:#abcdef')) problems.push(`${where}: a colour of the person's own does not reach the stylesheet`);
     for (const x of made) {
-      for (const m of x.text.matchAll(/<script>CANARY|javascript:|\.\.\/\.\./g)) report(where, m.index, x.text, `what was typed reached the ${x.path} unescaped: "${m[0]}"`);
+      if (x.from) {
+        if (!/^\/fonts\/sites\/[a-z0-9-]+\.woff2$/.test(x.from) || !existsSync(join(PUBLIC, x.from)) || x.path !== `fonts/${x.from.split('/').pop()}`) problems.push(`${where}: font file ${x.from} is not one of this site's`);
+        continue;
+      }
+      const bad = x.path === 'style.css' ? /CANARY|<\/?style|javascript:|\.\.\/\.\./g : /<script>CANARY|javascript:|\.\.\/\.\./g;
+      for (const m of x.text.matchAll(bad)) report(where, m.index, x.text, `what was typed reached the ${x.path} unescaped: "${m[0]}"`);
     }
     if (!index.text.includes('https://wa.me/6281234567890')) problems.push(`${where}: the WhatsApp number is not linked as wa.me/62…`);
+    if (!existsSync(join(PUBLIC, 'img', 'sites', `${design.id}.webp`))) problems.push(`${where}: no picture for the editor (npm run sites:preview -- --shots)`);
+  }
+  for (const [id, font] of Object.entries(siteTemplates.FONTS)) {
+    for (const [file] of font.files || []) if (!existsSync(join(PUBLIC, 'fonts', 'sites', file))) problems.push(`website font ${id}: public/fonts/sites/${file} is missing`);
   }
   scanAccount(ACCOUNT, pages);
   for (const m of pages.matchAll(/<script>CANARY/g)) report(ACCOUNT, m.index, pages, 'an account value reached the page unescaped');

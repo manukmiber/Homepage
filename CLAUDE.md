@@ -148,7 +148,8 @@ public/
                   bars, the Start button, the favicon); icons/: 16×16 pixel icons
                   drawn for Zeiko, shown at 16 or 32 px, never another size
   fonts/          Arimo and Cousine (woff2, Latin subset), the site's own font
-                  files; their licences are in fonts/ at the repository's root
+                  files; their licences are in fonts/ at the repository's root;
+                  sites/: the fonts of Zeiko Sites' designs (TEMPLATES.md)
   css/style.css   the only stylesheet; colour and bevel tokens for light and dark
   js/main.js      theme, mobile menu, topbar, copy buttons, effort bars, plan
                   value, estimator, chart hover, and the homepage desktop (caption
@@ -160,7 +161,8 @@ public/
                   lang.js picks English or Indonesian, payguide.js (and
                   payguide.id.js) is the buying guide's text, me.js names the
                   person for the top bar, session.js (on every page) asks who is
-                  signed in
+                  signed in; templates.js, designs.js and preview.js are Zeiko
+                  Sites' templates, their fifty designs and the editor's preview
 src/
   worker.js       fills /models from the snapshot and /drive from Drive's catalog,
                   sends /dashboard… to Drive's address, answers 404.html for the rest
@@ -170,6 +172,9 @@ src/
                   cards (numbers and escaped plan names only) and Zeiko S3's lines
 dev/
   sample-stats.mjs  made-up figures for local development and the check
+  sites-sample.mjs, sites-preview.mjs  Zeiko Sites' designs built from made-up
+                  content into dev/out/ (gitignored), and their thumbnails
+                  (npm run sites:preview, TEMPLATES.md)
 scripts/
   check-site.mjs  leak scan + price consistency + rendered /models and /account
                   + docs links and docs list (npm run check)
@@ -430,17 +435,34 @@ hosting blocks for the check, like `/vps`.
   storage, `https://*.r2.cloudflarestorage.com`, is in the account shell's
   `connect-src` beside the door, and only there; the check holds the shell
   to exactly those two and blanks that one string in the shell's scan.
-- **Templates** (`js/account/templates.js`): `homepage`, `gallery`, `links`,
-  `news`, `invite`, `catalog`, `library` (a package's `template`; `upload`
-  is files only). The editor keeps what was typed at the door as one JSON
-  document (`cleanContent`); **Save and publish** builds `index.html`,
-  `style.css` (and `site.js` for the library's search) in the browser
-  (`buildSite`) and uploads them like any file. Everything typed is escaped;
-  a link is a file of the site, http(s), mailto or tel, or nothing; the
-  WhatsApp buttons go to `https://wa.me/<their number>` (the one URL prefix
-  the check lets through, in that file only). The check builds every
-  template from junk and fails on `<script>`, `javascript:` or `../..` in
-  what comes out.
+- **Templates** (`js/account/templates.js`, `designs.js`, `preview.js`; the
+  brief, the rules and how to make one are in `TEMPLATES.md`): seven kinds —
+  `homepage`, `gallery`, `links`, `news`, `invite`, `catalog`, `library` (a
+  package's `template`; `upload` is files only) — drawn in **fifty designs**
+  (the owner's, 2026-10-29: at least fifty, not AI-made, every font and colour
+  changeable). The editor keeps what was typed at the door as one JSON document
+  (`cleanContent`): the fields, `design`, `fonts {head, body, label}` (ids of
+  `FONTS`, empty for the design's) and `colors` (seven `#rrggbb`, empty for the
+  design's). **Save and publish** builds `index.html`, `style.css` (and
+  `site.js` for the library's search) in the browser (`buildSite`), copies the
+  fonts the page uses from this site's `/fonts/sites/` into the website (a
+  same-origin `fetch` in `app.js`; Latin woff2 under OFL or Apache, licences in
+  `fonts/`), uploads them like any file, and deletes the catalogue's fonts it no
+  longer uses. Everything typed is escaped; a link is a file of the site,
+  http(s), mailto or tel, or nothing; the WhatsApp buttons go to
+  `https://wa.me/<their number>` (the one URL prefix the check lets through, in
+  that file only). Text is kept readable whatever colours are picked
+  (`scheme`). The check builds every design from junk and fails on `<script>`,
+  `javascript:` or `../..` in what comes out, on a colour of the person's that
+  does not reach the stylesheet, on a font file that is not this site's and on
+  a design without its thumbnail (`public/img/sites/<design>.webp`).
+- **The editor's preview** (`preview.js`, the owner's of 2026-10-29: "ada 2
+  viewport, Desktop dan mobile"): the page as a phone (390 px) and a desktop
+  (1280 px, scaled) would show it, redrawn on every change. No frame and no
+  inline style are allowed in the account area, so it is drawn in a shadow root
+  with constructed sheets, its media queries made container queries. The
+  pictures load from the website itself, so the shell's `img-src` is `'self'
+  data: https:`.
 
 ## Receipts (`/account/receipts`)
 

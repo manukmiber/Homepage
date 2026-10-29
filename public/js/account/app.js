@@ -10,7 +10,8 @@
 import * as view from './views.js';
 import { remember } from './me.js';
 import { L, getLang } from './lang.js';
-import { blankContent, buildSite, cleanContent } from './templates.js';
+import { FONTS, blankContent, buildSite } from './templates.js';
+import { contentFromForm, mountPreview } from './preview.js';
 
 const DOOR = (document.querySelector('meta[name="zeiko-accounts"]') || {}).content?.replace(/\/+$/, '') || '';
 const root = document.getElementById('acct');
@@ -349,6 +350,7 @@ async function siteEditPage(flash) {
   }
   const content = c.data.content && typeof c.data.content === 'object' ? c.data.content : blankContent(got.site.template, '');
   draw(view.siteEditor(o, got.site, content, got.files, { flash }));
+  mountPreview(root.querySelector('[data-site-preview]'), root.querySelector('form[data-act="sites-content"]'), got.site.template, got.site.url);
 }
 
 async function receiptsPage(flash) {
@@ -682,29 +684,37 @@ async function act(name, f, submitter, form) {
     }
     case 'sites-content': {
       if (!PAY_ID.test(f.id || '')) return siteEditPage(view.flash('err', L('That website was not found.', 'Situs itu tidak ditemukan.')));
-      const items = [];
-      for (let i = 0; i < 300; i += 1) {
-        if (!Object.keys(f).some((k) => k.startsWith(`item-${i}-`))) break;
-        items.push(Object.fromEntries(['title', 'text', 'image', 'link', 'price', 'date'].map((k) => [k, f[`item-${i}-${k}`] || ''])));
-      }
       const got = await ask('GET', `/sites/${encodeURIComponent(f.id)}/files`);
       if (got.status !== 200 || !got.data || !got.data.site) return siteEditPage(view.flash('err', problem(got)));
       const template = got.data.site.template;
-      const content = cleanContent({
-        title: f.title, tagline: f.tagline, about: f.about, accent: f.accent, logo: f.logo, cover: f.cover,
-        contact: { whatsapp: f.whatsapp, phone: f.phone, email: f.email, address: f.address, maps: f.maps, instagram: f.instagram, tiktok: f.tiktok, youtube: f.youtube, facebook: f.facebook },
-        event: { date: f.eventDate, time: f.eventTime, place: f.eventPlace, maps: f.eventMaps },
-        items,
-      }, template);
+      const content = contentFromForm(f, template);
       const r = await ask('PUT', `/sites/${encodeURIComponent(f.id)}/content`, content);
       if (r.status !== 200) return siteEditPage(view.flash('err', problem(r)));
       if (!submitter || submitter.value !== '1') return siteEditPage(view.flash('ok', L('Saved. Publish when you are ready.', 'Perubahan sudah dicatat. Terbitkan kalau sudah siap.')));
-      const built = buildSite(template, content, getLang()).map((x) => ({ path: x.path, type: x.type, blob: new Blob([x.text], { type: x.type }) }));
+      // The page's own files, and the fonts it names copied from this site's
+      // /fonts/sites/ — skipped when the website already has that file.
+      const had = new Map((Array.isArray(got.data.files) ? got.data.files : []).map((x) => [x.path, x.size]));
+      const built = [];
       try {
+        for (const x of buildSite(template, content, getLang())) {
+          if (!x.from) {
+            built.push({ path: x.path, type: x.type, blob: new Blob([x.text], { type: x.type }) });
+            continue;
+          }
+          const res = await fetch(x.from);
+          if (!res.ok) throw new Error(L('A font could not be read. Try again.', 'Sebuah font tidak bisa dibaca. Coba lagi.'));
+          const blob = await res.blob();
+          if (had.get(x.path) !== blob.size) built.push({ path: x.path, type: x.type, blob });
+        }
         await sendFiles(f.id, built, () => {});
       } catch (err) {
         return siteEditPage(view.flash('err', err.message));
       }
+      // Fonts an earlier design used and this one does not.
+      const fontFiles = new Set(Object.values(FONTS).flatMap((x) => (x.files || []).map(([file]) => `fonts/${file}`)));
+      const used = new Set(buildSite(template, content, getLang()).map((x) => x.path));
+      const stale = [...had.keys()].filter((p) => fontFiles.has(p) && !used.has(p));
+      if (stale.length) await ask('POST', `/sites/${encodeURIComponent(f.id)}/files/delete`, { paths: stale });
       return siteEditPage(view.flash('ok', L('Published. Open your website to see it.', 'Sudah terbit. Buka situsmu untuk melihatnya.')));
     }
     case 'subscribe': {

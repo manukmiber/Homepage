@@ -8,7 +8,7 @@ import { PAY_GUIDE_ID } from './payguide.id.js';
 import { displayName, esc, meLink } from './me.js';
 import { L, day, getLang, num } from './lang.js';
 import { CITIES } from './cities.js';
-import { FIELD_LABEL, TEMPLATES } from './templates.js';
+import { COLOR_KEYS, COLOR_LABEL, FIELD_LABEL, FONT_GROUPS, FONT_ROLES, FONTS, TEMPLATES, designFont, designFor, designsOf } from './templates.js';
 
 export { esc };
 
@@ -1288,13 +1288,55 @@ export function siteEditor(o, x, content, files, { flash } = {}) {
   // Room for three more each time; saving drops the empty ones.
   const shown = [...items, {}, {}, {}].slice(0, Math.max(items.length + 3, 3));
   const text = (name, label, value, extra = '') => `<label class="field">${label}<input type="text" name="${name}" value="${esc(value || '')}" maxlength="300"${extra}></label>`;
+  // The design, its fonts and its colours (templates.js, designs.js): every
+  // font and every colour may be the person's own; empty is the design's.
+  const designs = designsOf(x.template);
+  const design = designFor(x.template, c.design);
+  const fonts = c.fonts || {};
+  const colors = c.colors || {};
+  const legacy = /^#[0-9a-fA-F]{6}$/.test(c.accent || '') && c.accent.toLowerCase() !== '#1f4e9d' ? c.accent : '';
+  const shownColor = (k) => (/^#[0-9a-fA-F]{6}$/.test(colors[k] || '') ? colors[k] : k === 'accent' && legacy ? legacy : design.colors[k]);
+  const groups = FONT_GROUPS();
+  const fontField = (role, name) => {
+    const list = Object.entries(FONTS).filter(([, f]) => role !== 'body' || f.text);
+    const options = Object.keys(groups).map((g) => {
+      const inGroup = list.filter(([, f]) => f.group === g);
+      return inGroup.length ? `<optgroup label="${esc(groups[g])}">${inGroup.map(([id, f]) => `<option value="${esc(id)}"${fonts[role] === id ? ' selected' : ''}>${esc(f.name)}</option>`).join('')}</optgroup>` : '';
+    }).join('');
+    return `<label class="field">${FONT_ROLES()[role]}<select name="${name}"><option value="">${esc(designFont(design, role))}</option>${options}</select></label>`;
+  };
+  const screen = (id, width, height, label, hidden) => `<figure class="pv" data-screen="${id}" data-width="${width}" data-height="${height}"${hidden ? ' hidden' : ''}><div class="pv-screen"><div class="pv-canvas"></div></div><figcaption>${label}</figcaption></figure>`;
   const body = `<!-- hosting:start -->
     <section class="card acct-section">
-      <div class="section-row"><h2>${esc(tpl.name)} · ${esc(x.host)}</h2><span class="row-links"><a class="btn btn-ghost btn-sm" href="${esc(x.url)}" rel="noopener">${L('Open the website', 'Buka situsnya')}</a><a class="btn-link" href="/account/sites/files?id=${encodeURIComponent(x.id)}">${L('Files and pictures', 'File dan gambar')}</a></span></div>
+      <div class="section-row"><h2>${esc(tpl.name)}: ${esc(x.host)}</h2><span class="row-links"><a class="btn btn-ghost btn-sm" href="${esc(x.url)}" rel="noopener">${L('Open the website', 'Buka situsnya')}</a><a class="btn-link" href="/account/sites/files?id=${encodeURIComponent(x.id)}">${L('Files and pictures', 'File dan gambar')}</a></span></div>
       <p class="muted-note">${esc(tpl.hint)} ${L('Pictures are files of your website: upload them under Files, then type their name here (like img/photo.jpg).', 'Gambar adalah file situsmu: unggah di menu File, lalu ketik namanya di sini (misalnya img/foto.jpg).')}</p>
+    </section>
+    <div class="site-edit-grid">
+    <section class="card acct-section site-preview" data-site-preview aria-label="${L('Preview', 'Pratinjau')}">
+      <div class="section-row"><h2>${L('Preview', 'Pratinjau')}</h2>
+        <span class="pv-switch" role="group" aria-label="${L('Show it on', 'Tampilkan di')}"><button type="button" class="btn btn-sm" data-pv="phone" aria-pressed="true">${L('Phone', 'HP')}</button><button type="button" class="btn btn-sm" data-pv="desk" aria-pressed="false">Desktop</button><button type="button" class="btn btn-sm" data-pv="both" aria-pressed="false">${L('Both', 'Keduanya')}</button></span></div>
+      <div class="pv-stage">${screen('phone', 390, 700, L('Phone, 390 px wide', 'HP, lebar 390 px'), false)}${screen('desk', 1280, 800, L('Desktop, 1280 px wide', 'Desktop, lebar 1280 px'), true)}</div>
+      <p class="fineprint">${L('The preview follows the form as you type. Your website only changes when you press Save and publish; pictures show once they are uploaded under Files.', 'Pratinjau mengikuti isian formulir saat kamu mengetik. Situsmu baru berubah setelah kamu menekan Simpan dan terbitkan; gambar tampil setelah diunggah di menu File.')}</p>
     </section>
     <form data-act="sites-content" class="host-order site-editor">
       <input type="hidden" name="id" value="${esc(x.id)}">
+      <input type="hidden" name="shownDesign" value="${esc(design.id)}">
+      <section class="card acct-section">
+        <h2>${L('Design', 'Desain')}</h2>
+        <p class="muted-note">${L(`${designs.length} designs for this kind of website. Every font and colour of each can be changed below.`, `${designs.length} desain untuk jenis situs ini. Semua font dan warnanya bisa kamu ganti di bawah.`)}</p>
+        <div class="site-designs" role="radiogroup" aria-label="${L('Design', 'Desain')}">${designs.map((d) => `<label class="site-design"><img src="/img/sites/${esc(d.id)}.webp" alt="" width="117" height="192" loading="lazy"><span class="site-design-name"><input type="radio" name="design" value="${esc(d.id)}"${d.id === design.id ? ' checked' : ''}> ${esc(d.name)}</span><small>${esc(L(...d.note))}</small></label>`).join('')}</div>
+      </section>
+      <section class="card acct-section">
+        <h2>${L('Fonts', 'Font')}</h2>
+        ${fontField('head', 'fontHead')}${fontField('body', 'fontBody')}${fontField('label', 'fontLabel')}
+        <p class="fineprint">${L('The fonts go into your website with the page, so it shows them without asking anywhere else.', 'Font-nya ikut masuk ke situsmu bersama halamannya, jadi tampil tanpa mengambil dari tempat lain.')}</p>
+      </section>
+      <section class="card acct-section">
+        <h2>${L('Colours', 'Warna')}</h2>
+        <div class="site-colors">${COLOR_KEYS.map((k) => `<label class="field">${COLOR_LABEL()[k]}<input type="color" name="color-${k}" value="${esc(shownColor(k))}"></label>`).join('')}</div>
+        <label class="check"><input type="checkbox" name="resetColors" value="1"> ${L("Go back to the design's own colours", 'Kembalikan ke warna desainnya')}</label>
+        <p class="fineprint">${L('Text too faint on its background is darkened or lightened until it reads. Colours you pick are kept by day and by night.', 'Teks yang terlalu samar di atas latarnya digelapkan atau diterangkan sampai terbaca. Warna pilihanmu dipakai siang dan malam.')}</p>
+      </section>
       <section class="card acct-section">
         <h2>${L('The page', 'Halamannya')}</h2>
         ${text('title', L('Name', 'Nama'), c.title, ' required')}
@@ -1302,7 +1344,6 @@ export function siteEditor(o, x, content, files, { flash } = {}) {
         <label class="field">${L('About', 'Tentang')}<textarea name="about" rows="5" maxlength="4000">${esc(c.about || '')}</textarea><small>${L('A blank line starts a new paragraph.', 'Baris kosong memulai paragraf baru.')}</small></label>
         ${text('logo', L('Logo or photo', 'Logo atau foto'), c.logo, ' list="site-images" placeholder="img/logo.png" autocapitalize="none" spellcheck="false"')}
         ${tpl.cover ? text('cover', L('Wide picture at the top', 'Gambar lebar di atas'), c.cover, ' list="site-images" placeholder="img/sampul.jpg" autocapitalize="none" spellcheck="false"') : ''}
-        <label class="field">${L('Colour', 'Warna')}<input type="color" name="accent" value="${esc(/^#[0-9a-fA-F]{6}$/.test(c.accent || '') ? c.accent : '#1f4e9d')}"></label>
       </section>
       ${tpl.event ? `<section class="card acct-section"><h2>${L('The event', 'Acaranya')}</h2>
         ${text('eventDate', L('Date', 'Tanggal'), event.date, ' placeholder="Sabtu, 14 Desember 2026"')}
@@ -1326,8 +1367,9 @@ export function siteEditor(o, x, content, files, { flash } = {}) {
         <button class="btn btn-primary" type="submit" name="publish" value="1" data-busy="${L('Publishing…', 'Menerbitkan…')}">${L('Save and publish', 'Simpan dan terbitkan')}</button>
         <button class="btn btn-ghost" type="submit" name="publish" value="0" data-busy="${L('Saving…', 'Menyimpan…')}">${L('Save only', 'Simpan saja')}</button>
       </div>
-      <p class="fineprint">${L('Publishing replaces index.html and style.css on your website with the page made from this form. Your other files stay.', 'Menerbitkan mengganti index.html dan style.css di situsmu dengan halaman dari formulir ini. File lainnya tetap.')}</p>
+      <p class="fineprint">${L('Publishing replaces index.html, style.css and the fonts folder on your website with the page made from this form. Your other files stay.', 'Menerbitkan mengganti index.html, style.css, dan folder fonts di situsmu dengan halaman dari formulir ini. File lainnya tetap.')}</p>
     </form>
+    </div>
 <!-- hosting:end -->`;
   return shell('siteedit', o, body, flash);
 }
