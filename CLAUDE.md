@@ -334,20 +334,28 @@ The owner's (2026-10-27): one client area on the Zeiko Account for hosting,
 VPS and S3 — buy, renew, upgrade — paid by QRIS.
 
 - **VPS** (`views.js::vps`, `vpsCard`; `app.js::vpsPage`): everything comes
-  from the door's `GET /v1/vps` — plans (vCPU, RAM, NVMe, object storage;
-  a month, `halfYearIdr` for 6 months, a year), the systems (`templates`),
-  `setupIdr` (once, with the first payment) and `gift {months, tlds}` (a
-  free .my.id/.biz.id/.web.id domain from 6 months). The order form posts
-  `/v1/vps/order {plan, cycle: month|half|year, template, name, password,
-  domain, lang}`; a refused order is drawn again with what was typed,
-  **the password left out**, and the password is never drawn into a page.
-  A system may carry a licence, paid once with the setup (`extraIdr`:
-  Windows +Rp20.000), said beside it; the free domain field hides while
-  Monthly is picked; the free domain is free for its first year, then carried by
-  the renewals at `gift.domainIdr` per 3 months (each renewal button's
-  total includes it, and the line under them says so).
-  Cards renew (`/renew {cycle}`), upgrade (`/upgrade {plan}`, the same
-  `upgradeBlock` as hosting) and cancel an unpaid order.
+  from the door's `GET /v1/vps` — plans (vCPU, RAM, NVMe, object storage,
+  `monthIdr`), the systems (`templates`), `maxMonths` (12), `bonusMonths`
+  (2), `setupIdr` and `gift {months, tlds, freeMonths, domainIdr}`. **A VPS
+  is paid for 1 to 12 months** (the owner's, 2026-11-01: "bebas 1–12 tapi
+  tetap kasih pemberitahuan"), each at the month's price: under `gift.months`
+  (6) an order pays the setup (Rp10.000) once; from 6 there is no setup, a
+  free .my.id/.biz.id/.web.id domain free for `gift.freeMonths` (two years),
+  and `bonusMonths` free on every payment, renewals too. The order form's
+  months are a `<select name="months">` ("6 months + 2 free"), with the
+  notice of what six months bring beside it (`vpsLongNote`, an `alert-ok`),
+  and posts `/v1/vps/order {plan, months, template, name, password, domain,
+  lang}`; a refused order is drawn again with what was typed, **the password
+  left out**, and the password is never drawn into a page. A system may
+  carry a licence, paid once with the order (`extraIdr`: Windows Server 2025
+  +Rp50.000), said beside it; the free domain field hides under 6 months
+  (`option.vps-short:checked`); after its free months the free domain is
+  carried by the renewals at `gift.domainIdr` per 3 months. Cards renew
+  from a select of the door's `renew` (one bill per length: `months` booked,
+  `freeMonths`, `totalIdr` and what it carries), posting `/renew {months}`;
+  they upgrade (`/upgrade {plan}`, the same `upgradeBlock` as hosting) and
+  cancel an unpaid order. A card's cycle is `month`, `half`, `year` or the
+  months booked (`vpsCycle`).
 - **A VPS's address** (the owner's, 2026-10-29: it hides the server's own,
   priced like a hosting's): the order form has the same `addressFields`
   (`free`, `name`, `own`, and the free domain with 6 months or more), its
@@ -389,16 +397,23 @@ VPS and S3 — buy, renew, upgrade — paid by QRIS.
   (`refundAskedAt`, `refundIdr`, `refundTo`), an ended one that it was sent
   (`refundedAt`). The pay page says
   `product: "vps"` and goes back to `/account/vps`.
-- **The public VPS page** (`/vps`, `/id/vps`, the owner's, 2026-10-29): plans
-  with `data-price="vps:<plan>"`, `:half`, `:year` and `:save` keys, `vps:setup`
-  (Rp5.000, once), `vps:windows` (the licence, Rp20.000 once), `vps:domain`
-  (Rp5.000 per 3 months after the free domain's first year) and `vps:egress`
-  (Rp5.000 per 500 GB past the 500 GB a month that is free). It is a hosting
-  page for the check (`HOSTING_PAGES`). The prices are typed from the door's
-  `vps.plans`: change both together. It says IPv4 and nothing about IPv6 or
-  where the servers are (not decided). Its top bar adds a VPS link to the nav
-  and the Hosting pages link to it from the footer; the other pages' navs do
-  not list it yet.
+- **The public VPS page** (`/vps`, `/id/vps`, the owner's, 2026-10-29; prices
+  of 2026-11-01): ten plans by size (Extra Small, Small, Medium, Large), each
+  named vCPU.RAM.NVMe.object storage (`Medium 2.8.256.256`), with
+  `data-price="vps:<plan id>"` a month (`vps:xs-1-2-25-25` … `vps:l-4-16-256-600`);
+  `.vps-terms` says 1–5 months pay `vps:setup` (Rp10.000, once) and 6–12
+  have no setup, a free domain for 2 years and 2 months free (renewals too).
+  `vps:windows` (Windows Server 2025's licence, Rp50.000 once; every Linux is
+  free), `vps:domain` (Rp5.000 per 3 months after the free domain's 2 years)
+  and `vps:egress` (Rp5.000 per 500 GB past the 500 GB a month that is free).
+  VPS support is **human, 24/7, free** (the owner's, 2026-11-01): the page's
+  WhatsApp line says 24/7, not the 08.00–22.00 of the other pages. `#high-compute`
+  announces VPS High Compute (AMD EPYC Turin-D, 3.4 GHz) with no plan or
+  price yet (TBA). It is a hosting page for the check (`HOSTING_PAGES`). The
+  prices are typed from the door's `vps.plans`: change both together. It
+  says IPv4 and nothing about IPv6 or where the servers are (not decided).
+  Its top bar adds a VPS link to the nav and the Hosting pages link to it
+  from the footer; the other pages' navs do not list it yet.
 - **S3** (`views.js::s3`) is a tab that opens Zeiko S3 in Zeiko Drive
   (`https://drive.zeiko.biz.id/s3`), where it is bought, upgraded and
   renewed; the site shows no S3 price of its own.

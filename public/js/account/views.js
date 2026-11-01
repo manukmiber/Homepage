@@ -817,6 +817,38 @@ export function hosting(o, h, { flash, pick = '', domain = '', address = '', nam
 
 const CYCLES = () => ({ month: L('a month', 'per bulan'), half: L('6 months', '6 bulan'), year: L('a year', 'per tahun') });
 
+/** The months a VPS's last payment was for: `month`, `half`, `year`, or the
+ * number itself (1 to 12 are sold, two more free from 6). */
+const vpsCycle = (c) => CYCLES()[c] || (/^[0-9]{1,3}$/.test(String(c)) ? monthsText(Number(c)) : String(c));
+
+/** "6 months + 2 free", what one payment of `paid` months gives. */
+const vpsSpan = (paid, free) => (free > 0
+  ? L(`${monthsText(paid)} + ${num(free)} free`, `${monthsText(paid)} + ${num(free)} gratis`)
+  : monthsText(paid));
+
+/** What paying for six months or more brings, said beside the months to
+ * pick (the owner's, 2026-11-01: any of 1 to 12, but say it). */
+function vpsLongNote(v, renewal = false) {
+  const gift = (v && v.gift) || {};
+  const from = Number(gift.months) || 0;
+  const bonus = Number(v && v.bonusMonths) || 0;
+  if (!from) return '';
+  if (renewal) {
+    return bonus > 0 ? L(`Renew ${num(from)} months or more and get ${num(bonus)} months free.`, `Perpanjang ${num(from)} bulan atau lebih dan dapat gratis ${num(bonus)} bulan.`) : '';
+  }
+  const tlds = (Array.isArray(gift.tlds) ? gift.tlds : []).map((t) => `.${t}`).join(', ');
+  const years = Number(gift.freeMonths) % 12 === 0 && gift.freeMonths >= 12 ? gift.freeMonths / 12 : 0;
+  const domainFree = years ? L(`${num(years)} year${years === 1 ? '' : 's'}`, `${num(years)} tahun`) : monthsText(Number(gift.freeMonths) || 0);
+  const parts = [
+    v.setupIdr > 0 ? L('no setup fee', 'tanpa biaya pemasangan') : '',
+    tlds ? L(`a free ${tlds} domain for its first ${domainFree}`, `domain ${tlds} gratis selama ${domainFree} pertama`) : '',
+    bonus > 0 ? L(`${num(bonus)} months free, on every renewal of ${num(from)} months or more too`, `gratis ${num(bonus)} bulan, juga di setiap perpanjangan ${num(from)} bulan atau lebih`) : '',
+  ].filter(Boolean);
+  const under = v.setupIdr > 0 ? L(` Under ${num(from)} months, the setup is ${rp(v.setupIdr)}, once.`, ` Di bawah ${num(from)} bulan, biaya pemasangan ${rp(v.setupIdr)}, sekali.`) : '';
+  const list = (and) => (parts.length > 1 ? `${parts.slice(0, -1).join(', ')} ${and} ${parts[parts.length - 1]}` : parts[0]);
+  return parts.length ? L(`Pay ${num(from)} months or more: ${list('and')}.${under}`, `Bayar ${num(from)} bulan atau lebih: ${list('dan')}.${under}`) : '';
+}
+
 function vpsFacts(p) {
   return [
     `${num(p.vcpu)} vCPU`,
@@ -947,19 +979,21 @@ function vpsCard(x, systems = [], a = {}) {
     line = x.status === 'active'
       ? L(`Running until <strong>${esc(day(x.paidUntil))}</strong>. Renew before then; a day after it ends it is turned off, and a week after it is deleted.`, `Aktif sampai <strong>${esc(day(x.paidUntil))}</strong>. Perpanjang sebelum itu; sehari setelah habis dimatikan, dan seminggu setelahnya dihapus.`)
       : L(`Turned off since it ended on ${esc(day(x.paidUntil))}. Renew before <strong>${esc(day(x.deleteAt))}</strong> or it is deleted with everything on it.`, `Dimatikan karena habis ${esc(day(x.paidUntil))}. Perpanjang sebelum <strong>${esc(day(x.deleteAt))}</strong> atau dihapus beserta semua isinya.`);
-    const r = x.renew || {};
-    const btn = (cycle, text, idr, primary) => (idr ? `<button class="btn ${primary ? 'btn-primary' : 'btn-ghost'} btn-sm" type="submit" name="cycle" value="${cycle}" data-busy="${L('Opening…', 'Membuka…')}">${text} · ${esc(rp(idr))}</button>` : '');
-    act = r.monthIdr ? `<form data-act="vps-renew" class="host-renew">
+    // One choice per length the door prices: 1 to 12 months, two free
+    // from six, and what each carries besides the plan.
+    const r = (Array.isArray(x.renew) ? x.renew : []).filter((q) => q && q.totalIdr > 0);
+    const options = r.map((q, i) => {
+      const paid = (Number(q.months) || 0) - (Number(q.freeMonths) || 0);
+      const extra = renewExtras(q, true);
+      return `<option value="${esc(paid)}"${i === 0 ? ' selected' : ''}>${vpsSpan(paid, Number(q.freeMonths) || 0)} · ${esc(rp(q.totalIdr))}${extra ? ` (${extra})` : ''}</option>`;
+    }).join('');
+    act = r.length ? `<form data-act="vps-renew" class="host-renew vps-renew">
         <input type="hidden" name="id" value="${esc(x.id)}">
-        ${btn('month', L('Renew a month', 'Perpanjang sebulan'), r.monthIdr, true)}
-        ${btn('half', L('Renew 6 months', 'Perpanjang 6 bulan'), r.halfYearIdr, false)}
-        ${btn('year', L('Renew a year', 'Perpanjang setahun'), r.yearIdr, false)}
+        <label class="field">${L('Renew for', 'Perpanjang')}<select name="months">${options}</select></label>
+        <button class="btn btn-primary btn-sm" type="submit" data-busy="${L('Opening…', 'Membuka…')}">${L('Renew and pay by QRIS', 'Perpanjang dan bayar dengan QRIS')}</button>
       </form>` : '';
-    const extras = [['month', L('A month', 'Sebulan')], ['half', L('6 months', '6 bulan')], ['year', L('A year', 'Setahun')]]
-      .map(([k, name]) => [name, renewExtras(r[k], true)])
-      .filter(([, t]) => t)
-      .map(([name, t]) => `${name} ${t}`);
-    if (extras.length) act += `<p class="muted-note">${extras.join('. ')}.</p>`;
+    const note = r.length ? vpsLongNote(a.vps, true) : '';
+    if (note) act += `<p class="muted-note">${esc(note)}</p>`;
     more += upgradeBlock(x, 'vps-upgrade');
     more += downgradeBlock(x);
     more += addressBlock(x, a);
@@ -969,7 +1003,7 @@ function vpsCard(x, systems = [], a = {}) {
   // Its address: a free one is said only once it answers (signInAt).
   const shown = x.domainKind === 'free' ? (x.signInAt ? x.domain : '') : x.domain;
   const facts = [
-    `${esc(x.planName)} · ${esc(CYCLES()[x.cycle] || x.cycle)}`,
+    `${esc(x.planName)} · ${esc(vpsCycle(x.cycle))}`,
     esc(x.templateName || x.template),
     shown ? `${esc(addressKind()[x.domainKind] || '')} <code>${esc(shown)}</code>` : '',
     x.panelUser ? `${L('sign in', 'masuk')} <code>${esc(x.panelUser)}</code>` : '',
@@ -988,23 +1022,34 @@ function vpsCard(x, systems = [], a = {}) {
   </article>`;
 }
 
-export function vps(o, v, { flash, pick = '', cycle = '', template = '', name = '', domain = '', sshKey = '', address = '', addressName = '', ownDomain = '' }) {
+export function vps(o, v, { flash, pick = '', months = '', template = '', name = '', domain = '', sshKey = '', address = '', addressName = '', ownDomain = '' }) {
   const plans = (v && v.plans) || [];
   const systems = (v && v.templates) || [];
   const open = Boolean(v && v.open);
   const mine = (v && v.services) || [];
   const gift = (v && v.gift) || {};
-  // The address fields read the free domain from `gift`, as on a hosting's.
-  const a = { ...((v && v.address) || {}), gift };
+  // The address fields read the free domain from `gift`, as on a hosting's;
+  // the cards read what six months bring from `vps`.
+  const a = { ...((v && v.address) || {}), gift, vps: v || {} };
   const pickAddress = ['free', 'name', 'own', 'gift'].includes(address) ? address : (domain ? 'gift' : 'free');
   const chosen = plans.some((p) => p.id === pick) ? pick : (plans[0] || {}).id;
   const system = systems.some((t) => t.id === template) ? template : (systems[0] || {}).id;
-  const per = cycle === 'half' || cycle === 'year' ? cycle : 'month';
+  // 1 to 12 months, two free from six (the door's `maxMonths`,
+  // `bonusMonths` and `gift.months`); the free domain hides under six.
+  const most = Math.min(Math.max(Number(v && v.maxMonths) || 12, 1), 12);
+  const from = Number(gift.months) || 0;
+  const bonus = Number(v && v.bonusMonths) || 0;
+  const per = Math.min(Math.max(parseInt(months, 10) || 1, 1), most);
+  const monthOptions = Array.from({ length: most }, (_, i) => i + 1)
+    .map((m) => {
+      const long = from > 0 && m >= from;
+      return `<option value="${m}"${long ? '' : ' class="vps-short"'}${m === per ? ' selected' : ''}>${vpsSpan(m, long ? bonus : 0)}</option>`;
+    }).join('');
   const options = plans.map((p) => `<label class="host-option">
       <input type="radio" name="plan" value="${esc(p.id)}"${p.id === chosen ? ' checked' : ''} required>
       <span class="host-option-body">
         <strong>${esc(p.name)}</strong>
-        <span class="host-option-price">${esc(rp(p.monthIdr))}/${L('month', 'bulan')}${p.halfYearIdr ? ` · ${L('6 months', '6 bulan')} ${esc(rp(p.halfYearIdr))}` : ''}${p.yearIdr ? ` · ${esc(rp(p.yearIdr))}/${L('year', 'tahun')}` : ''}</span>
+        <span class="host-option-price">${esc(rp(p.monthIdr))}/${L('month', 'bulan')}</span>
         <span class="muted-note">${esc(vpsFacts(p))}</span>
       </span>
     </label>`).join('');
@@ -1016,11 +1061,8 @@ export function vps(o, v, { flash, pick = '', cycle = '', template = '', name = 
       ? alert('warn', L('Confirm your email address first: your VPS details are sent there.', 'Konfirmasi alamat email-mu dulu: detail VPS-mu dikirim ke sana.'))
       : `<form data-act="vps-order" class="host-order">
         <fieldset class="host-choose"><legend>${L('Plan', 'Paket')}</legend>${options}</fieldset>
-        <fieldset class="funds-way"><legend>${L('Pay', 'Bayar')}</legend>
-          <label><input type="radio" name="cycle" value="month"${per === 'month' ? ' checked' : ''}> ${L('Monthly', 'Bulanan')}</label>
-          <label><input type="radio" name="cycle" value="half"${per === 'half' ? ' checked' : ''}> ${L('6 months', '6 bulan')}</label>
-          <label><input type="radio" name="cycle" value="year"${per === 'year' ? ' checked' : ''}> ${L('Yearly', 'Tahunan')}</label>
-        </fieldset>
+        <label class="field vps-months">${L('Pay for', 'Bayar untuk')}<select name="months">${monthOptions}</select><small>${L('Each month at the plan’s monthly price.', 'Setiap bulan seharga bulanan paketnya.')}</small></label>
+        ${alert('ok', vpsLongNote(v))}
         <fieldset class="funds-way vps-systems"><legend>${L('System', 'Sistem')}</legend>${systemOptions}</fieldset>
         <label class="field">${L('VPS name', 'Nama VPS')}<input type="text" name="name" value="${esc(name)}" placeholder="web1" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="30" pattern="[A-Za-z0-9][A-Za-z0-9-]{0,28}[A-Za-z0-9]|[A-Za-z0-9]" required><small>${L('Letters, digits and -, up to 30.', 'Huruf, angka dan -, maksimal 30.')}</small></label>
         <label class="field">${L('Password', 'Password')}<input type="password" name="password" autocomplete="new-password" minlength="10" maxlength="64" required><small>${L('10 to 64 characters with a lowercase letter, a capital and a digit, no spaces or quotes. Your VPS is made with it; we do not email it.', '10 sampai 64 karakter dengan huruf kecil, huruf besar dan angka, tanpa spasi atau tanda kutip. VPS-mu dibuat dengan password ini; kami tidak mengirimnya lewat email.')}</small></label>
@@ -1028,7 +1070,9 @@ export function vps(o, v, { flash, pick = '', cycle = '', template = '', name = 
         ${a.base ? addressFields(a, { free: true, nameIdr: a.nameIdr, domainIdr: a.domainIdr, months: a.months, address: pickAddress, name: addressName, domain: pickAddress === 'gift' ? domain : ownDomain, vps: true, giftIdr: gift.domainIdr, fields: { name: 'addressName', domain: 'ownDomain', gift: 'domain' } }) : ''}
         ${a.base ? `<p class="fineprint">${L('You sign in at this address, not at the server’s own.', 'Kamu masuk lewat alamat ini, bukan alamat server-nya sendiri.')}</p>` : ''}
         <button class="btn btn-primary" type="submit" data-busy="${L('Opening…', 'Membuka…')}">${L('Order and pay by QRIS', 'Pesan dan bayar dengan QRIS')}</button>
-        ${v.setupIdr > 0 ? `<p class="fineprint">${L(`The first payment includes ${esc(rp(v.setupIdr))} to set it up, once, and a system’s licence where it has one: renewals never carry them.`, `Pembayaran pertama sudah termasuk ${esc(rp(v.setupIdr))} biaya pembuatan, sekali saja, dan lisensi sistem kalau ada: perpanjangan tidak pernah memuatnya.`)}</p>` : ''}
+        <p class="fineprint">${v.setupIdr > 0 && from > 0
+    ? L(`An order of under ${num(from)} months includes ${esc(rp(v.setupIdr))} to set it up, once. A system’s licence is paid with the order too. Renewals never carry either.`, `Pesanan di bawah ${num(from)} bulan sudah termasuk ${esc(rp(v.setupIdr))} biaya pemasangan, sekali saja. Lisensi sistem juga dibayar bersama pesanan. Perpanjangan tidak pernah memuat keduanya.`)
+    : L('A system’s licence is paid once, with the order: renewals never carry it.', 'Lisensi sistem dibayar sekali, bersama pesanan: perpanjangan tidak pernah memuatnya.')}</p>
         <p class="fineprint">${L('We check your QRIS payment by hand in 1–5 minutes, make your VPS within 1–2 hours, and email you its address and how to sign in.', 'Kami memeriksa pembayaran QRIS-mu secara manual dalam 1–5 menit, membuat VPS-mu dalam 1–2 jam, lalu mengirim alamat dan cara masuknya lewat email.')}</p>
       </form>`;
   const body = `<!-- hosting:start -->

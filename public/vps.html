@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Zeiko VPS — your own server in rupiah</title>
-<meta name="description" content="Zeiko VPS: a server of your own with an IPv4 address and 500 GB of egress a month, from Rp50.000 a month. Ubuntu, Debian, AlmaLinux, Rocky Linux, Windows, WordPress, n8n, ownCloud or OpenClaw.">
+<meta name="description" content="Zeiko VPS: a server of your own with an IPv4 address and 500 GB of egress a month, from Rp50.000 a month, for 1 to 12 months. 6 months or more: no setup, a free domain for 2 years and 2 months free. Ubuntu, Debian, AlmaLinux, Rocky Linux, Windows Server 2025, WordPress, n8n, ownCloud or OpenClaw.">
 <meta name="color-scheme" content="light dark">
 <!-- The top bar asks this address who is signed in. -->
 <meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
@@ -63,7 +63,7 @@
         </h1>
         <p class="lede">
           Pick a plan and a system, choose a password, and get your own VPS with an IPv4 address and 500 GB of egress a month.
-          From <strong data-price="vps:mini">Rp50.000</strong> a month.
+          From <strong data-price="vps:xs-1-2-25-25">Rp50.000</strong> a month, and 2 months free when you pay 6 months or more.
         </p>
         <div class="cta">
           <a class="btn btn-primary btn-lg" href="#plans">See the plans</a>
@@ -85,7 +85,8 @@
         <li>Sign in with a password, and with an SSH key too (Linux)</li>
         <li>Start, stop, reboot, reinstall, a new password and an emergency console, asked for in your Zeiko Account</li>
         <li>Move to a bigger plan any time, or to a smaller one from your next renewal</li>
-        <li>An address of your own under zeiko.biz.id, free, and a free domain with 6 months or more</li>
+        <li>An address of your own under zeiko.biz.id, free, and with 6 months or more a free domain for 2 years</li>
+        <li>Human support, 24/7, free</li>
       </ul>
     </div>
   </section>
@@ -94,72 +95,145 @@
     <div class="wrap">
       <div class="sec-head">
         <h2 class="sec-title" id="plansTitle">Pick a plan</h2>
-        <p class="sec-lede">Monthly, 6 months or yearly, in rupiah. 6 months cost six months’ price and a year costs less than twelve months. Setting it up is <span data-price="vps:setup">Rp5.000</span>, once, with your first payment.</p>
+        <p class="sec-lede">Pay for 1 to 12 months at a time, in rupiah: each month at the plan’s monthly price. A plan’s name is its vCPU, GB of RAM, GB of NVMe and GB of object storage.</p>
       </div>
+      <div class="vps-terms" role="note" aria-label="Pay longer, get more">
+        <p><strong>1 to 5 months</strong>: setting it up is <span data-price="vps:setup">Rp10.000</span>, once, with your order.</p>
+        <p><strong>6 to 12 months</strong>: no setup, a free .my.id, .biz.id or .web.id domain for its first 2 years, and <strong>2 months free</strong>. The 2 free months come with every payment of 6 months or more, renewals too.</p>
+      </div>
+      <h3 class="vps-tier">Extra Small</h3>
       <div class="plans host-plans">
-        <article class="plan" id="vps-mini">
-          <div class="plan-top"><h3>Mini</h3></div>
-          <p class="plan-price"><span data-price="vps:mini">Rp50.000</span><small>/month</small></p>
-          <p class="plan-reqs">or <strong data-price="vps:mini:half">Rp300.000</strong> for 6 months · or <strong data-price="vps:mini:year">Rp560.000</strong> a year, save <span data-price="vps:mini:save">Rp40.000</span></p>
+        <article class="plan" id="vps-xs-1-2-25-25">
+          <div class="plan-top"><h4>Extra Small 1.2.25.25</h4></div>
+          <p class="plan-price"><span data-price="vps:xs-1-2-25-25">Rp50.000</span><small>/month</small></p>
           <ul class="drive-facts host-specs">
             <li><strong>1</strong> vCPU</li>
             <li><strong>2 GB</strong> RAM</li>
-            <li><strong>20 GB</strong> NVMe storage</li>
-            <li><strong>30 GB</strong> object storage</li>
+            <li><strong>25 GB</strong> NVMe storage</li>
+            <li><strong>25 GB</strong> object storage</li>
           </ul>
-          <a class="btn btn-sm" href="/account/vps?plan=mini#order">Order</a>
+          <a class="btn btn-sm" href="/account/vps?plan=xs-1-2-25-25#order">Order</a>
         </article>
-        <article class="plan" id="vps-small">
-          <div class="plan-top"><h3>Small</h3></div>
-          <p class="plan-price"><span data-price="vps:small">Rp80.000</span><small>/month</small></p>
-          <p class="plan-reqs">or <strong data-price="vps:small:half">Rp480.000</strong> for 6 months · or <strong data-price="vps:small:year">Rp920.000</strong> a year, save <span data-price="vps:small:save">Rp40.000</span></p>
+        <article class="plan" id="vps-xs-1-2-64-64">
+          <div class="plan-top"><h4>Extra Small 1.2.64.64</h4></div>
+          <p class="plan-price"><span data-price="vps:xs-1-2-64-64">Rp90.000</span><small>/month</small></p>
+          <ul class="drive-facts host-specs">
+            <li><strong>1</strong> vCPU</li>
+            <li><strong>2 GB</strong> RAM</li>
+            <li><strong>64 GB</strong> NVMe storage</li>
+            <li><strong>64 GB</strong> object storage</li>
+          </ul>
+          <a class="btn btn-sm" href="/account/vps?plan=xs-1-2-64-64#order">Order</a>
+        </article>
+      </div>
+      <h3 class="vps-tier">Small</h3>
+      <div class="plans host-plans">
+        <article class="plan" id="vps-s-2-4-32-64">
+          <div class="plan-top"><h4>Small 2.4.32.64</h4></div>
+          <p class="plan-price"><span data-price="vps:s-2-4-32-64">Rp90.000</span><small>/month</small></p>
           <ul class="drive-facts host-specs">
             <li><strong>2</strong> vCPU</li>
-            <li><strong>2 GB</strong> RAM</li>
-            <li><strong>40 GB</strong> NVMe storage</li>
-            <li><strong>60 GB</strong> object storage</li>
+            <li><strong>4 GB</strong> RAM</li>
+            <li><strong>32 GB</strong> NVMe storage</li>
+            <li><strong>64 GB</strong> object storage</li>
           </ul>
-          <a class="btn btn-sm" href="/account/vps?plan=small#order">Order</a>
+          <a class="btn btn-sm" href="/account/vps?plan=s-2-4-32-64#order">Order</a>
         </article>
-        <article class="plan" id="vps-medium">
-          <div class="plan-top"><h3>Medium</h3></div>
-          <p class="plan-price"><span data-price="vps:medium">Rp160.000</span><small>/month</small></p>
-          <p class="plan-reqs">or <strong data-price="vps:medium:half">Rp960.000</strong> for 6 months · or <strong data-price="vps:medium:year">Rp1.800.000</strong> a year, save <span data-price="vps:medium:save">Rp120.000</span></p>
+        <article class="plan" id="vps-s-2-4-64-64">
+          <div class="plan-top"><h4>Small 2.4.64.64</h4></div>
+          <p class="plan-price"><span data-price="vps:s-2-4-64-64">Rp120.000</span><small>/month</small></p>
+          <ul class="drive-facts host-specs">
+            <li><strong>2</strong> vCPU</li>
+            <li><strong>4 GB</strong> RAM</li>
+            <li><strong>64 GB</strong> NVMe storage</li>
+            <li><strong>64 GB</strong> object storage</li>
+          </ul>
+          <a class="btn btn-sm" href="/account/vps?plan=s-2-4-64-64#order">Order</a>
+        </article>
+      </div>
+      <h3 class="vps-tier">Medium</h3>
+      <div class="plans host-plans">
+        <article class="plan" id="vps-m-2-8-64-64">
+          <div class="plan-top"><h4>Medium 2.8.64.64</h4></div>
+          <p class="plan-price"><span data-price="vps:m-2-8-64-64">Rp160.000</span><small>/month</small></p>
           <ul class="drive-facts host-specs">
             <li><strong>2</strong> vCPU</li>
             <li><strong>8 GB</strong> RAM</li>
             <li><strong>64 GB</strong> NVMe storage</li>
             <li><strong>64 GB</strong> object storage</li>
           </ul>
-          <a class="btn btn-sm" href="/account/vps?plan=medium#order">Order</a>
+          <a class="btn btn-sm" href="/account/vps?plan=m-2-8-64-64#order">Order</a>
         </article>
-        <article class="plan" id="vps-large">
-          <div class="plan-top"><h3>Large</h3></div>
-          <p class="plan-price"><span data-price="vps:large">Rp299.000</span><small>/month</small></p>
-          <p class="plan-reqs">or <strong data-price="vps:large:half">Rp1.794.000</strong> for 6 months · or <strong data-price="vps:large:year">Rp3.300.000</strong> a year, save <span data-price="vps:large:save">Rp288.000</span></p>
+        <article class="plan" id="vps-m-2-8-128-128">
+          <div class="plan-top"><h4>Medium 2.8.128.128</h4></div>
+          <p class="plan-price"><span data-price="vps:m-2-8-128-128">Rp200.000</span><small>/month</small></p>
           <ul class="drive-facts host-specs">
-            <li><strong>4</strong> vCPU</li>
-            <li><strong>14 GB</strong> RAM</li>
+            <li><strong>2</strong> vCPU</li>
+            <li><strong>8 GB</strong> RAM</li>
             <li><strong>128 GB</strong> NVMe storage</li>
             <li><strong>128 GB</strong> object storage</li>
           </ul>
-          <a class="btn btn-sm" href="/account/vps?plan=large#order">Order</a>
+          <a class="btn btn-sm" href="/account/vps?plan=m-2-8-128-128#order">Order</a>
         </article>
-        <article class="plan" id="vps-xl">
-          <div class="plan-top"><h3>Extra Large</h3></div>
-          <p class="plan-price"><span data-price="vps:xl">Rp570.000</span><small>/month</small></p>
-          <p class="plan-reqs">or <strong data-price="vps:xl:half">Rp3.420.000</strong> for 6 months · or <strong data-price="vps:xl:year">Rp6.650.000</strong> a year, save <span data-price="vps:xl:save">Rp190.000</span></p>
+        <article class="plan" id="vps-m-2-8-256-256">
+          <div class="plan-top"><h4>Medium 2.8.256.256</h4></div>
+          <p class="plan-price"><span data-price="vps:m-2-8-256-256">Rp280.000</span><small>/month</small></p>
           <ul class="drive-facts host-specs">
-            <li><strong>12</strong> vCPU</li>
-            <li><strong>24 GB</strong> RAM</li>
+            <li><strong>2</strong> vCPU</li>
+            <li><strong>8 GB</strong> RAM</li>
             <li><strong>256 GB</strong> NVMe storage</li>
             <li><strong>256 GB</strong> object storage</li>
           </ul>
-          <a class="btn btn-sm" href="/account/vps?plan=xl#order">Order</a>
+          <a class="btn btn-sm" href="/account/vps?plan=m-2-8-256-256#order">Order</a>
+        </article>
+      </div>
+      <h3 class="vps-tier">Large</h3>
+      <div class="plans host-plans">
+        <article class="plan" id="vps-l-4-16-64-128">
+          <div class="plan-top"><h4>Large 4.16.64.128</h4></div>
+          <p class="plan-price"><span data-price="vps:l-4-16-64-128">Rp280.000</span><small>/month</small></p>
+          <ul class="drive-facts host-specs">
+            <li><strong>4</strong> vCPU</li>
+            <li><strong>16 GB</strong> RAM</li>
+            <li><strong>64 GB</strong> NVMe storage</li>
+            <li><strong>128 GB</strong> object storage</li>
+          </ul>
+          <a class="btn btn-sm" href="/account/vps?plan=l-4-16-64-128#order">Order</a>
+        </article>
+        <article class="plan" id="vps-l-4-16-128-256">
+          <div class="plan-top"><h4>Large 4.16.128.256</h4></div>
+          <p class="plan-price"><span data-price="vps:l-4-16-128-256">Rp320.000</span><small>/month</small></p>
+          <ul class="drive-facts host-specs">
+            <li><strong>4</strong> vCPU</li>
+            <li><strong>16 GB</strong> RAM</li>
+            <li><strong>128 GB</strong> NVMe storage</li>
+            <li><strong>256 GB</strong> object storage</li>
+          </ul>
+          <a class="btn btn-sm" href="/account/vps?plan=l-4-16-128-256#order">Order</a>
+        </article>
+        <article class="plan" id="vps-l-4-16-256-600">
+          <div class="plan-top"><h4>Large 4.16.256.600</h4></div>
+          <p class="plan-price"><span data-price="vps:l-4-16-256-600">Rp400.000</span><small>/month</small></p>
+          <ul class="drive-facts host-specs">
+            <li><strong>4</strong> vCPU</li>
+            <li><strong>16 GB</strong> RAM</li>
+            <li><strong>256 GB</strong> NVMe storage</li>
+            <li><strong>600 GB</strong> object storage</li>
+          </ul>
+          <a class="btn btn-sm" href="/account/vps?plan=l-4-16-256-600#order">Order</a>
         </article>
       </div>
       <p class="fineprint host-order">Order in your Zeiko Account and pay by QRIS. We check your payment in 1–5 minutes and make your VPS within 1–2 hours, then email you its IP address and how to sign in.</p>
       <p class="fineprint">500 GB of egress a month is free on every plan. Past that, <strong data-price="vps:egress">Rp5.000</strong> per 500 GB.</p>
+    </div>
+  </section>
+
+  <section class="section" id="high-compute" aria-labelledby="hcTitle">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2 class="sec-title" id="hcTitle">VPS High Compute</h2>
+        <p class="sec-lede">Fast AMD EPYC Turin-D processors at 3.4 GHz, for work that needs a quick CPU. Plans and prices are coming soon.</p>
+      </div>
     </div>
   </section>
 
@@ -174,13 +248,13 @@
         <li>Debian</li>
         <li>AlmaLinux</li>
         <li>Rocky Linux</li>
-        <li>Windows, with its licence for <span data-price="vps:windows">Rp20.000</span>, once</li>
+        <li>Windows Server 2025, with its licence for <span data-price="vps:windows">Rp50.000</span>, once</li>
         <li>WordPress</li>
         <li>n8n</li>
         <li>ownCloud</li>
         <li>OpenClaw</li>
       </ul>
-      <p class="fineprint">Linux systems are signed in to with SSH; Windows with Remote Desktop.</p>
+      <p class="fineprint">Every Linux system is free. Linux systems are signed in to with SSH; Windows with Remote Desktop.</p>
     </div>
   </section>
 
@@ -193,7 +267,7 @@
       <ul class="ticks host-ticks">
         <li><strong>A name of your own</strong> straight under zeiko.biz.id, like <code>kantor.zeiko.biz.id</code>: <span data-price="hosting:name">Rp3.000</span> per 3 months, nothing to connect.</li>
         <li><strong>Your own domain</strong>, like <code>example.com</code>: <span data-price="hosting:domain">Rp5.000</span> per 3 months. You point it at your free address with a CNAME record.</li>
-        <li><strong>A free domain</strong> with 6 months or more: one .my.id, .biz.id or .web.id domain, registered for you and free for its first year, then <span data-price="vps:domain">Rp5.000</span> per 3 months with your renewals.</li>
+        <li><strong>A free domain</strong> with 6 months or more: one .my.id, .biz.id or .web.id domain, registered for you and free for its first 2 years, then <span data-price="vps:domain">Rp5.000</span> per 3 months with your renewals.</li>
       </ul>
       <p class="fineprint">A name or a domain is paid 3 months at a time, in the same QRIS as your VPS. Changing it later is one price, once: <span data-price="hosting:move-name">Rp3.000</span> to a name, <span data-price="hosting:move-domain">Rp5.000</span> to your own domain. It only changes where you sign in: SSH and Remote Desktop go straight to your VPS.</p>
     </div>
@@ -217,12 +291,16 @@
     <div class="wrap faq-layout">
       <div class="faq-intro">
         <h2 class="sec-title" id="faqTitle">Questions, answered</h2>
-        <p class="sec-lede">Something else? Chat us on <a href="https://wa.me/6281932416096">WhatsApp +62 819-3241-6096</a> (08.00–22.00 WIB).</p>
+        <p class="sec-lede">Something else? Chat us on <a href="https://wa.me/6281932416096">WhatsApp +62 819-3241-6096</a>: people answer, 24/7.</p>
       </div>
       <div class="faq-list">
         <details class="faq" open>
           <summary>How do I order?</summary>
-          <p>Press Order on the plan you want. You sign in to your Zeiko Account (or make one), pick a system, name your VPS, choose a password, choose monthly, 6 months or yearly, and pay by QRIS. We make your VPS within 1–2 hours.</p>
+          <p>Press Order on the plan you want. You sign in to your Zeiko Account (or make one), pick a system, name your VPS, choose a password, choose 1 to 12 months, and pay by QRIS. We make your VPS within 1–2 hours.</p>
+        </details>
+        <details class="faq">
+          <summary>What do I get for paying 6 months or more?</summary>
+          <p>No setup fee, a free .my.id, .biz.id or .web.id domain for its first 2 years, and 2 months free: pay 6 months and your VPS runs for 8, pay 12 and it runs for 14. The 2 free months come with every renewal of 6 months or more too. Under 6 months, setting it up is <span data-price="vps:setup">Rp10.000</span>, once.</p>
         </details>
         <details class="faq">
           <summary>How much traffic is included?</summary>
@@ -250,7 +328,11 @@
         </details>
         <details class="faq">
           <summary>Do I get a free domain?</summary>
-          <p>With 6 months or more, one .my.id, .biz.id or .web.id domain, free for its first year; after that <span data-price="vps:domain">Rp5.000</span> per 3 months with your renewals.</p>
+          <p>With 6 months or more, one .my.id, .biz.id or .web.id domain, free for its first 2 years; after that <span data-price="vps:domain">Rp5.000</span> per 3 months with your renewals.</p>
+        </details>
+        <details class="faq">
+          <summary>Is there support?</summary>
+          <p>Yes, from people, 24/7, and free. Chat us on WhatsApp any time.</p>
         </details>
       </div>
     </div>
