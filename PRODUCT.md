@@ -72,9 +72,10 @@ product for their need in one screen and finishes ordering without help.
 
 - Names: Zeiko (the site), Zeiko Sites, Zeiko Hosting, Zeiko VPS, Zeiko Drive, Zeiko S3, Zeiko Account,
   Zeiko Chat.
-- The Zeiko logo (the owner's choice, 2026-11-02): **zeiko** in lowercase, drawn in one line weight,
-  the dot of its i in amber; the icon is the z with that dot on a navy tile (`public/img/logo.svg`;
-  every file and render in `brand/zeiko/`). Zeiko Chat keeps the earlier mark until the owner says
+- The Zeiko logo (the owner's choice, 2026-11-02): the **kawung** mark (four petals of the batik
+  motif round one amber dot, on a navy tile) and **Zeiko** in Plus Jakarta Sans ExtraBold, the dot of
+  its i a round amber one like the mark's centre (`public/img/logo.svg`; every file and render in
+  `brand/zeiko/`). Zeiko Chat keeps the earlier mark until the owner says
   otherwise.
 - Wording the owner set stays as written: the QRIS "Thanks, we're gonna check your payment".
 - **The look** is `DESIGN.md`'s (2026-11-02, on the owner's word "aku serahkan semua ke kamu … no AI

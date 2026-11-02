@@ -195,7 +195,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .topbar.is-scrolled { box-shadow: 0 1px 0 var(--line), 0 6px 18px rgba(31, 38, 57, 0.06); }
 .topbar-in { display: flex; flex-wrap: wrap; align-items: center; column-gap: 12px; padding-top: 10px; padding-bottom: 0; }
 .brand { display: inline-flex; align-items: center; color: var(--ink); text-decoration: none; margin-right: auto; padding: 6px 0; }
-.wordmark { display: block; height: 26px; width: auto; color: var(--ink); overflow: visible; }
+.wordmark { display: block; height: 32px; width: auto; color: var(--ink); }
 .wordmark .dot { fill: var(--amber); }
 .topbar-tools { display: flex; align-items: center; gap: 8px; }
 .lang-switch { display: inline-grid; place-items: center; min-width: 40px; height: 40px; padding: 0 8px; border: 1px solid var(--line); border-radius: var(--r); font-size: 14px; font-weight: 700; text-decoration: none; color: var(--ink); }
@@ -236,7 +236,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .footer { border-top: 1px solid var(--line); background: var(--ground); margin-top: 72px; padding: 40px 0 28px; font-size: 14px; color: var(--muted); }
 .footer-grid { display: grid; gap: 28px; }
 .footer-brand p { margin-top: 10px; max-width: 40ch; }
-.footer-brand .wordmark { height: 24px; }
+.footer-brand .wordmark { height: 30px; }
 .footer-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 24px; }
 .footer-cols h2 { font-size: 14px; font-weight: 700; color: var(--ink); letter-spacing: 0; margin-bottom: 8px; }
 .footer-cols a { display: block; padding: 4px 0; color: var(--muted); text-decoration: none; }
@@ -662,7 +662,7 @@ legend { padding: 0; }
 .auth-aside { display: grid; gap: 18px; align-content: start; }
 @media (max-width: 899px) { .auth-split .auth-aside { order: 2; } }
 .auth-kicker { display: flex; align-items: center; gap: 10px; color: var(--muted); font-weight: 600; }
-.auth-kicker .wordmark { height: 24px; color: var(--ink); }
+.auth-kicker .wordmark { height: 30px; color: var(--ink); }
 .auth-pitch { font-size: clamp(1.6rem, 4vw, 2.2rem); font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; color: var(--ink); }
 .auth-points { list-style: none; display: grid; gap: 14px; border-top: 1px solid var(--line); padding-top: 18px; }
 .auth-points li { color: var(--muted); }

@@ -135,8 +135,8 @@ public/
                   are pictures, so the check cannot read their prices: when a price on
                   a product page changes, make the sheet again, and strip the export's
                   metadata (it names the design and its author) before it goes in
-  img/            logo.svg: the Zeiko icon (the z and the amber dot of the logo,
-                  brand/zeiko/); mark-16.svg / mark-32.svg: the same icon drawn in
+  img/            logo.svg: the Zeiko mark (kawung: four petals round an amber
+                  dot, brand/zeiko/); mark-16.svg / mark-32.svg: the same icon drawn in
                   pixels (the favicon); mark-mail.png: the icon the account emails
                   show. The site draws no other icons: words carry every action
   fonts/          Plus Jakarta Sans and Cousine (woff2, Latin subset), the site's own
