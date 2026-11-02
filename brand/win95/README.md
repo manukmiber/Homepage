@@ -1,5 +1,7 @@
 # Logo Zeiko — versi Windows 95
 
+Ini tanda lama. Logo Zeiko sejak 2026-11-02 ada di `brand/zeiko/`.
+
 Tanda Zeiko (jaring, pilar, dua kelelawar) digambar ulang sebagai ikon piksel, dengan nama "Zeiko" dalam
 huruf bitmap tebal. Semua digambar untuk Zeiko; tidak ada logo, ikon atau nama Windows/Microsoft di
 dalamnya. `overview.png` menampilkan semuanya sekaligus.

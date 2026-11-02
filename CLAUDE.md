@@ -143,9 +143,10 @@ public/
                   are pictures, so the check cannot read their prices: when a price on
                   a product page changes, make the sheet again, and strip the export's
                   metadata (it names the design and its author) before it goes in
-  img/            logo.svg / logo-day.svg: the Zeiko mark, shared with Zeiko Chat;
-                  mark-16.svg / mark-32.svg: the same mark drawn in pixels (title
-                  bars, the Start button, the favicon); icons/: 16×16 pixel icons
+  img/            logo.svg: the Zeiko icon (the z and the amber dot of the logo,
+                  brand/zeiko/); mark-16.svg / mark-32.svg: the same icon drawn in
+                  pixels (title bars, the Start button, the favicon); mark-mail.png:
+                  the icon the account emails show; icons/: 16×16 pixel icons
                   drawn for Zeiko, shown at 16 or 32 px, never another size
   fonts/          Arimo and Cousine (woff2, Latin subset), the site's own font
                   files; their licences are in fonts/ at the repository's root;
