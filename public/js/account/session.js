@@ -9,7 +9,7 @@
 import { displayName, hinted, meLink, remember } from './me.js';
 
 const DOOR = (document.querySelector('meta[name="zeiko-accounts"]') || {}).content?.replace(/\/+$/, '') || '';
-const signIn = document.querySelector('#nav .nav-account');
+const signIn = document.querySelector('#nav .nav-account, .topbar-tools .nav-account');
 const TITLE = document.documentElement.lang === 'id' ? 'Akunmu' : 'Your account';
 let me = null;
 

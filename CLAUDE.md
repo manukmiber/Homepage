@@ -112,10 +112,11 @@ commit messages: say what the customer gets, never where it comes from.
 
 ```
 public/
-  index.html      landing, drawn as a desktop: icons down the side, one window per
-                  section (Pranata V1 hero and #decision first, then Zeiko Drive
-                  (#drive), the roleplay models, pricing + cost estimator, FAQ,
-                  contact, About), and a taskbar whose Start menu is the navigation
+  index.html      the homepage (the owner's, 2026-11-02: the cloud products only):
+                  "What do you want to put online?" and four needs, each with its
+                  product and starting price (Drive's from its catalog), how ordering
+                  works, what comes with every product, FAQ, WhatsApp. A hosting page
+                  for the check (HOSTING_PAGES)
   id/             every page above and below in Indonesian (see "Two languages")
   drive.html      /drive: Zeiko Drive's features, plans (drawn from Drive's catalog), FAQ
   id/drive.html   /id/drive: the same page in Indonesian
@@ -151,10 +152,10 @@ public/
   fonts/          Arimo and Cousine (woff2, Latin subset), the site's own font
                   files; their licences are in fonts/ at the repository's root;
                   sites/: the fonts of Zeiko Sites' designs (TEMPLATES.md)
-  css/style.css   the only stylesheet; colour and bevel tokens for light and dark
-  js/main.js      theme, mobile menu, topbar, copy buttons, effort bars, plan
-                  value, estimator, chart hover, and the homepage desktop (caption
-                  buttons, taskbar buttons, the Start menu, the clock)
+  css/site.css    the stylesheet of the cloud pages (DESIGN.md): tokens for light and
+                  dark; css/style.css is the old one, still on the pages not yet moved
+  js/main.js      the light and dark switch, the language cookie, the header's shadow,
+                  copy buttons, the footer's year
   js/try.js       the homepage playground (#try): asks the account door's /v1/try
   docs/           /docs: one plain page per topic (index.html is /docs/)
   account/index.html  /account and every page under it: one plain page

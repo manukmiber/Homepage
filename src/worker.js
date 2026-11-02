@@ -78,19 +78,44 @@ function s3Shown(rewriter, facts) {
     });
 }
 
-/** / and /id/: the homepage as written, with Zeiko S3 shown once it is open. */
+/** / and /id/: the homepage as written, with Drive's lowest price from its
+ * catalog and Zeiko S3 shown once it is open. */
 async function homePage(request, env, lang) {
   const page = await env.ASSETS.fetch(request);
   if (!page.ok || !(page.headers.get('content-type') || '').includes('text/html')) return page;
   const catalog = await driveCatalog(env, request.url);
   const s3 = catalog ? renderS3(catalog, lang) : null;
-  if (!s3) return page;
-  const out = s3Shown(new HTMLRewriter(), s3).transform(page);
+  const from = catalog ? cheapest(catalog) : null;
+  if (!s3 && !from) return page;
+  const out = driveFrom(s3Shown(new HTMLRewriter(), s3), from).transform(page);
   const headers = new Headers(out.headers);
   headers.delete('etag');
   headers.delete('last-modified');
   headers.set('cache-control', 'public, max-age=60');
   return new Response(out.body, { status: out.status, headers });
+}
+
+/** Drive's lowest price where a page asks for it (`[data-drive-from]`), and
+ * its note shown in place of the plain words (`[data-drive-plain]`). */
+function driveFrom(rewriter, from) {
+  if (!from) return rewriter;
+  return rewriter
+    .on('[data-drive-from]', {
+      element(el) {
+        el.setInnerContent(from);
+        el.removeAttribute('hidden');
+      },
+    })
+    .on('[data-drive-from-note]', {
+      element(el) {
+        el.removeAttribute('hidden');
+      },
+    })
+    .on('[data-drive-plain]', {
+      element(el) {
+        el.setAttribute('hidden', '');
+      },
+    });
 }
 
 /** /drive and /id/drive, with the plan cards from Drive's catalog. */
@@ -103,23 +128,10 @@ async function drivePage(request, env, lang) {
   const family = catalog ? hasFamily(catalog) : false;
   const s3 = catalog ? renderS3(catalog, lang) : null;
   if (!cards && !s3) return page;
-  const out = s3Shown(new HTMLRewriter(), s3)
+  const out = driveFrom(s3Shown(new HTMLRewriter(), s3), from)
     .on('[data-drive-plans]', {
       element(el) {
         if (cards) el.setInnerContent(cards, { html: true });
-      },
-    })
-    .on('[data-drive-from]', {
-      element(el) {
-        if (from) {
-          el.setInnerContent(from);
-          el.removeAttribute('hidden');
-        }
-      },
-    })
-    .on('[data-drive-from-note]', {
-      element(el) {
-        if (from) el.removeAttribute('hidden');
       },
     })
     .on('[data-drive-family]', {

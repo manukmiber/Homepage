@@ -15,7 +15,7 @@
 <link rel="alternate" hreflang="en" href="/marketing-template">
 <link rel="alternate" hreflang="id" href="/id/marketing-template">
 <link rel="icon" href="/img/mark-32.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/site.css">
 </head>
 <body>
 
@@ -23,31 +23,20 @@
 
 <header class="topbar">
   <div class="wrap topbar-in">
-    <a class="brand" href="/">
-      <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
-      <span class="brand-name">Zeiko</span><span class="brand-doc" aria-hidden="true"> - Marketing</span>
-    </a>
-
-    <nav class="nav" id="nav" aria-label="Main navigation">
-      <a href="/#decision">Pranata V1</a>
-      <a href="/drive">Drive</a>
+    <a class="brand" href="/" aria-label="Zeiko, home"><svg class="wordmark" viewBox="-1 -18 131 46" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 0H19L3 24H19M29.5 12H53.5A12 12 0 1 0 50.69 19.71M63.5 0V24M76 -14V24M91 0L77 13M83 8L92 24"/><circle cx="114" cy="12" r="12"/></g><circle class="dot" cx="63.5" cy="-11" r="4.4"/></svg></a>
+    <nav class="nav" id="nav" aria-label="Products">
+      <a href="/sites">Sites</a>
       <a href="/hosting">Hosting</a>
-      <a href="/#models">Roleplay</a>
-      <a href="/models">Models</a>
-      <a href="/docs/">Docs</a>
-      <a class="nav-account" href="/account">Sign in</a>
-      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Create account</a>
+      <a href="/vps">VPS</a>
+      <a href="/drive">Drive</a>
+      <a href="/docs/">Guides</a>
+      <a href="/status">Status</a>
     </nav>
-
     <div class="topbar-tools">
-      <a class="lang-switch" href="/id/marketing-template" hreflang="id" lang="id" data-lang="id">ID</a>
-      <button class="icon-btn" id="theme" type="button" aria-label="Switch light and dark theme">
-        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-      </button>
-      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      </button>
+      <a class="lang-switch" href="/id/marketing-template" hreflang="id" lang="id" data-lang="id" title="Bahasa Indonesia">ID</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Switch between light and dark"><svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button>
+      <a class="nav-account" href="/account">Sign in</a>
+      <a class="btn btn-sm btn-primary signup" href="/account/signup" data-signed-out>Create account</a>
     </div>
   </div>
 </header>
@@ -78,71 +67,59 @@
         <p class="sec-lede">Tap a picture to see it full size. The Download button gets a 1588 × 2246 pixel PNG, sharp enough to print on A4 paper.</p>
       </div>
       <ul class="promo-grid">
-        <li class="win promo" id="hosting">
-          <div class="win-title"><img src="/img/icons/hosting.svg" alt="" width="16" height="16"><h3 class="win-name">Zeiko Hosting · cPanel prices</h3></div>
-          <div class="win-body">
+        <li class="promo" id="hosting">
+          <h3>Zeiko Hosting · cPanel prices</h3>
             <a class="promo-shot" href="/img/marketing/zeiko-hosting.png"><img src="/img/marketing/zeiko-hosting.jpg" width="794" height="1123" loading="lazy" alt="Zeiko Hosting sheet, in Indonesian: five cPanel plans by the month, your address, and what every plan comes with."></a>
             <p class="promo-what">Five plans by the month, your address, and what every plan comes with.</p>
             <div class="promo-actions">
               <a class="btn btn-primary" href="/img/marketing/zeiko-hosting.png" download="zeiko-hosting.png" type="image/png">Download PNG · 340 KB</a>
               <a class="btn-link" href="/hosting">Zeiko Hosting page</a>
             </div>
-          </div>
         </li>
-        <li class="win promo" id="vps">
-          <div class="win-title"><img src="/img/icons/hosting.svg" alt="" width="16" height="16"><h3 class="win-name">Zeiko VPS · server prices</h3></div>
-          <div class="win-body">
+        <li class="promo" id="vps">
+          <h3>Zeiko VPS · server prices</h3>
             <a class="promo-shot" href="/img/marketing/zeiko-vps.png"><img src="/img/marketing/zeiko-vps.jpg" width="794" height="1123" loading="lazy" alt="Zeiko VPS sheet, in Indonesian: five plans by the month, Linux or Windows, and what every plan comes with."></a>
             <p class="promo-what">Five plans by the month, Linux or Windows, and what every plan comes with.</p>
             <div class="promo-actions">
               <a class="btn btn-primary" href="/img/marketing/zeiko-vps.png" download="zeiko-vps.png" type="image/png">Download PNG · 330 KB</a>
               <a class="btn-link" href="/vps">Zeiko VPS page</a>
             </div>
-          </div>
         </li>
-        <li class="win promo" id="sites-sekolah">
-          <div class="win-title"><img src="/img/icons/page.svg" alt="" width="16" height="16"><h3 class="win-name">Zeiko Sites · schools &amp; events</h3></div>
-          <div class="win-body">
+        <li class="promo" id="sites-sekolah">
+          <h3>Zeiko Sites · schools &amp; events</h3>
             <a class="promo-shot" href="/img/marketing/zeiko-sites-sekolah-acara.png"><img src="/img/marketing/zeiko-sites-sekolah-acara.jpg" width="794" height="1123" loading="lazy" alt="Zeiko Sites sheet for schools and events, in Indonesian: school profile, class, school blog, library, yearbook, project website and invitation."></a>
             <p class="promo-what">School profile, class, school blog, library and alumni, plus a project website and an invitation by the event.</p>
             <div class="promo-actions">
               <a class="btn btn-primary" href="/img/marketing/zeiko-sites-sekolah-acara.png" download="zeiko-sites-sekolah-acara.png" type="image/png">Download PNG · 340 KB</a>
               <a class="btn-link" href="/sites">Zeiko Sites page</a>
             </div>
-          </div>
         </li>
-        <li class="win promo" id="sites-usaha">
-          <div class="win-title"><img src="/img/icons/page.svg" alt="" width="16" height="16"><h3 class="win-name">Zeiko Sites · personal &amp; business</h3></div>
-          <div class="win-body">
+        <li class="promo" id="sites-usaha">
+          <h3>Zeiko Sites · personal &amp; business</h3>
             <a class="promo-shot" href="/img/marketing/zeiko-sites-pribadi-usaha.png"><img src="/img/marketing/zeiko-sites-pribadi-usaha.jpg" width="794" height="1123" loading="lazy" alt="Zeiko Sites sheet for people and businesses, in Indonesian: portfolio, teacher's CV, link-in-bio, business card and small business catalogue."></a>
             <p class="promo-what">Portfolio, teacher's CV, link-in-bio, business card and small business catalogue.</p>
             <div class="promo-actions">
               <a class="btn btn-primary" href="/img/marketing/zeiko-sites-pribadi-usaha.png" download="zeiko-sites-pribadi-usaha.png" type="image/png">Download PNG · 330 KB</a>
               <a class="btn-link" href="/sites">Zeiko Sites page</a>
             </div>
-          </div>
         </li>
-        <li class="win promo" id="drive">
-          <div class="win-title"><img src="/img/icons/drive.svg" alt="" width="16" height="16"><h3 class="win-name">Zeiko Drive · every feature</h3></div>
-          <div class="win-body">
+        <li class="promo" id="drive">
+          <h3>Zeiko Drive · every feature</h3>
             <a class="promo-shot" href="/img/marketing/zeiko-drive-fitur.png"><img src="/img/marketing/zeiko-drive-fitur.jpg" width="794" height="1123" loading="lazy" alt="Zeiko Drive sheet, in Indonesian: unlimited uploads, sharing by link, the family Drive, compression, download as ZIP, editing in the browser, safe and private."></a>
             <p class="promo-what">Uploads, sharing by link, the family Drive, compression, ZIP, editing in the browser, and keeping files safe.</p>
             <div class="promo-actions">
               <a class="btn btn-primary" href="/img/marketing/zeiko-drive-fitur.png" download="zeiko-drive-fitur.png" type="image/png">Download PNG · 320 KB</a>
               <a class="btn-link" href="/drive">Zeiko Drive page</a>
             </div>
-          </div>
         </li>
-        <li class="win promo" id="drive-editor">
-          <div class="win-title"><img src="/img/icons/drive.svg" alt="" width="16" height="16"><h3 class="win-name">Zeiko Drive · editors in the browser</h3></div>
-          <div class="win-body">
+        <li class="promo" id="drive-editor">
+          <h3>Zeiko Drive · editors in the browser</h3>
             <a class="promo-shot" href="/img/marketing/zeiko-drive-editor.png"><img src="/img/marketing/zeiko-drive-editor.jpg" width="794" height="1123" loading="lazy" alt="Zeiko Drive editors sheet, in Indonesian: photo, video, PDF, document, spreadsheet, text and code, and ZIP."></a>
             <p class="promo-what">Photo, video, PDF, document, spreadsheet, text and ZIP editors, right from Drive.</p>
             <div class="promo-actions">
               <a class="btn btn-primary" href="/img/marketing/zeiko-drive-editor.png" download="zeiko-drive-editor.png" type="image/png">Download PNG · 310 KB</a>
               <a class="btn-link" href="/drive">Zeiko Drive page</a>
             </div>
-          </div>
         </li>
       </ul>
     </div>
@@ -166,35 +143,24 @@
 <footer class="footer">
   <div class="wrap footer-grid">
     <div class="footer-brand">
-      <a class="brand" href="/">
-        <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
-        <span class="brand-name">Zeiko</span>
-      </a>
-      <p>Pranata V1 for decisions, three roleplay models, Zeiko Drive for your files and Zeiko Hosting for your sites.</p>
+      <a class="brand" href="/" aria-label="Zeiko, home"><svg class="wordmark" viewBox="-1 -18 131 46" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 0H19L3 24H19M29.5 12H53.5A12 12 0 1 0 50.69 19.71M63.5 0V24M76 -14V24M91 0L77 13M83 8L92 24"/><circle cx="114" cy="12" r="12"/></g><circle class="dot" cx="63.5" cy="-11" r="4.4"/></svg></a>
+      <p>Websites, hosting, servers and a drive for your files. Help on WhatsApp, 08.00–22.00 WIB.</p>
     </div>
-    <nav class="footer-cols" aria-label="Footer links">
+    <nav class="footer-cols" aria-label="Footer">
       <div>
-        <h2>Hosting</h2>
+        <h2>Products</h2>
+        <a href="/sites">Zeiko Sites</a>
+        <a href="/hosting">Zeiko Hosting</a>
         <a href="/vps">Zeiko VPS</a>
-        <a href="/hosting#features">What you can run</a>
-        <a href="/hosting#plans">Plans</a>
-        <a href="/hosting#address">Your address</a>
-        <a href="/sites">Static sites &amp; packages</a>
-        <a href="/docs/hosting">Hosting docs</a>
-        <a href="/status">Status</a>
-      </div>
-      <div>
-        <h2>Drive</h2>
         <a href="/drive">Zeiko Drive</a>
-        <a href="/drive#plans">Drive plans</a>
         <a href="https://drive.zeiko.biz.id">Open Drive</a>
       </div>
       <div>
-        <h2>AI models</h2>
-        <a href="/#decision">Pranata V1</a>
-        <a href="/#models">Roleplay models</a>
-        <a href="/models">Specs &amp; performance</a>
-        <a href="/docs/">Docs</a>
+        <h2>Help</h2>
+        <a href="/docs/">Guides</a>
+        <a href="/status">Status</a>
+        <a href="/marketing-template">Price sheets</a>
+        <a href="https://wa.me/6281932416096">WhatsApp +62 819-3241-6096</a>
       </div>
       <div>
         <h2>Account</h2>
@@ -206,7 +172,6 @@
   </div>
   <div class="wrap footer-base">
     <p>© <span id="year">2026</span> Zeiko</p>
-    <p>The sheets are in Indonesian.</p>
   </div>
 </footer>
 

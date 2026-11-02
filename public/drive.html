@@ -14,7 +14,7 @@
 <link rel="alternate" hreflang="en" href="/drive">
 <link rel="alternate" hreflang="id" href="/id/drive">
 <link rel="icon" href="/img/mark-32.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/site.css">
 </head>
 <body>
 
@@ -33,31 +33,20 @@
 
 <header class="topbar">
   <div class="wrap topbar-in">
-    <a class="brand" href="/">
-      <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
-      <span class="brand-name">Zeiko</span><span class="brand-doc" aria-hidden="true"> - Drive</span>
-    </a>
-
-    <nav class="nav" id="nav" aria-label="Main navigation">
-      <a href="/#decision">Pranata V1</a>
-      <a href="/drive" aria-current="page">Drive</a>
+    <a class="brand" href="/" aria-label="Zeiko, home"><svg class="wordmark" viewBox="-1 -18 131 46" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 0H19L3 24H19M29.5 12H53.5A12 12 0 1 0 50.69 19.71M63.5 0V24M76 -14V24M91 0L77 13M83 8L92 24"/><circle cx="114" cy="12" r="12"/></g><circle class="dot" cx="63.5" cy="-11" r="4.4"/></svg></a>
+    <nav class="nav" id="nav" aria-label="Products">
+      <a href="/sites">Sites</a>
       <a href="/hosting">Hosting</a>
-      <a href="/#models">Roleplay</a>
-      <a href="/models">Models</a>
-      <a href="/docs/">Docs</a>
-      <a class="nav-account" href="/account">Sign in</a>
-      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Create account</a>
+      <a href="/vps">VPS</a>
+      <a href="/drive" aria-current="page">Drive</a>
+      <a href="/docs/">Guides</a>
+      <a href="/status">Status</a>
     </nav>
-
     <div class="topbar-tools">
-      <a class="lang-switch" href="/id/drive" hreflang="id" lang="id" data-lang="id">ID</a>
-      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
-        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-      </button>
-      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      </button>
+      <a class="lang-switch" href="/id/drive" hreflang="id" lang="id" data-lang="id" title="Bahasa Indonesia">ID</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Switch between light and dark"><svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button>
+      <a class="nav-account" href="/account">Sign in</a>
+      <a class="btn btn-sm btn-primary signup" href="/account/signup" data-signed-out>Create account</a>
     </div>
   </div>
 </header>
@@ -81,17 +70,16 @@
         </div>
         <p class="hero-signin" data-signed-out>One Zeiko Account for Drive, Pranata V1 and Zeiko Chat. Already have one? <a href="/account/signin?next=/dashboard">Sign in</a></p>
       </div>
-      <figure class="drv win" aria-label="Zeiko Drive, drawn as an example">
+      <figure class="drv" aria-label="Zeiko Drive, drawn as an example">
         <div class="drv-bar">
-          <img src="/img/icons/drive.svg" alt="" width="16" height="16">
           <span class="drv-path">My Drive <b aria-hidden="true">\</b> <strong>Trip to Bali</strong></span>
           <span class="demo-note">Illustration</span>
         </div>
         <ul class="drv-list">
-          <li class="drv-row"><img src="/img/icons/drive.svg" alt="" width="16" height="16"><span class="drv-name">Itinerary</span><span class="drv-size">12 files</span></li>
-          <li class="drv-row"><img src="/img/icons/image.svg" alt="" width="16" height="16"><span class="drv-name">sunset-kuta.jpg</span><span class="drv-tag">Shared</span><span class="drv-size">4.2 MB</span></li>
-          <li class="drv-row"><img src="/img/icons/film.svg" alt="" width="16" height="16"><span class="drv-name">drone-uluwatu.mp4</span><span class="drv-size">1.3 GB</span></li>
-          <li class="drv-row"><img src="/img/icons/page.svg" alt="" width="16" height="16"><span class="drv-name">tickets.pdf</span><span class="drv-size">380 KB</span></li>
+          <li class="drv-row"><span class="drv-name">Itinerary</span><span class="drv-size">12 files</span></li>
+          <li class="drv-row"><span class="drv-name">sunset-kuta.jpg</span><span class="drv-tag">Shared</span><span class="drv-size">4.2 MB</span></li>
+          <li class="drv-row"><span class="drv-name">drone-uluwatu.mp4</span><span class="drv-size">1.3 GB</span></li>
+          <li class="drv-row"><span class="drv-name">tickets.pdf</span><span class="drv-size">380 KB</span></li>
         </ul>
         <div class="drv-up">
           <span class="drv-up-text"><span>Uploading clips.zip</span><span class="drv-up-bar" aria-hidden="true"><i></i></span></span>
@@ -101,7 +89,7 @@
           <span class="drv-meter-text"><small>Storage</small><span>38.4 GB of 200 GB</span></span>
           <span class="drv-meter-bar" aria-hidden="true"><i></i></span>
         </div>
-        <p class="drv-toast" aria-hidden="true"><img src="/img/icons/link.svg" alt="" width="16" height="16"><span><strong>Link copied</strong><small>Expires in 7 days</small></span></p>
+        <p class="drv-toast" aria-hidden="true"><span><strong>Link copied</strong><small>Expires in 7 days</small></span></p>
       </figure>
     </div>
   </section>
@@ -114,33 +102,27 @@
       </div>
       <div class="kinds">
         <article class="kind">
-          <img src="/img/icons/bolt.svg" alt="" width="32" height="32">
           <h3>Full speed, both ways</h3>
           <p>No speed caps on uploads or downloads. Big uploads carry on where they stopped if your connection drops.</p>
         </article>
         <article class="kind">
-          <img src="/img/icons/link.svg" alt="" width="32" height="32">
           <h3>Share with a link</h3>
           <p>One click to download, no sign-in for the other side. Add a password, an end date or a download limit, and send it by WhatsApp, Telegram, email or QR.</p>
         </article>
         <!-- Shown once a family plan is on sale. -->
         <article class="kind" data-drive-family hidden>
-          <img src="/img/icons/family.svg" alt="" width="32" height="32">
           <h3>Family plans</h3>
           <p>One plan for the whole family. Everyone keeps a private My Drive, and a Family Drive holds what you share.</p>
         </article>
         <article class="kind">
-          <img src="/img/icons/shield.svg" alt="" width="32" height="32">
           <h3>Private by default</h3>
           <p>Only you see your files. A family owner sees how much each member uses, never what is in it.</p>
         </article>
         <article class="kind">
-          <img src="/img/icons/shrink.svg" alt="" width="32" height="32">
           <h3>Make photos and videos smaller</h3>
           <p>Compress a photo or a video in a tap. If it doesn’t get smaller, nothing changes and your credit comes back.</p>
         </article>
         <article class="kind">
-          <img src="/img/icons/drive.svg" alt="" width="32" height="32">
           <h3>Download a whole folder</h3>
           <p>Pick files or a folder and take them as one ZIP, straight away.</p>
         </article>
@@ -209,31 +191,24 @@
 <footer class="footer">
   <div class="wrap footer-grid">
     <div class="footer-brand">
-      <a class="brand" href="/">
-        <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
-        <span class="brand-name">Zeiko</span>
-      </a>
-      <p>Pranata V1 for decisions, three roleplay models, and Zeiko Drive for your files.</p>
+      <a class="brand" href="/" aria-label="Zeiko, home"><svg class="wordmark" viewBox="-1 -18 131 46" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 0H19L3 24H19M29.5 12H53.5A12 12 0 1 0 50.69 19.71M63.5 0V24M76 -14V24M91 0L77 13M83 8L92 24"/><circle cx="114" cy="12" r="12"/></g><circle class="dot" cx="63.5" cy="-11" r="4.4"/></svg></a>
+      <p>Websites, hosting, servers and a drive for your files. Help on WhatsApp, 08.00–22.00 WIB.</p>
     </div>
-    <nav class="footer-cols" aria-label="Footer links">
+    <nav class="footer-cols" aria-label="Footer">
       <div>
-        <h2>Drive</h2>
-        <a href="/drive#features">What it does</a>
-        <a href="/drive#plans">Plans</a>
-        <a href="/drive#s3" data-s3 hidden>Zeiko S3</a>
+        <h2>Products</h2>
+        <a href="/sites">Zeiko Sites</a>
+        <a href="/hosting">Zeiko Hosting</a>
+        <a href="/vps">Zeiko VPS</a>
+        <a href="/drive">Zeiko Drive</a>
         <a href="https://drive.zeiko.biz.id">Open Drive</a>
       </div>
       <div>
-        <h2>AI models</h2>
-        <a href="/#decision">Pranata V1</a>
-        <a href="/#models">Roleplay models</a>
-        <a href="/models">Specs &amp; performance</a>
-      </div>
-      <div>
-        <h2>Docs</h2>
-        <a href="/docs/">Getting started</a>
-        <a href="/docs/api">API basics</a>
-        <a href="/docs/faq">Troubleshooting</a>
+        <h2>Help</h2>
+        <a href="/docs/">Guides</a>
+        <a href="/status">Status</a>
+        <a href="/marketing-template">Price sheets</a>
+        <a href="https://wa.me/6281932416096">WhatsApp +62 819-3241-6096</a>
       </div>
       <div>
         <h2>Account</h2>
@@ -245,7 +220,6 @@
   </div>
   <div class="wrap footer-base">
     <p>© <span id="year">2026</span> Zeiko</p>
-    <p>Drive prices in rupiah.</p>
   </div>
 </footer>
 

@@ -242,7 +242,9 @@ function driveAllows(src, ranges, m) {
 // plan comes with — web and object storage, MySQL databases, Cloudflare CDN
 // — its prices in rupiah, and paying for one. Only these words; every other
 // rule holds there too, so nothing says who runs the hosting or how.
-const HOSTING_PAGES = new Set([join(PUBLIC, 'hosting.html'), join(PUBLIC, 'id', 'hosting.html'), join(PUBLIC, 'vps.html'), join(PUBLIC, 'id', 'vps.html'), join(PUBLIC, 'sites.html'), join(PUBLIC, 'id', 'sites.html')]);
+// The homepage is one of them since the AI products left the site (the
+// owner's, 2026-11-02): it sells the cloud products and nothing else.
+const HOSTING_PAGES = new Set([join(PUBLIC, 'hosting.html'), join(PUBLIC, 'id', 'hosting.html'), join(PUBLIC, 'vps.html'), join(PUBLIC, 'id', 'vps.html'), join(PUBLIC, 'sites.html'), join(PUBLIC, 'id', 'sites.html'), join(PUBLIC, 'index.html'), join(PUBLIC, 'id', 'index.html')]);
 const HOSTING_WORDS = /^(storage|database|mysql|cloudflare|rupiah|pay|paid|pays|payment|payments|penyimpanan|basis data|bayar|membayar|dibayar|pembayaran)$/i;
 function hostingRanges(file, src) {
   if (HOSTING_PAGES.has(file)) return [[0, src.length]];
