@@ -121,9 +121,9 @@ public/
   sites.html      /sites: Zeiko Sites' school and business packages and the static site
                   by the GB (typed here, in rupiah), the way from order to online, FAQ
   id/sites.html   /id/sites: the same page in Indonesian
-  marketing-template.html  /marketing-template: the six A4 price and feature sheets
-                  (Hosting, VPS, two for Sites, two for Drive), each with its download
-                  button, and all of them in one ZIP; the sheets are in Indonesian
+  marketing-template.html  /marketing-template: the seven A4 sheets (the poster of every
+                  product, then Hosting, VPS, two for Sites, two for Drive), each with its
+                  download button, and all of them in one ZIP; the sheets are in Indonesian
   id/marketing-template.html  /id/marketing-template: the same page in Indonesian
   status.html     /status: whether each service answers, filled by src/worker.js from
                   the status document (src/status.js); "not available" without it
@@ -134,7 +134,11 @@ public/
                   1123) for the page, and zeiko-materi-promosi.zip with every PNG. They
                   are pictures, so the check cannot read their prices: when a price on
                   a product page changes, make the sheet again, and strip the export's
-                  metadata (it names the design and its author) before it goes in
+                  metadata (it names the design and its author) before it goes in.
+                  zeiko-semua-produk.png, the poster of every product, is drawn from
+                  dev/marketing/semua-produk.html (the command is in its head). It prints
+                  Drive's Mini at Rp1 a month as a promo until 15 November 2026 (the owner's,
+                  2026-11-02): after that day, make it again with Drive's price
   img/            logo.svg: the Zeiko mark (kawung: four petals round an amber
                   dot, brand/zeiko/); mark-16.svg / mark-32.svg: the same icon drawn in
                   pixels (the favicon); mark-mail.png: the icon the account emails
@@ -162,6 +166,9 @@ src/
   drive.js        Drive's address (DRIVE_URL, driveAddress); Drive's catalog → plan
                   cards (numbers and escaped plan names only) and Zeiko S3's lines
 dev/
+  marketing/      semua-produk.html: the poster of every product, one A4 page in the site's
+                  look, rendered by headless Chromium into img/marketing/; qr-zeiko-id.svg
+                  is its QR code to https://zeiko.biz.id/id/
   sites-sample.mjs, sites-preview.mjs  Zeiko Sites' designs built from made-up
                   content into dev/out/ (gitignored), and their thumbnails
                   (npm run sites:preview, TEMPLATES.md)
