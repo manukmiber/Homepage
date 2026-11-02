@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Akun Zeiko-mu — Dokumentasi Zeiko</title>
-<meta name="description" content="Satu Akun Zeiko untuk ZeikoAI, Zeiko Chat, dan Zeiko Drive: daftar, paket dan saldo, kunci API, dan pengaturan.">
+<title>Akun Zeiko-mu — Panduan Zeiko</title>
+<meta name="description" content="Satu Akun Zeiko untuk Zeiko Sites, Hosting, VPS, dan Drive: daftar, halaman akun, dan pengaturan.">
 <meta name="color-scheme" content="light dark">
 <!-- The top bar asks this address who is signed in. -->
 <meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
 <meta property="og:title" content="Akun Zeiko-mu — Dokumentasi Zeiko">
-<meta property="og:description" content="Satu Akun Zeiko untuk ZeikoAI, Zeiko Chat, dan Zeiko Drive: daftar, paket dan saldo, kunci API, dan pengaturan.">
+<meta property="og:description" content="Satu Akun Zeiko untuk Zeiko Sites, Hosting, VPS, dan Drive: daftar, halaman akun, dan pengaturan.">
 <meta property="og:type" content="article">
 <link rel="icon" href="/img/mark-32.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/site.css">
 </head>
 <body>
 
@@ -20,64 +20,43 @@
 
 <header class="topbar">
   <div class="wrap topbar-in">
-    <a class="brand" href="/id/">
-      <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
-      <span class="brand-name">Zeiko</span><span class="brand-doc" aria-hidden="true"> - Akun Zeiko-mu</span>
-    </a>
-
-    <nav class="nav" id="nav" aria-label="Navigasi utama">
-      <a href="/id/#decision">Pranata V1</a>
-      <a href="/id/drive">Drive</a>
+    <a class="brand" href="/id/" aria-label="Zeiko, beranda"><svg class="wordmark" viewBox="-1 -18 131 46" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 0H19L3 24H19M29.5 12H53.5A12 12 0 1 0 50.69 19.71M63.5 0V24M76 -14V24M91 0L77 13M83 8L92 24"/><circle cx="114" cy="12" r="12"/></g><circle class="dot" cx="63.5" cy="-11" r="4.4"/></svg></a>
+    <nav class="nav" id="nav" aria-label="Produk">
+      <a href="/id/sites">Sites</a>
       <a href="/id/hosting">Hosting</a>
-      <a href="/id/#models">Roleplay</a>
-      <a href="/id/#pricing">Harga</a>
-      <a href="/id/models">Model</a>
-      <a href="/id/docs/" aria-current="page">Dokumentasi</a>
-      <a class="nav-account" href="/account">Masuk</a>
-      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Buat akun</a>
+      <a href="/id/vps">VPS</a>
+      <a href="/id/drive">Drive</a>
+      <a href="/id/docs/" aria-current="page">Panduan</a>
+      <a href="/id/status">Status</a>
     </nav>
-
     <div class="topbar-tools">
-      <a class="lang-switch" href="/docs/account" hreflang="en" lang="en" data-lang="en">EN</a>
-      <button class="icon-btn" id="theme" type="button" aria-label="Ganti tema terang dan gelap">
-        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-      </button>
-      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="nav">
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      </button>
+      <a class="lang-switch" href="/docs/account" hreflang="en" lang="en" data-lang="en" title="English">EN</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Ganti terang dan gelap"><svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button>
+      <a class="nav-account" href="/account">Masuk</a>
+      <a class="btn btn-sm btn-primary signup" href="/account/signup" data-signed-out>Buat akun</a>
     </div>
   </div>
 </header>
 
 <main id="main" class="docs">
   <div class="wrap docs-in">
-    <nav class="docs-side" aria-label="Dokumentasi">
+    <nav class="docs-side" aria-label="Panduan">
       <details class="docs-menu">
-        <summary>Menu dokumentasi <span>Akunmu</span></summary>
+        <summary>Semua panduan <span>Akunmu</span></summary>
         <div class="docs-group">
           <p class="docs-group-title">Mulai</p>
           <ul>
             <li><a href="/id/docs/">Pengantar</a></li>
             <li><a href="/id/docs/account" aria-current="page">Akunmu</a></li>
-            <li><a href="/id/docs/playground">Playground</a></li>
           </ul>
         </div>
         <div class="docs-group">
-          <p class="docs-group-title">Model AI</p>
+          <p class="docs-group-title">Zeiko Hosting</p>
           <ul>
-            <li><a href="/id/docs/pranata-v1">Pranata V1</a></li>
-            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
-            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
-          </ul>
-        </div>
-        <div class="docs-group">
-          <p class="docs-group-title">API</p>
-          <ul>
-            <li><a href="/id/docs/api">Dasar API</a></li>
-            <li><a href="/id/docs/api-decisions">API Keputusan</a></li>
-            <li><a href="/id/docs/api-chat">API Chat</a></li>
-            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+            <li><a href="/id/docs/hosting">Dasar hosting</a></li>
+            <li><a href="/id/docs/hosting-domain">Sambungkan domain</a></li>
+            <li><a href="/id/docs/hosting-sites">Online-kan situsmu</a></li>
+            <li><a href="/id/docs/hosting-tools">Staging, Git, cron &amp; PHP</a></li>
           </ul>
         </div>
         <div class="docs-group">
@@ -99,15 +78,6 @@
             <li><a href="/id/docs/drive-pdf">Alat PDF</a></li>
             <li><a href="/id/docs/drive-docs">Dokumen, spreadsheet &amp; teks</a></li>
             <li><a href="/id/docs/drive-video">Editor video</a></li>
-          </ul>
-        </div>
-        <div class="docs-group">
-          <p class="docs-group-title">Zeiko Hosting</p>
-          <ul>
-            <li><a href="/id/docs/hosting">Dasar hosting</a></li>
-            <li><a href="/id/docs/hosting-domain">Sambungkan domain</a></li>
-            <li><a href="/id/docs/hosting-sites">Online-kan situsmu</a></li>
-            <li><a href="/id/docs/hosting-tools">Staging, Git, cron &amp; PHP</a></li>
           </ul>
         </div>
       </details>
@@ -117,24 +87,15 @@
           <ul>
             <li><a href="/id/docs/">Pengantar</a></li>
             <li><a href="/id/docs/account" aria-current="page">Akunmu</a></li>
-            <li><a href="/id/docs/playground">Playground</a></li>
           </ul>
         </div>
         <div class="docs-group">
-          <p class="docs-group-title">Model AI</p>
+          <p class="docs-group-title">Zeiko Hosting</p>
           <ul>
-            <li><a href="/id/docs/pranata-v1">Pranata V1</a></li>
-            <li><a href="/id/docs/roleplay">Model roleplay</a></li>
-            <li><a href="/id/docs/pricing">Harga &amp; paket</a></li>
-          </ul>
-        </div>
-        <div class="docs-group">
-          <p class="docs-group-title">API</p>
-          <ul>
-            <li><a href="/id/docs/api">Dasar API</a></li>
-            <li><a href="/id/docs/api-decisions">API Keputusan</a></li>
-            <li><a href="/id/docs/api-chat">API Chat</a></li>
-            <li><a href="/id/docs/faq">Pemecahan masalah</a></li>
+            <li><a href="/id/docs/hosting">Dasar hosting</a></li>
+            <li><a href="/id/docs/hosting-domain">Sambungkan domain</a></li>
+            <li><a href="/id/docs/hosting-sites">Online-kan situsmu</a></li>
+            <li><a href="/id/docs/hosting-tools">Staging, Git, cron &amp; PHP</a></li>
           </ul>
         </div>
         <div class="docs-group">
@@ -158,43 +119,30 @@
             <li><a href="/id/docs/drive-video">Editor video</a></li>
           </ul>
         </div>
-        <div class="docs-group">
-          <p class="docs-group-title">Zeiko Hosting</p>
-          <ul>
-            <li><a href="/id/docs/hosting">Dasar hosting</a></li>
-            <li><a href="/id/docs/hosting-domain">Sambungkan domain</a></li>
-            <li><a href="/id/docs/hosting-sites">Online-kan situsmu</a></li>
-            <li><a href="/id/docs/hosting-tools">Staging, Git, cron &amp; PHP</a></li>
-          </ul>
-        </div>
       </div>
     </nav>
 
     <article class="docs-main prose" id="doc">
-      <p class="crumbs"><a href="/id/docs/">Dokumentasi</a> <span aria-hidden="true">/</span> Mulai</p>
+      <p class="crumbs"><a href="/id/docs/">Panduan</a> <span aria-hidden="true">/</span> Mulai</p>
       <h1>Akun Zeiko-mu</h1>
-      <p class="lede">Satu Akun Zeiko untuk masuk ke ZeikoAI, Zeiko Chat, dan Zeiko Drive. Di akun ini ada paket Pranata V1-mu, saldomu, dan kunci API-mu.</p>
+      <p class="lede">Satu Akun Zeiko untuk masuk ke Zeiko Sites, Hosting, VPS, dan Drive. Semua yang kamu pesan ada di sana, setiap produk di tab-nya sendiri.</p>
       <nav class="docs-toc" aria-label="Di halaman ini">
         <p>Di halaman ini</p>
         <ul>
-          <li><a href="#one-account">Satu akun, tiga produk</a></li>
+          <li><a href="#one-account">Satu akun untuk semuanya</a></li>
           <li><a href="#create">Membuat akun</a></li>
           <li><a href="#confirm">Konfirmasi email</a></li>
           <li><a href="#pages">Halaman akunmu</a></li>
-          <li><a href="#plans">Paket dan saldo</a></li>
-          <li><a href="#key">Kunci API-mu</a></li>
           <li><a href="#settings">Pengaturan</a></li>
           <li><a href="#password">Lupa kata sandi?</a></li>
-          <li><a href="#usage">Pemakaian</a></li>
         </ul>
       </nav>
-
-<h2 id="one-account">Satu akun, tiga produk</h2>
+<!-- hosting:start -->
+<h2 id="one-account">Satu akun untuk semuanya</h2>
 <ul>
-  <li><strong>Satu kali masuk.</strong> Email dan kata sandi yang sama, atau masuk sekali klik, berlaku di sini, di Zeiko Chat, dan di <a href="/id/docs/drive">Zeiko Drive</a>. Selama kamu masuk, namamu tampil di bagian atas setiap halaman situs ini.</li>
+  <li><strong>Satu kali masuk.</strong> Email dan kata sandi yang sama, atau masuk sekali klik, berlaku di sini, di <a href="/id/docs/drive">Zeiko Drive</a>, dan di Zeiko Chat. Selama kamu masuk, namamu tampil di bagian atas setiap halaman situs ini.</li>
   <li><strong>Masuk sekali, masuk di mana-mana.</strong> Zeiko Drive terbuka dalam keadaan sudah masuk, dan mengikuti situs ini: keluar di sini, Drive di browser ini ikut keluar; masuk sebagai orang lain, Drive ikut berpindah.</li>
-  <li><strong>Satu saldo.</strong> Isi saldo sekali: saldo itu menanggung panggilan Pranata V1 di luar paketmu dan balasan Zeiko Chat di luar paket chat-mu. Zeiko Drive tidak memakainya: setiap pembelian di sana dilakukan di aplikasi Drive (<a href="/id/docs/drive-plans">Paket Drive</a>).</li>
-  <li><strong>Semua paket di satu tempat.</strong> Paket Pranata V1 dan paket Zeiko Chat dibeli berdampingan di <a href="/account/plans">Paket &amp; saldo</a>.</li>
+  <li><strong>Semua di satu tempat.</strong> Hosting, VPS, dan website-mu dipesan, diperpanjang, dan dinaikkan paketnya di tab masing-masing. Zeiko Drive dibeli di aplikasi Drive sendiri (<a href="/id/docs/drive-plans">Paket Drive</a>).</li>
 </ul>
 
 <h2 id="create">Membuat akun</h2>
@@ -219,31 +167,15 @@
 <div class="doc-table-wrap"><table class="doc-table">
     <thead><tr><th scope="col">Halaman</th><th scope="col">Isinya</th></tr></thead>
     <tbody>
-      <tr><th scope="row"><a href="/account">Ringkasan</a></th><td>Paketmu dan sisa permintaan di periode ini, saldomu, kuncimu, panggilan per hari selama 30 hari terakhir, dan apa saja yang sudah kamu beli.</td></tr>
-      <tr><th scope="row"><a href="/account/plans">Paket &amp; saldo</a></th><td>Paket Pranata V1, paket Zeiko Chat, dan isi saldo.</td></tr>
-      <tr><th scope="row"><a href="/account/key">Kunci API</a></th><td>Kuncimu, alamat yang dipakai bersamanya, model yang bisa dipanggilnya, dan cara menggantinya.</td></tr>
-      <tr><th scope="row"><a href="/account/settings">Pengaturan</a></th><td>Profil, cara masuk, kata sandi, email, dan keluar.</td></tr>
+      <tr><th scope="row"><a href="/account">Ringkasan</a></th><td>Akunmu sekilas, dan apa saja yang sudah kamu beli.</td></tr>
+      <tr><th scope="row"><a href="/account/hosting">Hosting</a></th><td>Pesan paket hosting; perpanjang, naikkan, atau akhiri; ganti alamatnya.</td></tr>
+      <tr><th scope="row"><a href="/account/vps">VPS</a></th><td>Pesan VPS; perpanjang, pindah ke paket lebih besar, atau ke yang lebih kecil mulai perpanjangan berikutnya; minta nyalakan, matikan, reboot, instal ulang, atau password baru.</td></tr>
+      <tr><th scope="row"><a href="/account/sites">Situs</a></th><td>Pesan website; perpanjang, unggah file-nya, atau isi desainnya.</td></tr>
+      <tr><th scope="row"><a href="/account/s3">S3</a></th><td>Membuka Zeiko S3 di Zeiko Drive.</td></tr>
+      <tr><th scope="row"><a href="/account/receipts">Kuitansi</a></th><td>Kuitansi PDF untuk setiap pembayaran QRIS, dalam bahasa Indonesia atau Inggris.</td></tr>
+      <tr><th scope="row"><a href="/account/settings">Pengaturan</a></th><td>Profil, tempat tinggal, cara masuk, kata sandi, email, dan keluar.</td></tr>
     </tbody>
   </table></div>
-
-<h2 id="plans">Paket dan saldo</h2>
-<ul>
-  <li>Paket Pranata V1 memberi sejumlah permintaan untuk 30 hari. Lihat <a href="/id/docs/pricing#pranata-plans">daftar paket</a>.</li>
-  <li>Permintaan dari paket dipakai lebih dulu; setelah habis, panggilan memakai saldomu.</li>
-  <li>Permintaan dihitung per periode 30 hari paketmu, bukan per bulan kalender. Ringkasan menunjukkan kapan hitungannya mulai lagi.</li>
-  <li>Membeli paket yang sedang kamu pakai menambah 30 hari. Membeli paket lain langsung memulainya, dan sisa paket lama kembali ke saldomu.</li>
-  <li>Saldomu sama dengan saldo di Zeiko Chat.</li>
-</ul>
-<div class="callout"><p>Setelah masuk, <a href="/account/how-to-buy">panduan membeli</a> menuntunmu menyelesaikan pembelian langkah demi langkah.</p></div>
-
-<h2 id="key">Kunci API-mu</h2>
-<ul>
-  <li>Buka <a href="/account/key">Kunci API</a> dan tekan <em>Tampilkan kunci</em>. <em>Salin</em> menyalinnya, dan <em>Alamat</em> di bawahnya adalah base URL tujuan kunci itu.</li>
-  <li>Kunci disembunyikan lagi begitu kamu meninggalkan halaman.</li>
-  <li><em>Model yang bisa dipanggil kunci ini</em> mencantumkan setiap model dengan harganya dan panggilan terpanjangnya. Kunci akun ini untuk Pranata V1; kunci model roleplay <a href="/id/docs/roleplay#access">diminta lewat email</a>.</li>
-  <li><strong>Buat kunci baru</strong> kalau kunci lama mungkin sudah dilihat orang lain. Kunci lama langsung tidak berlaku, jadi segera perbarui aplikasimu.</li>
-</ul>
-<div class="callout callout-warn"><p><strong>Rahasiakan kuncimu.</strong> Siapa pun yang memegangnya bisa memakai paket dan saldomu. Simpan di servermu: jangan pernah di halaman web, aplikasi ponsel, atau repositori publik.</p></div>
 
 <h2 id="settings">Pengaturan</h2>
 <ul>
@@ -257,30 +189,48 @@
 
 <h2 id="password">Lupa kata sandi?</h2>
 <p>Di <a href="/account/signin">halaman masuk</a>, tekan <em>Lupa?</em> dan ketik email-mu. Kalau alamat itu punya akun, link untuk membuat kata sandi baru sedang dikirim. Link berlaku sekali, selama 30 menit, dan kata sandi baru berlaku di sini, di Zeiko Chat, dan di Zeiko Drive.</p>
-
-<h2 id="usage">Pemakaian</h2>
-<p>Ringkasan menampilkan grafik panggilanmu per hari selama 30 hari terakhir (UTC), dengan jumlah permintaan paket yang terpakai dan token input yang dibawanya. <em>Tampilkan sebagai tabel</em> menampilkan angka yang sama hari demi hari.</p>
+<!-- hosting:end -->
 
       <nav class="docs-pager" aria-label="Halaman sebelum dan sesudah">
         <a class="prev" href="/id/docs/"><small>Sebelumnya</small>Pengantar</a>
-        <a class="next" href="/id/docs/playground"><small>Berikutnya</small>Playground</a>
+        <a class="next" href="/id/docs/hosting"><small>Berikutnya</small>Dasar hosting</a>
       </nav>
     </article>
   </div>
 </main>
 
 <footer class="footer">
-  <div class="wrap footer-in">
-    <p>© <span id="year">2026</span> Zeiko</p>
-    <nav aria-label="Tautan bawah">
-      <a href="/id/">Beranda</a>
-      <a href="/id/models">Model</a>
-      <a href="/id/#pricing">Harga</a>
-      <a href="/id/drive">Drive</a>
-      <a href="/id/docs/">Dokumentasi</a>
-      <a href="/id/#contact">Kontak</a>
-      <a href="/account">Akun</a>
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="/id/" aria-label="Zeiko, beranda"><svg class="wordmark" viewBox="-1 -18 131 46" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 0H19L3 24H19M29.5 12H53.5A12 12 0 1 0 50.69 19.71M63.5 0V24M76 -14V24M91 0L77 13M83 8L92 24"/><circle cx="114" cy="12" r="12"/></g><circle class="dot" cx="63.5" cy="-11" r="4.4"/></svg></a>
+      <p>Website, hosting, server, dan drive untuk file-mu. Bantuan lewat WhatsApp, 08.00–22.00 WIB.</p>
+    </div>
+    <nav class="footer-cols" aria-label="Tautan bawah">
+      <div>
+        <h2>Produk</h2>
+        <a href="/id/sites">Zeiko Sites</a>
+        <a href="/id/hosting">Zeiko Hosting</a>
+        <a href="/id/vps">Zeiko VPS</a>
+        <a href="/id/drive">Zeiko Drive</a>
+        <a href="https://drive.zeiko.biz.id">Buka Drive</a>
+      </div>
+      <div>
+        <h2>Bantuan</h2>
+        <a href="/id/docs/">Panduan</a>
+        <a href="/id/status">Status</a>
+        <a href="/id/marketing-template">Materi promosi</a>
+        <a href="https://wa.me/6281932416096">WhatsApp +62 819-3241-6096</a>
+      </div>
+      <div>
+        <h2>Akun</h2>
+        <a href="/account" data-signed-out>Masuk</a>
+        <a href="/account/signup" data-signed-out>Buat akun</a>
+        <a href="/account" data-signed-in hidden>Akunmu</a>
+      </div>
     </nav>
+  </div>
+  <div class="wrap footer-base">
+    <p>© <span id="year">2026</span> Zeiko</p>
   </div>
 </footer>
 

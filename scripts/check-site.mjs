@@ -10,10 +10,6 @@
 //      signed in.
 //   3. Every price carries a data-price key, and a key reads the same
 //      everywhere it appears.
-//   4. Every /models#<id> link lands on a model that exists.
-//   5. What src/render.js puts into /models on the server passes the same
-//      rules, carries no text out of the snapshot, and fills every
-//      placeholder models.html has.
 //   6. The account area — its files, and its pages (public/js/account/
 //      views.js) rendered from a made-up account — passes the same rules
 //      except billing words and the details a customer gets with their key
@@ -32,10 +28,8 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, relative, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { render, sanitize } from '../src/render.js';
 import { renderS3 } from '../src/drive.js';
 import { renderStatus } from '../src/status.js';
-import { sampleSnapshot } from '../dev/sample-stats.mjs';
 import * as accountViews from '../public/js/account/views.js';
 import * as accountMe from '../public/js/account/me.js';
 import * as accountLang from '../public/js/account/lang.js';
@@ -178,29 +172,15 @@ const prices = new Map(); // key -> [{ value, file, index, src }]
 // the same length so line numbers stay true.
 const CONTACT = 'admin@zeiko.biz.id';
 
-// The homepage's playground (#try) is the one exception outside the account
-// area, on the operator's request: js/try.js may call the account door —
-// `fetch(DOOR …)` and the door's /v1 path, nothing else. Every page with the
-// top bar names the door in its <meta name="zeiko-accounts"> (the top bar's
-// script, js/account/session.js, and the playground read it there), and
-// nowhere else. Every other rule, billing included, holds.
-const PLAYGROUND = join(PUBLIC, 'js', 'try.js');
-const HOME = join(PUBLIC, 'index.html');
 const DOOR_META = `<meta name="zeiko-accounts" content="${DOOR}">`;
 const SESSION_SCRIPT = '<script type="module" src="/js/account/session.js">';
 
-// The docs are the one public place allowed the details a caller needs to
-// connect, on the operator's request: the API's address (the only other
-// address they may name), its paths, the Authorization header, and curl and
-// SDK examples, whose key parameter is `api_key` / `apiKey`. The examples
-// are text in <pre> blocks, so a fetch( there is not a request; the pages
-// run main.js and nothing else. Every other rule, billing included, holds.
+// The docs (public/docs/, public/id/docs/) are the customers' guides to the
+// cloud products; every rule holds there too.
 const DOCS = join(PUBLIC, 'docs');
 const DOCS_ID = join(PUBLIC, 'id', 'docs');
 const under = (d, f) => f.startsWith(d + '/') || f.startsWith(d + '\\');
 const inDocs = (f) => under(DOCS, f) || under(DOCS_ID, f);
-const API_ADDR = 'https://ai.zeiko.biz.id';
-const SDK_KEY = /^api_?key$/i;
 const blankPre = (src) => src.replace(/<pre\b[\s\S]*?<\/pre>/gi, (m) => m.replace(/[^\n]/g, ' '));
 
 // Zeiko Drive, the file storage product, is the third exception, on the
@@ -260,8 +240,6 @@ function scan(file, src) {
   for (const [what, re] of BANNED) {
     const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
     for (const m of words.matchAll(g)) {
-      if (file === PLAYGROUND && what === 'connection detail' && /^\/v1$/i.test(m[0])) continue;
-      if (inDocs(file) && (what === 'connection detail' || (what === 'infrastructure' && SDK_KEY.test(m[0])))) continue;
       if (driveAllows(words, drive, m)) continue;
       if (inRanges(hosting, m.index) && HOSTING_WORDS.test(m[0])) continue;
       report(file, m.index, src, `${what}: "${m[0]}"`);
@@ -272,7 +250,6 @@ function scan(file, src) {
   for (const re of NETWORK) {
     const g = new RegExp(re.source, re.flags + 'g');
     for (const m of code.matchAll(g)) {
-      if (file === PLAYGROUND && src.startsWith('fetch(DOOR ', m.index)) continue;
       report(file, m.index, src, `network call: "${m[0]}" (the site fetches nothing; the playground asks only the account door)`);
     }
   }
@@ -281,7 +258,6 @@ function scan(file, src) {
     if (URL_OK.some((ok) => ok.test(m[0]))) continue;
     if (driveLink(m[0])) continue;
     if (m[0] === DOOR && src.slice(m.index - DOOR_META.indexOf(DOOR)).startsWith(DOOR_META)) continue;
-    if (inDocs(file) && (m[0] === API_ADDR || m[0].startsWith(API_ADDR + '/'))) continue;
     report(file, m.index, src, `external URL: "${m[0]}"`);
   }
 
@@ -309,13 +285,6 @@ for (const file of files) {
   if (extname(file) === '.html') html.push({ file, src });
 }
 
-if (files.includes(PLAYGROUND)) {
-  const home = html.find((h) => h.file === HOME);
-  if (!home || !home.src.includes(DOOR_META)) {
-    problems.push(`public/index.html: the playground (js/try.js) reads the account door from ${DOOR_META}`);
-  }
-}
-
 // ---------------------------------------------------------------- prices
 
 const PRICE_EL = /data-price="([^"]+)"[^>]*>([^<]*)</g;
@@ -340,21 +309,6 @@ for (const [key, seen] of prices) {
   const values = new Set(seen.map((s) => s.value));
   if (values.size > 1) {
     for (const s of seen) report(s.file, s.index, s.src, `data-price="${key}" reads ${s.value}, but elsewhere ${[...values].filter((v) => v !== s.value).join(' / ')}`);
-  }
-}
-
-// ---------------------------------------------------------- model anchors
-
-const models = html.find((h) => h.file === join(PUBLIC, 'models.html'));
-if (!models) {
-  problems.push('public/models.html is missing — /models must exist');
-} else {
-  for (const { file, src } of html) {
-    for (const m of src.matchAll(/href="(?:\/id)?\/models#([^"]+)"|href="#([^"]+)"/g)) {
-      const id = m[1] ?? (file === models.file || file === join(PUBLIC, 'id', 'models.html') ? m[2] : null);
-      if (!id) continue;
-      if (!models.src.includes(`id="${id}"`)) report(file, m.index, src, `link to /models#${id}, but models.html has no id="${id}"`);
-    }
   }
 }
 
@@ -435,41 +389,6 @@ for (const [file, src] of pages) {
   if (!pages.has(twin)) { report(file, m.index, src, `the EN | ID switch goes to ${m[1]}, but there is no ${relative(ROOT, twin)}`); continue; }
   const back = pages.get(twin).match(SWITCH);
   if (!back || pageOf(back[1]) !== file) report(file, m.index, src, `${m[1]} does not switch back to ${urlOf(file)}`);
-}
-
-// ------------------------------------------------------ rendered /models
-
-// Render the made-up sample through the same code the server runs, with
-// junk a real snapshot might carry mixed in. None of the junk may come out.
-const RENDERED = 'rendered /models (dev sample)';
-const snap = sampleSnapshot(Date.UTC(2026, 8, 24, 12));
-snap.format = 'CANARY format';
-snap.models[0].page = { notes: ['CANARY note'] };
-snap.models[0].endpoints = ['CANARY endpoint'];
-snap.models[1].stats['7d'].current.requests = 'CANARY count';
-snap.models.push({ id: '<b>CANARY</b>', stats: {} });
-// Both languages: /models in English, /id/models in Indonesian.
-for (const [lang, page] of [['en', models], ['id', html.find((h) => h.file === join(PUBLIC, 'id', 'models.html'))]]) {
-  const where = `${RENDERED}, ${lang}`;
-  const view = render(sanitize(snap), lang);
-  if (!view) {
-    problems.push(`${where}: src/render.js rendered nothing`);
-    continue;
-  }
-  const out = [view.bar, ...Object.values(view.models), ...Object.values(view.glance).flatMap(Object.values)].join('\n');
-  scan(where, out);
-  for (const m of out.matchAll(/CANARY/g)) report(where, m.index, out, 'text from the snapshot reached the page; only numbers may');
-  for (const m of out.matchAll(/\$\s?\d/g)) report(where, m.index, out, 'a price in the performance figures; prices live in the static HTML');
-  if (!page) {
-    problems.push(`${where}: no page to fill (public/${lang === 'id' ? 'id/' : ''}models.html)`);
-    continue;
-  }
-  for (const m of page.src.matchAll(/data-perf="([^"]+)"/g)) {
-    if (!view.models[m[1]]) report(page.file, m.index, page.src, `data-perf="${m[1]}" has no model in the sample`);
-  }
-  for (const m of page.src.matchAll(/data-stat="([^":]+):([^"]+)"/g)) {
-    if (!(view.glance[m[1]] && view.glance[m[1]][m[2]])) report(page.file, m.index, page.src, `data-stat="${m[1]}:${m[2]}" is never filled`);
-  }
 }
 
 // ------------------------------------------------------ rendered Zeiko S3
@@ -796,4 +715,4 @@ if (problems.length) {
   process.exit(1);
 }
 
-console.log(`check-site: ${files.length} files (${accountFiles.length} in the account area), the rendered /models and the account pages clean, ${prices.size} price keys consistent.`);
+console.log(`check-site: ${files.length} files (${accountFiles.length} in the account area), the account pages clean, ${prices.size} price keys consistent.`);

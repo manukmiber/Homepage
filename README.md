@@ -1,25 +1,28 @@
-# ZeikoAI site
+# Zeiko site
 
-The public ZeikoAI website: the models, their prices, and how each model is
-performing.
+The public Zeiko website, for Zeiko's cloud products: Zeiko Sites, Zeiko
+Hosting, Zeiko VPS and Zeiko Drive, priced in rupiah, and the Zeiko Account
+where they are ordered.
 
-- `/` is the landing page: Pranata V1 first (hero, what it decides, its
-  plans), then the roleplay models, the pricing table, a cost estimator,
-  a FAQ, and the two ways to get a key.
-- `/models` lists every model with its specs, full rate card and live
-  performance: time to first token, output speed, latency, availability,
-  requests, tokens and cache rate over 24 hours, 7 days and 30 days, with
-  charts. The old `/models/<id>` links redirect to `/models#<id>`.
-- `/docs` is the documentation: getting started, the Zeiko Account, the
-  playground, Pranata V1, the roleplay models, pricing and plans, and the
-  API (basics, decisions, chat, troubleshooting). Plain pages, one per
-  topic.
-- `/account` is Zeiko Accounts: one account for ZeikoAI and Zeiko Chat
-  (email and password, Google or GitHub), and the customer's own area —
-  plan and requests left, the one balance, buying plans and balance, payments,
-  the key, settings, and the buying guide (`/account/how-to-buy`). A plain page whose script asks the account door
-  (`https://auth.zeiko.biz.id`) itself: the site keeps no sign-in and no
+- `/` asks what you want to put online and answers with the four products,
+  each with its starting price, then how ordering works, what comes with
+  every product, a FAQ and WhatsApp.
+- `/sites`, `/hosting`, `/vps` and `/drive` are the product pages: what each
+  one does, every plan and its price, the way from order to online, and a
+  FAQ. Drive's plans come from Drive's own catalog.
+- `/status` shows whether each service answers, and `/marketing-template`
+  the price sheets to download.
+- `/docs` is the guides: the Zeiko Account, Zeiko Hosting and Zeiko Drive.
+  Plain pages, one per topic.
+- `/account` is the Zeiko Account: one account for every product (email and
+  password, Google or GitHub), where hosting, a VPS and websites are ordered,
+  paid by QRIS, renewed and run. A plain page whose script asks the account
+  door (`https://auth.zeiko.biz.id`) itself: the site keeps no sign-in and no
   setting for it.
+
+Every page is in English and Indonesian (`/id/…`), in a light and a dark
+scheme. The look is written down in [DESIGN.md](DESIGN.md); the logo files
+are in [brand/zeiko](brand/zeiko).
 
 **Read [CLAUDE.md](CLAUDE.md) before changing anything.** It lists what the
 site must never show, and every place a price has to be updated.
@@ -28,42 +31,38 @@ site must never show, and every place a price has to be updated.
 
 ```
 public/
-  index.html      landing page
-  models.html     /models, with placeholders for the performance figures
+  index.html      the homepage
+  sites.html, hosting.html, vps.html, drive.html, status.html, marketing-template.html
   404.html
-  _redirects      /models/<id> → /models#<id>
-  css/style.css   one stylesheet, light and dark
-  js/main.js      theme, menu, topbar, copy buttons, plan value, estimator, chart hover
+  id/             every page above in Indonesian
+  _redirects      old addresses → their new place
+  css/site.css    the stylesheet, light and dark (css/style.css: the account area's, for now)
+  js/main.js      theme, language, header, copy buttons
   docs/           /docs, one page per topic
   account/index.html  /account and every page under it (one page)
   js/account/     app.js: asks the account door and draws the page; views.js: the pages;
-                  payguide.js: the buying guide; session.js: the top bar's "who is
-                  signed in" on every page; me.js: the name and badge both draw
+                  session.js: the top bar's "who is signed in" on every page
 src/
-  worker.js       runs for /models and /account only
-  render.js       the hourly snapshot → the figures and charts on /models
-dev/
-  sample-stats.mjs  made-up figures for local development
+  worker.js       runs for /, /drive, /status and /account, and for a 404
+  drive.js        Drive's catalog → its plans and lowest price
+  status.js       the status document → /status
 scripts/
   check-site.mjs  npm run check
 ```
 
-Every path but `/models` and `/account…` is a plain static file. For `/models`, the worker
-reads the hourly snapshot from the `zeiko-models` R2 bucket and renders the
-figures into the page before it is sent, so the browser receives finished
-HTML and never asks for a data file. If there is no snapshot yet, `/models`
-goes out without figures and says they are not available right now.
+Every other path is a plain static file. The worker fills a few pages in on
+the way out, so the browser receives finished HTML and never asks for a data
+file.
 
 ## Run locally
 
 ```bash
 npm install
-npm run seed:local        # made-up figures into the local bucket
 npx wrangler dev          # http://localhost:8787
 ```
 
-Every page with the top bar asks the same door who is signed in, and shows
-their name in place of "Sign in".
+Every page with the top bar asks the account door who is signed in, and
+shows their name in place of "Sign in".
 
 `/account` asks the account door named in its `<meta name="zeiko-accounts">`
 (and allowed by the page's `connect-src`). The door answers only the site's
@@ -80,13 +79,12 @@ npm run check
 ```
 
 This checks the site for words it must never contain and for requests to
-anywhere else, and confirms that each price reads the same everywhere it
-appears. It also renders the made-up figures through `src/render.js`, holds
-the result to the same rules, and fails if any text from the snapshot would
-reach the page, and renders the account pages from a made-up account to the
-same rules (money words allowed there). The account area's files are the
-only ones that may make a request, and only to the account door. Run it before every commit. `npm run deploy` runs it first
-and stops if it fails.
+anywhere else, confirms that each price reads the same everywhere it
+appears, and that every guide link and EN | ID switch lands. It renders
+/status, Zeiko S3's lines and the account pages from made-up data to the
+same rules. The account area's files are the only ones that may make a
+request, and only to the account door. Run it before every commit; `npm run
+deploy` runs it first and stops if it fails.
 
 ## Deploy
 
@@ -94,5 +92,5 @@ and stops if it fails.
 npm run deploy
 ```
 
-The `zeiko-models` R2 bucket must exist before a deploy, because the worker
-binds to it.
+The `zeiko-models` R2 bucket (it holds the status document) must exist
+before a deploy, because the worker binds to it.

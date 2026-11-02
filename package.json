@@ -3,10 +3,9 @@
   "version": "0.3.0",
   "private": true,
   "type": "module",
-  "description": "ZeikoAI site — the models, their prices and their live performance.",
+  "description": "Zeiko site — Sites, Hosting, VPS and Drive, and the Zeiko Account.",
   "scripts": {
     "dev": "wrangler dev",
-    "seed:local": "node dev/sample-stats.mjs | wrangler r2 object put zeiko-models/models.json --pipe --local --content-type application/json",
     "check": "node scripts/check-site.mjs",
     "deploy": "npm run check && wrangler deploy",
     "sites:preview": "node dev/sites-preview.mjs"

@@ -8,102 +8,97 @@ web
 
 ## Users
 
-Three audiences, all confirmed by the owner (2026-10-24), arriving at the same site:
+Zeiko sells cloud products to people in Indonesia (the owner's focus from 2026-11-02; the AI products
+and Pranata V1 are off the site). They arrive at the same site, mostly on an Android phone and often in
+Indonesian:
 
-- **Developers and businesses** who wire Pranata V1 into their own product: they read the model page,
-  the docs and the prices, try a question in the playground, then create a Zeiko Account and buy a
-  plan. Mostly on a desktop when reading docs; often on a phone when first looking.
-- **Builders of roleplay apps** who want Jagad, Asmarandana or Wisanggeni: they compare the three
-  models, their rates and their measured performance on `/models`, then ask for a key.
-- **Everyday people in Indonesia** who use Zeiko Drive (file storage, paid in rupiah) and Zeiko Chat:
-  they arrive on a phone, often in Indonesian, to read about Drive, sign in, or pay for something.
+- **Schools, teachers, students and small businesses** who want a website without running a server:
+  a school profile, a class or OSIS page, an invitation, a catalogue, a link-in-bio. They pick a
+  package on `/sites`, fill in a design from their phone, and pay a few thousand rupiah a year.
+- **People and businesses with a WordPress site or a PHP app** who want hosting with cPanel: they
+  compare the plans on `/hosting`, order in the account and wait 1–2 hours.
+- **Developers and builders** who want a server of their own for an app, a bot or a tool: `/vps`.
+- **Everyday people** who want somewhere to keep and send their files: Zeiko Drive (`/drive`), at its
+  own address.
+
+Many have never bought hosting. They know their need ("a website for my school"), not the product
+name, and they pay by QRIS from a banking app.
 
 Behind sign-in, the same people use **their Zeiko Account** (`/account`): sign up (with the city they
-live in), buy a plan or add balance, pay by QRIS or crypto, copy their Pranata V1 key, see usage, and
+live in), order hosting, a VPS or a website, pay by QRIS, renew and upgrade, read their receipts and
 change settings.
 
 ## Product Purpose
 
-The public site says what Zeiko sells — the models, what they cost, how each one is performing — and
-lets a visitor act on it: try Pranata V1, create an account, buy, or ask for a key. The account area
-is where the customer's own plan, balance, payments and key live. Success is a visitor who
-understands the offer in one screen and finishes what they came to do without help.
+The public site says what each cloud product does in plain words, what it costs in rupiah and how to
+get it, and lets a visitor act on it: order in the account, or ask on WhatsApp first. The account
+area is where the customer's own hosting, VPS and websites live. Success is a visitor who finds the
+product for their need in one screen and finishes ordering without help.
 
 ## Positioning
 
-- **Pranata V1** is a decision model built in-house: a text and a question in, a probability for
-  every option out (yes or no, pick one, score it). Fast, consistent from one call to the next, sold
-  by plan from $1 for 30 days.
-- **The roleplay models** are priced per million tokens, with every rate on the page, and their
-  real performance (time to first token, speed, latency, availability) measured and published
-  every hour.
-- **Zeiko Drive** is file storage for Indonesia, priced in rupiah, opened at its own address.
-- **Zeiko Hosting** is WordPress hosting (PHP, Node.js, Python and Ruby run too), managed in cPanel,
-  priced in rupiah by plan with a cheaper first month on the smaller plans, plus static sites per GB;
-  ordered and renewed in the account area, paid by QRIS. Every hosting starts on a free address of
-  its own under zeiko.biz.id; a name there or the customer's own domain is paid by three months with
-  it, and egress past 500 GB a month is added to the next renewal.
-- **One Zeiko Account** signs a person into ZeikoAI, Zeiko Chat and Zeiko Drive.
+- **Zeiko Sites**: ready websites for schools, events, people and small businesses, filled in from a
+  phone from fifty designs, live as soon as the payment is checked, from Rp5.000 a year.
+- **Zeiko Hosting**: WordPress hosting (PHP, Node.js, Python and Ruby run too) managed in cPanel,
+  by the month or year, with a cheaper first month on the smaller plans, from Rp17.000 a month.
+- **Zeiko VPS**: a server of one's own, Linux or Windows, with an IPv4 address, paid for 1 to 12 months,
+  with human help around the clock, from Rp50.000 a month.
+- **Zeiko Drive**: file storage priced in rupiah, opened at its own address; Zeiko S3 beside it.
+- Every hosting, VPS and website starts online at a free address of its own under zeiko.biz.id.
+- **One Zeiko Account** for every product; support is a person on WhatsApp.
 
 ## Operating Context
 
 - Two languages on every page, English and Indonesian (`/…` and `/id/…`); the account pages draw in
   the visitor's language. Indonesian copy uses "kamu".
 - Many visitors are on Android phones; layouts must work at 375px with no horizontal scroll.
-- Developers read code samples and tables in the docs and copy model IDs.
-- Buying is done in the account area; a QRIS payment is paid from a banking or e-wallet app by
-  scanning the QR the page draws.
+- Buying is done in the account area; a QRIS payment is paid from a banking app by scanning the QR the
+  page draws, and checked by hand.
 
 ## Capabilities and Constraints
 
 - Plain HTML, CSS and JavaScript, no build step, no framework, served as static files by a Cloudflare
-  Worker that fills `/models`, `/drive` and the account shell. `public/css/style.css` is the one
-  stylesheet.
-- **What may never appear on the site** is set in `CLAUDE.md` ("never leak anything about how the API
-  works") and enforced by `npm run check`; it covers class names, file names and comments too.
-- No runtime requests to anyone but the site itself, except the account pages, the sign-in badge and
-  the playground, which ask the account door only. No analytics, no CDN, no third-party fonts.
-  **Font files may be hosted on the site itself** (owner, 2026-10-24).
-- Every public page reads fine with JavaScript off; the account area and the playground say they
-  need it.
-- Prices carry `data-price` keys and must agree everywhere; figures on `/models` are measured and
-  hourly, never typed in, padded or animated.
+  Worker that fills the homepage, `/drive`, `/status` and the account shell.
+- **What may never appear on the site** is set in `CLAUDE.md` and enforced by `npm run check`; it
+  covers class names, file names and comments too. Who runs the hosting is never named.
+- No runtime requests to anyone but the site itself, except the account pages and the sign-in badge,
+  which ask the account door only. No analytics, no CDN, no third-party fonts. **Font files are hosted
+  on the site itself.**
+- Every public page reads fine with JavaScript off; the account area says it needs it.
+- Prices carry `data-price` keys and must agree everywhere; Drive's come from its catalog.
 - Colours are tokens on `:root` with a dark theme (system and manual switch).
 
 ## Brand Commitments
 
-- Names: Zeiko (the site), ZeikoAI, Pranata V1, Jagad 512B V1, Asmarandana 512B V1, Wisanggeni 512B
-  V1, Zeiko Drive, Zeiko Hosting, Zeiko Chat, Zeiko Account. Model IDs are lowercase and exact.
+- Names: Zeiko (the site), Zeiko Sites, Zeiko Hosting, Zeiko VPS, Zeiko Drive, Zeiko S3, Zeiko Account,
+  Zeiko Chat.
 - The Zeiko logo (the owner's choice, 2026-11-02): **zeiko** in lowercase, drawn in one line weight,
   the dot of its i in amber; the icon is the z with that dot on a navy tile (`public/img/logo.svg`;
   every file and render in `brand/zeiko/`). Zeiko Chat keeps the earlier mark until the owner says
   otherwise.
-- Pranata V1 stands apart from the roleplay models and leads the homepage.
-- Wording the owner set stays as written: the high-demand notice, the QRIS "Thanks, we're gonna check
-  your payment".
-- **Visual era pinned by the owner (2026-10-24): Windows 95**, for the website, the account pages and
-  the operator panel. The homepage is a full desktop (icons, windows, a taskbar with a Start menu as
-  the navigation); every other page uses the era's windows and controls in an ordinary scrolling
-  layout. A dark "appearance scheme" stays beside the standard one. No Windows or Microsoft name,
-  logo or icon is used: the Start button carries the Zeiko mark and every icon is drawn for Zeiko.
+- Wording the owner set stays as written: the QRIS "Thanks, we're gonna check your payment".
+- **The look** is `DESIGN.md`'s (2026-11-02, on the owner's word "aku serahkan semua ke kamu … no AI
+  slop UI"): a price list that answers in plain words, light with a dark scheme beside it. It replaces
+  the Windows 95 desktop of 2026-10-24.
 
 ## Evidence on Hand
 
-- Measured performance per model, hourly, over 24 hours, 7 days and 30 days (`/models`).
-- The playground: a real answer from Pranata V1, live.
-- The product pages and docs (26 pages, both languages).
-- **Absent, and not to be invented:** testimonials, customer logos, user counts (the owner removed
-  one), benchmarks against other models, press.
+- Every price, typed from the products' own lists, and Drive's from its catalog.
+- Whether each service answers, every few minutes (`/status`).
+- The product pages and guides (both languages), and six price sheets to download.
+- **Absent, and not to be invented:** testimonials, customer logos, user counts, uptime promises,
+  press.
 
 ## Product Principles
 
-1. Say the offer plainly: what it does, what it costs, where to start.
-2. Show real things: a live answer, measured figures, actual prices — illustrations are labelled.
-3. Every page works on a phone, in both languages, with JavaScript off where it can.
-4. Nothing on the page explains how the service is built.
-5. The account area is a tool: the next thing to do is obvious, and money is always clear.
+1. Lead with the need, in the visitor's words; the product name second.
+2. Show the price where the eye lands first, with nothing added that the page does not say.
+3. Show real things: actual prices, a live status, labelled illustrations.
+4. Every page works on a phone, in both languages, with JavaScript off where it can.
+5. Nothing on the page says who runs the service or how it is built.
+6. The account area is a tool: the next thing to do is obvious, and money is always clear.
 
 ## Accessibility & Inclusion
 
-WCAG AA contrast in both themes, visible focus, keyboard reachable controls, reduced-motion respected,
-charts with a table view.
+WCAG AA contrast in both themes, visible focus, keyboard reachable controls, reduced motion respected,
+44px touch targets.

@@ -1,17 +1,22 @@
 # CLAUDE.md
 
-This repository is the public ZeikoAI website. It shows **the models, their
-prices, and how each model is performing** — and, behind sign-in, **the
-customer's own Zeiko Account** (`/account`): where Pranata V1 plans and the
-balance are bought and the key is handed over.
+This repository is the public Zeiko website. It sells **Zeiko's cloud
+products** — Zeiko Sites, Zeiko Hosting, Zeiko VPS and Zeiko Drive (with
+Zeiko S3) — with their prices in rupiah, and, behind sign-in, holds **the
+customer's own Zeiko Account** (`/account`): where those products are
+ordered, paid by QRIS, renewed and run.
 
-`/models` stays: it is where visitors look the models up, with each model's
-live performance figures. `/docs` is the documentation: the products, the
-account, pricing, and the API (below). `/drive` (and `/id/drive`) is **Zeiko
-Drive**, the file storage on the same account, whose app is at its own
-address, `https://drive.zeiko.biz.id` (below).
+**The AI products are off the site** (the owner's, 2026-11-02: "mulai saat ini
+kita fokus jualan cloud product, AI dan pranata kita tarik dulu"): no Pranata V1,
+no roleplay models, no `/models`, no playground, no API docs. Old addresses
+are sent on by `public/_redirects`. Do not bring any of it back without the
+owner asking.
 
-## The rule: never leak anything about how the API works
+`/docs` is the customers' guides to the products and the account.
+`/drive` (and `/id/drive`) is **Zeiko Drive**, the file storage on the same
+account, whose app is at its own address, `https://drive.zeiko.biz.id` (below).
+
+## The rule: never leak anything about how it is built or run
 
 Everything under `public/` ships to every visitor: HTML and its comments, JS
 and CSS and their comments, `<meta>` tags, `alt` text, class names, file names,
@@ -51,15 +56,9 @@ else above stays banned there too — architecture, what runs the models,
 infrastructure, decision logic — and the public pages keep the rule whole:
 a plan card says "Buy", never how payment works.
 
-**The second exception is the docs (`public/docs/`)**, on the operator's
-explicit request: they may show the connection details a caller needs — the
-API's address (`https://ai.zeiko.biz.id/v1`, the only other address they may
-name), its endpoint paths, the `Authorization: Bearer` header, and `curl`
-and SDK examples (whose key parameter is `api_key` / `apiKey`). A key is
-always `YOUR_API_KEY` or `$ZEIKO_API_KEY`: never the key format, its prefix
-or an example key. Everything else above stays banned there too — billing
-included: the docs say "buy a plan" and "add balance", never how payment
-works; that is the buying guide's, inside the account area.
+**The docs had a second exception** for the API's connection details; it went
+with the API docs (2026-11-02). The guides now hold to every rule above, and
+connection details appear nowhere on the site.
 
 The same rule covers everything else in this repository: README, code
 comments, commit messages, PR titles and PR descriptions. Never name or
@@ -76,9 +75,10 @@ its own stays banned). Everything else above holds
 there too, and the AI products' copy keeps the rule whole.
 
 **The fourth exception is Zeiko Hosting**, on the operator's request (October
-2026). Its own pages (`hosting.html`, `id/hosting.html`) and blocks marked
-`<!-- hosting:start -->` … `<!-- hosting:end -->` (the homepage's window and
-About column, the hosting docs; in the account area's script,
+2026). Its own pages (`hosting.html`, `vps.html`, `sites.html`, the homepage,
+and their Indonesian twins: `HOSTING_PAGES` in the check) and blocks marked
+`<!-- hosting:start -->` … `<!-- hosting:end -->` (the hosting docs and the
+account guide; in the account area's script,
 `// hosting:start` … `// hosting:end`) may name what a hosting plan comes
 with — web and object storage, MySQL databases, Cloudflare CDN — its prices
 in rupiah, and paying for one. Everything else above holds there too. **Who runs the hosting is
@@ -87,24 +87,16 @@ commit messages: say what the customer gets, never where it comes from.
 
 ## What the site may show
 
-- Each model's display name, model ID, one-line description, and content
-  rating (SFW / Adult / Unrestricted).
-- Context window (256K), max output (32,000 tokens), streaming support, the
-  thinking-effort levels (`none` … `max`), and "works with the official
-  OpenAI SDKs".
-- Every rate: input, cache read, the output rate in each of the three bands,
-  and the flat fee for a refused request; which effort lands in which band;
-  that reasoning tokens count as output.
-- Each model's performance on `/models`, over the last 24 hours, 7 days and
-  30 days, each beside the window before it: time to first token, output
-  speed, latency, availability, requests, input and output tokens, cache
-  rate, and their charts. Say where they come from as "updated every hour"
-  and stop there.
-- How to request a key (the contact section) for the roleplay models, and
-  "Buy" / "Create an account" for Pranata V1.
-- The playground (`#try`, below): "5 free tries every 30 minutes" and
-  nothing more about what a try costs or whose plan it uses.
-- The docs (`/docs`, below): all of the above, plus how to call the API.
+- Each cloud product: what it does in plain words, what every plan comes
+  with, and every price, in rupiah, typed from the door's own lists
+  (`data-price`, below) or, for Drive, drawn from Drive's catalog.
+- How ordering works: the Zeiko Account, QRIS, the payment checked by hand in
+  1–5 minutes, hosting and a VPS made within 1–2 hours, a website from Zeiko
+  Sites at once.
+- Help: WhatsApp `+62 819-3241-6096` (08.00–22.00 WIB; VPS 24/7), the guides
+  (`/docs`), and the status page (`/status`).
+- Labelled illustrations of a product's own screen ("Illustration"), with
+  fixed, made-up content, never animated.
 - A "Sign in" link to `/account`, which becomes the visitor's own name once
   they are signed in (below, "Who is signed in").
 
@@ -136,9 +128,8 @@ public/
   status.html     /status: whether each service answers, filled by src/worker.js from
                   the status document (src/status.js); "not available" without it
   id/status.html  /id/status: the same page in Indonesian
-  models.html     /models: at-a-glance table, then each model's specs and rate card
   404.html
-  _redirects      old /models/<id> links → /models#<id>
+  _redirects      the AI products' old addresses (/models, the API docs) → / and /docs/
   img/marketing/  the sheets: a PNG (1588 × 2246) to download, a JPG preview (794 ×
                   1123) for the page, and zeiko-materi-promosi.zip with every PNG. They
                   are pictures, so the check cannot read their prices: when a price on
@@ -149,15 +140,14 @@ public/
                   pixels (title bars, the Start button, the favicon); mark-mail.png:
                   the icon the account emails show; icons/: 16×16 pixel icons
                   drawn for Zeiko, shown at 16 or 32 px, never another size
-  fonts/          Arimo and Cousine (woff2, Latin subset), the site's own font
-                  files; their licences are in fonts/ at the repository's root;
+  fonts/          Plus Jakarta Sans and Cousine (woff2, Latin subset), the site's own
+                  font files (Arimo and DotGothic16 for the old stylesheet); their licences are in fonts/ at the repository's root;
                   sites/: the fonts of Zeiko Sites' designs (TEMPLATES.md)
   css/site.css    the stylesheet of the cloud pages (DESIGN.md): tokens for light and
                   dark; css/style.css is the old one, still on the pages not yet moved
   js/main.js      the light and dark switch, the language cookie, the header's shadow,
                   copy buttons, the footer's year
-  js/try.js       the homepage playground (#try): asks the account door's /v1/try
-  docs/           /docs: one plain page per topic (index.html is /docs/)
+  docs/           /docs: the guides, one plain page per topic (index.html is /docs/)
   account/index.html  /account and every page under it: one plain page
   js/account/     Zeiko Accounts: app.js asks the account door, views.js draws,
                   lang.js picks English or Indonesian, payguide.js (and
@@ -166,54 +156,44 @@ public/
                   signed in; templates.js, designs.js and preview.js are Zeiko
                   Sites' templates, their fifty designs and the editor's preview
 src/
-  worker.js       fills /models from the snapshot and /drive from Drive's catalog,
-                  sends /dashboard… to Drive's address, answers 404.html for the rest
-  render.js       snapshot → HTML for those placeholders; numbers only
+  worker.js       fills /drive and the homepage from Drive's catalog and /status from
+                  the status document, sends /dashboard… to Drive's address, answers
+                  404.html for the rest
   status.js       the status document → /status's two placeholders; ids and numbers only
   drive.js        Drive's address (DRIVE_URL, driveAddress); Drive's catalog → plan
                   cards (numbers and escaped plan names only) and Zeiko S3's lines
 dev/
-  sample-stats.mjs  made-up figures for local development and the check
   sites-sample.mjs, sites-preview.mjs  Zeiko Sites' designs built from made-up
                   content into dev/out/ (gitignored), and their thumbnails
                   (npm run sites:preview, TEMPLATES.md)
 scripts/
-  check-site.mjs  leak scan + price consistency + rendered /models and /account
-                  + docs links and docs list (npm run check)
-wrangler.jsonc    static assets, plus the worker for /models, /drive and /account, its R2
-                  binding, and (in production) the DRIVE service binding
+  check-site.mjs  leak scan + price consistency + rendered /status, Zeiko S3 and
+                  /account + docs links and docs list (npm run check)
+wrangler.jsonc    static assets, plus the worker for /, /drive, /status and /account, its
+                  R2 binding (the status document), and the DRIVE service binding
 ```
 
-Everything is a static file except `/models`, and the browser never asks
-for anything but this site's own files — **except the account area** (below),
-whose script talks to the account door and nowhere else:
+Everything is a static file, filled in on the way out for a few pages, and
+the browser never asks for anything but this site's own files — **except the
+account area** (below), whose script talks to the account door and nowhere
+else:
 
-- **One piece of server code.** `src/worker.js` runs first for `/models`,
-  `/drive`, `/id/drive`, the homepage (`/`, `/id/`) and `/account` (`run_worker_first`), and for any path
-  that is no file (`/dashboard…`, below, or a 404); for `/account…` it only hands back
-  `public/account/index.html`, so deep links open. It reads the hourly snapshot from the `MODELS` R2
-  binding and fills the page's placeholders (`data-perf-bar`, `data-perf`,
-  `data-stat`) before the page leaves. Every other path never reaches it.
-- **`src/render.js` is the only door from the snapshot to the page.** It
-  reads numbers and nothing else; every string on the page is a fixed label
-  written there or a number formatted there. The snapshot carries other
-  fields; never copy one of them, or any text at all, onto the page. The
-  check renders a sample laced with junk text and fails if any gets through.
-- **Never serve the snapshot to the browser**, whole or in part: no data
-  file, no JSON endpoint, no inline JSON. Only finished HTML goes out.
+- **One piece of server code.** `src/worker.js` runs first for the homepage
+  (`/`, `/id/`), `/drive`, `/status` and `/account` (`run_worker_first`), and
+  for any path that is no file (`/dashboard…`, below, or a 404); for
+  `/account…` it only hands back `public/account/index.html`, so deep links
+  open. Every other path never reaches it.
+- **Only finished HTML goes out**: no data file, no JSON endpoint, no inline
+  JSON. What the worker fills in is numbers and fixed words (`src/drive.js`,
+  `src/status.js`); the check renders both from samples laced with junk text.
 - **No runtime requests.** No `fetch`, XHR, WebSocket, analytics, third-party
   web fonts or CDN scripts (the fonts are the site's own files, in
-  `public/fonts`). The network tab shows only this site's own files. Three
-  exceptions, all to the account door only: `public/js/account/app.js`, the
-  top bar's `public/js/account/session.js` (see "Who is signed in"), and the
-  homepage playground `public/js/try.js` (see "The playground").
+  `public/fonts`). The network tab shows only this site's own files. Two
+  exceptions, both to the account door only: `public/js/account/app.js` and
+  the top bar's `public/js/account/session.js` (see "Who is signed in").
 - **No build step**, no framework, no dependencies besides wrangler.
-- Every page must read fine with JavaScript off, except the account area
-  and the playground, which need it and say so (`<noscript>`). The figures and charts are
-  rendered on the server; JavaScript only adds chart hover, the estimator
-  and the plans' "requests per dollar" line (both stay hidden without it).
-- If the snapshot is missing or unreadable, `/models` goes out as the static
-  file, with "not available right now" where the figures would be.
+- Every page must read fine with JavaScript off, except the account area,
+  which needs it and says so (`<noscript>`).
 
 ## Zeiko Drive (`/drive`, `drive.zeiko.biz.id`)
 
@@ -504,7 +484,7 @@ junk text and an unknown id. Never type a figure into the page.
 
 Every page is in English and in Indonesian (the operator's, October 2026):
 `public/<page>.html` and its twin `public/id/<page>.html` — `/` and `/id/`,
-`/models` and `/id/models`, `/drive` and `/id/drive`, `/docs/…` and
+`/hosting` and `/id/hosting`, `/drive` and `/id/drive`, `/docs/…` and
 `/id/docs/…`, `404.html` and `id/404.html`.
 
 - **The switch**: every page with the top bar has
@@ -528,11 +508,10 @@ Every page is in English and in Indonesian (the operator's, October 2026):
   disimpan, penyimpanan, analitik, pelacakan…), with Drive's words
   (penyimpanan, bayar, pembayaran…) allowed in Drive blocks only, like
   storage and pay in English.
-- **What scripts write**: `main.js` and `try.js` pick their words from the
-  page's `<html lang>`; `src/render.js` renders `/models` with
-  `render(view, 'en')` and `/id/models` with `render(view, 'id')` (labels,
-  dates and number format, all in its `TEXT`); the worker answers
-  `id/404.html` under `/id/` or for a `zk_lang=id` visitor.
+- **What scripts write**: `main.js` picks its words from the page's
+  `<html lang>`; `src/drive.js` and `src/status.js` draw in the page's
+  language; the worker answers `id/404.html` under `/id/` or for a
+  `zk_lang=id` visitor.
 - **The account pages** are drawn in the visitor's language
   (`public/js/account/lang.js`: the `zk_lang` cookie; `L(en, id)`). Every
   sentence in `views.js` and `app.js` is an `L('…', '…')`; the static shell
@@ -543,7 +522,7 @@ Every page is in English and in Indonesian (the operator's, October 2026):
   Messages the account door writes come back in its own words (English).
 - **A new page, or a change to one**, is made in both languages in the same
   commit. Every docs page has the same frame (top bar, both docs lists,
-  pager, footer): a change to it goes into all 50 pages, and the two
+  pager, footer): a change to it goes into all 34 pages, and the two
   languages' docs lists and pagers stay the same.
 
 ## Zeiko Accounts (`public/account/`, `public/js/account/`)
@@ -666,140 +645,41 @@ and signs in by itself when they come back. So `next=` may be:
 Anything else goes to `/account`. The door's Google and GitHub sign-in hold
 `next` to the same rule (Drive's address there is the door's own setting).
 
-## The playground (`#try` on the homepage, `public/js/try.js`)
-
-On the operator's request, anyone can ask Pranata V1 one real question of
-each kind — yes or no (`noul`), pick one (`choice`), score it (`score`) — right
-after the hero, and see the answer with its probabilities.
-
-- **It asks the account door, `GET`/`POST /v1/try`, and nothing else.** The
-  door's address is the homepage's `<meta name="zeiko-accounts">`; the
-  `POST` carries `X-Zeiko: 1` and the visitor's own cookie for the door
-  (`credentials: 'include'`), so a signed-in visitor counts as their account.
-  `npm run check` lets `fetch(DOOR …)` and the door's `/v1` path through in
-  `try.js` only, and the door's address in that one `<meta>` only.
-- **The limit lives in the account door**, never here: 5 free tries per 30
-  minutes per visitor, a ceiling across everybody, free tries never touch a
-  plan. Past them a signed-in
-  person's tries go through their plan, then their balance, then are owed up
-  to a small cap; the account page shows what is owed. **The public page says
-  only "5 free tries every 30 minutes"** — never what a try costs, whose plan
-  it uses or what is owed (billing stays off the public pages).
-- **Every value that comes back goes in as text** (`textContent`), never as
-  markup; 4xx messages from the door are shown as written, anything else is
-  "not available right now".
-- The examples in the form are fixed, made-up texts; the answer is the
-  model's own, live. Nothing from a try is kept on the site.
-
 ## Prices: one key, many places
 
-Each rate appears in several places, and every one of them is marked with
-`data-price="<model-id>:<rate>"`. The rate keys are `input`, `cache`, `out`
-(standard band), `out-none` and `out-max`. The refused-request fee is just
-`data-price="refusal"`.
-
-Pranata V1 has its own keys: `decision:<plan-id>` for each plan (`welcome`,
-`expand`, `huh`, `question`, `enough`). On the operator's request Pranata V1
-is sold by plan only: the site shows no per-token price for it (the old
-`pranata-v1:input` key is gone; do not bring it back).
-
-**Opening offers** (the operator's, October 2026): Expand runs 90 days for
-the price of 30 for the first 1,000 people, once each; Question about
-decision? runs 90 days when bought by 31 October (WIB). The door decides who
-gets one (its plans carry `promo {days, until, left}`, which the account
-page shows); the public pages only say so, in a `.plan-offer` line on the
-plan card, the `/models` rate row and `docs/pricing.html`. A dated offer
-carries `data-offer-until` and `main.js` hides it once passed, but the words
-must still come off the pages afterwards — and the capped one when the
-door's `left` reaches 0, which the site cannot see.
-
-When a rate changes, change **every** element that carries its key
+Every price on a public page is typed into the HTML and marked with a
+`data-price` key, and a key reads the same everywhere it appears
 (`npm run check` fails until they all agree):
 
-- `index.html`: the effort card in `#models` (Jagad only), the model cards,
-  the pricing table, and the refusal card and FAQ entry.
-- `models.html`: the at-a-glance table and that model's rate card.
-- Decision: `index.html`'s hero (the lede and the facts under the buttons:
-  `decision:welcome`), its `#decision` section (the
-  facts strip and the plan cards) and `models.html`'s Decision sheet (its
-  rate table).
-- Docs: `docs/pricing.html` (every rate and plan), `docs/pranata-v1.html`
-  (`decision:welcome`), `docs/index.html`
-  (`decision:welcome`), `docs/roleplay.html` (Jagad's three output bands,
-  `refusal`), `docs/api-chat.html` and `docs/faq.html` (`refusal`).
+- `hosting:<plan>` (`mini` … `xl`) a month, with `:first`, `:year` and
+  `:save`; `hosting:setup`, `:name`, `:domain`, `:move-name`, `:move-domain`,
+  `:egress`, `:egress-gb`, `:static`.
+- `vps:<plan id>` a month (`vps:xs-1-2-25-25` … `vps:l-4-16-256-600`),
+  `vps:setup`, `vps:windows`, `vps:domain`, `vps:egress`.
+- `sites:<package>` a year, with `:domain` and `:event`.
 
-The estimator reads its rates from the pricing table (`#rateTable`), the
-effort bars size themselves from their prices, and each plan's "requests per
-dollar" line, its meter and the "Best value" tag are worked out from the
-plan's `data-price` and `data-requests`, so none of them needs editing. A
-plan's `data-requests` must match the requests written on its card.
-Any new `$` amount on a page must carry a `data-price` key too.
+They appear on the product page, its Indonesian twin, the homepage (each
+product's lowest price) and the guides. Rupiah is written `Rp17.000` in both
+languages. **The door's own lists are what is actually asked**: change a
+price there and on the pages together. Drive's prices are never typed: they
+come from its catalog. When a price changes, the marketing sheets
+(`img/marketing/`) are made again too.
 
-## Pranata V1 stands apart
+## The guides (`public/docs/`, `public/id/docs/`)
 
-The decision model is not one of the roleplay models and must not be mixed in
-with them: it has its own section on both pages (`#decision` on the landing
-page, its own sheet below the roleplay sheets on `/models`), it is not in the
-pricing table, the estimator, the at-a-glance table or the "Models: 3" stat,
-and plans cover it only. Its figures on `/models` come from the snapshot's
-`decisions` block and `per_second` (calls, not streamed replies:
-`render.js::decisionSection`) — measured counts only. Never put a made-up,
-animated or "live-looking" number in the figures; they are hourly and say so.
-The operator removed the "Active users" figure; do not bring back a typed-in
-user count. The high-demand notice is the operator's wording; take it down
-when they say so. Plan cards link to `/account/plans?plan=<id>` ("Buy"); the
-plan ids there must stay the accounts service's (`welcome`, `expand`, `huh`,
-`question`, `enough`).
-The model's id is `pranata-v1` (display name Pranata V1).
+`/docs` is seventeen plain pages, grouped Get started (`index`, `account`),
+Zeiko Hosting (`hosting`, `hosting-domain`, `hosting-sites`, `hosting-tools`:
+staging, Git, cron and PHP), Zeiko Drive (`drive`, `drive-plans`,
+`drive-files`, `drive-sharing`, `drive-safety`, `drive-faq`) and Drive tools
+(`drive-tools`, `drive-photo`, `drive-pdf`, `drive-docs`, `drive-video`),
+each with its Indonesian twin under `/id/docs/`. `/docs/<name>` serves
+`docs/<name>.html`; `/docs` itself goes to `/docs/`. The Zeiko Drive pages
+are written from the Drive app itself (its own words and button names) and
+sit in Drive blocks; they never type a Drive price: plans and prices are on
+`/drive`. Zeiko Sites and Zeiko VPS have no guides yet; `index` says so.
+They read fine with JavaScript off and load `main.js` and `session.js` only.
 
-Pranata V1 leads the landing page, on the operator's request: the hero is
-its own (name, price, "Create an account", the example answers card), then
-`#decision`, and only then the roleplay models. The example answers window
-beside the hero is illustrative and labelled so ("Example answers"): fixed,
-made-up percentages showing what an answer looks like, never a measured
-figure and never animated (only the playground's live answer fills in).
-
-## Adding, renaming or removing a model
-
-A model ID on the site is the API's own, exactly as `GET /v1/models` lists
-it: lowercase (`jagad-512b-v1`, `wisanggeni-512b-v1`). It is what callers
-copy, and the snapshot's figures are keyed on it. The display name
-("Wisanggeni 512B V1") is only a label.
-
-- `index.html`: the model card, a `<tr data-model="…">` row in the pricing
-  table, the "Models" stat, and "three"/"3" in the copy and meta tags.
-- `models.html`: a jump chip, an at-a-glance row, and a full
-  `<article id="<model-id>">` sheet (copy one of the existing ones).
-- The FAQ entry "Which roleplay model should I pick?".
-- `models.html`: the model's `data-perf` section and its three `data-stat`
-  cells in the at-a-glance table. Its figures appear once the snapshot
-  carries that model id.
-- The docs: `docs/roleplay.html` (the models table), `docs/pricing.html`
-  (the rates table), `docs/api.html` (Model IDs), `docs/api-chat.html`
-  (`model`), and "three" in their copy.
-
-## The docs (`public/docs/`, `public/id/docs/`)
-
-`/docs` is twenty-five plain pages, one per topic, grouped Get started
-(`index`, `account`, `playground`), Models (`pranata-v1`, `roleplay`,
-`pricing`), API (`api`, `api-decisions`, `api-chat`, `faq`), Zeiko Drive
-(`drive`, `drive-plans`, `drive-files`, `drive-sharing`, `drive-safety`,
-`drive-faq`) and Drive tools (`drive-tools`, `drive-photo`, `drive-pdf`,
-`drive-docs`, `drive-video`) and Zeiko Hosting (`hosting`, `hosting-domain`,
-`hosting-sites`, `hosting-tools`: staging, Git, cron and PHP), each with its Indonesian twin
-under `/id/docs/`. `/docs/<name>` serves `docs/<name>.html`; `/docs` itself
-goes to `/docs/`. The Zeiko Drive pages are written from the Drive app
-itself (its own words and button names) and sit in Drive blocks; they never
-type a Drive price: plans and prices are on `/drive`. They read fine with
-JavaScript off and load `main.js` only (theme, menu, the copy buttons on
-code, which hide without it).
-
-- **What the API does is written from the API itself**, never guessed: the
-  request and answer shapes, limits and error codes are the ones the API
-  returns. Change the docs with the API. Figures the site already states
-  (256K context, 32,000 output tokens, 2,048 tokens per Pranata call) are
-  the site's.
-- **The docs list is in every page twice** — `.docs-list` beside the page,
+- **The guides list is in every page twice** — `.docs-list` beside the page,
   `.docs-menu` (a `<details>`) on a phone — in `index.html`'s order, with
   `aria-current="page"` on the page itself. A new page goes into all of
   them, and into the previous and next page's pager. `npm run check` holds
@@ -807,11 +687,11 @@ code, which hide without it).
 - Every `<h2>` has an `id`; the "On this page" box lists them. Links to
   `/docs/<name>#<id>`, and `#<id>` inside a docs page, must land: the check
   follows them.
-- Code examples are `<div class="code">` with a `.code-bar` (label, Copy)
-  and a `<pre id="code-N">`, its text HTML-escaped. Tables are
-  `.doc-table` in a `.doc-table-wrap`; one of three columns or more with no
-  figures to compare is also `.doc-table-cards` (one card per row on a
-  phone, each `<td>` with a `data-label`).
+- Code is `<div class="code">` with a `.code-bar` (label, Copy) and a
+  `<pre id="code-N">`, its text HTML-escaped. Tables are `.doc-table` in a
+  `.doc-table-wrap`; one of three columns or more with no figures to compare
+  is also `.doc-table-cards` (one card per row on a phone, each `<td>` with a
+  `data-label`).
 
 ## Before every commit
 
@@ -820,12 +700,11 @@ npm run check
 ```
 
 It fails on banned words, external URLs, network calls, a price that reads
-differently in two places, a `$` amount without `data-price`, a link to a
-model that `models.html` does not have, or a docs link or docs list that
-does not match the docs pages. It also renders the made-up sample
-through `src/render.js` and holds that output to the same rules, fails if any
-text from the snapshot reaches it, and fails if a placeholder on `/models`
-would stay empty. Reword the page until it passes. Never shorten the banned
+differently in two places, a `$` amount without `data-price`, a docs link or
+docs list that does not match the docs pages, or an EN | ID switch that does
+not land on its twin. It also renders /status, Zeiko S3's lines and every
+account page from made-up data laced with junk text, and fails if any of it
+gets through. Reword the page until it passes. Never shorten the banned
 list to make it pass.
 
 The check only catches words. It will not catch a sentence that gives the
@@ -840,16 +719,13 @@ response"). Read your own copy with the rule above in mind.
   `prefers-color-scheme` block and `[data-theme="dark"]`. Add a new colour
   to all three.
 - Layouts must work at 375px wide with no horizontal scroll.
-- **The look is Windows 95** (the operator's, October 2026; `PRODUCT.md`,
-  `DESIGN.md`): grey chrome with two-pixel bevels (the `--raise`, `--sunk`…
-  tokens), navy title bars, white wells for documents and fields, navy blocks
-  for every probability and meter, a teal desktop, and a night appearance
-  scheme beside the standard one. The homepage is the desktop; every other
-  page is one maximised window (title bar, menu bar, the page, a status bar).
-  No Windows or Microsoft name, logo or icon: the Start button carries the
-  Zeiko mark and every icon is drawn for Zeiko.
-- Preview locally with `npm run seed:local` once (made-up figures into the
-  local bucket), then `npx wrangler dev` (http://localhost:8787).
+- **The look is DESIGN.md's** (2026-11-02, replacing the Windows 95 desktop):
+  a price list that answers in plain words. Navy ink from the logo on white,
+  Plus Jakarta Sans, one accent (the amber of the logo's dot) and only on
+  prices, plan lists as rows, a dark scheme beside the light one. The header
+  shows every product (a sideways-scrolling row on a phone). The account area
+  still wears `css/style.css` until it moves over.
+- Preview locally with `npx wrangler dev` (http://localhost:8787).
 - Charts: thin marks, hairline grid, one colour per series from the
   `--series-*` tokens (validated for colour-blind separation in both themes),
   a legend only when a chart has two series, and a table view under them.

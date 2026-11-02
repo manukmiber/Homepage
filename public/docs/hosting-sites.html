@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Put your site online — Zeiko Docs</title>
+<title>Put your site online — Zeiko Guides</title>
 <meta name="description" content="Sign in to cPanel, install WordPress in one click, upload your own site, run Node.js, Python and Ruby apps, and use SSH and email.">
 <meta name="color-scheme" content="light dark">
 <!-- The top bar asks this address who is signed in. -->
@@ -12,7 +12,7 @@
 <meta property="og:description" content="Sign in to cPanel, install WordPress in one click, upload your own site, run Node.js, Python and Ruby apps, and use SSH and email.">
 <meta property="og:type" content="article">
 <link rel="icon" href="/img/mark-32.svg" type="image/svg+xml">
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/site.css">
 </head>
 <body>
 
@@ -20,64 +20,43 @@
 
 <header class="topbar">
   <div class="wrap topbar-in">
-    <a class="brand" href="/">
-      <img class="brand-mark" src="/img/mark-16.svg" alt="" width="16" height="16">
-      <span class="brand-name">Zeiko</span><span class="brand-doc" aria-hidden="true"> - Put your site online</span>
-    </a>
-
-    <nav class="nav" id="nav" aria-label="Main navigation">
-      <a href="/#decision">Pranata V1</a>
-      <a href="/drive">Drive</a>
+    <a class="brand" href="/" aria-label="Zeiko, home"><svg class="wordmark" viewBox="-1 -18 131 46" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 0H19L3 24H19M29.5 12H53.5A12 12 0 1 0 50.69 19.71M63.5 0V24M76 -14V24M91 0L77 13M83 8L92 24"/><circle cx="114" cy="12" r="12"/></g><circle class="dot" cx="63.5" cy="-11" r="4.4"/></svg></a>
+    <nav class="nav" id="nav" aria-label="Products">
+      <a href="/sites">Sites</a>
       <a href="/hosting">Hosting</a>
-      <a href="/#models">Roleplay</a>
-      <a href="/#pricing">Pricing</a>
-      <a href="/models">Models</a>
-      <a href="/docs/" aria-current="page">Docs</a>
-      <a class="nav-account" href="/account">Sign in</a>
-      <a class="btn btn-sm btn-primary" href="/account/signup" data-signed-out>Create account</a>
+      <a href="/vps">VPS</a>
+      <a href="/drive">Drive</a>
+      <a href="/docs/" aria-current="page">Guides</a>
+      <a href="/status">Status</a>
     </nav>
-
     <div class="topbar-tools">
-      <a class="lang-switch" href="/id/docs/hosting-sites" hreflang="id" lang="id" data-lang="id">ID</a>
-      <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
-        <svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-        <svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
-      </button>
-      <button class="icon-btn nav-toggle" id="navToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav">
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      </button>
+      <a class="lang-switch" href="/id/docs/hosting-sites" hreflang="id" lang="id" data-lang="id" title="Bahasa Indonesia">ID</a>
+      <button class="icon-btn" id="theme" type="button" aria-label="Switch between light and dark"><svg class="i-sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><svg class="i-moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M20 14.6A8.2 8.2 0 0 1 9.4 4a8.2 8.2 0 1 0 10.6 10.6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></button>
+      <a class="nav-account" href="/account">Sign in</a>
+      <a class="btn btn-sm btn-primary signup" href="/account/signup" data-signed-out>Create account</a>
     </div>
   </div>
 </header>
 
 <main id="main" class="docs">
   <div class="wrap docs-in">
-    <nav class="docs-side" aria-label="Docs">
+    <nav class="docs-side" aria-label="Guides">
       <details class="docs-menu">
-        <summary>Docs menu <span>Put your site online</span></summary>
+        <summary>All guides <span>Put your site online</span></summary>
         <div class="docs-group">
           <p class="docs-group-title">Get started</p>
           <ul>
             <li><a href="/docs/">Introduction</a></li>
             <li><a href="/docs/account">Your account</a></li>
-            <li><a href="/docs/playground">Playground</a></li>
           </ul>
         </div>
         <div class="docs-group">
-          <p class="docs-group-title">Models</p>
+          <p class="docs-group-title">Zeiko Hosting</p>
           <ul>
-            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
-            <li><a href="/docs/roleplay">Roleplay models</a></li>
-            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
-          </ul>
-        </div>
-        <div class="docs-group">
-          <p class="docs-group-title">API</p>
-          <ul>
-            <li><a href="/docs/api">API basics</a></li>
-            <li><a href="/docs/api-decisions">Decisions API</a></li>
-            <li><a href="/docs/api-chat">Chat API</a></li>
-            <li><a href="/docs/faq">Troubleshooting</a></li>
+            <li><a href="/docs/hosting">Hosting basics</a></li>
+            <li><a href="/docs/hosting-domain">Connect your domain</a></li>
+            <li><a href="/docs/hosting-sites" aria-current="page">Put your site online</a></li>
+            <li><a href="/docs/hosting-tools">Staging, Git, cron &amp; PHP</a></li>
           </ul>
         </div>
         <div class="docs-group">
@@ -99,15 +78,6 @@
             <li><a href="/docs/drive-pdf">PDF tools</a></li>
             <li><a href="/docs/drive-docs">Documents, sheets &amp; text</a></li>
             <li><a href="/docs/drive-video">Video editor</a></li>
-          </ul>
-        </div>
-        <div class="docs-group">
-          <p class="docs-group-title">Zeiko Hosting</p>
-          <ul>
-            <li><a href="/docs/hosting">Hosting basics</a></li>
-            <li><a href="/docs/hosting-domain">Connect your domain</a></li>
-            <li><a href="/docs/hosting-sites" aria-current="page">Put your site online</a></li>
-            <li><a href="/docs/hosting-tools">Staging, Git, cron &amp; PHP</a></li>
           </ul>
         </div>
       </details>
@@ -117,24 +87,15 @@
           <ul>
             <li><a href="/docs/">Introduction</a></li>
             <li><a href="/docs/account">Your account</a></li>
-            <li><a href="/docs/playground">Playground</a></li>
           </ul>
         </div>
         <div class="docs-group">
-          <p class="docs-group-title">Models</p>
+          <p class="docs-group-title">Zeiko Hosting</p>
           <ul>
-            <li><a href="/docs/pranata-v1">Pranata V1</a></li>
-            <li><a href="/docs/roleplay">Roleplay models</a></li>
-            <li><a href="/docs/pricing">Pricing &amp; plans</a></li>
-          </ul>
-        </div>
-        <div class="docs-group">
-          <p class="docs-group-title">API</p>
-          <ul>
-            <li><a href="/docs/api">API basics</a></li>
-            <li><a href="/docs/api-decisions">Decisions API</a></li>
-            <li><a href="/docs/api-chat">Chat API</a></li>
-            <li><a href="/docs/faq">Troubleshooting</a></li>
+            <li><a href="/docs/hosting">Hosting basics</a></li>
+            <li><a href="/docs/hosting-domain">Connect your domain</a></li>
+            <li><a href="/docs/hosting-sites" aria-current="page">Put your site online</a></li>
+            <li><a href="/docs/hosting-tools">Staging, Git, cron &amp; PHP</a></li>
           </ul>
         </div>
         <div class="docs-group">
@@ -158,20 +119,11 @@
             <li><a href="/docs/drive-video">Video editor</a></li>
           </ul>
         </div>
-        <div class="docs-group">
-          <p class="docs-group-title">Zeiko Hosting</p>
-          <ul>
-            <li><a href="/docs/hosting">Hosting basics</a></li>
-            <li><a href="/docs/hosting-domain">Connect your domain</a></li>
-            <li><a href="/docs/hosting-sites" aria-current="page">Put your site online</a></li>
-            <li><a href="/docs/hosting-tools">Staging, Git, cron &amp; PHP</a></li>
-          </ul>
-        </div>
       </div>
     </nav>
 
     <article class="docs-main prose" id="doc">
-      <p class="crumbs"><a href="/docs/">Docs</a> <span aria-hidden="true">/</span> Zeiko Hosting</p>
+      <p class="crumbs"><a href="/docs/">Guides</a> <span aria-hidden="true">/</span> Zeiko Hosting</p>
 <!-- hosting:start -->
       <h1>Put your site online</h1>
       <p class="lede">Sign in to cPanel, then install WordPress, upload your own files, or start an app. On your own domain, point it here first (<a href="/docs/hosting-domain">Connect your domain</a>) so you can see the result at it; an address under zeiko.biz.id is ready already.</p>
@@ -261,17 +213,37 @@
 </main>
 
 <footer class="footer">
-  <div class="wrap footer-in">
-    <p>© <span id="year">2026</span> Zeiko</p>
-    <nav aria-label="Footer links">
-      <a href="/">Home</a>
-      <a href="/models">Models</a>
-      <a href="/#pricing">Pricing</a>
-      <a href="/drive">Drive</a>
-      <a href="/docs/">Docs</a>
-      <a href="/#contact">Contact</a>
-      <a href="/account">Account</a>
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="/" aria-label="Zeiko, home"><svg class="wordmark" viewBox="-1 -18 131 46" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 0H19L3 24H19M29.5 12H53.5A12 12 0 1 0 50.69 19.71M63.5 0V24M76 -14V24M91 0L77 13M83 8L92 24"/><circle cx="114" cy="12" r="12"/></g><circle class="dot" cx="63.5" cy="-11" r="4.4"/></svg></a>
+      <p>Websites, hosting, servers and a drive for your files. Help on WhatsApp, 08.00–22.00 WIB.</p>
+    </div>
+    <nav class="footer-cols" aria-label="Footer">
+      <div>
+        <h2>Products</h2>
+        <a href="/sites">Zeiko Sites</a>
+        <a href="/hosting">Zeiko Hosting</a>
+        <a href="/vps">Zeiko VPS</a>
+        <a href="/drive">Zeiko Drive</a>
+        <a href="https://drive.zeiko.biz.id">Open Drive</a>
+      </div>
+      <div>
+        <h2>Help</h2>
+        <a href="/docs/">Guides</a>
+        <a href="/status">Status</a>
+        <a href="/marketing-template">Price sheets</a>
+        <a href="https://wa.me/6281932416096">WhatsApp +62 819-3241-6096</a>
+      </div>
+      <div>
+        <h2>Account</h2>
+        <a href="/account" data-signed-out>Sign in</a>
+        <a href="/account/signup" data-signed-out>Create account</a>
+        <a href="/account" data-signed-in hidden>Your account</a>
+      </div>
     </nav>
+  </div>
+  <div class="wrap footer-base">
+    <p>© <span id="year">2026</span> Zeiko</p>
   </div>
 </footer>
 

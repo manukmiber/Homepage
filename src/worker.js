@@ -1,16 +1,18 @@
 // The only code that runs on the server side of the site.
 //
-// `run_worker_first` in wrangler.jsonc sends /models, /drive, /status and
-// /account (and /id/models, /id/drive, /id/status) here; every other path that is a plain file
-// never reaches this code. A path that is no file at all does, and is either
-// the way back to Zeiko Drive (/dashboard…) or the site's 404 page, in
-// Indonesian under /id/ or for a visitor who chose it (the zk_lang cookie).
+// `run_worker_first` in wrangler.jsonc sends the homepage, /drive, /status and
+// /account (and /id/, /id/drive, /id/status) here; every other path that is a
+// plain file never reaches this code. A path that is no file at all does, and
+// is either the way back to Zeiko Drive (/dashboard…) or the site's 404 page,
+// in Indonesian under /id/ or for a visitor who chose it (the zk_lang cookie).
+// Old addresses (/models, the AI docs) are sent on by public/_redirects.
 //
 // Zeiko Drive is its own Worker at its own address, drive.zeiko.biz.id.
 // /dashboard/… (its old address here) sends the visitor there, the same path
 // after it. /drive (and /id/drive) is a plain page whose plan cards are drawn
 // here from Drive's own catalog (src/drive.js, through the DRIVE service
-// binding), so a price changed there shows here without touching the page.
+// binding), so a price changed there shows here without touching the page;
+// the homepage takes Drive's lowest price from the same catalog.
 //
 // /account and every page under it is one plain file,
 // public/account/index.html: the visitor's browser signs in with the account
@@ -18,14 +20,9 @@
 // this code holds no secret. It only hands every account address the same
 // page, so a link to /account/plans or /account/reset?token=… opens.
 //
-// For /models (and /id/models), the static page is fetched as usual and the
-// latest hourly snapshot in R2 is rendered into its placeholders, in the
-// page's language (see src/render.js). The
-// visitor's browser only ever receives finished HTML: no data file, no script
-// fetching one. If the snapshot is missing or unreadable, the static page
-// goes out as is, with its "not available right now" notes.
+// The visitor's browser only ever receives finished HTML: no data file, no
+// script fetching one.
 
-import { render, sanitize } from './render.js';
 import { renderStatus } from './status.js';
 import { cheapest, driveAddress, driveCatalog, hasFamily, renderPlans, renderS3 } from './drive.js';
 
@@ -43,8 +40,6 @@ async function accountShell(request, env) {
   headers.set('referrer-policy', 'same-origin');
   return new Response(page.body, { status: page.status, headers });
 }
-
-const OBJECT = 'models.json';
 
 /** The language a visitor reads: /id/… is Indonesian, elsewhere their zk_lang choice. */
 function langOf(request, url) {
@@ -197,60 +192,8 @@ export default {
     if (url.pathname === '/id/drive') return drivePage(request, env, 'id');
     if (url.pathname === '/status') return statusPage(request, env, 'en');
     if (url.pathname === '/id/status') return statusPage(request, env, 'id');
-    const lang = url.pathname === '/id/models' ? 'id' : 'en';
-    if (url.pathname !== '/models' && url.pathname !== '/id/models') {
-      const res = await env.ASSETS.fetch(request);
-      return res.status === 404 ? notFound(request, env) : res;
-    }
-
-    // The page is rewritten every hour, so the static file's validators no
-    // longer describe what goes out. Ask for the whole file every time.
-    const plain = new Request(request);
-    plain.headers.delete('if-none-match');
-    plain.headers.delete('if-modified-since');
-    const page = await env.ASSETS.fetch(plain);
-    if (!page.ok || !(page.headers.get('content-type') || '').includes('text/html')) return page;
-
-    const view = await load(env, lang);
-    if (!view) return page;
-
-    const out = new HTMLRewriter()
-      .on('[data-perf-bar]', {
-        element(el) {
-          el.setInnerContent(view.bar, { html: true });
-          el.removeAttribute('hidden');
-        },
-      })
-      .on('[data-perf]', {
-        element(el) {
-          const html = view.models[el.getAttribute('data-perf')];
-          if (html) el.setInnerContent(html, { html: true });
-        },
-      })
-      .on('[data-stat]', {
-        element(el) {
-          const [id, key] = (el.getAttribute('data-stat') || '').split(':');
-          const html = view.glance[id] && view.glance[id][key];
-          if (html) el.setInnerContent(html, { html: true });
-        },
-      })
-      .transform(page);
-
-    const headers = new Headers(out.headers);
-    headers.delete('etag');
-    headers.delete('last-modified');
-    headers.set('cache-control', 'public, max-age=300');
-    return new Response(out.body, { status: out.status, headers });
+    const res = await env.ASSETS.fetch(request);
+    return res.status === 404 ? notFound(request, env) : res;
   },
 };
 
-async function load(env, lang) {
-  try {
-    if (!env.MODELS) return null;
-    const object = await env.MODELS.get(OBJECT);
-    if (!object) return null;
-    return render(sanitize(await object.json()), lang);
-  } catch {
-    return null;
-  }
-}
