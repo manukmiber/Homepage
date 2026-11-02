@@ -38,6 +38,12 @@
         ],
         "createdAt": "2026-10-29T12:01:00.515Z",
         "reason": "Claude triage: only finding is the shared full-bleed .page-head hero band (sites.html and hosting.html get the same, predates this page); its text is inset by the .wrap gutter, checked in a 375px and 1280px render"
+      },
+      {
+        "rule": "overused-font",
+        "value": "plus jakarta sans",
+        "createdAt": "2026-11-02T14:51:55.467Z",
+        "reason": "agent decision on owner's delegation (2026-11-02, 'aku serahkan semua ke kamu'): Indonesian-made face chosen for an Indonesian product, compact for long Indonesian words at 375px, tabular figures for prices; rationale in DESIGN.md Typography. Brand identity rests on the custom-drawn wordmark, not the font."
       }
     ]
   }
