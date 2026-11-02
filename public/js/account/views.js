@@ -32,7 +32,15 @@ function when(ms) {
 // The site's own 16×16 pixel icons (public/img/icons), shown at 16 or 32 px
 // and never another size. Decorative: the alt text is always empty.
 
-const icon = (name, cls = '') => `<img class="ico px${cls ? ` ${cls}` : ''}" src="/img/icons/${name}.svg" alt="" width="16" height="16">`;
+// The pixel icons went with the old look (2026-11-02). Words carry every
+// action now; the password field's show and hide button keeps an eye.
+const GLYPH = {
+  eye: '<path d="M1.5 10S5 4 10 4s8.5 6 8.5 6-3.5 6-8.5 6-8.5-6-8.5-6Z"/><circle cx="10" cy="10" r="2.6"/>',
+  'eye-off': '<path d="M1.5 10S5 4 10 4s8.5 6 8.5 6-3.5 6-8.5 6-8.5-6-8.5-6Z"/><path d="M3 17 17 3"/>',
+};
+const icon = (name, cls = '') => (GLYPH[name]
+  ? `<svg class="ico${cls ? ` ${cls}` : ''}" viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${GLYPH[name]}</svg>`
+  : '');
 const I = {
   check: 'ok',
   copy: 'copy',
@@ -50,28 +58,27 @@ const I = {
   pin: 'pin',
 };
 
-const LOGO = `<img class="px" src="/img/mark-16.svg" alt="" width="16" height="16">`;
+const LOGO = `<svg class="wordmark" viewBox="-1 -18 131 46" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 0H19L3 24H19M29.5 12H53.5A12 12 0 1 0 50.69 19.71M63.5 0V24M76 -14V24M91 0L77 13M83 8L92 24"/><circle cx="114" cy="12" r="12"/></g><circle class="dot" cx="63.5" cy="-11" r="4.4"/></svg>`;
 
-/** The top bar's links: signed in (`account`, as the door answers it), the
- * person's name where "Sign in" is on every other page; signed out, as the
- * page is written. */
+/** The top bar's products, in the page's language, the same signed in or out. */
 export function nav(account) {
   // The site's pages in the same language: /id/… for Indonesian.
   const site = L('', '/id');
-  return account
-    ? `<a href="${site}/#decision">Pranata V1</a>
-      <a href="${site}/drive">Drive</a>
+  return `<a href="${site}/sites">Sites</a>
       <a href="${site}/hosting">Hosting</a>
-      <a href="${site}/models">${L('Models', 'Model')}</a>
-      <a href="${site}/docs/">${L('Docs', 'Dokumentasi')}</a>
-      ${meLink(displayName(account), { current: true, title: L('Your account', 'Akunmu') })}
-      <form data-act="signout" class="nav-form"><button class="btn btn-sm btn-ghost" type="submit">${L('Sign out', 'Keluar')}</button></form>`
-    : `<a href="${site}/#decision">Pranata V1</a>
-      <a href="${site}/#pricing">${L('Pricing', 'Harga')}</a>
-      <a href="${site}/models">${L('Models', 'Model')}</a>
-      <a href="${site}/docs/">${L('Docs', 'Dokumentasi')}</a>
-      <a class="nav-account" href="/account/signin">${L('Sign in', 'Masuk')}</a>
-      <a class="btn btn-sm btn-primary" href="/account/signup">${L('Create account', 'Buat akun')}</a>`;
+      <a href="${site}/vps">VPS</a>
+      <a href="${site}/drive">Drive</a>
+      <a href="${site}/docs/">${L('Guides', 'Panduan')}</a>${account ? '' : ''}`;
+}
+
+/** The top bar's person: signed in (`account`, as the door answers it), their
+ * name and Sign out; signed out, Sign in and Create account. */
+export function me(account) {
+  return account
+    ? `${meLink(displayName(account), { current: true, title: L('Your account', 'Akunmu') })}
+      <form data-act="signout" class="nav-form"><button class="btn btn-sm" type="submit">${L('Sign out', 'Keluar')}</button></form>`
+    : `<a class="nav-account" href="/account/signin">${L('Sign in', 'Masuk')}</a>
+      <a class="btn btn-sm btn-primary signup" href="/account/signup">${L('Create account', 'Buat akun')}</a>`;
 }
 
 export function loading() {
@@ -114,11 +121,11 @@ function password({ id, label, name = 'password', autocomplete, hint = '', side 
 // What one Zeiko Account gives, beside the sign-in and sign-up forms.
 const authAside = () => `<aside class="auth-aside" aria-label="${L('About Zeiko Accounts', 'Tentang Akun Zeiko')}">
     <p class="auth-kicker">${LOGO}<span>${L('Zeiko Account', 'Akun Zeiko')}</span></p>
-    <p class="auth-pitch">${L('One sign-in for ZeikoAI, Zeiko Chat and Zeiko Drive.', 'Satu kali masuk untuk ZeikoAI, Zeiko Chat, dan Zeiko Drive.')}</p>
+    <p class="auth-pitch">${L('One sign-in for Zeiko Sites, Hosting, VPS and Drive.', 'Satu kali masuk untuk Zeiko Sites, Hosting, VPS, dan Drive.')}</p>
     <ul class="auth-points">
-      <li>${icon(I.layers)}<span>${L('<strong>Every product, one login.</strong> Email and password, Google or GitHub — it works in Zeiko Chat and Zeiko Drive too.', '<strong>Semua produk, satu login.</strong> Email dan kata sandi, Google, atau GitHub — juga berlaku di Zeiko Chat dan Zeiko Drive.')}</span></li>
-      <li>${icon(I.wallet)}<span>${L('<strong>One balance.</strong> Add funds once; they pay for Pranata V1 calls and Zeiko Chat replies.', '<strong>Satu saldo.</strong> Isi sekali; saldonya membayar panggilan Pranata V1 dan balasan Zeiko Chat.')}</span></li>
-      <li>${icon(I.key)}<span>${L('<strong>Your key, kept here.</strong> Plans, usage and your Pranata V1 key on one page.', '<strong>Kuncimu ada di sini.</strong> Paket, pemakaian, dan kunci Pranata V1-mu di satu halaman.')}</span></li>
+      <li><span>${L('<strong>Every product, one login.</strong> Email and password, Google or GitHub. It works in Zeiko Drive and Zeiko Chat too.', '<strong>Semua produk, satu login.</strong> Email dan kata sandi, Google, atau GitHub. Juga berlaku di Zeiko Drive dan Zeiko Chat.')}</span></li>
+      <li><span>${L('<strong>Order and pay in one place.</strong> Hosting, a VPS or a website, paid by QRIS in rupiah.', '<strong>Pesan dan bayar di satu tempat.</strong> Hosting, VPS, atau website, dibayar pakai QRIS dalam rupiah.')}</span></li>
+      <li><span>${L('<strong>Your receipts, kept here.</strong> A PDF receipt for every payment, in English or Indonesian.', '<strong>Kuitansimu ada di sini.</strong> Kuitansi PDF untuk setiap pembayaran, dalam bahasa Indonesia atau Inggris.')}</span></li>
     </ul>
   </aside>`;
 
@@ -231,14 +238,19 @@ export function message({ heading, text, link = '/account', label = L('Go to you
 
 /* ---------------------------------------------------------------- account */
 
-const tabs = () => [
+// Pranata V1 is off sale (the owner's, 2026-11-02): an account that already
+// uses it (a plan, calls in the last 30 days, or balance) keeps its plan,
+// balance, key and usage; nobody else sees them.
+const usesPranata = (o) => Boolean(o && (o.usage || (o.plan && o.plan.id) || (o.daily || []).some((d) => d.calls) || Number(o.balance && o.balance.micro) > 0));
+
+const tabs = (o) => [
   ['overview', '/account', L('Overview', 'Ringkasan')],
-  ['plans', '/account/plans', L('Plans & balance', 'Paket & saldo')],
   ['hosting', '/account/hosting', 'Hosting'],
   ['vps', '/account/vps', 'VPS'],
   ['sites', '/account/sites', L('Sites', 'Situs')],
   ['s3', '/account/s3', 'S3'],
-  ['key', '/account/key', L('API key', 'Kunci API')],
+  ['plans', '/account/plans', L('Plans & balance', 'Paket & saldo')],
+  ...(usesPranata(o) ? [['key', '/account/key', L('API key', 'Kunci API')]] : []),
   ['settings', '/account/settings', L('Settings', 'Pengaturan')],
 ];
 // Account pages that are not tabs: reached by a link, titled here.
@@ -271,7 +283,7 @@ function verifyBanner(a) {
 function shell(tab, o, inner, flash) {
   const a = o.account;
   const name = displayName(a) || L('there', 'kamu');
-  const tabbed = tabs().find((t) => t[0] === tab);
+  const tabbed = tabs(o).find((t) => t[0] === tab);
   const title = tab === 'overview' ? L(`Hi, ${esc(name)}`, `Hai, ${esc(name)}`) : esc(tabbed ? tabbed[2] : pages()[tab]);
   return `<section class="acct">
   <div class="wrap">
@@ -282,7 +294,7 @@ function shell(tab, o, inner, flash) {
       <div class="acct-who"><span class="avatar" aria-hidden="true">${esc((name[0] || 'Z').toUpperCase())}</span><span class="acct-who-text"><strong>${esc(a.username ? '@' + a.username : name)}</strong><span>${esc(a.email || '')}</span></span></div>
     </header>
     <nav class="acct-tabs" aria-label="${L('Account sections', 'Bagian akun')}">
-      ${tabs().map(([id, href, label]) => `<a href="${href}"${id === tab ? ' aria-current="page"' : ''}>${label}</a>`).join('')}
+      ${tabs(o).map(([id, href, label]) => `<a href="${href}"${id === tab ? ' aria-current="page"' : ''}>${label}</a>`).join('')}
     </nav>
     <div class="acct-panel">
     ${flash || ''}
@@ -313,15 +325,12 @@ function planCard(o) {
       <p class="stat-sub">${L(`<strong>${num(left)}</strong> of ${num(u.amount)} requests left`, `Sisa <strong>${num(left)}</strong> dari ${num(u.amount)} permintaan`)}</p>
       ${bar(share)}
       <p class="stat-foot">${L(`${Math.round(share * 100)}% used · resets ${esc(day(u.resetsAt))}`, `${Math.round(share * 100)}% terpakai · direset ${esc(day(u.resetsAt))}`)}${p.expiresAt ? L(` · ends ${esc(day(p.expiresAt))}`, ` · berakhir ${esc(day(p.expiresAt))}`) : ''}</p>
-      <a class="btn btn-ghost btn-sm" href="/account/plans">${L('Change plan', 'Ganti paket')}</a>
     </article>`;
   }
   return `<article class="card stat-card">
     <p class="stat-label">${icon(I.layers)}${L('Plan', 'Paket')}</p>
-    <p class="stat-value">${p.paygo ? L('Per token', 'Per token') : L('No plan yet', 'Belum ada paket')}</p>
-    <p class="stat-sub">${p.paygo ? L('Every call is paid from your balance.', 'Setiap panggilan dibayar dari saldomu.') : L('Buy a plan, or add balance, to start calling Pranata V1.', 'Beli paket, atau isi saldo, untuk mulai memanggil Pranata V1.')}</p>
-    <p class="stat-foot">${L('A plan gives you a set number of requests for 30 days.', 'Paket memberimu sejumlah permintaan untuk 30 hari.')}</p>
-    <a class="btn btn-primary btn-sm" href="/account/plans">${L('See plans', 'Lihat paket')}</a>
+    <p class="stat-value">${p.paygo ? L('Per token', 'Per token') : L('No plan', 'Tidak ada paket')}</p>
+    <p class="stat-sub">${p.paygo ? L('Every call is paid from your balance.', 'Setiap panggilan dibayar dari saldomu.') : L('Calls are paid from your balance.', 'Panggilan dibayar dari saldomu.')}</p>
   </article>`;
 }
 
@@ -330,7 +339,7 @@ function balanceCard(o) {
   return `<article class="card stat-card">
     <p class="stat-label">${icon(I.wallet)}${L('Balance', 'Saldo')}</p>
     <p class="stat-value">${esc(o.balance.text)}</p>
-    <p class="stat-sub">${L('Pays for Pranata V1 calls past your plan and Zeiko Chat replies past your chat plan.', 'Membayar panggilan Pranata V1 di luar paketmu dan balasan Zeiko Chat di luar paket chat-mu.')}</p>
+    <p class="stat-sub">${L('Pays for Zeiko Chat replies past your chat plan, and Pranata V1 calls past your plan.', 'Membayar balasan Zeiko Chat di luar paket chat-mu, dan panggilan Pranata V1 di luar paketmu.')}</p>
     <p class="stat-foot">${o.balance.shared ? L('The same balance in Zeiko Chat.', 'Saldo yang sama di Zeiko Chat.') : ''}</p>
     ${o.owed && Number(o.owed.micro) > 0 && o.owed.text ? `<p class="stat-owed">${icon(I.alert)}<span>${L(`You owe <strong>${esc(o.owed.text)}</strong> for playground tries past your plan. It comes off the next balance you add.`, `Kamu berutang <strong>${esc(o.owed.text)}</strong> untuk percobaan playground di luar paketmu. Dipotong dari saldo berikutnya yang kamu isi.`)}</span></p>` : ''}
     <a class="btn ${low ? 'btn-primary' : 'btn-ghost'} btn-sm" href="/account/plans#topup">${L('Add balance', 'Isi saldo')}</a>
@@ -440,16 +449,37 @@ function chatStrip(o) {
   </section>`;
 }
 
+/** The products this account orders, each a row to its own tab. */
+function productRows() {
+  const row = (href, name, text, out = false) => `<li><a class="product-row" href="${href}"${out ? ' rel="noopener"' : ''}><strong>${name}</strong><span>${text}</span></a></li>`;
+  return `<ul class="product-rows">
+      ${row('/account/hosting', 'Zeiko Hosting', L('WordPress and PHP sites with cPanel: order, renew, change the address.', 'Situs WordPress dan PHP dengan cPanel: pesan, perpanjang, ganti alamat.'))}
+      ${row('/account/vps', 'Zeiko VPS', L('A server of your own: order, renew, start, stop, reinstall.', 'Server milikmu sendiri: pesan, perpanjang, nyalakan, matikan, instal ulang.'))}
+      ${row('/account/sites', 'Zeiko Sites', L('A website for a school, an event or a shop: order, fill in, upload.', 'Website untuk sekolah, acara, atau toko: pesan, isi, unggah.'))}
+      ${row('/account/s3', 'Zeiko S3', L('For the S3 tools you already use, run in Zeiko Drive.', 'Untuk tool S3 yang sudah kamu pakai, diatur di Zeiko Drive.'))}
+      ${row('https://drive.zeiko.biz.id', 'Zeiko Drive', L('Your files, at Drive’s own address.', 'File-mu, di alamat Drive sendiri.'), true)}
+    </ul>`;
+}
+
 export function overview(o, flash) {
-  const body = `
-    <div class="stat-grid">${planCard(o)}${balanceCard(o)}${keyCard(o)}</div>
-    ${chatStrip(o)}
+  const pranata = usesPranata(o) ? `
+    <section class="acct-section-plain">
+      <div class="section-row"><h2>Pranata V1</h2><p class="muted-note">${L('Not on sale for now. What you have keeps running.', 'Sedang tidak dijual. Yang sudah kamu punya tetap berjalan.')}</p></div>
+      <div class="stat-grid">${planCard(o)}${balanceCard(o)}${keyCard(o)}</div>
+    </section>
     <section class="card acct-section">
       <div class="section-row"><h2>${L('Usage', 'Pemakaian')}</h2><p class="muted-note">${L('Last 30 days, UTC', '30 hari terakhir, UTC')}</p></div>
       ${usageChart(o.daily)}
+    </section>` : '';
+  const body = `
+    <section class="acct-section-plain">
+      <div class="section-row"><h2>${L('Your products', 'Produkmu')}</h2></div>
+      ${productRows()}
     </section>
+    ${chatStrip(o)}
+    ${pranata}
     <section class="card acct-section">
-      <div class="section-row"><h2>${L('Payments', 'Pembayaran')}</h2><span class="row-links"><a class="btn-link" href="/account/receipts">${L('Receipts', 'Kuitansi')}</a><a class="btn-link" href="/account/how-to-buy">${L('How to pay', 'Cara membayar')}</a><a class="btn btn-ghost btn-sm" href="/account/plans">${L('Buy a plan or add balance', 'Beli paket atau isi saldo')}</a></span></div>
+      <div class="section-row"><h2>${L('Payments', 'Pembayaran')}</h2><span class="row-links"><a class="btn-link" href="/account/receipts">${L('Receipts', 'Kuitansi')}</a><a class="btn-link" href="/account/how-to-buy">${L('How to pay', 'Cara membayar')}</a></span></div>
       ${payments(o.payments)}
     </section>`;
   return shell('overview', o, body, flash);
@@ -500,7 +530,8 @@ export function plans(o, { flash, pick }) {
       <div class="plan-actions">${forms}</div>
     </article>`;
   };
-  const cards = o.plans.map((p) => card(p, 'pranata', o.plan.id)).join('');
+  // Pranata V1 is off sale: its plans are not drawn, only the plan someone has.
+  const mine = (o.plans || []).find((p) => o.plan && p.id === o.plan.id);
   const chat = o.chat || {};
   const chatCards = (chat.plans || []).map((p) => card(p, 'chat', chat.plan)).join('');
   const chips = (o.topUps || []).map((n) => `<button class="chip-btn" type="submit" name="amount" value="${esc(n)}" data-busy="…">${esc(usd(n))}</button>`).join('');
@@ -517,18 +548,17 @@ export function plans(o, { flash, pick }) {
   ].filter(Boolean);
   const body = `
     ${!buying ? alert('warn', L('Buying online is not open yet. Please try again later.', 'Pembelian online belum dibuka. Coba lagi nanti.')) : ''}
-    <section class="acct-section-plain">
-      <div class="section-row"><h2>${L('Pranata V1 plans', 'Paket Pranata V1')}</h2><p class="muted-note">${L('A call over 1,024 tokens counts as two requests', 'Panggilan lebih dari 1.024 token dihitung dua permintaan')}</p></div>
-      <div class="acct-plans">${cards}</div>
-      <p class="fineprint">${L('Buying the plan you are on adds its days to it. Buying another starts it now, and what is left of the current one comes back to your balance.', 'Membeli paket yang sedang kamu pakai menambah harinya. Membeli paket lain langsung memulainya, dan sisa paket sekarang kembali ke saldomu.')}${subs.length ? L(` Renewing: ${subs.map((s) => esc(s.planName)).join(', ')} — the next link arrives by email.`, ` Diperpanjang: ${subs.map((s) => esc(s.planName)).join(', ')} — link berikutnya datang lewat email.`) : ''}</p>
-    </section>
+    ${mine ? `<section class="acct-section-plain">
+      <div class="section-row"><h2>Pranata V1</h2></div>
+      <p class="muted-note">${L(`Pranata V1 is not on sale for now. Your <strong>${esc(mine.name)}</strong> plan keeps running to its end${o.plan.expiresAt ? `, ${esc(day(o.plan.expiresAt))}` : ''}.`, `Pranata V1 sedang tidak dijual. Paket <strong>${esc(mine.name)}</strong>-mu tetap berjalan sampai akhir${o.plan.expiresAt ? `, ${esc(day(o.plan.expiresAt))}` : ''}.`)}${subs.length ? L(` Renewing: ${subs.map((s) => esc(s.planName)).join(', ')}; the next link arrives by email.`, ` Diperpanjang: ${subs.map((s) => esc(s.planName)).join(', ')}; link berikutnya datang lewat email.`) : ''}</p>
+    </section>` : ''}
     ${chatCards ? `<section class="acct-section-plain" id="chat">
       <div class="section-row"><h2>${L('Zeiko Chat plans', 'Paket Zeiko Chat')}</h2><p class="muted-note">${L('The same account signs in to Zeiko Chat', 'Akun yang sama dipakai untuk masuk ke Zeiko Chat')}</p></div>
       <div class="acct-plans">${chatCards}</div>
     </section>` : ''}
     <section class="card acct-section" id="topup">
       <div class="section-row"><h2>${L('Balance', 'Saldo')}</h2><p class="balance-now">${esc(o.balance.text)}</p></div>
-      <p class="muted-note">${L('Your balance pays for Pranata V1 calls past your plan and for Zeiko Chat replies past your chat plan. It is the same balance in Zeiko Chat.', 'Saldomu membayar panggilan Pranata V1 di luar paketmu dan balasan Zeiko Chat di luar paket chat-mu. Saldonya sama dengan di Zeiko Chat.')}</p>
+      <p class="muted-note">${L('Your balance pays for Zeiko Chat replies past your chat plan, and for Pranata V1 calls past a plan you already have. It is the same balance in Zeiko Chat.', 'Saldomu membayar balasan Zeiko Chat di luar paket chat-mu, dan panggilan Pranata V1 di luar paket yang sudah kamu punya. Saldonya sama dengan di Zeiko Chat.')}</p>
       ${buying ? `<form data-act="topup" class="funds">
         ${method}
         <div class="chips-row" role="group" aria-label="${L('Add this amount', 'Tambah jumlah ini')}">${chips}</div>

@@ -16,6 +16,7 @@ import { contentFromForm, mountPreview } from './preview.js';
 const DOOR = (document.querySelector('meta[name="zeiko-accounts"]') || {}).content?.replace(/\/+$/, '') || '';
 const root = document.getElementById('acct');
 const navEl = document.getElementById('nav');
+const meEl = document.getElementById('me');
 const here = new URL(location.href);
 const path = here.pathname.replace(/\/+$/, '') || '/account';
 const params = here.searchParams;
@@ -176,7 +177,13 @@ function draw(html) {
  * the tab's next page (js/account/session.js). */
 function setNav(account) {
   remember(account);
+  drawNav(account);
+}
+
+/** The top bar alone, leaving the name kept for the tab as it is. */
+function drawNav(account) {
   if (navEl) navEl.innerHTML = view.nav(account);
+  if (meEl) meEl.innerHTML = view.me(account);
 }
 
 const TITLES = {
@@ -845,7 +852,7 @@ async function start() {
     const r = await ask('POST', '/verify', { token: params.get('token') || '' });
     const status = await loadSession();
     if (status === 200) setNav(session.account);
-    else if (navEl) navEl.innerHTML = view.nav(null);
+    else drawNav(null);
     if (r.status === 200) {
       if (session.account) return location.replace('/account?m=verified');
       return draw(view.message({ heading: L('Email confirmed', 'Email dikonfirmasi'), text: L('Thanks — your email is confirmed. Sign in to carry on.', 'Terima kasih — email-mu sudah dikonfirmasi. Masuk untuk melanjutkan.'), link: '/account/signin', label: L('Sign in', 'Masuk') }));
@@ -855,7 +862,7 @@ async function start() {
   const status = await loadSession();
   if (status !== 200) {
     // The door did not answer: who this is stays unknown, not signed out.
-    if (navEl) navEl.innerHTML = view.nav(null);
+    drawNav(null);
     draw(view.message({ heading: L('Not available right now', 'Sedang tidak tersedia'), text: L('Signing in is not available right now. Try again in a minute.', 'Masuk sedang tidak tersedia. Coba lagi semenit lagi.'), link: path, label: L('Try again', 'Coba lagi') }));
     return;
   }

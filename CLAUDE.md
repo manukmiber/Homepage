@@ -137,14 +137,13 @@ public/
                   metadata (it names the design and its author) before it goes in
   img/            logo.svg: the Zeiko icon (the z and the amber dot of the logo,
                   brand/zeiko/); mark-16.svg / mark-32.svg: the same icon drawn in
-                  pixels (title bars, the Start button, the favicon); mark-mail.png:
-                  the icon the account emails show; icons/: 16×16 pixel icons
-                  drawn for Zeiko, shown at 16 or 32 px, never another size
+                  pixels (the favicon); mark-mail.png: the icon the account emails
+                  show. The site draws no other icons: words carry every action
   fonts/          Plus Jakarta Sans and Cousine (woff2, Latin subset), the site's own
-                  font files (Arimo and DotGothic16 for the old stylesheet); their licences are in fonts/ at the repository's root;
+                  font files; their licences are in fonts/ at the repository's root;
                   sites/: the fonts of Zeiko Sites' designs (TEMPLATES.md)
-  css/site.css    the stylesheet of the cloud pages (DESIGN.md): tokens for light and
-                  dark; css/style.css is the old one, still on the pages not yet moved
+  css/site.css    the only stylesheet (DESIGN.md), for every page and the account
+                  area: tokens for light and dark
   js/main.js      the light and dark switch, the language cookie, the header's shadow,
                   copy buttons, the footer's year
   docs/           /docs: the guides, one plain page per topic (index.html is /docs/)
@@ -565,7 +564,14 @@ GitHub keys. Google and GitHub sign-in start and finish at the door
 - Sign-up also takes an optional **referral code**
   (pre-filled from `?ref=` on any account page, kept 30 days on the
   browser). The door keeps the code and gives its discount at checkout.
-- Zeiko Chat's plans and the balance are bought here beside Pranata V1's
+- **Pranata V1 is off sale** (the owner's, 2026-11-02). The account tabs are
+  Overview, Hosting, VPS, Sites, S3, Plans & balance and Settings; the
+  Overview leads with the cloud products. An account that already uses
+  Pranata V1 (`views.js::usesPranata`: a plan, calls in the last 30 days, or
+  balance) still sees its plan, balance, key and usage, and the API key tab;
+  nobody is offered a Pranata V1 plan. Whether the door still sells one if
+  asked directly is the door's to decide, not this site's.
+- Zeiko Chat's plans and the balance are bought on Plans & balance
   (`product` on the buy and subscribe forms); top-ups go to the balance. The
   door's payment page sends the buyer back to `/account?paid=<id>`, and the
   subscription plans to `/account?m=subscription-paid|-failed|-partial`.
@@ -723,8 +729,8 @@ response"). Read your own copy with the rule above in mind.
   a price list that answers in plain words. Navy ink from the logo on white,
   Plus Jakarta Sans, one accent (the amber of the logo's dot) and only on
   prices, plan lists as rows, a dark scheme beside the light one. The header
-  shows every product (a sideways-scrolling row on a phone). The account area
-  still wears `css/style.css` until it moves over.
+  shows every product (a sideways-scrolling row on a phone); in the account
+  area `views.js::nav` draws the products and `views.js::me` the person.
 - Preview locally with `npx wrangler dev` (http://localhost:8787).
 - Charts: thin marks, hairline grid, one colour per series from the
   `--series-*` tokens (validated for colour-blind separation in both themes),

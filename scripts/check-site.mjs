@@ -560,6 +560,8 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
   const pages = ['en', 'id'].flatMap((lang) => (accountLang.setLang(lang), [
     accountViews.nav(o.account),
     accountViews.nav(null),
+    accountViews.me(o.account),
+    accountViews.me(null),
     accountMe.meLink(accountMe.displayName(o.account), { title: evil }),
     accountMe.meLink(accountMe.displayName({ username: evil })),
     accountViews.overview(o, ''),
