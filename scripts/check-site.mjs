@@ -573,7 +573,7 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
     ...[true, false].map((open) => accountViews.hosting(o, {
       open, firstOffer: open, emailVerified: open,
       plans: [{ id: evil, name: evil, websites: 1, ramMb: 512, diskMb: 512, objectGb: 13.5, monthIdr: 17000, firstMonthIdr: 8000, halfIdr: 102000, yearIdr: 170000 }],
-      address: { base: evil, months: 3, nameIdr: 3000, domainIdr: 10000, gift: { months: 6, tlds: [evil, 'my.id'], freeMonths: 12 } },
+      address: { base: evil, freeBase: evil, months: 3, nameIdr: 3000, domainIdr: 10000, gift: { months: 6, tlds: [evil, 'my.id'], freeMonths: 12 } },
       setupIdr: 5000,
       egress: { freeGb: 500, blockGb: 500, blockIdr: 5000, measured: true },
       // Every state, then a running one being moved to a new address.
@@ -598,8 +598,10 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
     }, { flash: '', pick: evil, domain: evil, address: evil, name: evil })),
     // Zeiko VPS: every state, an upgrade offered and one paid, and the order form.
     ...[true, false].map((open) => accountViews.vps(o, {
-      open, emailVerified: open, setupIdr: 10000, maxMonths: 12, bonusMonths: 2, gift: { months: 6, tlds: [evil, 'my.id'], freeMonths: 24, domainIdr: 5000 },
-      address: { base: evil, months: 3, nameIdr: 3000, domainIdr: 5000 },
+      open, emailVerified: open, setupIdr: 10000, maxMonths: 12, bonusMonths: 1, gift: { months: 6, tlds: [evil, 'my.id'], freeMonths: 24, domainIdr: 5000 },
+      // Free months by tier (6–9 one, 10–12 two), and a tier from the door that makes no sense.
+      bonus: [{ fromMonths: 6, freeMonths: 1 }, { fromMonths: 10, freeMonths: 2 }, { fromMonths: evil, freeMonths: evil }],
+      address: { base: evil, freeBase: evil, months: 3, nameIdr: 3000, domainIdr: 5000 },
       plans: [{ id: evil, name: evil, vcpu: 1, ramGb: 2, diskGb: 25, objectGb: 25, monthIdr: 50000 }],
       templates: [{ id: evil, name: evil, extraIdr: 0 }, { id: 'windows', name: evil, extraIdr: 50000 }],
       services: [...['ordered', 'paid', 'active', 'suspended', 'deleted', 'cancelled', evil], 'active'].map((status, i) => ({
@@ -609,11 +611,12 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
         label: evil, freeAddress: evil, signInAt: i % 3 ? evil : '', nextDomain: i === 3 ? evil : '', move: { nameIdr: 3000, domainIdr: 5000 },
         paidUntil: Date.UTC(2026, 10, 1), deleteAt: Date.UTC(2026, 10, 8),
         spec: { vcpu: 1, ramGb: 2, diskGb: 20, objectGb: 30 },
-        // A renewal of each length: 1 to 12 months, two free from six, and
+        // A renewal of each length: 1 to 12 months, one free from six and two
+        // from ten, and
         // one from the door that makes no sense.
         renew: [...Array.from({ length: 12 }, (_, k) => {
           const paid = k + 1;
-          const free = paid >= 6 ? 2 : 0;
+          const free = paid >= 10 ? 2 : paid >= 6 ? 1 : 0;
           const blocks = paid >= 6 ? 2 : 0;
           return { totalIdr: 50000 * paid + blocks * 5000, months: paid + free, freeMonths: free, planIdr: 50000 * paid, addressBlocks: blocks, addressMonths: blocks * 3, addressIdr: blocks * 5000, egressGb: 0, egressIdr: 0, setupIdr: 0 };
         }), { totalIdr: 1, months: evil, freeMonths: evil, addressBlocks: 1, addressIdr: 1, addressMonths: evil }],

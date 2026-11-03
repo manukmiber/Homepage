@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Zeiko VPS: lembar promosi</title>
+<!--
+  The Zeiko VPS sheet on /marketing-template (in Indonesian), in the site's look like
+  semua-produk.html. One A4 sheet: 794 x 1123 CSS px, saved at 2x as
+  public/img/marketing/zeiko-vps.png (1588 x 2246) and at 1x as the page's JPG preview.
+  From the repository's root:
+
+    chromium --headless=new --no-sandbox --hide-scrollbars --window-size=794,1123 \
+      --force-device-scale-factor=2 --screenshot=zeiko-vps.png dev/marketing/vps.html
+
+  Every price is typed from its data-price key on /vps (vps:<plan id>, vps:setup, vps:windows):
+  change a price there, change it here and make the sheet again. The free months are the
+  owner's of 2026-11-03 (6 to 9 months one, 10 to 12 two). The system logos are
+  public/img/os/. qr-zeiko-id.svg opens https://zeiko.biz.id/id/.
+-->
+<style>
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("../../public/fonts/plus-jakarta-sans.woff2") format("woff2");
+  font-weight: 200 800;
+}
+:root {
+  --ink: #1f2639;
+  --cream: #eee6d7;
+  --cream-soft: #c9ccd6;
+  --muted: #586074;
+  --line: #e3e5eb;
+  --line-strong: #cdd1da;
+  --ground: #f4f5f8;
+  --marker: #f7cd7c;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 794px; height: 1123px; }
+body {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  color: var(--ink);
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+  display: grid;
+  grid-template-rows: auto auto auto auto 1fr auto;
+  overflow: hidden;
+}
+
+/* ---------- head */
+.head { background: var(--ink); color: var(--cream); padding: 22px 48px 18px; }
+.head-top { display: flex; justify-content: space-between; align-items: center; }
+.head-top img { height: 32px; width: auto; display: block; }
+.head-top span { font-size: 15px; font-weight: 650; color: var(--cream-soft); }
+h1 { margin-top: 14px; font-size: 44px; line-height: 1.04; font-weight: 800; letter-spacing: -0.03em; }
+.lede { margin-top: 8px; font-size: 16.5px; line-height: 1.5; color: var(--cream-soft); }
+.lede b { color: var(--cream); font-weight: 650; }
+
+/* ---------- the plans, as a printed price list */
+.plans { padding: 14px 48px 4px; }
+.plans h2, .longer h2, .systems h2, .every h2 { font-size: 15px; font-weight: 750; }
+table { width: 100%; border-collapse: collapse; margin-top: 6px; font-variant-numeric: tabular-nums; }
+th { text-align: left; font-size: 12px; font-weight: 650; color: var(--muted); padding: 0 0 5px; border-bottom: 1px solid var(--line-strong); }
+th.n, td.n { text-align: right; }
+td { font-size: 14px; padding: 4px 0; border-bottom: 1px solid var(--line); }
+tr:last-child td { border-bottom: 0; }
+td.plan { font-weight: 700; }
+td.plan small { font-weight: 600; color: var(--muted); font-size: 12.5px; margin-left: 4px; }
+td.price { text-align: right; padding-left: 12px; }
+.price span {
+  display: inline-block; font-size: 18px; line-height: 1.05; font-weight: 800; letter-spacing: -0.02em;
+  background: linear-gradient(transparent 55%, var(--marker) 55%, var(--marker) 92%, transparent 92%);
+  padding: 0 0.12em;
+}
+.price small { font-size: 12px; font-weight: 600; color: var(--muted); margin-left: 2px; }
+.note { margin-top: 4px; font-size: 12px; color: var(--muted); }
+
+/* ---------- pay longer, get more */
+.longer { padding: 10px 48px 10px; }
+.longer ul { list-style: none; margin-top: 8px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.longer li { border: 1.5px solid var(--line-strong); border-radius: 12px; padding: 8px 12px; font-size: 13px; line-height: 1.4; color: var(--muted); }
+.longer li.best { border-color: var(--ink); }
+.longer li b { display: block; color: var(--ink); font-size: 16px; font-weight: 800; letter-spacing: -0.01em; margin-bottom: 2px; }
+.longer li strong { color: var(--ink); font-weight: 750; }
+
+/* ---------- systems, each with its logo */
+.systems { padding: 2px 48px 10px; }
+.systems ul { list-style: none; margin-top: 8px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.systems li { display: flex; gap: 10px; align-items: center; border: 1px solid var(--line); border-radius: 12px; padding: 5px 10px; }
+.systems li img { width: 26px; height: 26px; display: block; }
+.tile { flex: none; width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--line); display: grid; place-items: center; }
+.systems li b { display: block; font-size: 14px; font-weight: 700; line-height: 1.25; }
+.systems li span { font-size: 12px; color: var(--muted); line-height: 1.3; }
+.systems li span strong { color: var(--ink); font-weight: 750; }
+
+/* ---------- every plan */
+.every { background: var(--ground); padding: 11px 48px 12px; align-self: end; }
+.every ul { list-style: none; margin-top: 7px; display: grid; grid-template-columns: repeat(3, 1fr); column-gap: 18px; row-gap: 6px; }
+.every li { position: relative; padding-left: 21px; font-size: 13px; line-height: 1.35; }
+.every li::before {
+  content: ""; position: absolute; left: 0; top: 2px; width: 14px; height: 14px;
+  background: var(--ink);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3.2 3L13 4.5' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 13px no-repeat;
+}
+
+/* ---------- the next step */
+.foot {
+  background: var(--ink); color: var(--cream);
+  padding: 16px 48px 18px;
+  display: grid; grid-template-columns: auto 1fr auto; column-gap: 28px; align-items: center;
+}
+.cta-small { font-size: 15px; font-weight: 600; color: var(--cream-soft); }
+.cta-big { font-size: 34px; line-height: 1.1; font-weight: 800; letter-spacing: -0.025em; }
+.wa { padding-left: 28px; border-left: 1px solid #3a4361; align-self: stretch; display: grid; align-content: center; }
+.wa-num { font-size: 22px; font-weight: 750; letter-spacing: -0.01em; }
+.wa-hours { margin-top: 2px; font-size: 13.5px; color: var(--cream-soft); }
+.qr { text-align: center; }
+.qr-tile { background: #fff; padding: 8px; border-radius: 10px; width: 104px; height: 104px; margin: 0 auto; }
+.qr-tile img { width: 88px; height: 88px; display: block; image-rendering: pixelated; }
+.qr p { margin-top: 6px; font-size: 12.5px; line-height: 1.35; color: var(--cream-soft); }
+</style>
+</head>
+<body>
+
+<header class="head">
+  <div class="head-top">
+    <img src="../../brand/zeiko/zeiko-logo-on-dark.svg" alt="Zeiko" width="103" height="32">
+    <span>Zeiko VPS</span>
+  </div>
+  <h1>Server sendiri, siap 1–2 jam.</h1>
+  <p class="lede">Linux atau Windows, <b>IPv4 sendiri</b>, bayar <b>1 sampai 12 bulan</b> pakai <b>QRIS</b>.</p>
+</header>
+
+<section class="plans">
+  <h2>Pilih paket</h2>
+  <table>
+    <thead>
+      <tr><th>Paket</th><th class="n">vCPU</th><th class="n">RAM</th><th class="n">NVMe</th><th class="n">Object storage</th><th class="n">Per bulan</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="plan">Extra Small <small>1.2.25.25</small></td><td class="n">1</td><td class="n">2 GB</td><td class="n">25 GB</td><td class="n">25 GB</td><td class="price"><span>Rp50.000</span></td></tr>
+      <tr><td class="plan">Extra Small <small>1.2.64.64</small></td><td class="n">1</td><td class="n">2 GB</td><td class="n">64 GB</td><td class="n">64 GB</td><td class="price"><span>Rp90.000</span></td></tr>
+      <tr><td class="plan">Small <small>2.4.32.64</small></td><td class="n">2</td><td class="n">4 GB</td><td class="n">32 GB</td><td class="n">64 GB</td><td class="price"><span>Rp90.000</span></td></tr>
+      <tr><td class="plan">Small <small>2.4.64.64</small></td><td class="n">2</td><td class="n">4 GB</td><td class="n">64 GB</td><td class="n">64 GB</td><td class="price"><span>Rp120.000</span></td></tr>
+      <tr><td class="plan">Medium <small>2.8.64.64</small></td><td class="n">2</td><td class="n">8 GB</td><td class="n">64 GB</td><td class="n">64 GB</td><td class="price"><span>Rp160.000</span></td></tr>
+      <tr><td class="plan">Medium <small>2.8.128.128</small></td><td class="n">2</td><td class="n">8 GB</td><td class="n">128 GB</td><td class="n">128 GB</td><td class="price"><span>Rp200.000</span></td></tr>
+      <tr><td class="plan">Medium <small>2.8.256.256</small></td><td class="n">2</td><td class="n">8 GB</td><td class="n">256 GB</td><td class="n">256 GB</td><td class="price"><span>Rp280.000</span></td></tr>
+      <tr><td class="plan">Large <small>4.16.64.128</small></td><td class="n">4</td><td class="n">16 GB</td><td class="n">64 GB</td><td class="n">128 GB</td><td class="price"><span>Rp280.000</span></td></tr>
+      <tr><td class="plan">Large <small>4.16.128.256</small></td><td class="n">4</td><td class="n">16 GB</td><td class="n">128 GB</td><td class="n">256 GB</td><td class="price"><span>Rp320.000</span></td></tr>
+      <tr><td class="plan">Large <small>4.16.256.600</small></td><td class="n">4</td><td class="n">16 GB</td><td class="n">256 GB</td><td class="n">600 GB</td><td class="price"><span>Rp400.000</span></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="longer">
+  <h2>Bayar lebih lama, dapat lebih banyak</h2>
+  <ul>
+    <li><b>1–5 bulan</b>Pemasangan <strong>Rp10.000</strong>, sekali saja.</li>
+    <li><b>6–9 bulan</b><strong>Gratis 1 bulan</strong>, tanpa pemasangan, domain gratis 2 tahun.</li>
+    <li class="best"><b>10–12 bulan</b><strong>Gratis 2 bulan</strong>, tanpa pemasangan, domain gratis 2 tahun.</li>
+  </ul>
+</section>
+
+<section class="systems">
+  <h2>Pilih sistemmu</h2>
+  <ul>
+    <li><span class="tile"><img src="../../public/img/os/ubuntu.svg" alt=""></span><div><b>Ubuntu</b><span>Gratis</span></div></li>
+    <li><span class="tile"><img src="../../public/img/os/debian.svg" alt=""></span><div><b>Debian</b><span>Gratis</span></div></li>
+    <li><span class="tile"><img src="../../public/img/os/almalinux.svg" alt=""></span><div><b>AlmaLinux</b><span>Gratis</span></div></li>
+    <li><span class="tile"><img src="../../public/img/os/rocky.svg" alt=""></span><div><b>Rocky Linux</b><span>Gratis</span></div></li>
+    <li><span class="tile"><img src="../../public/img/os/windows.svg" alt=""></span><div><b>Windows Server 2025</b><span><strong>Rp50.000</strong> sekali bayar</span></div></li>
+    <li><span class="tile"><img src="../../public/img/os/wordpress.svg" alt=""></span><div><b>WordPress</b><span>Gratis</span></div></li>
+    <li><span class="tile"><img src="../../public/img/os/n8n.svg" alt=""></span><div><b>n8n</b><span>Gratis</span></div></li>
+    <li><span class="tile"><img src="../../public/img/os/owncloud.svg" alt=""></span><div><b>ownCloud</b><span>Gratis</span></div></li>
+    <li><span class="tile"><img src="../../public/img/os/openclaw.svg" alt=""></span><div><b>OpenClaw</b><span>Gratis</span></div></li>
+  </ul>
+</section>
+
+<section class="every">
+  <h2>Di setiap paket VPS</h2>
+  <ul>
+    <li>Egress 500 GB per bulan</li>
+    <li>Alamat IPv4 sendiri</li>
+    <li>Password atau kunci SSH</li>
+    <li>Reboot dan instal ulang</li>
+    <li>Alamat gratis di zeikosite.biz.id</li>
+    <li>Dibantu manusia 24 jam, gratis</li>
+  </ul>
+</section>
+
+<footer class="foot">
+  <div>
+    <p class="cta-small">Pilih paketnya dan pesan di</p>
+    <p class="cta-big">zeiko.biz.id</p>
+  </div>
+  <div class="wa">
+    <p class="cta-small">Tanya dulu di WhatsApp</p>
+    <p class="wa-num">+62 819-3241-6096</p>
+    <p class="wa-hours">Khusus VPS 24 jam</p>
+  </div>
+  <div class="qr">
+    <div class="qr-tile"><img src="qr-zeiko-id.svg" alt="Kode QR ke zeiko.biz.id" width="88" height="88"></div>
+    <p>Scan untuk pesan</p>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Zeiko VPS — server sendiri dalam rupiah</title>
-<meta name="description" content="Zeiko VPS: server milikmu sendiri dengan alamat IPv4 dan egress 500 GB per bulan, mulai Rp50.000 per bulan, untuk 1 sampai 12 bulan. 6 bulan atau lebih: tanpa biaya pemasangan, domain gratis 2 tahun dan gratis 2 bulan. Ubuntu, Debian, AlmaLinux, Rocky Linux, Windows Server 2025, WordPress, n8n, ownCloud atau OpenClaw.">
+<meta name="description" content="Zeiko VPS: server milikmu sendiri dengan alamat IPv4 dan egress 500 GB per bulan, mulai Rp50.000 per bulan, untuk 1 sampai 12 bulan. 6 bulan atau lebih: tanpa biaya pemasangan, domain gratis 2 tahun dan gratis sampai 2 bulan. Ubuntu, Debian, AlmaLinux, Rocky Linux, Windows Server 2025, WordPress, n8n, ownCloud atau OpenClaw.">
 <meta name="color-scheme" content="light dark">
 <!-- The top bar asks this address who is signed in. -->
 <meta name="zeiko-accounts" content="https://auth.zeiko.biz.id">
@@ -51,7 +51,7 @@
         </h1>
         <p class="lede">
           Pilih paket dan sistem, tentukan password, lalu dapatkan VPS sendiri dengan alamat IPv4 dan egress 500 GB per bulan.
-          Mulai <strong data-price="vps:xs-1-2-25-25">Rp50.000</strong> per bulan, dan gratis 2 bulan kalau bayar 6 bulan atau lebih.
+          Mulai <strong data-price="vps:xs-1-2-25-25">Rp50.000</strong> per bulan: bayar 6 bulan gratis 1 bulan, bayar 10 bulan atau lebih gratis 2 bulan.
         </p>
         <div class="cta">
           <a class="btn btn-primary btn-lg" href="#plans">Lihat paket</a>
@@ -73,7 +73,7 @@
         <li>Masuk dengan password, dan dengan kunci SSH juga (Linux)</li>
         <li>Nyalakan, matikan, reboot, instal ulang, password baru dan konsol darurat, diminta lewat Akun Zeiko-mu</li>
         <li>Pindah ke paket lebih besar kapan saja, atau ke yang lebih kecil mulai perpanjangan berikutnya</li>
-        <li>Alamatmu sendiri di bawah zeiko.biz.id, gratis, dan dengan 6 bulan atau lebih domain gratis selama 2 tahun</li>
+        <li>Alamat gratismu sendiri di bawah zeikosite.biz.id, dan dengan 6 bulan atau lebih domain gratis selama 2 tahun</li>
         <li>Bantuan dari manusia, 24/7, gratis</li>
       </ul>
     </div>
@@ -87,7 +87,8 @@
       </div>
       <div class="vps-terms" role="note" aria-label="Bayar lebih lama, dapat lebih banyak">
         <p><strong>1 sampai 5 bulan</strong>: biaya pemasangan <span data-price="vps:setup">Rp10.000</span>, sekali, bersama pesananmu.</p>
-        <p><strong>6 sampai 12 bulan</strong>: tanpa biaya pemasangan, domain .my.id, .biz.id atau .web.id gratis selama 2 tahun pertamanya, dan <strong>gratis 2 bulan</strong>. Gratis 2 bulan berlaku di setiap pembayaran 6 bulan atau lebih, perpanjangan juga.</p>
+        <p><strong>6 sampai 9 bulan</strong>: tanpa biaya pemasangan, domain .my.id, .biz.id atau .web.id gratis selama 2 tahun pertamanya, dan <strong>gratis 1 bulan</strong>.</p>
+        <p><strong>10 sampai 12 bulan</strong>: sama, dan <strong>gratis 2 bulan</strong>. Bulan gratis berlaku di setiap pembayaran 6 bulan atau lebih, perpanjangan juga.</p>
       </div>
       <h3 class="vps-tier">Extra Small</h3>
       <div class="plans host-plans">
@@ -231,18 +232,18 @@
         <h2 class="sec-title" id="systemsTitle">Pilih sistemmu</h2>
         <p class="sec-lede">Mulai dari sistem kosong atau dari aplikasi yang sudah siap.</p>
       </div>
-      <ul class="ticks host-ticks">
-        <li>Ubuntu</li>
-        <li>Debian</li>
-        <li>AlmaLinux</li>
-        <li>Rocky Linux</li>
-        <li>Windows Server 2025, dengan lisensinya <span data-price="vps:windows">Rp50.000</span>, sekali</li>
-        <li>WordPress</li>
-        <li>n8n</li>
-        <li>ownCloud</li>
-        <li>OpenClaw</li>
+      <ul class="os-list">
+        <li><span class="os-logo"><img src="/img/os/ubuntu.svg" alt="" width="28" height="28" loading="lazy"></span><span class="os-name"><strong>Ubuntu</strong><small>Gratis</small></span></li>
+        <li><span class="os-logo"><img src="/img/os/debian.svg" alt="" width="28" height="28" loading="lazy"></span><span class="os-name"><strong>Debian</strong><small>Gratis</small></span></li>
+        <li><span class="os-logo"><img src="/img/os/almalinux.svg" alt="" width="28" height="28" loading="lazy"></span><span class="os-name"><strong>AlmaLinux</strong><small>Gratis</small></span></li>
+        <li><span class="os-logo"><img src="/img/os/rocky.svg" alt="" width="28" height="28" loading="lazy"></span><span class="os-name"><strong>Rocky Linux</strong><small>Gratis</small></span></li>
+        <li><span class="os-logo"><img src="/img/os/windows.svg" alt="" width="28" height="28" loading="lazy"></span><span class="os-name"><strong>Windows Server 2025</strong><small>lisensi <span data-price="vps:windows">Rp50.000</span>, sekali bayar</small></span></li>
+        <li><span class="os-logo"><img src="/img/os/wordpress.svg" alt="" width="28" height="28" loading="lazy"></span><span class="os-name"><strong>WordPress</strong><small>Gratis</small></span></li>
+        <li><span class="os-logo"><img src="/img/os/n8n.svg" alt="" width="28" height="28" loading="lazy"></span><span class="os-name"><strong>n8n</strong><small>Gratis</small></span></li>
+        <li><span class="os-logo"><img src="/img/os/owncloud.svg" alt="" width="28" height="28" loading="lazy"></span><span class="os-name"><strong>ownCloud</strong><small>Gratis</small></span></li>
+        <li><span class="os-logo"><img src="/img/os/openclaw.svg" alt="" width="28" height="28" loading="lazy"></span><span class="os-name"><strong>OpenClaw</strong><small>Gratis</small></span></li>
       </ul>
-      <p class="fineprint">Semua sistem Linux gratis. Sistem Linux dimasuki dengan SSH; Windows dengan Remote Desktop.</p>
+      <p class="fineprint">Semua sistem Linux dan aplikasi gratis; Windows Server 2025 perlu lisensi, dibayar sekali bersama pesananmu dan tidak pernah ikut perpanjangan. Sistem Linux dimasuki dengan SSH; Windows dengan Remote Desktop.</p>
     </div>
   </section>
 
@@ -250,7 +251,7 @@
     <div class="wrap">
       <div class="sec-head">
         <h2 class="sec-title" id="domainTitle">Alamatmu</h2>
-        <p class="sec-lede">Kamu masuk ke VPS-mu lewat alamatmu sendiri, bukan alamat server-nya. Setiap VPS mulai dengan alamat gratis, enam huruf dan angka acak di bawah zeiko.biz.id, misalnya <code>k3x9qa.zeiko.biz.id</code>.</p>
+        <p class="sec-lede">Kamu masuk ke VPS-mu lewat alamatmu sendiri, bukan alamat server-nya. Setiap VPS mulai dengan alamat gratis, enam huruf dan angka acak di bawah zeikosite.biz.id, misalnya <code>k3x9qa.zeikosite.biz.id</code>.</p>
       </div>
       <ul class="ticks host-ticks">
         <li><strong>Nama pilihanmu</strong> langsung di bawah zeiko.biz.id, misalnya <code>kantor.zeiko.biz.id</code>: <span data-price="hosting:name">Rp3.000</span> per 3 bulan, tanpa perlu menyambungkan apa pun.</li>
@@ -288,7 +289,7 @@
         </details>
         <details class="faq">
           <summary>Apa yang didapat kalau bayar 6 bulan atau lebih?</summary>
-          <p>Tanpa biaya pemasangan, domain .my.id, .biz.id atau .web.id gratis selama 2 tahun pertamanya, dan gratis 2 bulan: bayar 6 bulan dan VPS-mu aktif 8 bulan, bayar 12 dan aktif 14 bulan. Gratis 2 bulan juga berlaku di setiap perpanjangan 6 bulan atau lebih. Di bawah 6 bulan, biaya pemasangan <span data-price="vps:setup">Rp10.000</span>, sekali.</p>
+          <p>Tanpa biaya pemasangan, domain .my.id, .biz.id atau .web.id gratis selama 2 tahun pertamanya, dan bulan gratis: 1 bulan untuk 6 sampai 9 bulan, 2 bulan untuk 10 sampai 12 bulan. Bayar 6 bulan dan VPS-mu aktif 7 bulan, bayar 10 dan aktif 12 bulan, bayar 12 dan aktif 14 bulan. Perpanjangan 6 bulan atau lebih juga dapat bulan gratisnya. Di bawah 6 bulan, biaya pemasangan <span data-price="vps:setup">Rp10.000</span>, sekali.</p>
         </details>
         <details class="faq">
           <summary>Berapa traffic yang termasuk?</summary>
@@ -312,7 +313,7 @@
         </details>
         <details class="faq">
           <summary>Bisakah VPS-ku punya alamat yang lebih rapi?</summary>
-          <p>Bisa. VPS mulai dengan alamat gratis di bawah zeiko.biz.id; nama pilihanmu di sana <span data-price="hosting:name">Rp3.000</span> per 3 bulan, dan domain sendiri <span data-price="hosting:domain">Rp5.000</span> per 3 bulan. Pilih saat memesan, atau ganti nanti di Akun Zeiko-mu.</p>
+          <p>Bisa. VPS mulai dengan alamat gratis di bawah zeikosite.biz.id; nama pilihanmu langsung di bawah zeiko.biz.id <span data-price="hosting:name">Rp3.000</span> per 3 bulan, dan domain sendiri <span data-price="hosting:domain">Rp5.000</span> per 3 bulan. Pilih saat memesan, atau ganti nanti di Akun Zeiko-mu.</p>
         </details>
         <details class="faq">
           <summary>Apakah dapat domain gratis?</summary>

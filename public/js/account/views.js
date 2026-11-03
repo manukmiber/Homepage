@@ -249,12 +249,15 @@ const tabs = (o) => [
   ['vps', '/account/vps', 'VPS'],
   ['sites', '/account/sites', L('Sites', 'Situs')],
   ['s3', '/account/s3', 'S3'],
-  ['plans', '/account/plans', L('Plans & balance', 'Paket & saldo')],
-  ...(usesPranata(o) ? [['key', '/account/key', L('API key', 'Kunci API')]] : []),
   ['settings', '/account/settings', L('Settings', 'Pengaturan')],
 ];
-// Account pages that are not tabs: reached by a link, titled here.
+// Account pages that are not tabs: reached by a link, titled here. Plans &
+// balance and the API key are off the tabs for now (the owner's, 2026-11-03:
+// "sembunyikan dulu"); an account that still has a balance or a Pranata V1
+// plan reaches them from its Overview.
 const pages = () => ({
+  plans: L('Plans & balance', 'Paket & saldo'),
+  key: L('API key', 'Kunci API'),
   howtobuy: L('How to pay', 'Cara membayar'),
   pay: L('Pay by QRIS', 'Bayar dengan QRIS'),
   receipts: L('Receipts', 'Kuitansi'),
@@ -634,22 +637,28 @@ function addressFields(a, { free, nameIdr, domainIdr, months, once = false, labe
   const field = { name: 'name', domain: 'domain', gift: 'giftDomain', ...fields };
   const pick = address || (free ? 'free' : 'name');
   const base = esc(a.base || '');
+  // The free address has a base of its own (the owner's, 2026-11-03:
+  // zeikosite.biz.id); a name stays straight under `base`.
+  const freeBase = esc(a.freeBase || a.base || '');
   const six = label ? esc(label) : 'k3x9qa';
   const gift = (!once && a.gift) || {};
   const tlds = (Array.isArray(gift.tlds) ? gift.tlds : []).map((t) => `.${esc(t)}`).join(', ');
   const giftOn = gift.months > 0 && tlds;
+  // A hosting's free domain is free for a year, a VPS's for `freeMonths` (two years).
+  const freeYears = Number(gift.freeMonths) >= 24 && Number(gift.freeMonths) % 12 === 0 ? Number(gift.freeMonths) / 12 : 1;
+  const giftYears = freeYears > 1 ? { en: `${num(freeYears)} years`, id: `${num(freeYears)} tahun` } : { en: 'year', id: 'tahun' };
   const option = (value, title, price, note) => `<label class="host-option">
       <input type="radio" name="address" value="${value}"${pick === value ? ' checked' : ''}>
       <span class="host-option-body"><strong>${title}</strong>${price ? `<span class="host-option-price">${price}</span>` : ''}<span class="muted-note">${note}</span></span>
     </label>`;
   const per = once ? L('once', 'sekali') : `/ ${esc(monthsText(months))}`;
   return `<fieldset class="host-choose host-address"><legend>${L('Address', 'Alamat')}</legend>
-      ${free ? option('free', L('Free address', 'Alamat gratis'), L('Free', 'Gratis'), L(`Six random letters and digits, like <code>${six}.${base}</code>.`, `Enam huruf dan angka acak, misalnya <code>${six}.${base}</code>.`)) : ''}
+      ${free ? option('free', L('Free address', 'Alamat gratis'), L('Free', 'Gratis'), L(`Six random letters and digits, like <code>${six}.${freeBase}</code>.`, `Enam huruf dan angka acak, misalnya <code>${six}.${freeBase}</code>.`)) : ''}
       ${option('name', L('A name of your own', 'Nama pilihanmu'), `${esc(rp(nameIdr))} ${per}`, L(`Like <code>toko-bunga.${base}</code>: nothing to connect.`, `Misalnya <code>toko-bunga.${base}</code>: tanpa perlu menyambungkan apa pun.`))}
       ${option('own', L('Your own domain', 'Domain sendiri'), `${esc(rp(domainIdr))} ${per}`, vps
     ? L(`A domain you bought, like <code>example.com</code>. You point it at your free address with a CNAME record.`, `Domain yang kamu beli, misalnya <code>contoh.com</code>. Kamu arahkan ke alamat gratismu dengan record CNAME.`)
     : L('A domain you bought, like <code>example.com</code>. You point it at us with nameservers.', 'Domain yang kamu beli, misalnya <code>contoh.com</code>. Kamu sambungkan lewat nameserver.'))}
-      ${giftOn ? `<span class="host-gift host-gift-opt">${option('gift', L('Free domain', 'Domain gratis'), L('Free for its first year', 'Gratis tahun pertama'), L(`With ${num(gift.months)} months or more: one ${tlds} domain, registered and connected for you. After its first year it comes with your renewals at ${esc(rp(giftIdr))} per 3 months.`, `Dengan ${num(gift.months)} bulan atau lebih: satu domain ${tlds}, kami daftarkan dan sambungkan. Setelah tahun pertamanya ikut perpanjanganmu ${esc(rp(giftIdr))} per 3 bulan.`))}</span>` : ''}
+      ${giftOn ? `<span class="host-gift host-gift-opt">${option('gift', L('Free domain', 'Domain gratis'), L(`Free for its first ${giftYears.en}`, `Gratis ${giftYears.id} pertama`), L(`With ${num(gift.months)} months or more: one ${tlds} domain, registered and connected for you. After its first ${giftYears.en} it comes with your renewals at ${esc(rp(giftIdr))} per 3 months.`, `Dengan ${num(gift.months)} bulan atau lebih: satu domain ${tlds}, kami daftarkan dan sambungkan. Setelah ${giftYears.id} pertamanya ikut perpanjanganmu ${esc(rp(giftIdr))} per 3 bulan.`))}</span>` : ''}
       <label class="field host-addr-field host-addr-name">${L('Your name', 'Nama pilihanmu')}<span class="host-addr-in"><input type="text" name="${field.name}" value="${esc(name)}" placeholder="toko-bunga" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="40"><span>.${base}</span></span></label>
       <label class="field host-addr-field host-addr-own">${L('Your domain', 'Domainmu')}<input type="text" name="${field.domain}" value="${esc(address === 'gift' ? '' : domain)}" placeholder="${L('example.com', 'contoh.com')}" autocomplete="off" autocapitalize="none" spellcheck="false"></label>
       ${giftOn ? `<label class="field host-addr-field host-addr-gift host-gift">${L('Free domain', 'Domain gratis')}<input type="text" name="${field.gift}" value="${esc(address === 'gift' ? domain : '')}" placeholder="toko-bunga.${esc(gift.tlds[0])}" autocomplete="off" autocapitalize="none" spellcheck="false"></label>` : ''}
@@ -851,7 +860,38 @@ const CYCLES = () => ({ month: L('a month', 'per bulan'), half: L('6 months', '6
  * number itself (1 to 12 are sold, two more free from 6). */
 const vpsCycle = (c) => CYCLES()[c] || (/^[0-9]{1,3}$/.test(String(c)) ? monthsText(Number(c)) : String(c));
 
-/** "6 months + 2 free", what one payment of `paid` months gives. */
+/** The free months tiers (the owner's, 2026-11-03: 6–9 months one free,
+ * 10–12 two), lowest first, from the door's `bonus` ([{fromMonths,
+ * freeMonths}]); a door from before sends one `bonusMonths` from
+ * `gift.months`. */
+function bonusTiers(v) {
+  const list = Array.isArray(v && v.bonus) ? v.bonus : [];
+  const tiers = list
+    .map((t) => ({ from: Number(t && t.fromMonths) || 0, free: Number(t && t.freeMonths) || 0 }))
+    .filter((t) => t.from > 0 && t.free > 0);
+  if (!tiers.length && !Array.isArray(v && v.bonus)) {
+    const from = Number(v && v.gift && v.gift.months) || 0;
+    const free = Number(v && v.bonusMonths) || 0;
+    if (from > 0 && free > 0) tiers.push({ from, free });
+  }
+  return tiers.sort((x, y) => x.from - y.from);
+}
+
+/** The months a payment of `paid` months adds free. */
+const freeFor = (tiers, paid) => tiers.reduce((n, t) => (paid >= t.from ? t.free : n), 0);
+
+/** The tiers in words: "1 month with 6–9 months, 2 with 10–12". */
+function tiersText(tiers, most = 12) {
+  return tiers.map((t, i) => {
+    const to = i + 1 < tiers.length ? tiers[i + 1].from - 1 : most;
+    const span = to > t.from ? `${num(t.from)}–${num(to)}` : num(t.from);
+    return i === 0
+      ? L(`${num(t.free)} month${t.free === 1 ? '' : 's'} with ${span} months`, `${num(t.free)} bulan untuk ${span} bulan`)
+      : L(`${num(t.free)} with ${span}`, `${num(t.free)} bulan untuk ${span} bulan`);
+  }).join(', ');
+}
+
+/** "6 months + 1 free", what one payment of `paid` months gives. */
 const vpsSpan = (paid, free) => (free > 0
   ? L(`${monthsText(paid)} + ${num(free)} free`, `${monthsText(paid)} + ${num(free)} gratis`)
   : monthsText(paid));
@@ -861,23 +901,32 @@ const vpsSpan = (paid, free) => (free > 0
 function vpsLongNote(v, renewal = false) {
   const gift = (v && v.gift) || {};
   const from = Number(gift.months) || 0;
-  const bonus = Number(v && v.bonusMonths) || 0;
-  if (!from) return '';
+  const tiers = bonusTiers(v);
+  const most = Math.min(Math.max(Number(v && v.maxMonths) || 12, 1), 12);
+  const bonus = tiers.length ? tiersText(tiers, most) : '';
   if (renewal) {
-    return bonus > 0 ? L(`Renew ${num(from)} months or more and get ${num(bonus)} months free.`, `Perpanjang ${num(from)} bulan atau lebih dan dapat gratis ${num(bonus)} bulan.`) : '';
+    return bonus ? L(`Renewals get free months too: ${bonus}.`, `Perpanjangan juga dapat bulan gratis: ${bonus}.`) : '';
   }
+  if (!from) return '';
   const tlds = (Array.isArray(gift.tlds) ? gift.tlds : []).map((t) => `.${t}`).join(', ');
   const years = Number(gift.freeMonths) % 12 === 0 && gift.freeMonths >= 12 ? gift.freeMonths / 12 : 0;
   const domainFree = years ? L(`${num(years)} year${years === 1 ? '' : 's'}`, `${num(years)} tahun`) : monthsText(Number(gift.freeMonths) || 0);
   const parts = [
     v.setupIdr > 0 ? L('no setup fee', 'tanpa biaya pemasangan') : '',
     tlds ? L(`a free ${tlds} domain for its first ${domainFree}`, `domain ${tlds} gratis selama ${domainFree} pertama`) : '',
-    bonus > 0 ? L(`${num(bonus)} months free, on every renewal of ${num(from)} months or more too`, `gratis ${num(bonus)} bulan, juga di setiap perpanjangan ${num(from)} bulan atau lebih`) : '',
   ].filter(Boolean);
+  const and = L(' and ', ' dan ');
+  const first = parts.length ? L(`Pay ${num(from)} months or more: ${parts.join(and)}.`, `Bayar ${num(from)} bulan atau lebih: ${parts.join(and)}.`) : '';
+  const free = bonus ? L(` Free months: ${bonus}, on renewals too.`, ` Bulan gratis: ${bonus}, juga di perpanjangan.`) : '';
   const under = v.setupIdr > 0 ? L(` Under ${num(from)} months, the setup is ${rp(v.setupIdr)}, once.`, ` Di bawah ${num(from)} bulan, biaya pemasangan ${rp(v.setupIdr)}, sekali.`) : '';
-  const list = (and) => (parts.length > 1 ? `${parts.slice(0, -1).join(', ')} ${and} ${parts[parts.length - 1]}` : parts[0]);
-  return parts.length ? L(`Pay ${num(from)} months or more: ${list('and')}.${under}`, `Bayar ${num(from)} bulan atau lebih: ${list('dan')}.${under}`) : '';
+  return `${first}${free}${under}`.trim();
 }
+
+/** A system's logo (`/img/os/<id>.svg`), for the ids we have one of. */
+const OS_LOGOS = new Set(['ubuntu', 'debian', 'almalinux', 'rocky', 'windows', 'wordpress', 'n8n', 'owncloud', 'openclaw']);
+const osLogo = (id) => (OS_LOGOS.has(id)
+  ? `<span class="os-logo"><img src="/img/os/${id}.svg" alt="" width="28" height="28" loading="lazy"></span>`
+  : '<span class="os-logo" aria-hidden="true"></span>');
 
 function vpsFacts(p) {
   return [
@@ -1064,16 +1113,16 @@ export function vps(o, v, { flash, pick = '', months = '', template = '', name =
   const pickAddress = ['free', 'name', 'own', 'gift'].includes(address) ? address : (domain ? 'gift' : 'free');
   const chosen = plans.some((p) => p.id === pick) ? pick : (plans[0] || {}).id;
   const system = systems.some((t) => t.id === template) ? template : (systems[0] || {}).id;
-  // 1 to 12 months, two free from six (the door's `maxMonths`,
-  // `bonusMonths` and `gift.months`); the free domain hides under six.
+  // 1 to 12 months, free months by tier (the door's `maxMonths`, `bonus`
+  // and `gift.months`); the free domain hides under six.
   const most = Math.min(Math.max(Number(v && v.maxMonths) || 12, 1), 12);
   const from = Number(gift.months) || 0;
-  const bonus = Number(v && v.bonusMonths) || 0;
+  const tiers = bonusTiers(v);
   const per = Math.min(Math.max(parseInt(months, 10) || 1, 1), most);
   const monthOptions = Array.from({ length: most }, (_, i) => i + 1)
     .map((m) => {
       const long = from > 0 && m >= from;
-      return `<option value="${m}"${long ? '' : ' class="vps-short"'}${m === per ? ' selected' : ''}>${vpsSpan(m, long ? bonus : 0)}</option>`;
+      return `<option value="${m}"${long ? '' : ' class="vps-short"'}${m === per ? ' selected' : ''}>${vpsSpan(m, freeFor(tiers, m))}</option>`;
     }).join('');
   const options = plans.map((p) => `<label class="host-option">
       <input type="radio" name="plan" value="${esc(p.id)}"${p.id === chosen ? ' checked' : ''} required>
@@ -1083,7 +1132,10 @@ export function vps(o, v, { flash, pick = '', months = '', template = '', name =
         <span class="muted-note">${esc(vpsFacts(p))}</span>
       </span>
     </label>`).join('');
-  const systemOptions = systems.map((t) => `<label><input type="radio" name="template" value="${esc(t.id)}"${t.id === system ? ' checked' : ''} required> ${esc(t.name)}${t.extraIdr > 0 ? ` (+${esc(rp(t.extraIdr))} ${L('licence, once', 'lisensi, sekali')})` : ''}</label>`).join('');
+  const systemOptions = systems.map((t) => `<label class="os-option">
+      <input type="radio" name="template" value="${esc(t.id)}"${t.id === system ? ' checked' : ''} required>
+      ${osLogo(t.id)}<span class="os-option-body"><strong>${esc(t.name)}</strong><span class="muted-note">${t.extraIdr > 0 ? L(`+${esc(rp(t.extraIdr))} licence, paid once`, `+${esc(rp(t.extraIdr))} lisensi, sekali bayar`) : L('Free', 'Gratis')}</span></span>
+    </label>`).join('');
   const verified = Boolean(v && v.emailVerified);
   const form = !open
     ? alert('warn', L('VPS orders are not open yet. Please try again later.', 'Pemesanan VPS belum dibuka. Coba lagi nanti.'))
@@ -1093,7 +1145,7 @@ export function vps(o, v, { flash, pick = '', months = '', template = '', name =
         <fieldset class="host-choose"><legend>${L('Plan', 'Paket')}</legend>${options}</fieldset>
         <label class="field vps-months">${L('Pay for', 'Bayar untuk')}<select name="months">${monthOptions}</select><small>${L('Each month at the plan’s monthly price.', 'Setiap bulan seharga bulanan paketnya.')}</small></label>
         ${alert('ok', vpsLongNote(v))}
-        <fieldset class="funds-way vps-systems"><legend>${L('System', 'Sistem')}</legend>${systemOptions}</fieldset>
+        <fieldset class="host-choose vps-systems"><legend>${L('System', 'Sistem')}</legend><div class="os-grid">${systemOptions}</div></fieldset>
         <label class="field">${L('VPS name', 'Nama VPS')}<input type="text" name="name" value="${esc(name)}" placeholder="web1" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="30" pattern="[A-Za-z0-9][A-Za-z0-9-]{0,28}[A-Za-z0-9]|[A-Za-z0-9]" required><small>${L('Letters, digits and -, up to 30.', 'Huruf, angka dan -, maksimal 30.')}</small></label>
         <label class="field">${L('Password', 'Password')}<input type="password" name="password" autocomplete="new-password" minlength="10" maxlength="64" required><small>${L('10 to 64 characters with a lowercase letter, a capital and a digit, no spaces or quotes. Your VPS is made with it; we do not email it.', '10 sampai 64 karakter dengan huruf kecil, huruf besar dan angka, tanpa spasi atau tanda kutip. VPS-mu dibuat dengan password ini; kami tidak mengirimnya lewat email.')}</small></label>
         <label class="field">${L('SSH public key (optional)', 'Kunci SSH publik (opsional)')}<textarea name="sshKey" rows="3" placeholder="ssh-ed25519 AAAA… ${L('you@laptop', 'kamu@laptop')}" autocomplete="off" autocapitalize="none" spellcheck="false" maxlength="4096">${esc(sshKey)}</textarea><small>${L('Paste the one line from your .pub file to sign in with your key as well as the password. Never paste a private key. Not for Windows.', 'Tempel satu baris dari file .pub-mu supaya bisa masuk dengan kunci selain password. Jangan pernah menempel kunci privat. Tidak untuk Windows.')}</small></label>

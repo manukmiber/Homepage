@@ -138,11 +138,18 @@ public/
                   zeiko-semua-produk.png, the poster of every product, is drawn from
                   dev/marketing/semua-produk.html (the command is in its head). It prints
                   Drive's Mini at Rp1 a month as a promo until 15 November 2026 (the owner's,
-                  2026-11-02): after that day, make it again with Drive's price
+                  2026-11-02): after that day, make it again with Drive's price.
+                  zeiko-vps.png is drawn the same way from dev/marketing/vps.html (the
+                  owner's of 2026-11-03: the old sheet still had the first price list).
+                  zeiko-hosting.png is still a design export, and still gives the free
+                  address under zeiko.biz.id: make it again in dev/marketing/ next
   img/            logo.svg: the Zeiko mark (kawung: four petals round an amber
                   dot, brand/zeiko/); mark-16.svg / mark-32.svg: the same icon drawn in
                   pixels (the favicon); mark-mail.png: the icon the account emails
-                  show. The site draws no other icons: words carry every action
+                  show. The site draws no other icons: words carry every action,
+                  except os/: each VPS system's own logo (the owner's, 2026-11-03),
+                  beside its name on /vps, the order form and the VPS sheet, on a light
+                  tile (`--logo-tile`); their sources and licences are in brand/os/
   fonts/          Plus Jakarta Sans and Cousine (woff2, Latin subset), the site's own
                   font files; their licences are in fonts/ at the repository's root;
                   sites/: the fonts of Zeiko Sites' designs (TEMPLATES.md)
@@ -166,9 +173,10 @@ src/
   drive.js        Drive's address (DRIVE_URL, driveAddress); Drive's catalog → plan
                   cards (numbers and escaped plan names only) and Zeiko S3's lines
 dev/
-  marketing/      semua-produk.html: the poster of every product, one A4 page in the site's
-                  look, rendered by headless Chromium into img/marketing/; qr-zeiko-id.svg
-                  is its QR code to https://zeiko.biz.id/id/
+  marketing/      semua-produk.html: the poster of every product, and vps.html: the Zeiko
+                  VPS sheet, each one A4 page in the site's look, rendered by headless
+                  Chromium into img/marketing/; qr-zeiko-id.svg is their QR code to
+                  https://zeiko.biz.id/id/
   sites-sample.mjs, sites-preview.mjs  Zeiko Sites' designs built from made-up
                   content into dev/out/ (gitignored), and their thumbnails
                   (npm run sites:preview, TEMPLATES.md)
@@ -259,8 +267,10 @@ GB (the operator's, October 2026).
   written `Rp17.000` in both languages. The door's prices (the relay's
   `hosting.plans`) are what is actually asked: change both together.
 - **The address** (the operator's, 2026-10-27): every hosting starts on a
-  free one of its own, six random letters and digits under zeiko.biz.id
-  (`k3x9qa.zeiko.biz.id`, made by the door). A name of the customer's own
+  free one of its own, six random letters and digits **under
+  zeikosite.biz.id** (`k3x9qa.zeikosite.biz.id`, made by the door; the
+  owner's of 2026-11-03, the door's `address.freeBase`, which
+  `addressFields` shows, falling back to `base`). A name of the customer's own
   goes **straight under zeiko.biz.id** (`toko-bunga.zeiko.biz.id`, the
   owner's of 2026-10-28; `hosting:name`, Rp3.000) or their own domain
   (`hosting:domain`, Rp5.000), each paid by three months in the same QRIS
@@ -323,20 +333,26 @@ VPS and S3 — buy, renew, upgrade — paid by QRIS.
 
 - **VPS** (`views.js::vps`, `vpsCard`; `app.js::vpsPage`): everything comes
   from the door's `GET /v1/vps` — plans (vCPU, RAM, NVMe, object storage,
-  `monthIdr`), the systems (`templates`), `maxMonths` (12), `bonusMonths`
-  (2), `setupIdr` and `gift {months, tlds, freeMonths, domainIdr}`. **A VPS
+  `monthIdr`), the systems (`templates`), `maxMonths` (12), `bonus`
+  (`[{fromMonths, freeMonths}]`, below), `setupIdr` and `gift {months, tlds,
+  freeMonths, domainIdr}`. **A VPS
   is paid for 1 to 12 months** (the owner's, 2026-11-01: "bebas 1–12 tapi
   tetap kasih pemberitahuan"), each at the month's price: under `gift.months`
   (6) an order pays the setup (Rp10.000) once; from 6 there is no setup, a
   free .my.id/.biz.id/.web.id domain free for `gift.freeMonths` (two years),
-  and `bonusMonths` free on every payment, renewals too. The order form's
-  months are a `<select name="months">` ("6 months + 2 free"), with the
-  notice of what six months bring beside it (`vpsLongNote`, an `alert-ok`),
+  and free months on every payment, renewals too, **by tier** (the owner's,
+  2026-11-03: 6–9 months one free, 10–12 two; `bonusTiers`, `freeFor`,
+  `tiersText`; a door from before sends one `bonusMonths` from
+  `gift.months`, still read). The order form's months are a `<select
+  name="months">` ("6 months + 1 free", "10 months + 2 free"), with the
+  notice of what paying longer brings beside it (`vpsLongNote`, an `alert-ok`),
   and posts `/v1/vps/order {plan, months, template, name, password, domain,
   lang}`; a refused order is drawn again with what was typed, **the password
   left out**, and the password is never drawn into a page. A system may
   carry a licence, paid once with the order (`extraIdr`: Windows Server 2025
-  +Rp50.000), said beside it; the free domain field hides under 6 months
+  +Rp50.000), said beside it ("sekali bayar"); each system is a tile with its
+  logo (`osLogo`, `OS_LOGOS`: `/img/os/<id>.svg` for the ids we have, an empty
+  tile for any other); the free domain field hides under 6 months
   (`option.vps-short:checked`); after its free months the free domain is
   carried by the renewals at `gift.domainIdr` per 3 months. Cards renew
   from a select of the door's `renew` (one bill per length: `months` booked,
@@ -348,8 +364,14 @@ VPS and S3 — buy, renew, upgrade — paid by QRIS.
   priced like a hosting's): the order form has the same `addressFields`
   (`free`, `name`, `own`, and the free domain with 6 months or more), its
   inputs renamed `addressName`, `ownDomain` and `domain` (the free domain)
-  because the form already has a `name`; only the chosen one is sent. The
-  door's `address {base, months, nameIdr, domainIdr}` prices it. A card
+  because the form already has a `name`; only the chosen one is sent, and
+  **only the chosen one's field is shown** (`.host-address .host-addr-field`
+  hidden, the chosen one's shown by `:has()`; with one class the rule lost to
+  `label.field` and every field showed, the owner's report of 2026-11-03).
+  The free domain says how long it is free from `gift.freeMonths` (a year
+  for a hosting, two for a VPS). The door's `address {base, freeBase, months,
+  nameIdr, domainIdr}` prices it: the free address is under `freeBase`
+  (zeikosite.biz.id), a name straight under `base` (zeiko.biz.id). A card
   says the address (a free one only once it answers, `signInAt`), signs in
   at `panelUser` as the door gives it, tells an own domain to CNAME to
   `freeAddress`, and has **Change the address** (`addressBlock`, posting
@@ -389,8 +411,10 @@ VPS and S3 — buy, renew, upgrade — paid by QRIS.
   of 2026-11-01): ten plans by size (Extra Small, Small, Medium, Large), each
   named vCPU.RAM.NVMe.object storage (`Medium 2.8.256.256`), with
   `data-price="vps:<plan id>"` a month (`vps:xs-1-2-25-25` … `vps:l-4-16-256-600`);
-  `.vps-terms` says 1–5 months pay `vps:setup` (Rp10.000, once) and 6–12
-  have no setup, a free domain for 2 years and 2 months free (renewals too).
+  `.vps-terms` says 1–5 months pay `vps:setup` (Rp10.000, once), 6–9 have no
+  setup, a free domain for 2 years and 1 month free, and 10–12 the same with
+  2 months free (renewals too; the owner's, 2026-11-03). `#systems` is a list
+  of the nine systems, each with its logo (`.os-list`).
   `vps:windows` (Windows Server 2025's licence, Rp50.000 once; every Linux is
   free), `vps:domain` (Rp5.000 per 3 months after the free domain's 2 years)
   and `vps:egress` (Rp5.000 per 500 GB past the 500 GB a month that is free).
@@ -572,11 +596,13 @@ GitHub keys. Google and GitHub sign-in start and finish at the door
   (pre-filled from `?ref=` on any account page, kept 30 days on the
   browser). The door keeps the code and gives its discount at checkout.
 - **Pranata V1 is off sale** (the owner's, 2026-11-02). The account tabs are
-  Overview, Hosting, VPS, Sites, S3, Plans & balance and Settings; the
+  Overview, Hosting, VPS, Sites, S3 and Settings: **Plans & balance and the
+  API key are off the tabs** (the owner's, 2026-11-03: "sembunyikan dulu";
+  they are `pages()`, still titled and reachable by their links). The
   Overview leads with the cloud products. An account that already uses
   Pranata V1 (`views.js::usesPranata`: a plan, calls in the last 30 days, or
-  balance) still sees its plan, balance, key and usage, and the API key tab;
-  nobody is offered a Pranata V1 plan. Whether the door still sells one if
+  balance) still sees its plan, balance, key and usage on the Overview, which
+  links to both pages; nobody is offered a Pranata V1 plan. Whether the door still sells one if
   asked directly is the door's to decide, not this site's.
 - Zeiko Chat's plans and the balance are bought on Plans & balance
   (`product` on the buy and subscribe forms); top-ups go to the balance. The

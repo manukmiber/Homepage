@@ -19,6 +19,7 @@
   --bg: #ffffff;
   --ground: #f4f5f8;
   --surface: #ffffff;
+  --logo-tile: #ffffff;
   --ink: #1f2639;
   --on-ink: #ffffff;
   --text: #1f2639;
@@ -54,6 +55,7 @@
     --bg: #10131b;
     --ground: #151a24;
     --surface: #1a2030;
+    --logo-tile: #f4f1ea;
     --ink: #eee6d7;
     --on-ink: #1f2639;
     --text: #e9e4da;
@@ -79,6 +81,7 @@
   --bg: #10131b;
   --ground: #151a24;
   --surface: #1a2030;
+  --logo-tile: #f4f1ea;
   --ink: #eee6d7;
   --on-ink: #1f2639;
   --text: #e9e4da;
@@ -820,9 +823,27 @@ legend { padding: 0; }
 .host-addr-in input { flex: 1 1 auto; min-width: 0; }
 .host-addr-in span { flex: none; color: var(--muted); font-size: 14px; font-weight: 500; }
 .host-gift-opt { display: contents; }
-/* Only the field the chosen address needs, where the browser can tell. */
+/* A VPS's systems: each with its own logo on a light tile (the logos are the
+   systems' own colours, so the tile stays light in the dark scheme too). */
+.os-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 8px; }
+.os-option { display: flex; gap: 10px; align-items: center; padding: 10px 12px; border: 1.5px solid var(--line-strong); border-radius: var(--r-card); background: var(--surface); cursor: pointer; }
+.os-option:hover { border-color: var(--ink); }
+.os-option:has(input:checked) { border-color: var(--ink); background: var(--ground); }
+.os-option input { flex: none; margin: 0; }
+.os-option-body { display: grid; gap: 1px; min-width: 0; }
+.os-option-body strong { color: var(--ink); }
+.os-logo { flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 8px; background: var(--logo-tile); border: 1px solid var(--line); }
+.os-logo img { display: block; width: 26px; height: 26px; }
+.os-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); gap: 10px; margin: 0 0 16px; padding: 0; list-style: none; }
+.os-list li { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--r-card); background: var(--surface); }
+.os-name { display: grid; gap: 2px; min-width: 0; }
+.os-name strong { color: var(--ink); }
+.os-name small { color: var(--muted); font-size: 14px; }
+/* Only the field the chosen address needs, where the browser can tell.
+   `.host-address .host-addr-field` outweighs `label.field`'s display: with one
+   class it lost, and every field showed whatever was picked. */
 @supports selector(:has(*)) {
-  .host-addr-field { display: none; }
+  .host-address .host-addr-field { display: none; }
   .host-address:has(input[value="name"]:checked) .host-addr-name,
   .host-address:has(input[value="own"]:checked) .host-addr-own,
   .host-address:has(input[value="gift"]:checked) .host-addr-gift { display: grid; }
