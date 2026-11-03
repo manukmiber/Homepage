@@ -144,7 +144,7 @@ function authShell(heading, sub, inner, { aside = false } = {}) {
 }
 
 /** Where the sign-in pages say the visitor is headed, when an app sent them. */
-const GOING_TO = { drive: 'Zeiko Drive' };
+const GOING_TO = { drive: 'Zeiko Drive', ai: 'Zeiko AI' };
 
 export function signIn({ error, notice, email = '', next = '', app = '', opts, door }) {
   const sub = GOING_TO[app]
@@ -461,6 +461,7 @@ function productRows() {
       ${row('/account/sites', 'Zeiko Sites', L('A website for a school, an event or a shop: order, fill in, upload.', 'Website untuk sekolah, acara, atau toko: pesan, isi, unggah.'))}
       ${row('/account/s3', 'Zeiko S3', L('For the S3 tools you already use, run in Zeiko Drive.', 'Untuk tool S3 yang sudah kamu pakai, diatur di Zeiko Drive.'))}
       ${row('https://drive.zeiko.biz.id', 'Zeiko Drive', L('Your files, at Drive’s own address.', 'File-mu, di alamat Drive sendiri.'), true)}
+      ${row('https://ai.zeiko.biz.id', 'Zeiko AI', L('Chat with AI models, at its own address. Token packs are bought there.', 'Chat dengan model AI, di alamatnya sendiri. Paket token dibeli di sana.'), true)}
     </ul>`;
 }
 

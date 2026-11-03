@@ -63,8 +63,10 @@ function problem(r) {
 /* --------------------------------------------------------------- helpers */
 
 // The apps on this account that send people here to sign in, and ask to go
-// back afterwards: Zeiko Drive, at its own address.
-const APPS = ['https://drive.zeiko.biz.id'];
+// back afterwards: Zeiko Drive and Zeiko AI, each at its own address.
+const DRIVE_APP = 'https://drive.zeiko.biz.id';
+const AI_APP = 'https://ai.zeiko.biz.id';
+const APPS = [DRIVE_APP, AI_APP];
 
 /** Where a visitor may be sent after signing in: one of our own account
  * pages, a page of an app on this account (APPS), or /dashboard… (Drive's
@@ -85,7 +87,8 @@ function safeNext(next) {
 
 /** The app a `next` leads to, for the sign-in page's words. */
 function appOf(next) {
-  return next.startsWith('/dashboard') || next.startsWith(`${APPS[0]}/`) ? 'drive' : '';
+  if (next.startsWith('/dashboard') || next.startsWith(`${DRIVE_APP}/`)) return 'drive';
+  return next.startsWith(`${AI_APP}/`) ? 'ai' : '';
 }
 
 /** Where a Zeiko Drive payment goes back to: Drive at its own address, one

@@ -12,6 +12,16 @@ no roleplay models, no `/models`, no playground, no API docs. Old addresses
 are sent on by `public/_redirects`. Do not bring any of it back without the
 owner asking.
 
+**Zeiko AI is linked from the account area, and only there** (the owner's,
+2026-11-03: "cara akses dashboard ainya dari proxychat bisa langsung buka UI
+AI chat"). The chat app is at its own address, `https://ai.zeiko.biz.id`
+(`AI_APP` in `app.js`), signed in with the same Zeiko Account, and its token
+packs are bought there. Here it is a row in the Overview's products
+(`views.js::productRows`) and a `next=` a sign-in may go back to (below). The
+public pages keep the AI products off the site: no page, price, model name or
+nav link for it outside `/account`, and `npm run check` lets that address
+through in the account files only (`aiLink`).
+
 `/docs` is the customers' guides to the products and the account.
 `/drive` (and `/id/drive`) is **Zeiko Drive**, the file storage on the same
 account, whose app is at its own address, `https://drive.zeiko.biz.id` (below).
@@ -583,7 +593,7 @@ GitHub keys. Google and GitHub sign-in start and finish at the door
   with `<script>`.
 - **Only fixed sentences come from the address bar** (`?m=` → `FLASH` in
   `app.js`). `next=` only ever points at `/account…`, a page of Zeiko Drive
-  at its own address, or `/dashboard…` (`safeNext`).
+  or Zeiko AI at its own address, or `/dashboard…` (`safeNext`).
 - **4xx messages from the door are shown as written** (they are written for
   customers); a 5xx or no answer is "not available right now".
 - Sign-up asks for a username and **the city the person lives in** (with
@@ -675,9 +685,9 @@ of its own: it sends people to `/account/signin?next=https://drive.zeiko.biz.id/
 and signs in by itself when they come back. So `next=` may be:
 
 - one of the account pages (`/account…`);
-- a page of Drive at its own address (`APPS` in `app.js`: that origin
-  exactly, a plain path and query, no user, no fragment); the sign-in pages
-  then say "…to open Zeiko Drive";
+- a page of Drive or of Zeiko AI at its own address (`APPS` in `app.js`:
+  that origin exactly, a plain path and query, no user, no fragment); the
+  sign-in pages then say "…to open Zeiko Drive" or "…to open Zeiko AI";
 - `/dashboard…`, Drive's old address here, which `src/worker.js` still
   forwards there for old links.
 
