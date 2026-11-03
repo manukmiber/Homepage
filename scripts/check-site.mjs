@@ -497,8 +497,8 @@ function scanAccount(file, src) {
 // Its files: the account door is the one address they may name (and the
 // apps a sign-in may go back to: Zeiko Drive's and Zeiko AI's), and the
 // account script and the top bar's the only places that may call it.
-// Zeiko AI is linked from the account area only (the owner's, 2026-11-03):
-// the public pages keep the AI products off the site.
+// Zeiko AI is linked for signed-in people only (the owner's, 2026-11-03): the
+// top bar adds it from session.js; no HTML file names it.
 const AI_ADDR = 'https://ai.zeiko.biz.id';
 const aiLink = (url) => url === AI_ADDR || url.startsWith(AI_ADDR + '/');
 const CALLERS = new Set([join(PUBLIC, 'js', 'account', 'app.js'), join(PUBLIC, 'js', 'account', 'session.js')]);

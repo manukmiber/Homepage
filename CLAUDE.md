@@ -12,15 +12,22 @@ no roleplay models, no `/models`, no playground, no API docs. Old addresses
 are sent on by `public/_redirects`. Do not bring any of it back without the
 owner asking.
 
-**Zeiko AI is linked from the account area, and only there** (the owner's,
-2026-11-03: "cara akses dashboard ainya dari proxychat bisa langsung buka UI
-AI chat"). The chat app is at its own address, `https://ai.zeiko.biz.id`
-(`AI_APP` in `app.js`), signed in with the same Zeiko Account, and its token
-packs are bought there. Here it is a row in the Overview's products
-(`views.js::productRows`) and a `next=` a sign-in may go back to (below). The
-public pages keep the AI products off the site: no page, price, model name or
-nav link for it outside `/account`, and `npm run check` lets that address
-through in the account files only (`aiLink`).
+**Zeiko AI is linked for signed-in people only** (the owner's, 2026-11-03:
+"cara akses dashboard ainya dari proxychat bisa langsung buka UI AI chat", then
+"udah aku serve the page tapi di proxychat ga ada"). The chat app is at its own
+address, `https://ai.zeiko.biz.id` (`AI_APP` in `app.js`), signed in with the
+same Zeiko Account, and its token packs are bought there. Here it is a row in
+the Overview's products (`views.js::productRows`), a "Zeiko AI" link after
+Drive in the top bar's products once someone is signed in (`session.js::aiLink`
+on the public pages, `views.js::nav` in the account area), and a `next=` a
+sign-in may go back to (below). The pages themselves keep the AI products off
+the site: no page, price, model name or link for it in any HTML file, so a
+visitor who is not signed in never sees it, and `npm run check` lets that
+address through in the account files only (`aiLink`).
+
+The homepage's tab name is `Zeiko >_<` (the owner's, 2026-11-03: "nama tab
+proxychat cukup"), in both languages; `og:title` keeps the long one for link
+previews. The other pages keep their own titles.
 
 `/docs` is the customers' guides to the products and the account.
 `/drive` (and `/id/drive`) is **Zeiko Drive**, the file storage on the same

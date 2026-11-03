@@ -5,13 +5,37 @@
 // only for people without an account (`data-signed-out`) and shows what is
 // only for people with one (`data-signed-in`). Without JavaScript, or when
 // the door does not answer, the page stays as it was written.
+//
+// Signed in, the products row also gets Zeiko AI, the chat app at its own
+// address (the owner's, 2026-11-03): the page itself never names it, so a
+// visitor who is not signed in never sees it.
 
 import { displayName, hinted, meLink, remember } from './me.js';
 
 const DOOR = (document.querySelector('meta[name="zeiko-accounts"]') || {}).content?.replace(/\/+$/, '') || '';
 const signIn = document.querySelector('#nav .nav-account, .topbar-tools .nav-account');
 const TITLE = document.documentElement.lang === 'id' ? 'Akunmu' : 'Your account';
+const AI_APP = 'https://ai.zeiko.biz.id';
 let me = null;
+let ai = null;
+
+/** Zeiko AI in the products row, after Drive, while someone is signed in. */
+function aiLink(on) {
+  const row = document.getElementById('nav');
+  if (!row) return;
+  if (!on) {
+    ai?.remove();
+    ai = null;
+    return;
+  }
+  if (ai) return;
+  ai = document.createElement('a');
+  ai.href = AI_APP;
+  ai.textContent = 'Zeiko AI';
+  const drive = row.querySelector('a[href="/drive"], a[href="/id/drive"]');
+  if (drive) drive.after(ai);
+  else row.append(ai);
+}
 
 function paint(name) {
   if (signIn) {
@@ -28,6 +52,7 @@ function paint(name) {
   }
   for (const el of document.querySelectorAll('[data-signed-out]')) el.hidden = Boolean(name);
   for (const el of document.querySelectorAll('[data-signed-in]')) el.hidden = !name;
+  aiLink(Boolean(name));
 }
 
 async function check() {
