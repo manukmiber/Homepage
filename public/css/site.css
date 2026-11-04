@@ -4,10 +4,12 @@
  * logo on white, one accent, the amber of the logo's dot, and it marks the
  * price and nothing else. Plain rows before cards, mobile first.
  *
- * Every colour is a token on bare :root first, then redefined for the dark
- * scheme twice: once for the system setting and once for a pinned choice. A
- * colour that only lives inside one of those blocks disappears the moment
- * somebody pins the scheme the other way.
+ * Every colour is a token on bare :root first (the light scheme), then
+ * redefined for the dark one twice: for every page not pinned light, which
+ * makes dark the default whatever the system says (the owner's, 2026-11-03:
+ * "everything is night mode by default"), and for a pinned dark. A colour
+ * that only lives inside one of those blocks disappears the moment somebody
+ * pins the scheme the other way.
  */
 
 @font-face { font-family: "Plus Jakarta Sans"; src: url("/fonts/plus-jakarta-sans.woff2") format("woff2"); font-weight: 200 800; font-style: normal; font-display: swap; }
@@ -50,32 +52,30 @@
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #10131b;
-    --ground: #151a24;
-    --surface: #1a2030;
-    --logo-tile: #f4f1ea;
-    --ink: #eee6d7;
-    --on-ink: #1f2639;
-    --text: #e9e4da;
-    --muted: #a3a9b8;
-    --line: #2a3142;
-    --line-strong: #3d465b;
-    --amber: #f0ae48;
-    --marker: #66491a;
-    --focus: #7aa7ff;
-    --hover: #212838;
-    --ok: #4cc38a;
-    --ok-bg: #12291f;
-    --warn: #f0b85a;
-    --warn-bg: #2b2214;
-    --err: #ff8a80;
-    --err-bg: #2e1716;
-    --code-bg: #151a24;
-    --shadow-pop: 0 10px 30px rgba(0, 0, 0, 0.45);
-    color-scheme: dark;
-  }
+:root:not([data-theme="light"]) {
+  --bg: #10131b;
+  --ground: #151a24;
+  --surface: #1a2030;
+  --logo-tile: #f4f1ea;
+  --ink: #eee6d7;
+  --on-ink: #1f2639;
+  --text: #e9e4da;
+  --muted: #a3a9b8;
+  --line: #2a3142;
+  --line-strong: #3d465b;
+  --amber: #f0ae48;
+  --marker: #66491a;
+  --focus: #7aa7ff;
+  --hover: #212838;
+  --ok: #4cc38a;
+  --ok-bg: #12291f;
+  --warn: #f0b85a;
+  --warn-bg: #2b2214;
+  --err: #ff8a80;
+  --err-bg: #2e1716;
+  --code-bg: #151a24;
+  --shadow-pop: 0 10px 30px rgba(0, 0, 0, 0.45);
+  color-scheme: dark;
 }
 :root[data-theme="dark"] {
   --bg: #10131b;
@@ -187,10 +187,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .i-moon { display: none; }
 :root[data-theme="dark"] .i-sun { display: none; }
 :root[data-theme="dark"] .i-moon { display: block; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .i-sun { display: none; }
-  :root:not([data-theme="light"]) .i-moon { display: block; }
-}
+:root:not([data-theme="light"]) .i-sun { display: none; }
+:root:not([data-theme="light"]) .i-moon { display: block; }
 
 /* ================================================================ header */
 

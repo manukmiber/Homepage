@@ -18,7 +18,7 @@
 
   /* --------------------------------------------------------- theme */
   /* localStorage can throw (private window, blocked site data), so every
-     access is wrapped — the page follows the system setting instead. */
+     access is wrapped — the page is then dark, the default. */
 
   function readTheme() {
     try { return localStorage.getItem('zeiko-theme'); } catch (e) { return null; }
@@ -27,15 +27,18 @@
     try { localStorage.setItem('zeiko-theme', v); } catch (e) { /* ignore */ }
   }
 
+  /* Dark unless light was chosen: the house default. `system` is Zeiko AI's
+     third choice, and here it means whatever the device says. */
   var saved = readTheme();
-  if (saved === 'dark' || saved === 'light') root.setAttribute('data-theme', saved);
+  if (saved === 'system') {
+    saved = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  }
+  root.setAttribute('data-theme', saved === 'light' ? 'light' : 'dark');
 
   var themeBtn = document.getElementById('theme');
   if (themeBtn) {
     themeBtn.addEventListener('click', function () {
-      var dark = root.getAttribute('data-theme') === 'dark' ||
-        (!root.hasAttribute('data-theme') &&
-          window.matchMedia('(prefers-color-scheme: dark)').matches);
+      var dark = root.getAttribute('data-theme') !== 'light';
       var next = dark ? 'light' : 'dark';
       root.setAttribute('data-theme', next);
       writeTheme(next);
