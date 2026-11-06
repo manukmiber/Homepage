@@ -20,7 +20,8 @@
 //      link to a docs page, and to a heading on one, lands.
 //   8. Every page is in English and Indonesian: the EN | ID switch on each
 //      lands on its twin, and the Indonesian pages pass an Indonesian list
-//      of the same banned words.
+//      of the same banned words. A visitor's language (src/lang.js) is tried
+//      case by case, and every English page with a twin reaches the worker.
 //
 // Exits 1 with one line per problem. Reword the page; never trim the lists
 // below to make a check pass.
@@ -30,6 +31,7 @@ import { join, relative, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { renderS3 } from '../src/drive.js';
 import { renderStatus } from '../src/status.js';
+import { twinFor, visitorLang } from '../src/lang.js';
 import * as accountViews from '../public/js/account/views.js';
 import * as accountMe from '../public/js/account/me.js';
 import * as accountLang from '../public/js/account/lang.js';
@@ -409,6 +411,57 @@ for (const [file, src] of pages) {
   if (!pages.has(twin)) { report(file, m.index, src, `the EN | ID switch goes to ${m[1]}, but there is no ${relative(ROOT, twin)}`); continue; }
   const back = pages.get(twin).match(SWITCH);
   if (!back || pageOf(back[1]) !== file) report(file, m.index, src, `${m[1]} does not switch back to ${urlOf(file)}`);
+}
+
+// --------------------------------------------- the language of a visitor
+
+// Their own choice (zk_lang) always wins; without one, Indonesia reads
+// Indonesian and everywhere else English, and only an English page is ever
+// sent on to its twin (src/lang.js). Every English page with a twin must
+// reach the worker first (run_worker_first), or nobody is ever sent.
+{
+  const site = 'https://zeiko.test';
+  const twin = (o) => twinFor({ method: 'GET', url: new URL(`${site}/hosting?plan=mini`), cookie: '', country: 'ID', referer: '', ...o });
+  const cases = [
+    ['a chosen id wins over the country', visitorLang('theme=dark; zk_lang=id', 'SG'), 'id'],
+    ['a chosen en wins over Indonesia', visitorLang('zk_lang=en', 'ID'), 'en'],
+    ['Indonesia with no choice reads id', visitorLang('', 'ID'), 'id'],
+    ['another country reads en', visitorLang('', 'SG'), 'en'],
+    ['an unknown country (XX) reads en', visitorLang(null, 'XX'), 'en'],
+    ['Tor (T1) reads en', visitorLang(null, 'T1'), 'en'],
+    ['no country at all reads en', visitorLang(undefined, undefined), 'en'],
+    ['Indonesia with no choice is sent to the twin', twin({}), '/id/hosting'],
+    ['a HEAD is sent too', twin({ method: 'HEAD' }), '/id/hosting'],
+    ["the homepage's twin is /id/", twin({ url: new URL(`${site}/`) }), '/id/'],
+    ['a link from another site is sent', twin({ referer: 'https://www.google.com/' }), '/id/hosting'],
+    ['a referer that is no address is as none', twin({ referer: 'nonsense' }), '/id/hosting'],
+    ['a chosen en is not sent', twin({ cookie: 'zk_lang=en' }), null],
+    ['a chosen id is not sent', twin({ cookie: 'zk_lang=id' }), null],
+    ['another country is not sent', twin({ country: 'SG' }), null],
+    ['an unknown country is not sent', twin({ country: 'XX' }), null],
+    ['no country is not sent', twin({ country: undefined }), null],
+    ['an /id/ page is never sent', twin({ url: new URL(`${site}/id/hosting`) }), null],
+    ['the account area is not sent', twin({ url: new URL(`${site}/account/vps`) }), null],
+    ['a POST is not sent', twin({ method: 'POST' }), null],
+    ['a link from this site is followed as it is', twin({ referer: `${site}/id/hosting` }), null],
+  ];
+  for (const [what, got, want] of cases) {
+    if (got !== want) problems.push(`src/lang.js: ${what}: got ${JSON.stringify(got)}, want ${JSON.stringify(want)}`);
+  }
+
+  let first = [];
+  try {
+    const conf = JSON.parse(readFileSync(join(ROOT, 'wrangler.jsonc'), 'utf8').replace(/^\s*\/\/.*$/gm, ''));
+    first = (conf.assets?.run_worker_first || []).map((p) => new RegExp(`^${p.replace(/[.+?^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*')}$`));
+  } catch (e) {
+    problems.push(`wrangler.jsonc: cannot be read (${e.message})`);
+  }
+  for (const file of pages.keys()) {
+    if (under(join(PUBLIC, 'id'), file) || file.endsWith('404.html')) continue;
+    if (!pages.has(join(PUBLIC, 'id', relative(PUBLIC, file)))) continue;
+    const path = urlOf(file);
+    if (!first.some((re) => re.test(path))) problems.push(`wrangler.jsonc: ${path} has an Indonesian twin but is not in run_worker_first, so nobody is ever sent to it`);
+  }
 }
 
 // ------------------------------------------------------ rendered Zeiko S3

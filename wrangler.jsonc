@@ -15,8 +15,14 @@
     // Plain files that the worker fills in first: /drive (Drive's plans),
     // /status (each service's state), the homepage (Drive's lowest price, and
     // Zeiko S3 once it is open) and /account (one page for every account
-    // address).
-    "run_worker_first": ["/", "/id", "/id/", "/drive", "/id/drive", "/status", "/id/status", "/account", "/account/*"]
+    // address, in the visitor's language). Every English page with an
+    // Indonesian twin comes here too, so a visitor from Indonesia who has not
+    // chosen a language is sent to the twin (src/lang.js); npm run check
+    // fails an English page with a twin that is missing from this list.
+    "run_worker_first": [
+      "/", "/id", "/id/", "/drive", "/id/drive", "/status", "/id/status", "/account", "/account/*",
+      "/hosting", "/vps", "/sites", "/marketing-template", "/docs", "/docs/*"
+    ]
   },
   // /account is one plain page (public/account/index.html) whose script signs
   // in with the account door itself: no secret is set for it here.

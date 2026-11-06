@@ -1,11 +1,17 @@
 // The only code that runs on the server side of the site.
 //
 // `run_worker_first` in wrangler.jsonc sends the homepage, /drive, /status and
-// /account (and /id/, /id/drive, /id/status) here; every other path that is a
-// plain file never reaches this code. A path that is no file at all does, and
-// is either the way back to Zeiko Drive (/dashboard…) or the site's 404 page,
-// in Indonesian under /id/ or for a visitor who chose it (the zk_lang cookie).
+// /account (and /id/, /id/drive, /id/status) here, and every other English
+// page with an Indonesian twin (/hosting, /vps, /sites, /docs…); the other
+// pages under /id/ and the site's own files (css, js, img, fonts) never reach
+// this code. A path that is no file at all does, and is either the way back to
+// Zeiko Drive (/dashboard…) or the site's 404 page.
 // Old addresses (/models, the AI docs) are sent on by public/_redirects.
+//
+// A visitor from Indonesia who has not chosen a language is sent from an
+// English page to its Indonesian twin (src/lang.js); the 404 page and the
+// account page are drawn in the same language. Their own choice (the zk_lang
+// cookie) always wins.
 //
 // Zeiko Drive is its own Worker at its own address, drive.zeiko.biz.id.
 // /dashboard/… (its old address here) sends the visitor there, the same path
@@ -25,15 +31,34 @@
 
 import { renderStatus } from './status.js';
 import { cheapest, driveAddress, driveCatalog, hasFamily, renderPlans, renderS3 } from './drive.js';
+import { twinFor, visitorLang } from './lang.js';
 
-/** The account page, whatever account address was asked for. */
+/** The country Cloudflare says the visit comes from (two letters), if any. */
+const countryOf = (request) => request.cf?.country;
+
+/** The account page, whatever account address was asked for, its <html lang>
+ * the visitor's language: public/js/account/lang.js reads it when no choice
+ * is kept. */
 async function accountShell(request, env) {
   const url = new URL(request.url);
   if (request.method !== 'GET' && request.method !== 'HEAD') {
     return new Response('method not allowed', { status: 405, headers: { allow: 'GET, HEAD' } });
   }
-  const page = await env.ASSETS.fetch(new Request(new URL('/account/', url), { method: request.method }));
+  const lang = visitorLang(request.headers.get('cookie'), countryOf(request));
+  const plain = await env.ASSETS.fetch(new Request(new URL('/account/', url), { method: request.method }));
+  const page =
+    request.method === 'GET'
+      ? new HTMLRewriter()
+          .on('html', {
+            element(el) {
+              el.setAttribute('lang', lang);
+            },
+          })
+          .transform(plain)
+      : plain;
   const headers = new Headers(page.headers);
+  headers.delete('etag');
+  headers.delete('last-modified');
   headers.set('cache-control', 'no-store');
   headers.set('x-frame-options', 'DENY');
   headers.set('x-content-type-options', 'nosniff');
@@ -41,10 +66,32 @@ async function accountShell(request, env) {
   return new Response(page.body, { status: page.status, headers });
 }
 
-/** The language a visitor reads: /id/… is Indonesian, elsewhere their zk_lang choice. */
+/** The language a visitor reads: /id/… is Indonesian, elsewhere their zk_lang
+ * choice, else their country's (src/lang.js). */
 function langOf(request, url) {
   if (url.pathname === '/id' || url.pathname.startsWith('/id/')) return 'id';
-  return /(?:^|;\s*)zk_lang=id(?:;|$)/.test(request.headers.get('cookie') || '') ? 'id' : 'en';
+  return visitorLang(request.headers.get('cookie'), countryOf(request));
+}
+
+/** A visitor from Indonesia who has chosen nothing, on an English page with
+ * an Indonesian twin: sent there (302), the query kept. The answer is this
+ * visitor's alone, so it is never cached; no cookie is written, since being
+ * sent is not a choice (an Indonesian page keeps one itself, main.js). */
+async function toTwin(request, env, url) {
+  const twin = twinFor({
+    method: request.method,
+    url,
+    cookie: request.headers.get('cookie'),
+    country: countryOf(request),
+    referer: request.headers.get('referer'),
+  });
+  if (!twin) return null;
+  const page = await env.ASSETS.fetch(new Request(new URL(twin, url), { method: 'HEAD' }));
+  if (page.status !== 200) return null;
+  return new Response(null, {
+    status: 302,
+    headers: { location: new URL(twin + url.search, url).href, 'cache-control': 'private, no-store' },
+  });
 }
 
 /** The site's own 404 page, for a path that is neither a file nor Drive's. */
@@ -183,6 +230,8 @@ export default {
     const url = new URL(request.url);
     const drive = driveAddress(url);
     if (drive) return Response.redirect(drive, 302);
+    const twin = await toTwin(request, env, url);
+    if (twin) return twin;
     if (url.pathname === '/account' || url.pathname.startsWith('/account/')) {
       return accountShell(request, env);
     }

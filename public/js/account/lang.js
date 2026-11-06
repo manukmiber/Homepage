@@ -1,12 +1,20 @@
 // The account area's language. The account pages are one page for both
-// languages: Indonesian when the visitor chose it — the zk_lang cookie, which
-// the EN | ID switch on every page of the site keeps (main.js) — English
-// otherwise. `L(en, id)` says one thing in the page's language.
+// languages: the one the visitor chose — the zk_lang cookie, which the EN | ID
+// switch on every page of the site keeps (main.js) — and without a choice the
+// one the page came in (<html lang>, which the site writes from where the
+// visit comes from). `L(en, id)` says one thing in the page's language.
 //
 // No document (scripts/check-site.mjs renders the pages in Node): English,
 // until setLang() says otherwise.
 
-let lang = typeof document !== 'undefined' && /(?:^|;\s*)zk_lang=id(?:;|$)/.test(document.cookie) ? 'id' : 'en';
+function firstLang() {
+  if (typeof document === 'undefined') return 'en';
+  const kept = /(?:^|;\s*)zk_lang=(id|en)(?:;|$)/.exec(document.cookie);
+  if (kept) return kept[1];
+  return document.documentElement.lang === 'id' ? 'id' : 'en';
+}
+
+let lang = firstLang();
 
 export const getLang = () => lang;
 
