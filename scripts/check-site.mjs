@@ -233,15 +233,35 @@ function hostingRanges(file, src) {
   return out;
 }
 
+// Zeiko Proxy is the fifth exception, on the owner's request (2026-11-05:
+// "kita akan jualan proxy"; asked whether the word may be on the site, the
+// owner allowed it). Its own pages (proxy.html, and id/proxy.html) and the
+// marked blocks elsewhere (<!-- proxy:start --> … <!-- proxy:end -->, and in
+// the account area's script // proxy:start … // proxy:end) may name the
+// product for what it is — proxies, datacenter and residential ones, the
+// countries and regions they are in — its prices in rupiah, and paying for
+// one. Only these words; every other rule holds there too, and nothing
+// anywhere says where the proxies come from.
+const PROXY_PAGES = new Set([join(PUBLIC, 'proxy.html'), join(PUBLIC, 'id', 'proxy.html')]);
+const PROXY_WORDS = /^(proxy|proxies|datacenters?|data centers?|regions?|pusat data|rupiah|pay|paid|pays|payment|payments|bayar|membayar|dibayar|pembayaran)$/i;
+function proxyRanges(file, src) {
+  if (PROXY_PAGES.has(file)) return [[0, src.length]];
+  const out = [];
+  for (const m of src.matchAll(/(?:<!-- |\/\/ )proxy:start[\s\S]*?(?:<!-- |\/\/ )proxy:end/g)) out.push([m.index, m.index + m[0].length]);
+  return out;
+}
+
 function scan(file, src) {
   const words = src.split(CONTACT).join(' '.repeat(CONTACT.length));
   const drive = driveRanges(file, src);
   const hosting = hostingRanges(file, src);
+  const proxy = proxyRanges(file, src);
   for (const [what, re] of BANNED) {
     const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
     for (const m of words.matchAll(g)) {
       if (driveAllows(words, drive, m)) continue;
       if (inRanges(hosting, m.index) && HOSTING_WORDS.test(m[0])) continue;
+      if (inRanges(proxy, m.index) && PROXY_WORDS.test(m[0])) continue;
       report(file, m.index, src, `${what}: "${m[0]}"`);
     }
   }
@@ -479,6 +499,7 @@ function scanAccount(file, src) {
   let words = src.split(CONTACT).join(' '.repeat(CONTACT.length));
   if (file === SHELL) words = words.split(UPLOADS).join(' '.repeat(UPLOADS.length));
   const hosting = hostingRanges(file, src);
+  const proxy = proxyRanges(file, src);
   for (const [what, re] of ACCOUNT_BANNED) {
     const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
     for (const m of words.matchAll(g)) {
@@ -489,6 +510,7 @@ function scanAccount(file, src) {
       if (what === 'model origin' && m[0] === 'Gemini' && words.startsWith('<th scope="row">Gemini</th>', m.index - 16)) continue;
       if (drivePath(words, m)) continue;
       if (inRanges(hosting, m.index) && HOSTING_WORDS.test(m[0])) continue;
+      if (inRanges(proxy, m.index) && PROXY_WORDS.test(m[0])) continue;
       report(file, m.index, src, `${what}: "${m[0]}"`);
     }
   }
@@ -659,10 +681,57 @@ else if (!shell.src.includes(`name="zeiko-accounts" content="${DOOR}"`) || !shel
       event: { date: evil, time: evil, place: evil, maps: evil },
       items: [{ title: evil, text: evil, image: evil, link: evil, price: evil, date: evil }],
     }, [{ path: evil, size: 1 }, { path: 'img/a.jpg', size: 1 }], { flash: '' })),
+    // Zeiko Proxy: every state, each kind of product, and the order form at
+    // each step (nothing picked, a product, a country, a block, GB).
+    ...[true, false].map((open) => {
+      const item = (i) => ({
+        id: evil, status: evil, host: evil, publicIp: evil, ipVersion: evil, httpPort: 8080, httpsPort: i ? evil : 0, socks5Port: 1080,
+        protocol: ['HTTP', 'HTTPS', 'SOCKS5', evil][i % 4], username: evil, password: evil, whitelist: i % 2 ? [evil] : [],
+        expiresAt: Date.UTC(2026, 11, 5), bandwidthTotal: i % 2 ? 10 : null, bandwidthUsed: 2.5,
+      });
+      const d = {
+        open, emailVerified: open, maxQuantity: 100,
+        products: [
+          { id: evil, name: evil, unit: 'ip', fromIdr: 60000, monthIdr: 60000, countries: [{ country: evil, monthIdr: 70000 }], days: [{ days: 7, idr: 25000 }], packages: [], gbIdr: 0, gbTiers: [], minGb: 1, maxGb: 100 },
+          { id: 'block', name: evil, unit: 'package', fromIdr: 30000, monthIdr: 0, countries: [], days: [], packages: [{ id: evil, monthIdr: 30000 }], gbIdr: 0, gbTiers: [], minGb: 1, maxGb: 100 },
+          { id: 'gb', name: evil, unit: 'gb', fromIdr: 9000, monthIdr: 0, countries: [], days: [], packages: [], gbIdr: 15000, gbTiers: [{ fromGb: 10, gbIdr: 12000 }, { fromGb: evil, gbIdr: evil }], minGb: 1, maxGb: 500 },
+          { id: 'days', name: evil, unit: 'ip', fromIdr: 0, monthIdr: 0, countries: [], days: [{ days: 1, idr: 5000 }], packages: [], gbIdr: 0, gbTiers: [], minGb: 1, maxGb: 100 },
+        ],
+        orders: [...['ordered', 'paid', 'buying', 'active', 'expired', 'cancelled', 'refunded', evil], 'active', 'buying'].map((status, i) => ({
+          id: evil, product: evil, productName: evil, unit: ['ip', 'package', 'gb', evil][i % 4], package: i % 2 ? evil : '50', country: ['US', evil, '', 'id'][i % 4],
+          region: evil, city: evil, ispName: evil, quantity: i % 3 ? 2 : evil, periodUnit: ['months', 'days', '', evil][i % 4], periodValue: i % 2 ? 3 : evil, gb: i % 2 ? 5 : evil,
+          status, expiresAt: i % 3 ? Date.UTC(2026, 11, 5) : null, renewWaiting: i === 8, gbWaiting: i === 9 ? 5 : 0, refundIdr: 45000,
+          createdAt: Date.UTC(2026, 10, 5), paidAt: Date.UTC(2026, 10, 5), payment: i % 2 ? evil : '',
+          items: status === 'active' || status === 'buying' ? Array.from({ length: i === 3 ? 25 : 2 }, (_, k) => item(k)) : [],
+          renew: i % 2 ? { monthIdr: 120000, months: [1, 3, evil] } : undefined,
+          topUp: i % 2 ? undefined : { gbIdr: 15000, gbTiers: [{ fromGb: 10, gbIdr: 12000 }], minGb: 1, maxGb: evil },
+        })),
+      };
+      const options = (product) => ({
+        product, unit: 'ip',
+        countries: [{ code: 'US', available: 900, monthIdr: 60000 }, { code: evil, available: null, monthIdr: 70000 }, { code: 'ID', available: evil, monthIdr: 0 }],
+        regions: { US: [{ id: evil, label: evil, isps: [evil] }], [evil]: [{ id: evil, label: evil }] },
+        cities: { US: [{ id: evil, label: evil, region: evil, isps: [evil] }, { id: 'nyc', label: evil, region: '' }] },
+        isps: { US: [{ id: evil, label: evil }] },
+        months: [1, 3, evil], days: [{ days: 7, idr: 25000 }, { days: evil, idr: evil }],
+        packages: [{ id: evil, proxies: 10, monthIdr: 30000 }, { id: '50', proxies: evil, monthIdr: evil }],
+        gbIdr: 0, gbTiers: [], minGb: 1, maxGb: 100,
+      });
+      return [
+        accountViews.proxy(o, d, { flash: '' }),
+        accountViews.proxy(o, d, { flash: '', product: evil, options: options(evil) }),
+        accountViews.proxy(o, d, { flash: '', product: evil, options: options(evil), country: 'US', region: evil, city: evil, isp: evil, quantity: evil, period: evil }),
+        accountViews.proxy(o, d, { flash: '', product: evil, options: options(evil), country: evil }),
+        accountViews.proxy(o, d, { flash: '', product: 'block', options: options('block'), country: 'US', pkg: evil }),
+        accountViews.proxy(o, d, { flash: '', product: 'gb', gb: evil }),
+        accountViews.proxy(o, d, { flash: '', product: 'days', options: options('days'), country: 'ID' }),
+        accountViews.proxy(o, { open, emailVerified: open, products: [], orders: [] }, {}),
+      ].join('\n');
+    }),
     accountViews.receipts(o, [{ id: evil, what: evil, rupiahText: evil, rupiah: 1, paidAt: Date.now(), product: 'hosting' }], door, ''),
     accountViews.receipts(o, [], door, ''),
     ...['waiting', 'confirming', 'paid', 'failed', 'expired', evil].map((status) => accountViews.qrisPay(o, {
-      id: evil, what: evil, amountText: evil, rupiah: 449237, rupiahText: evil, merchant: evil, nmid: evil, product: status === 'paid' ? 'hosting' : status === 'confirming' ? 'vps' : status === 'failed' ? 'sites' : 'pranata', receiptUrl: evil,
+      id: evil, what: evil, amountText: evil, rupiah: 449237, rupiahText: evil, merchant: evil, nmid: evil, product: status === 'paid' ? 'hosting' : status === 'confirming' ? 'vps' : status === 'failed' ? 'sites' : status === 'expired' ? 'proxy' : 'pranata', receiptUrl: evil,
       qr: status === 'waiting' ? ['1010', '0101', '1100', '0011'] : [evil], status, createdAt: Date.now(), expiresAt: Date.now() + 3_600_000,
     }, '')),
     // Rows that are not all 0 and 1 draw no code at all.

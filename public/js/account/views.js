@@ -263,6 +263,10 @@ const pages = () => ({
   receipts: L('Receipts', 'Kuitansi'),
   sitefiles: L('Website files', 'File situs'),
   siteedit: L('Edit your website', 'Edit situsmu'),
+  // Not a tab until it is on sale: reached from its own link for now.
+  // proxy:start
+  proxy: 'Zeiko Proxy',
+  // proxy:end
 });
 
 function verifyBanner(a) {
@@ -1519,6 +1523,259 @@ export function receipts(o, list, door, flash) {
 }
 // hosting:end
 
+// proxy:start
+/* --------------------------------------------------------------- proxy */
+// Zeiko Proxy (the owner's, 2026-11-05): static and rotating proxies, from
+// the door (`GET /proxies`, and a product's countries, regions, cities and
+// ISPs from `GET /proxies/options/{product}`). An order is paid by QRIS and
+// set up by hand once checked; its addresses show here, each line ready to
+// copy as host:port:user:password.
+
+const proxyStatus = () => ({
+  ordered: [L('Waiting for payment', 'Menunggu pembayaran'), 'warn'],
+  paid: [L('Being set up', 'Sedang disiapkan'), 'status'],
+  buying: [L('Being set up', 'Sedang disiapkan'), 'status'],
+  active: [L('Active', 'Aktif'), 'ok'],
+  expired: [L('Ended', 'Berakhir'), ''],
+  cancelled: [L('Cancelled', 'Dibatalkan'), ''],
+  refunded: [L('Money sent back', 'Uang dikembalikan'), ''],
+});
+
+/** A country's name in the page's language, from its two-letter code. */
+function countryName(code) {
+  const c = String(code || '').toUpperCase();
+  if (!/^[A-Z]{2}$/.test(c)) return String(code || '');
+  try {
+    return new Intl.DisplayNames([getLang() === 'id' ? 'id' : 'en'], { type: 'region' }).of(c) || c;
+  } catch {
+    return c;
+  }
+}
+
+const daysText = (n) => L(`${num(n)} day${Number(n) === 1 ? '' : 's'}`, `${num(n)} hari`);
+const proxiesText = (n) => L(`${num(n)} ${Number(n) === 1 ? 'proxy' : 'proxies'}`, `${num(n)} proxy`);
+
+/** What a product costs at least, on one line. */
+function proxyFrom(p) {
+  const days = (p.days || []).filter((d) => d.idr > 0).sort((a, b) => a.days - b.days);
+  if (p.unit === 'gb') return L(`from ${esc(rp(p.fromIdr || p.gbIdr))} per GB`, `mulai ${esc(rp(p.fromIdr || p.gbIdr))} per GB`);
+  if (p.unit === 'package') return L(`from ${esc(rp(p.fromIdr))} a month`, `mulai ${esc(rp(p.fromIdr))} per bulan`);
+  const month = p.fromIdr ? L(`from ${esc(rp(p.fromIdr))} a proxy a month`, `mulai ${esc(rp(p.fromIdr))} per proxy per bulan`) : '';
+  const short = days.length ? L(`${esc(daysText(days[0].days))} ${esc(rp(days[0].idr))}`, `${esc(daysText(days[0].days))} ${esc(rp(days[0].idr))}`) : '';
+  return [month, short].filter(Boolean).join(' · ');
+}
+
+/** What an order is, on one line: how many, where, how long. */
+function proxyWhat(x) {
+  const many = x.unit === 'gb' ? gb(x.gb) : x.unit === 'package' ? L(`${num(x.package)} IPv6 proxies`, `${num(x.package)} proxy IPv6`) : proxiesText(x.quantity);
+  const where = [x.country ? countryName(x.country) : '', x.region, x.city, x.ispName].filter(Boolean).join(', ');
+  const long = x.periodUnit === 'days' ? daysText(x.periodValue) : x.periodUnit === 'months' ? monthsText(x.periodValue) : '';
+  return [many, where, long].filter(Boolean).map(esc).join(' · ');
+}
+
+/** The port of a proxy for the protocol it is set to. */
+const proxyPort = (it) => (it.protocol === 'SOCKS5' ? it.socks5Port : it.protocol === 'HTTPS' ? it.httpsPort : it.httpPort) || it.httpPort || it.socks5Port || '';
+const proxyLine = (it) => [it.host || it.publicIp, proxyPort(it), it.username, it.password].filter((v) => v !== '' && v != null).join(':');
+
+/** The proxies of an order: a line each to copy, then the details. */
+function proxyItems(x, n) {
+  const items = x.items || [];
+  if (!items.length) return '';
+  const lines = items.map(proxyLine).join('\n');
+  const shown = items.slice(0, 20);
+  const rows = shown.map((it) => `<tr>
+      <th scope="row"><code>${esc(it.host || it.publicIp)}</code></th>
+      <td data-label="HTTP">${esc(it.httpPort || '—')}</td>
+      <td data-label="HTTPS">${esc(it.httpsPort || '—')}</td>
+      <td data-label="SOCKS5">${esc(it.socks5Port || '—')}</td>
+      <td data-label="${L('User', 'User')}"><code>${esc(it.username || '—')}</code></td>
+      <td data-label="${L('Password', 'Password')}"><code>${esc(it.password || '—')}</code></td>
+    </tr>`).join('');
+  const allow = (items[0].whitelist || []).filter(Boolean);
+  return `<div class="px-lines">
+      <p class="muted-note">${L(`Each line is host:port:user:password, on ${esc(items[0].protocol || 'HTTP')}.`, `Tiap baris adalah host:port:user:password, lewat ${esc(items[0].protocol || 'HTTP')}.`)}</p>
+      <div class="key-box"><pre id="px-${n}">${esc(lines)}</pre><button class="btn btn-ghost btn-sm copy-btn" type="button" data-copy="#px-${n}" aria-label="${L('Copy every line', 'Salin semua baris')}">${icon(I.copy)}<span class="copy-label">${L('Copy', 'Salin')}</span></button></div>
+    </div>
+    <div class="table-scroll"><table class="table acct-table"><thead><tr><th scope="col">Host</th><th scope="col">HTTP</th><th scope="col">HTTPS</th><th scope="col">SOCKS5</th><th scope="col">User</th><th scope="col">Password</th></tr></thead><tbody>${rows}</tbody></table></div>
+    ${items.length > shown.length ? `<p class="muted-note">${L(`The first ${num(shown.length)} of ${num(items.length)}: every one is in the lines above.`, `${num(shown.length)} pertama dari ${num(items.length)}: semuanya ada di baris di atas.`)}</p>` : ''}
+    ${allow.length ? `<p class="muted-note">${L(`Only these addresses may connect: ${esc(allow.join(', '))}.`, `Hanya alamat ini yang bisa terhubung: ${esc(allow.join(', '))}.`)}</p>` : ''}`;
+}
+
+/** How an active order connects: user and password or only some
+ * addresses, and its protocol. Both change at once. */
+function proxyAccess(x) {
+  const it = (x.items || [])[0] || {};
+  const allow = (it.whitelist || []).filter(Boolean);
+  const proto = ['HTTP', 'HTTPS', 'SOCKS5'].map((p) => `<option value="${p}"${(it.protocol || 'HTTP') === p ? ' selected' : ''}>${p}</option>`).join('');
+  return `<details class="host-move"><summary>${L('Protocol and access', 'Protokol dan akses')}</summary>
+      <form data-act="proxy-protocol" class="host-renew vps-renew">
+        <input type="hidden" name="id" value="${esc(x.id)}">
+        <label class="field">${L('Protocol', 'Protokol')}<select name="protocol">${proto}</select></label>
+        <button class="btn btn-sm" type="submit" data-busy="${L('Saving…', 'Menyimpan…')}">${L('Save', 'Simpan')}</button>
+      </form>
+      <form data-act="proxy-access" class="host-order">
+        <input type="hidden" name="id" value="${esc(x.id)}">
+        <fieldset class="funds-way"><legend>${L('Who may connect', 'Siapa yang bisa terhubung')}</legend>
+          <label><input type="radio" name="auth" value="USERNAME_PASSWORD"${allow.length ? '' : ' checked'}> ${L('Anyone with the user and password', 'Siapa saja dengan user dan password')}</label>
+          <label><input type="radio" name="auth" value="IP_WHITELIST"${allow.length ? ' checked' : ''}> ${L('Only my addresses', 'Hanya alamatku')}</label>
+        </fieldset>
+        <label class="field">${L('Your IP addresses', 'Alamat IP-mu')}<textarea name="ips" rows="3" placeholder="203.0.113.7" autocomplete="off" spellcheck="false">${esc(allow.join('\n'))}</textarea><small>${L('Up to 10, one per line. Only for “Only my addresses”.', 'Paling banyak 10, satu per baris. Hanya untuk “Hanya alamatku”.')}</small></label>
+        <button class="btn btn-sm" type="submit" data-busy="${L('Saving…', 'Menyimpan…')}">${L('Save', 'Simpan')}</button>
+      </form>
+    </details>`;
+}
+
+function proxyCard(x, n) {
+  const [label, tone] = proxyStatus()[x.status] || [x.status, ''];
+  let line = '';
+  let act = '';
+  let more = '';
+  if (x.status === 'ordered') {
+    line = L('Pay its QRIS to start it. An unpaid order is dropped after a few days.', 'Bayar QRIS-nya untuk memulai. Pesanan yang tidak dibayar dihapus setelah beberapa hari.');
+    act = `${x.payment ? `<a class="btn btn-primary btn-sm" href="/account/pay?id=${encodeURIComponent(x.payment)}">${L('Open QR', 'Buka QR')}</a>` : ''}
+      <form data-act="proxy-cancel"><input type="hidden" name="id" value="${esc(x.id)}"><button class="btn-link" type="submit" data-busy="…">${L('Cancel order', 'Batalkan pesanan')}</button></form>`;
+  } else if (x.status === 'paid' || (x.status === 'buying' && !(x.items || []).length)) {
+    line = L('Paid — we are setting it up, usually within 1–2 hours. We email you when it is ready, and its details show here.', 'Sudah dibayar — sedang kami siapkan, biasanya dalam 1–2 jam. Kami kirim email kalau sudah siap, dan detailnya tampil di sini.');
+  } else if (x.status === 'active' || x.status === 'buying') {
+    line = x.expiresAt
+      ? L(`Active until <strong>${esc(day(x.expiresAt))}</strong>.`, `Aktif sampai <strong>${esc(day(x.expiresAt))}</strong>.`)
+      : L('Active.', 'Aktif.');
+    if (x.unit === 'gb') {
+      const it = (x.items || [])[0] || {};
+      if (it.bandwidthTotal) {
+        more += `<p class="muted-note">${L(`${esc(gb(it.bandwidthUsed))} of ${esc(gb(it.bandwidthTotal))} used`, `${esc(gb(it.bandwidthUsed))} dari ${esc(gb(it.bandwidthTotal))} terpakai`)}</p>${bar((Number(it.bandwidthUsed) || 0) / Number(it.bandwidthTotal))}`;
+      }
+    }
+    more += proxyItems(x, n);
+    if (x.renewWaiting) {
+      more += `<p class="muted-note">${L('Your renewal is paid and being added; the new end date shows here soon.', 'Perpanjanganmu sudah dibayar dan sedang ditambahkan; tanggal barunya segera tampil di sini.')}</p>`;
+    } else if (x.renew && x.renew.monthIdr) {
+      const opts = (x.renew.months || []).map((m) => `<option value="${esc(m)}">${esc(monthsText(Number(m)))} · ${esc(rp(x.renew.monthIdr * Number(m)))}</option>`).join('');
+      more += `<form data-act="proxy-renew" class="host-renew vps-renew">
+        <input type="hidden" name="id" value="${esc(x.id)}">
+        <label class="field">${L('Renew for', 'Perpanjang')}<select name="months">${opts}</select></label>
+        <button class="btn btn-primary btn-sm" type="submit" data-busy="${L('Opening…', 'Membuka…')}">${L('Renew and pay by QRIS', 'Perpanjang dan bayar dengan QRIS')}</button>
+      </form>`;
+    }
+    if (x.gbWaiting) {
+      more += `<p class="muted-note">${L(`${esc(gb(x.gbWaiting))} more are paid and being added.`, `Tambahan ${esc(gb(x.gbWaiting))} sudah dibayar dan sedang ditambahkan.`)}</p>`;
+    } else if (x.topUp && x.topUp.gbIdr) {
+      more += `<form data-act="proxy-traffic" class="host-renew vps-renew">
+        <input type="hidden" name="id" value="${esc(x.id)}">
+        <label class="field">${L('More GB', 'Tambah GB')}<input type="number" name="gb" value="${esc(x.topUp.minGb || 1)}" min="${esc(x.topUp.minGb || 1)}" max="${esc(x.topUp.maxGb || 100)}" step="1" required><small>${esc(rp(x.topUp.gbIdr))} ${L('per GB', 'per GB')}${(x.topUp.gbTiers || []).filter((t) => t.gbIdr > 0).map((t) => ` · ${L(`from ${esc(num(t.fromGb))} GB`, `mulai ${esc(num(t.fromGb))} GB`)} ${esc(rp(t.gbIdr))}`).join('')}</small></label>
+        <button class="btn btn-primary btn-sm" type="submit" data-busy="${L('Opening…', 'Membuka…')}">${L('Add and pay by QRIS', 'Tambah dan bayar dengan QRIS')}</button>
+      </form>`;
+    }
+    if (x.status === 'active' && (x.items || []).length) more += proxyAccess(x);
+  } else if (x.status === 'expired') {
+    line = x.expiresAt ? L(`Ended on ${esc(day(x.expiresAt))}.`, `Berakhir pada ${esc(day(x.expiresAt))}.`) : L('Ended.', 'Berakhir.');
+  } else if (x.status === 'refunded') {
+    line = L(`We could not set this one up and sent ${esc(rp(x.refundIdr))} back to you.`, `Pesanan ini tidak bisa kami siapkan dan ${esc(rp(x.refundIdr))} sudah kami kembalikan.`);
+  }
+  return `<article class="card host-item">
+    <div class="section-row"><h3>${esc(x.productName)}</h3><span class="tag tag-${esc(tone)}">${esc(label)}</span></div>
+    <p class="muted-note">${proxyWhat(x)}</p>
+    ${line ? `<p>${line}</p>` : ''}
+    ${act ? `<div class="row-links">${act}</div>` : ''}
+    ${more}
+  </article>`;
+}
+
+/** The order form, a step at a time: the product; then, from its own list,
+ * the country; then where in it, how many and how long. */
+function proxyOrderForm(d, { product = '', options = null, country = '', region = '', city = '', isp = '', quantity = '', period = '', pkg = '', gb: gbTyped = '' }) {
+  const products = d.products || [];
+  const chosen = products.find((p) => p.id === product);
+  const opt = options && chosen && options.product === chosen.id ? options : null;
+  const list = products.map((p) => `<label class="host-option">
+      <input type="radio" name="product" value="${esc(p.id)}"${chosen && p.id === chosen.id ? ' checked' : ''} required>
+      <span class="host-option-body"><strong>${esc(p.name)}</strong><span class="host-option-price">${proxyFrom(p)}</span></span>
+    </label>`).join('');
+  const parts = [`<fieldset class="host-choose"><legend>${L('Product', 'Produk')}</legend>${list}</fieldset>`];
+  let ready = false;
+  if (chosen && chosen.unit === 'gb') {
+    const tiers = (chosen.gbTiers || []).filter((t) => t.gbIdr > 0).map((t) => ` · ${L(`from ${esc(num(t.fromGb))} GB`, `mulai ${esc(num(t.fromGb))} GB`)} ${esc(rp(t.gbIdr))}`).join('');
+    parts.push(`<label class="field">${L('How many GB', 'Berapa GB')}<input type="number" name="gb" value="${esc(gbTyped || chosen.minGb || 1)}" min="${esc(chosen.minGb || 1)}" max="${esc(chosen.maxGb || 100)}" step="1" required><small>${esc(rp(chosen.gbIdr))} ${L('per GB', 'per GB')}${tiers}</small></label>`);
+    ready = true;
+  } else if (opt) {
+    const countries = opt.countries || [];
+    const cc = countries.some((c) => c.code === country) ? country : '';
+    const cOpts = countries.map((c) => `<option value="${esc(c.code)}"${c.code === cc ? ' selected' : ''}>${esc(countryName(c.code))}${chosen.unit === 'ip' && c.monthIdr ? ` · ${esc(rp(c.monthIdr))}${L('/month', '/bulan')}` : ''}</option>`).join('');
+    parts.push(`<label class="field">${L('Country', 'Negara')}<select name="country" required><option value="">${L('Pick a country', 'Pilih negara')}</option>${cOpts}</select></label>`);
+    if (cc) {
+      const any = L('Any', 'Bebas');
+      const sel = (name, label, rows, value, text) => (rows.length
+        ? `<label class="field">${label}<select name="${name}"><option value="">${any}</option>${rows.map((r) => `<option value="${esc(r.id)}"${r.id === value ? ' selected' : ''}>${esc(text(r))}</option>`).join('')}</select></label>`
+        : '');
+      const regions = (opt.regions || {})[cc] || [];
+      const cities = ((opt.cities || {})[cc] || []).filter((c) => !region || !c.region || c.region === region);
+      const isps = (opt.isps || {})[cc] || [];
+      parts.push(sel('region', L('Region', 'Wilayah'), regions, region, (r) => r.label));
+      parts.push(sel('city', L('City', 'Kota'), cities, city, (r) => (r.region && !region ? `${r.label} (${r.region})` : r.label)));
+      parts.push(sel('isp', 'ISP', isps, isp, (r) => r.label));
+      const free = (countries.find((c) => c.code === cc) || {}).available;
+      if (chosen.unit === 'package') {
+        const pk = (opt.packages || []).map((p, i) => `<label><input type="radio" name="package" value="${esc(p.id)}"${p.id === pkg || (!pkg && i === 0) ? ' checked' : ''} required> ${esc(L(`${num(p.proxies)} proxies`, `${num(p.proxies)} proxy`))} · ${esc(rp(p.monthIdr))}${L('/month', '/bulan')}</label>`).join('');
+        parts.push(`<fieldset class="funds-way"><legend>${L('Size', 'Ukuran')}</legend>${pk}</fieldset>`);
+      } else {
+        const most = Math.max(1, Math.min(Number(d.maxQuantity) || 100, free == null ? Infinity : Number(free)));
+        parts.push(`<label class="field">${L('How many proxies', 'Berapa proxy')}<input type="number" name="quantity" value="${esc(quantity || 1)}" min="1" max="${esc(most)}" step="1" required>${free != null ? `<small>${L(`${esc(num(free))} free in this country now.`, `${esc(num(free))} tersedia di negara ini sekarang.`)}</small>` : ''}</label>`);
+      }
+      const months = (opt.months || []).map((m) => [`m${m}`, monthsText(Number(m))]);
+      const days = chosen.unit === 'ip' ? (opt.days || []).map((x) => [`d${x.days}`, `${daysText(x.days)} · ${rp(x.idr)}`]) : [];
+      const monthly = chosen.unit === 'package' || ((countries.find((c) => c.code === cc) || {}).monthIdr > 0);
+      const periods = [...(monthly ? months : []), ...days];
+      parts.push(`<label class="field">${L('How long', 'Berapa lama')}<select name="period" required>${periods.map(([v, t]) => `<option value="${esc(v)}"${v === period ? ' selected' : ''}>${esc(t)}</option>`).join('')}</select></label>`);
+      ready = periods.length > 0;
+    }
+  }
+  const next = `<button class="btn${ready ? ' btn-ghost' : ' btn-primary'}" type="submit" name="go" value="next" data-busy="${L('Loading…', 'Memuat…')}">${ready ? L('Update the choices', 'Perbarui pilihan') : L('Next', 'Lanjut')}</button>`;
+  const order = ready ? `<button class="btn btn-primary" type="submit" name="go" value="order" data-busy="${L('Opening…', 'Membuka…')}">${L('Order and pay by QRIS', 'Pesan dan bayar dengan QRIS')}</button>` : '';
+  return `<form data-act="proxy-order" class="host-order">
+      ${parts.join('')}
+      <div class="row-links">${order}${next}</div>
+      <p class="fineprint">${L('The QR shows the exact amount. We check your QRIS payment by hand in 1–5 minutes, then set your proxies up, usually within 1–2 hours, and email you.', 'QR-nya menampilkan jumlah persisnya. Kami memeriksa pembayaran QRIS-mu secara manual dalam 1–5 menit, lalu menyiapkan proxy-mu, biasanya dalam 1–2 jam, dan mengirim email.')}</p>
+    </form>`;
+}
+
+export function proxy(o, d, { flash, ...pick } = {}) {
+  const open = Boolean(d && d.open);
+  const mine = (d && d.orders) || [];
+  const form = !open
+    ? alert('warn', L('Proxy orders are not open yet. Please try again later.', 'Pemesanan proxy belum dibuka. Coba lagi nanti.'))
+    : !(d && d.emailVerified)
+      ? alert('warn', L('Confirm your email address first: we tell you there when your proxies are ready.', 'Konfirmasi alamat email-mu dulu: kami kabari di sana kalau proxy-mu sudah siap.'))
+      : proxyOrderForm(d, pick);
+  const body = `
+    ${mine.length ? `<section class="acct-section-plain">
+      <div class="section-row"><h2>${L('Your proxies', 'Proxy-mu')}</h2><p class="muted-note">${L('We email you 3 days and 1 day before each one ends', 'Kami kirim email 3 hari dan 1 hari sebelum masing-masing berakhir')} · <a href="/account/receipts">${L('Receipts', 'Kuitansi')}</a></p></div>
+      <div class="host-list">${mine.map((x, i) => proxyCard(x, i)).join('')}</div>
+    </section>` : ''}
+    <section class="card acct-section" id="order">
+      <div class="section-row"><h2>${L('Order proxies', 'Pesan proxy')}</h2></div>
+      ${form}
+    </section>`;
+  return marked('proxy', shell('proxy', o, body, flash));
+}
+// proxy:end
+
+// proxy:start
+/** A page of this product's, title and all, marked for the site's check.
+ * The markers are put together here so this file's own block goes on. */
+const mark = (w) => `<!-- proxy:${w} -->`;
+const marked = (product, html) => (product === 'proxy' ? `${mark('start')}${html}${mark('end')}` : html);
+
+/** Where a paid product goes on, what it is called there and its tab; none
+ * for the plans and Zeiko Drive (the pay page and app.js ask this). */
+const PAID_FOR = () => ({
+  hosting: ['/account/hosting', L('your hosting', 'hosting-mu'), L('Your hosting', 'Hosting-mu'), 'Hosting'],
+  vps: ['/account/vps', L('your VPS', 'VPS-mu'), L('Your VPS', 'VPS-mu'), 'VPS'],
+  sites: ['/account/sites', L('your website', 'situsmu'), L('Your website', 'Situsmu'), L('Sites', 'Situs')],
+  proxy: ['/account/proxy', L('your proxies', 'proxy-mu'), L('Your proxies', 'Proxy-mu'), 'Zeiko Proxy'],
+});
+export const paidPage = (product) => (PAID_FOR()[product] || [''])[0];
+// proxy:end
+
 /** The QR as SVG, from the door's rows of 0 and 1 (dark is 1), with the
  * quiet zone round it. Black on white whatever the theme: that is what a
  * scanner reads. Anything but 0 and 1 draws nothing. */
@@ -1545,9 +1802,10 @@ function qrSvg(rows) {
 export function qrisPay(o, q, flash) {
   // A Zeiko Drive payment goes back to Drive (app.js checks the address).
   const drive = q.product === 'drive' && q.driveBack ? String(q.driveBack) : '';
-  const host = q.product === 'hosting' || q.product === 'vps' || q.product === 'sites';
-  const page = q.product === 'vps' ? '/account/vps' : q.product === 'sites' ? '/account/sites' : '/account/hosting';
-  const yours = q.product === 'vps' ? L('your VPS', 'VPS-mu') : q.product === 'sites' ? L('your website', 'situsmu') : L('your hosting', 'hosting-mu');
+  // Hosting, VPS, Sites and the rest set up by hand go back to their own page.
+  const own = PAID_FOR()[q.product];
+  const host = Boolean(own);
+  const [page, yours] = own || ['/account', ''];
   const back = drive || (host ? page : q.product === 'chat' ? '/account/plans#chat' : '/account/plans');
   let body;
   if (q.status === 'waiting') {
@@ -1586,23 +1844,24 @@ export function qrisPay(o, q, flash) {
         <div><h2>${esc(heading)}</h2><p>${esc(text)}</p><p class="muted-note">${esc(q.what)} · ${esc(q.rupiahText)} (${esc(q.amountText)})</p></div>
       </div>
       <div class="row-links">
-        ${q.status === 'paid' ? (drive ? `<a class="btn btn-primary btn-sm" href="${esc(drive)}">${L('Back to Zeiko Drive', 'Kembali ke Zeiko Drive')}</a>` : `<a class="btn btn-primary btn-sm" href="${host ? page : '/account'}">${host ? (q.product === 'vps' ? L('Your VPS', 'VPS-mu') : q.product === 'sites' ? L('Your website', 'Situsmu') : L('Your hosting', 'Hosting-mu')) : L('Go to your account', 'Buka akunmu')}</a>`) : ''}
+        ${q.status === 'paid' ? (drive ? `<a class="btn btn-primary btn-sm" href="${esc(drive)}">${L('Back to Zeiko Drive', 'Kembali ke Zeiko Drive')}</a>` : `<a class="btn btn-primary btn-sm" href="${host ? page : '/account'}">${host ? own[2] : L('Go to your account', 'Buka akunmu')}</a>`) : ''}
         ${q.status === 'paid' && q.receiptUrl ? `<a class="btn btn-ghost btn-sm" href="${esc(q.receiptUrl)}">${L('Download the receipt (PDF)', 'Unduh kuitansi (PDF)')}</a>` : ''}
         ${q.status === 'failed' || q.status === 'expired' ? `<a class="btn btn-primary btn-sm" href="${esc(back)}">${L('Start a new payment', 'Mulai pembayaran baru')}</a>` : ''}
-        ${drive ? '' : host ? `<a class="btn btn-ghost btn-sm" href="${page}">${q.product === 'vps' ? 'VPS' : q.product === 'sites' ? L('Sites', 'Situs') : 'Hosting'}</a>` : `<a class="btn btn-ghost btn-sm" href="/account/plans">${L('Plans &amp; balance', 'Paket &amp; saldo')}</a>`}
+        ${drive ? '' : host ? `<a class="btn btn-ghost btn-sm" href="${page}">${own[3]}</a>` : `<a class="btn btn-ghost btn-sm" href="/account/plans">${L('Plans &amp; balance', 'Paket &amp; saldo')}</a>`}
       </div>
     </section>`;
   }
-  return shell('pay', o, body, flash);
+  return marked(q.product, shell('pay', o, body, flash));
 }
 
 /** Right after "I've paid": thanks, then app.js takes the buyer back to
  * their account (or to Zeiko Drive) when the countdown runs out. */
 export function qrisThanks(o, q, seconds) {
   const drive = q.product === 'drive' && q.driveBack ? String(q.driveBack) : '';
-  const host = q.product === 'hosting' || q.product === 'vps' || q.product === 'sites';
-  const page = q.product === 'vps' ? '/account/vps' : q.product === 'sites' ? '/account/sites' : '/account/hosting';
-  const yours = q.product === 'vps' ? L('your VPS', 'VPS-mu') : q.product === 'sites' ? L('your website', 'situsmu') : L('your hosting', 'hosting-mu');
+  // Hosting, VPS, Sites and the rest set up by hand go back to their own page.
+  const own = PAID_FOR()[q.product];
+  const host = Boolean(own);
+  const [page, yours] = own || ['/account', ''];
   const body = `<section class="card acct-section qris qris-ok" role="status">
       <div class="qris-state">
         ${icon(I.check)}
@@ -1612,7 +1871,7 @@ export function qrisThanks(o, q, seconds) {
         <a class="btn btn-primary btn-sm" href="${esc(drive || (host ? page : '/account'))}">${drive ? L('Back to Zeiko Drive now', 'Kembali ke Zeiko Drive sekarang') : L('Go to your account now', 'Buka akunmu sekarang')}</a>
       </div>
     </section>`;
-  return shell('pay', o, body, '');
+  return marked(q.product, shell('pay', o, body, ''));
 }
 
 /** A value with its copy button (main.js copies whatever `data-copy` names). */

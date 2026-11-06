@@ -875,6 +875,9 @@ legend { padding: 0; }
 .key-box { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 10px 10px 14px; border: 1.5px solid var(--line-strong); border-radius: var(--r); background: var(--ground); }
 .key-box code { flex: 1 1 260px; min-width: 0; padding: 0; border: 0; background: none; font-size: 15px; font-weight: 700; overflow-wrap: anywhere; }
 .key-box form { margin: 0; }
+/* Many lines to copy at once (host:port:user:password), scrolled when long. */
+.key-box pre { flex: 1 1 260px; min-width: 0; max-height: 240px; margin: 0; overflow: auto; font: 600 14px/1.5 var(--mono, ui-monospace, monospace); white-space: pre; }
+.px-lines { display: grid; gap: 6px; }
 .copy-btn { min-width: 98px; }
 .key-note { margin-top: 12px; font-size: 15px; }
 .key-addr { margin-top: 18px; }

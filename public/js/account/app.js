@@ -205,6 +205,10 @@ const TITLES = {
   '/account/pay': L('Pay by QRIS', 'Bayar dengan QRIS'),
 };
 const TABS = { '/account': 'overview', '/account/plans': 'plans', '/account/hosting': 'hosting', '/account/vps': 'vps', '/account/sites': 'sites', '/account/sites/files': 'sitefiles', '/account/sites/edit': 'siteedit', '/account/s3': 's3', '/account/key': 'key', '/account/settings': 'settings', '/account/how-to-buy': 'howtobuy', '/account/pay': 'pay', '/account/receipts': 'receipts' };
+// proxy:start
+TITLES['/account/proxy'] = 'Zeiko Proxy';
+TABS['/account/proxy'] = 'proxy';
+// proxy:end
 
 // A QRIS payment's page asks again every few seconds while it can still move.
 const PAY_POLL_MS = 8_000;
@@ -275,6 +279,9 @@ async function accountPage(extra = {}) {
   if (tab === 'hosting') return hostingPage(flash, extra);
   if (tab === 'vps') return vpsPage(flash, extra);
   if (tab === 'sites') return sitesPage(flash, extra);
+  // proxy:start
+  if (tab === 'proxy') return proxyPage(flash, extra);
+  // proxy:end
   if (tab === 'sitefiles') return siteFilesPage(flash);
   if (tab === 'siteedit') return siteEditPage(flash);
   if (tab === 'receipts') return receiptsPage(flash);
@@ -316,6 +323,29 @@ async function vpsPage(flash, extra = {}) {
   }
   draw(view.vps(o, r.data, { flash, pick: extra.pick || params.get('plan') || '', months: extra.months || params.get('months') || '', template: extra.template || '', name: extra.name || '', domain: extra.domain || '', sshKey: extra.sshKey || '', address: extra.address || '', addressName: extra.addressName || '', ownDomain: extra.ownDomain || '' }));
 }
+
+// proxy:start
+/** Zeiko Proxy: the person's proxies and the order form, its countries and
+ * places asked of the door once a product is picked. */
+async function proxyPage(flash, extra = {}) {
+  const r = await ask('GET', '/proxies');
+  if (r.status !== 200 || !r.data) {
+    draw(view.message({ heading: L('Not available right now', 'Sedang tidak tersedia'), text: problem(r), link: '/account/proxy', label: L('Try again', 'Coba lagi') }));
+    return;
+  }
+  const want = extra.product || params.get('product') || '';
+  const chosen = (r.data.products || []).find((p) => p.id === want);
+  let options = null;
+  let note = flash;
+  if (r.data.open && r.data.emailVerified && chosen && chosen.unit !== 'gb') {
+    const got = await ask('GET', `/proxies/options/${encodeURIComponent(chosen.id)}`);
+    if (got.status === 200 && got.data) options = got.data;
+    else if (!note) note = view.flash('err', problem(got));
+  }
+  draw(view.proxy(o, r.data, { ...extra, flash: note, product: chosen ? chosen.id : '', options }));
+  if (extra.product) document.getElementById('order')?.scrollIntoView();
+}
+// proxy:end
 
 /** Zeiko Sites: the person's websites and the order form. A refused order
  * is drawn again with what was chosen. */
@@ -451,7 +481,7 @@ function thanks(q) {
   thanked = true;
   clearTimeout(payTimer);
   const until = Date.now() + THANKS_MS;
-  const back = driveBack(q) || (q.product === 'hosting' ? '/account/hosting' : q.product === 'vps' ? '/account/vps' : q.product === 'sites' ? '/account/sites' : '');
+  const back = driveBack(q) || view.paidPage(q.product);
   draw(view.qrisThanks(o, { ...q, driveBack: back }, THANKS_MS / 1000));
   const tick = () => {
     const left = Math.max(0, Math.ceil((until - Date.now()) / 1000));
@@ -635,6 +665,46 @@ async function act(name, f, submitter, form) {
       const r = await ask('POST', `/hosting/${encodeURIComponent(f.id)}/cancel`, {});
       return hostingPage(r.status === 200 ? view.flash('ok', L('Order cancelled.', 'Pesanan dibatalkan.')) : view.flash('err', problem(r)));
     }
+    // proxy:start
+    case 'proxy-order': {
+      const pick = { product: f.product || '', country: f.country || '', region: f.region || '', city: f.city || '', isp: f.isp || '', quantity: f.quantity || '', period: f.period || '', pkg: f.package || '', gb: f.gb || '' };
+      if ((submitter ? submitter.value : '') !== 'order') return proxyPage('', pick);
+      const per = /^([md])([0-9]{1,3})$/.exec(pick.period) || [];
+      const r = await ask('POST', '/proxies/order', {
+        product: pick.product, country: pick.country, region: pick.region, city: pick.city, isp: pick.isp,
+        quantity: Number(pick.quantity) || 1, months: per[1] === 'm' ? Number(per[2]) : 0, days: per[1] === 'd' ? Number(per[2]) : 0,
+        package: pick.pkg, gb: Number(pick.gb) || 0, lang: getLang(),
+      });
+      if (r.status === 200 && r.data && r.data.payment && PAY_ID.test(r.data.payment.id || '')) return location.assign(`/account/pay?id=${encodeURIComponent(r.data.payment.id)}`);
+      return proxyPage(view.flash('err', problem(r)), pick);
+    }
+    case 'proxy-renew': {
+      if (!PAY_ID.test(f.id || '')) return proxyPage(view.flash('err', L('That order was not found.', 'Pesanan itu tidak ditemukan.')));
+      const r = await ask('POST', `/proxies/${encodeURIComponent(f.id)}/renew`, { months: Number(f.months) || 1 });
+      return toPay(r, proxyPage);
+    }
+    case 'proxy-traffic': {
+      if (!PAY_ID.test(f.id || '')) return proxyPage(view.flash('err', L('That order was not found.', 'Pesanan itu tidak ditemukan.')));
+      const r = await ask('POST', `/proxies/${encodeURIComponent(f.id)}/traffic`, { gb: Number(f.gb) || 0 });
+      return toPay(r, proxyPage);
+    }
+    case 'proxy-cancel': {
+      if (!PAY_ID.test(f.id || '')) return proxyPage(view.flash('err', L('That order was not found.', 'Pesanan itu tidak ditemukan.')));
+      const r = await ask('POST', `/proxies/${encodeURIComponent(f.id)}/cancel`, {});
+      return proxyPage(r.status === 200 ? view.flash('ok', L('Order cancelled.', 'Pesanan dibatalkan.')) : view.flash('err', problem(r)));
+    }
+    case 'proxy-protocol': {
+      if (!PAY_ID.test(f.id || '')) return proxyPage(view.flash('err', L('That order was not found.', 'Pesanan itu tidak ditemukan.')));
+      const r = await ask('POST', `/proxies/${encodeURIComponent(f.id)}/protocol`, { protocol: f.protocol || '' });
+      return proxyPage(r.status === 200 ? view.flash('ok', L('Changed. The new ports show below.', 'Sudah diubah. Port barunya tampil di bawah.')) : view.flash('err', problem(r)));
+    }
+    case 'proxy-access': {
+      if (!PAY_ID.test(f.id || '')) return proxyPage(view.flash('err', L('That order was not found.', 'Pesanan itu tidak ditemukan.')));
+      const ips = (f.ips || '').split(/[\s,]+/).map((x) => x.trim()).filter(Boolean).slice(0, 20);
+      const r = await ask('POST', `/proxies/${encodeURIComponent(f.id)}/access`, { auth: f.auth || '', ips });
+      return proxyPage(r.status === 200 ? view.flash('ok', L('Changed.', 'Sudah diubah.')) : view.flash('err', problem(r)));
+    }
+    // proxy:end
     case 'sites-order': {
       const cycle = ['year', 'domain', 'event', 'month', 'half'].includes(f.cycle) ? f.cycle : 'year';
       const isStatic = f.package === 'static';
